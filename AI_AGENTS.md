@@ -195,6 +195,12 @@ the bootstrap (this scaffold); v1.A is the first real shipped capability.
 - **Package manager: pnpm only.** No `bun.lockb`, no `package-lock.json`, no `yarn.lock` — they cause CF Pages to pick the wrong manager and break the build. The `pnpm-lock.yaml` is the only lockfile that should ever be committed.
 - Build path: this project's `Makefile` → `../Makefile` → `~/work/projects/builder/`
 - Cloudflare deploy constraints: Vite ≥ 6, frozen-lockfile install, no `_redirects` SPA fallback (handled by `wrangler.jsonc`'s `not_found_handling` instead).
+- **`public/_redirects` exists and is load-bearing — don't delete it.** The
+  constraint above is scoped to *SPA fallback rules*, not to the file: Workers
+  static assets supports `_redirects`, and it is where real 301s live. It
+  currently holds `/schedule/` → `/monterey-car-week/schedule/` from the v1.A
+  restructure. Astro's own `redirects` config can't replace it — under
+  `output: 'static'` that emits a meta-refresh HTML page, which is a 200.
 - **Versioning**: two-level `vN` / `vN.X` — see Versioning section above and `sites/portfolio/AI_AGENTS.md` for the canonical statement.
 
 ## Out of scope / don't touch

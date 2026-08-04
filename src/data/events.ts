@@ -1,5 +1,13 @@
 export type Access = "free" | "ticketed" | "private";
 
+/**
+ * UTC offset for the Monterey Peninsula (America/Los_Angeles) during Car Week.
+ * August is inside Pacific Daylight Time, so the offset is fixed at -07:00 for
+ * every date in `schedule` — no DST boundary falls inside August 7–16.
+ * Used to build `startDate` / `endDate` in the Event JSON-LD.
+ */
+export const PACIFIC_OFFSET = "-07:00";
+
 export type CarEvent = {
   title: string;
   url?: string;
@@ -7,10 +15,24 @@ export type CarEvent = {
   accessLabel: string;
   day?: string;
   description?: string;
+  /**
+   * Local (America/Los_Angeles) clock times, 24h "HH:MM".
+   *
+   * ONLY set these where the organizer's stated time is actually known — they
+   * are published as machine-readable `startDate` / `endDate` in Event JSON-LD
+   * and surface as event start times in Google results. An event with no entry
+   * here emits a date-only `startDate`, which schema.org accepts (startDate is
+   * "Date or DateTime"). Guessing a time here puts a wrong time in front of
+   * people deciding when to show up, so leave it unset when unsure.
+   */
+  startTime?: string;
+  endTime?: string;
 };
 
 export type DaySchedule = {
   id: string;
+  /** Calendar date as ISO 8601 `YYYY-MM-DD`, America/Los_Angeles. */
+  iso: string;
   weekday: string;
   date: string;
   short: string;
@@ -39,6 +61,7 @@ const PRE_REUNION =
 export const schedule: DaySchedule[] = [
   {
     id: "august-7",
+    iso: "2026-08-07",
     weekday: "Friday",
     date: "August 7",
     short: "Aug 7",
@@ -64,6 +87,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-8",
+    iso: "2026-08-08",
     weekday: "Saturday",
     date: "August 8",
     short: "Aug 8",
@@ -88,6 +112,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-9",
+    iso: "2026-08-09",
     weekday: "Sunday",
     date: "August 9",
     short: "Aug 9",
@@ -110,6 +135,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-10",
+    iso: "2026-08-10",
     weekday: "Monday",
     date: "August 10",
     short: "Aug 10",
@@ -168,6 +194,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-11",
+    iso: "2026-08-11",
     weekday: "Tuesday",
     date: "August 11",
     short: "Aug 11",
@@ -212,6 +239,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-12",
+    iso: "2026-08-12",
     weekday: "Wednesday",
     date: "August 12",
     short: "Aug 12",
@@ -257,6 +285,11 @@ export const schedule: DaySchedule[] = [
         url: "https://www.thelittlecarshow.com/",
         access: "free",
         accessLabel: "Free for spectators",
+        // The only event in this dataset with an organizer-stated clock time
+        // ("noon to 5 PM", below). Everything else emits a date-only startDate
+        // until a real time is sourced — see CarEvent.startTime.
+        startTime: "12:00",
+        endTime: "17:00",
         description:
           "Mini, micro, electric, steam and arcane vehicles take over Lighthouse Avenue in downtown Pacific Grove, noon to 5 PM.",
       },
@@ -296,6 +329,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-13",
+    iso: "2026-08-13",
     weekday: "Thursday",
     date: "August 13",
     short: "Aug 13",
@@ -386,6 +420,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-14",
+    iso: "2026-08-14",
     weekday: "Friday",
     date: "August 14",
     short: "Aug 14",
@@ -438,6 +473,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-15",
+    iso: "2026-08-15",
     weekday: "Saturday",
     date: "August 15",
     short: "Aug 15",
@@ -520,6 +556,7 @@ export const schedule: DaySchedule[] = [
   },
   {
     id: "august-16",
+    iso: "2026-08-16",
     weekday: "Sunday",
     date: "August 16",
     short: "Aug 16",

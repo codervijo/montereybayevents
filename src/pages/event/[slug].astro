@@ -4,6 +4,7 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { allEventDetails, mapUrl, type EventDetail } from "../../data/eventIndex";
 import { ROAD_CLOSURES_URL } from "../../data/events";
+import { buildEventJsonLd, formatTime } from "../../lib/eventSchema";
 
 export function getStaticPaths() {
   return allEventDetails.map((event) => ({
@@ -35,23 +36,9 @@ const keywords = [
   .filter(Boolean)
   .join(", ");
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Event",
-  name: event.title,
-  description: fullDescription.slice(0, 300),
-  url: canonical,
-  eventStatus: "https://schema.org/EventScheduled",
-  ...(event.venue
-    ? {
-        location: {
-          "@type": "Place",
-          name: event.venue.venue,
-          address: event.venue.address,
-        },
-      }
-    : {}),
-};
+// Event JSON-LD, incl. the required startDate — built in src/lib/eventSchema.ts
+// so it can be unit-tested against every event in the dataset.
+const jsonLd = buildEventJsonLd(event, site);
 
 const accessStyles = {
   free: "border-brass/60 text-brass",
@@ -104,7 +91,7 @@ const others = allEventDetails
 
   <main class="mx-auto max-w-4xl px-5 py-14">
     <a
-      href="/schedule/"
+      href="/monterey-car-week/schedule/"
       class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
     >
       ← Full schedule
@@ -140,10 +127,19 @@ const others = allEventDetails
         <ul class="mt-4 space-y-2">
           {
             event.days.map((d) => (
-              <li class="flex items-baseline gap-3">
-                <a href={`/schedule/#${d.id}`} class="text-base text-foreground hover:text-brass">
+              <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <a
+                  href={`/monterey-car-week/schedule/#${d.id}`}
+                  class="text-base text-foreground hover:text-brass"
+                >
                   {d.weekday}, {d.date}
                 </a>
+                {d.startTime && (
+                  <span class="text-sm text-brass">
+                    {formatTime(d.startTime)}
+                    {d.endTime ? ` – ${formatTime(d.endTime)}` : ""}
+                  </span>
+                )}
                 {d.label && (
                   <span class="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                     {d.label}
@@ -154,8 +150,11 @@ const others = allEventDetails
           }
         </ul>
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
-          Start times are set by the organizer and can shift — confirm on the official
-          page before you travel.
+          {
+            event.days.some((d) => d.startTime)
+              ? "Times are the organizer's published hours and can shift — confirm on the official page before you travel."
+              : "We don't have a confirmed start time for this one yet. Check the official page before you travel."
+          }
         </p>
       </section>
 

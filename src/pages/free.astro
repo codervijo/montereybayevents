@@ -1,0 +1,162 @@
+---
+// Prerendered at build time (output: 'static' in astro.config.mjs) — the HTML
+// ships complete, no client-side routing or hydration for the listing itself.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { freeEventsByDay, totalFreeListings } from "../data/eventIndex";
+import { formatTime } from "../lib/eventSchema";
+
+const site = "https://montereybayevents.com";
+const title = "Free Monterey Car Week Events 2026";
+const description = `Every Monterey Car Week 2026 event that is free for spectators — ${totalFreeListings} listings across August 7–16, grouped by day with location, time where known and a link to each event.`;
+const canonical = `${site}/free/`;
+
+const days = freeEventsByDay();
+
+// ItemList of the free events, in first-appearance (chronological) order. `url`
+// points at our own /event/ page for each one, so the list describes this site's
+// pages rather than asserting anything about the organizers' sites.
+//
+// Deduplicated by URL: a free event that runs several days is listed under each
+// of those days in the visible markup below, but appears once here — repeating a
+// URL across ListItems is the kind of duplication that gets an ItemList
+// discarded wholesale. `numberOfItems` therefore counts distinct events, which
+// is smaller than the day-by-day listing count.
+const seen = new Set<string>();
+const uniqueFree = days
+  .flatMap((day) => day.events.map((e) => ({ day, e })))
+  .filter(({ e }) => (seen.has(e.slug) ? false : (seen.add(e.slug), true)));
+
+const itemList = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: title,
+  description,
+  url: canonical,
+  numberOfItems: uniqueFree.length,
+  itemListOrder: "https://schema.org/ItemListOrderAscending",
+  itemListElement: uniqueFree.map(({ e }, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: e.title,
+    url: `${site}${e.href}`,
+  })),
+};
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title} — Monterey Bay Events</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={`${site}/og-carweek.jpg`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={`${site}/og-carweek.jpg`} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(itemList)}></script>
+  </Fragment>
+
+  <main class="mx-auto max-w-4xl px-5 py-14">
+    <p class="eyebrow">August 7 – 16, 2026 · No ticket required</p>
+    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">
+      Free Monterey <span class="text-brass">Car Week</span> Events 2026
+    </h1>
+    <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+      {totalFreeListings} of the week's listings are free for spectators — street
+      concours on Ocean Avenue, the Tour d'Elegance along Highway One, auction
+      previews and the Concours Village. Each one is grouped under the day it runs.
+      Where an entry has a cost attached to something other than admission — paid
+      parking, paid entrant registration — the badge says so.
+    </p>
+    <p class="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+      Start times come from the organizer and are only shown where one is
+      published. Follow an event through to its page for the venue address, a map
+      link and the official site.
+    </p>
+
+    <div class="mt-14 space-y-14">
+      {
+        days.map((day) => (
+          <section id={day.id} class="scroll-mt-32">
+            <div class="flex flex-wrap items-end gap-x-4 gap-y-1 border-b border-border/70 pb-3">
+              <h2 class="text-4xl leading-none text-brass sm:text-5xl">{day.date}</h2>
+              <span class="pb-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                {day.weekday} · {day.events.length} free
+              </span>
+            </div>
+            <ul class="mt-5 grid gap-3">
+              {day.events.map((e) => (
+                <li>
+                  <a
+                    href={e.href}
+                    class="group flex flex-col gap-2 border-l-2 border-border/80 bg-surface/60 px-5 py-4 transition-all hover:border-brass hover:bg-surface-raised"
+                  >
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <h3 class="text-xl leading-tight text-foreground transition-colors group-hover:text-brass">
+                        {e.title}
+                      </h3>
+                      {e.label && (
+                        <span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                          {e.label}
+                        </span>
+                      )}
+                    </div>
+                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <span class="w-fit border border-brass/50 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-brass">
+                        {e.accessLabel}
+                      </span>
+                      <span class="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+                        {day.weekday}, {day.date}
+                      </span>
+                      {e.startTime && (
+                        <span class="text-[0.65rem] uppercase tracking-[0.14em] text-brass">
+                          {formatTime(e.startTime)}
+                          {e.endTime ? ` – ${formatTime(e.endTime)}` : ""}
+                        </span>
+                      )}
+                    </div>
+                    {e.venue && (
+                      <p class="text-sm leading-relaxed text-muted-foreground">
+                        {e.venue.venue} · {e.venue.address}
+                      </p>
+                    )}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+
+    <section class="mt-16 border-t border-border/70 pt-8">
+      <p class="text-sm leading-relaxed text-muted-foreground">
+        Looking for the whole week, ticketed events included? See the{" "}
+        <a href="/monterey-car-week/schedule/" class="text-brass hover:underline">
+          full Car Week schedule
+        </a>{" "}
+        or the{" "}
+        <a href="/monterey-car-week/" class="text-brass hover:underline">
+          Car Week overview
+        </a>
+        . Before you drive, check{" "}
+        <a href="/traffic/" class="text-brass hover:underline">
+          traffic and road closures
+        </a>
+        .
+      </p>
+    </section>
+  </main>
+</BaseLayout>

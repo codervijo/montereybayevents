@@ -1,42 +1,66 @@
 ---
-// src/pages/index.astro
+// src/pages/index.astro — the Monterey Bay events index.
+//
+// Site-level page: Organization + WebSite JSON-LD live here, and Car Week is the
+// featured section rather than the subject of the whole page. The Car Week hub
+// (with its own Event JSON-LD) is at /monterey-car-week/.
+//
+// SCOPE NOTE: the only event data in this repo is Monterey Car Week 2026
+// (src/data/events.ts). The "also on the calendar" section below therefore lists
+// what the site covers next, NOT invented listings — no county fair, parade or
+// festival is named with a date until real data exists for it. Add sources to
+// src/data/ and this section becomes real listings.
 import BaseLayout from "../layouts/BaseLayout.astro";
-import EventCard from "../components/EventCard.tsx";
 import { ROAD_CLOSURES_URL, schedule, totalEvents } from "../data/events";
+import { totalFreeListings } from "../data/eventIndex";
 
 const site = "https://montereybayevents.com";
-const title = "Monterey Car Week 2026 — Schedule, Traffic & Events";
+const title = "Monterey Bay Events — Monterey & Santa Cruz County Event Calendar";
 const description =
-  "Every Monterey Car Week 2026 event from August 7–16: concours, auctions, rallies and races, with road closure and public safety information.";
+  "What's on across Monterey and Santa Cruz counties: verified dates, locations and free-or-ticketed status. Currently covering Monterey Car Week 2026 in full, August 7–16.";
 // Canonical MUST match the served URL incl. trailing slash (trailingSlash:
 // 'always' in astro.config.mjs). For a sub-page, derive it the same way:
-//   const canonical = `${site}/<route>/`;   // e.g. `${site}/about/`
+//   const canonical = `${site}/<route>/`;   // e.g. `${site}/free/`
 // A no-slash canonical 308-redirects and breaks indexing (CHECK_161).
 const canonical = `${site}/`;
 
-const highlightTitles = [
-  "Pebble Beach Concours d'Elegance",
-  "The Quail, A Motorsports Gathering",
-  "Rolex Monterey Motorsports Reunion",
-  "Monterey Pre-Reunion and Corkscrew Hillclimb",
+// Sections of the site that exist today, in the order a visitor needs them.
+const sections = [
+  {
+    href: "/monterey-car-week/schedule/",
+    label: "Full Car Week schedule",
+    body: `All ${totalEvents} listings across ten days, filterable by admission.`,
+  },
+  {
+    href: "/free/",
+    label: "Free Car Week events",
+    body: `${totalFreeListings} listings that cost nothing to spectate, grouped by day.`,
+  },
+  {
+    href: "/traffic/",
+    label: "Traffic, closures & safety",
+    body: "Live county closures, Caltrans cameras and public safety text alerts.",
+  },
 ];
 
-const highlights = highlightTitles
-  .map((t) => schedule.flatMap((d) => d.events).find((e) => e.title === t))
-  .filter((e): e is NonNullable<typeof e> => Boolean(e));
-
-const stats = [
-  { n: "10", l: "Days" },
-  { n: String(totalEvents), l: "Listed events" },
-  { n: "75th", l: "Pebble Beach Concours" },
-  { n: "Free", l: "Public safety texts" },
+// Coverage the calendar is being extended to. Deliberately dateless: these are
+// the recurring regional events this site will cover, and naming a date before
+// one is sourced would put a wrong date in front of someone planning a trip.
+const upcomingCoverage = [
+  "Monterey County Fair",
+  "Santa Cruz County Fair",
+  "Capitola Begonia Festival",
+  "Pacific Grove Butterfly Parade",
+  "Castroville Artichoke Festival",
+  "Watsonville holiday markets",
 ];
 ---
 
 <BaseLayout>
   <Fragment slot="head">
     <title>{title}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -44,19 +68,20 @@ const stats = [
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={description.slice(0, 200)} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:image" content={`${site}/og-carweek.jpg`} />
 
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
     <meta name="twitter:image" content={`${site}/og-carweek.jpg`} />
 
-    <!-- JSON-LD structured data: Organization + WebSite + the Car Week Event
-         itself (static; domain is known at scaffold time). -->
+    <!-- Site-level JSON-LD. The Monterey Car Week Event object lives on its own
+         hub page (/monterey-car-week/), not here. -->
     <script type="application/ld+json" is:inline>
 {
   "@context": "https://schema.org",
@@ -65,7 +90,11 @@ const stats = [
       "@type": "Organization",
       "@id": "https://montereybayevents.com/#organization",
       "name": "Monterey Bay Events",
-      "url": "https://montereybayevents.com/"
+      "url": "https://montereybayevents.com/",
+      "areaServed": [
+        { "@type": "AdministrativeArea", "name": "Monterey County, California" },
+        { "@type": "AdministrativeArea", "name": "Santa Cruz County, California" }
+      ]
     },
     {
       "@type": "WebSite",
@@ -73,29 +102,6 @@ const stats = [
       "url": "https://montereybayevents.com/",
       "name": "Monterey Bay Events",
       "publisher": { "@id": "https://montereybayevents.com/#organization" }
-    },
-    {
-      "@type": "Event",
-      "name": "Monterey Car Week 2026",
-      "startDate": "2026-08-07",
-      "endDate": "2026-08-16",
-      "eventStatus": "https://schema.org/EventScheduled",
-      "url": "https://montereybayevents.com/",
-      "location": {
-        "@type": "Place",
-        "name": "Monterey Peninsula",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Monterey",
-          "addressRegion": "CA",
-          "addressCountry": "US"
-        }
-      },
-      "organizer": {
-        "@type": "Organization",
-        "name": "Monterey Bay Events",
-        "url": "https://montereybayevents.com/"
-      }
     }
   ]
 }
@@ -103,86 +109,122 @@ const stats = [
   </Fragment>
 
   <main>
-    <section class="relative">
-      <img
-        src="/hero-carweek.jpg"
-        alt="A silver 1950s Porsche racing car on a coastal Monterey road at golden hour"
-        width={1920}
-        height={1088}
-        class="h-[68vh] min-h-[420px] w-full object-cover"
-      />
-      <div class="hero-scrim absolute inset-0"></div>
-      <div class="absolute inset-0 flex items-end">
-        <div class="mx-auto w-full max-w-6xl px-5 pb-10">
-          <p class="eyebrow">August 7 – 16, 2026 · Monterey Peninsula</p>
-          <h1 class="mt-3 text-6xl leading-[0.85] sm:text-8xl md:text-[9rem]">
-            Monterey
-            <br />
-            <span class="text-brass">Car Week</span> 2026
-          </h1>
-          <p class="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Ten days, {totalEvents} listed events, one peninsula. Concours lawns,
-            historic racing, auctions and dawn drives along Highway One.
+    <section class="border-b border-border/70">
+      <div class="mx-auto max-w-6xl px-5 py-14 sm:py-20">
+        <p class="eyebrow">Monterey &amp; Santa Cruz counties</p>
+        <h1 class="mt-3 text-5xl leading-[0.88] sm:text-7xl md:text-8xl">
+          What's on around
+          <br />
+          <span class="text-brass">Monterey Bay</span>
+        </h1>
+        <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+          Verified dates, locations and free-or-ticketed status for public events
+          across the Central Coast — the details that official calendars bury.
+          Monterey Car Week 2026 is covered in full; the rest of the regional
+          calendar is being built out event by event.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href="/monterey-car-week/"
+            class="bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            Monterey Car Week 2026
+          </a>
+          <a
+            href="/free/"
+            class="border border-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brass transition-colors hover:bg-brass hover:text-primary-foreground"
+          >
+            Free Car Week events
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured: Car Week -->
+    <section class="mx-auto max-w-6xl px-5 py-14">
+      <p class="eyebrow">Featured event</p>
+      <div class="mt-4 overflow-hidden border border-border/80 bg-surface">
+        <a href="/monterey-car-week/" class="group block">
+          <img
+            src="/hero-carweek.jpg"
+            alt="A silver 1950s Porsche racing car on a coastal Monterey road at golden hour"
+            width={1920}
+            height={1088}
+            class="h-64 w-full object-cover sm:h-80"
+          />
+        </a>
+        <div class="px-6 py-8 sm:px-8">
+          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+            August 7 – 16, 2026 · Monterey Peninsula
+          </p>
+          <h2 class="mt-3 text-4xl leading-none sm:text-6xl">
+            <a href="/monterey-car-week/" class="transition-colors hover:text-brass">
+              Monterey <span class="text-brass">Car Week</span> 2026
+            </a>
+          </h2>
+          <p class="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            Ten days, {totalEvents} listed events across the peninsula — concours
+            lawns, historic racing at Laguna Seca, auctions and dawn drives on
+            Highway One. {totalFreeListings} of them are free for spectators.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a
-              href="/schedule/"
-              class="bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
+              href="/monterey-car-week/"
+              class="bg-brass px-5 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-opacity hover:opacity-90"
             >
-              View the schedule
+              Car Week overview
             </a>
             <a
-              href="/traffic/"
-              class="border border-border px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-foreground transition-colors hover:border-brass hover:text-brass"
+              href="/monterey-car-week/schedule/"
+              class="border border-border px-5 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-brass hover:text-brass"
             >
-              Traffic &amp; safety
+              Day-by-day schedule
             </a>
+            <a
+              href="/free/"
+              class="border border-border px-5 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-brass hover:text-brass"
+            >
+              Free events
+            </a>
+          </div>
+
+          <div class="mt-8 grid gap-2 border-t border-border/70 pt-6 sm:grid-cols-5">
+            {
+              schedule.map((day) => (
+                <a
+                  href={`/monterey-car-week/schedule/#${day.id}`}
+                  class="group border border-border/70 bg-background px-3 py-3 transition-colors hover:border-brass"
+                >
+                  <p class="text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
+                    {day.weekday}
+                  </p>
+                  <p class="mt-0.5 font-display text-2xl leading-none text-foreground transition-colors group-hover:text-brass">
+                    {day.short}
+                  </p>
+                </a>
+              ))
+            }
           </div>
         </div>
       </div>
     </section>
 
+    <!-- Site sections -->
     <section class="border-y border-border/70 bg-surface">
-      <div class="mx-auto grid max-w-6xl grid-cols-2 gap-px px-5 py-8 sm:grid-cols-4">
-        {
-          stats.map((s) => (
-            <div>
-              <p class="font-display text-4xl leading-none text-brass">{s.n}</p>
-              <p class="mt-1 text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                {s.l}
-              </p>
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="mx-auto max-w-6xl px-5 py-16">
-      <p class="eyebrow">Marquee events</p>
-      <h2 class="mt-2 text-5xl leading-none sm:text-6xl">The ones to plan around</h2>
-      <div class="mt-8 grid gap-3 md:grid-cols-2">
-        {highlights.map((e) => <EventCard event={e} />)}
-      </div>
-    </section>
-
-    <section class="border-t border-border/70 bg-surface">
-      <div class="mx-auto max-w-6xl px-5 py-16">
-        <p class="eyebrow">Day by day</p>
-        <h2 class="mt-2 text-5xl leading-none sm:text-6xl">Ten days on the peninsula</h2>
-        <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+      <div class="mx-auto max-w-6xl px-5 py-14">
+        <p class="eyebrow">Start here</p>
+        <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Plan the week</h2>
+        <div class="mt-8 grid gap-3 sm:grid-cols-3">
           {
-            schedule.map((day) => (
+            sections.map((s) => (
               <a
-                href={`/schedule/#${day.id}`}
-                class="group border border-border/80 bg-background px-4 py-5 transition-colors hover:border-brass"
+                href={s.href}
+                class="group flex flex-col gap-2 border-l-2 border-border/80 bg-background px-5 py-5 transition-all hover:border-brass"
               >
-                <p class="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  {day.weekday}
-                </p>
-                <p class="mt-1 font-display text-3xl leading-none text-foreground transition-colors group-hover:text-brass">
-                  {day.short}
-                </p>
-                <p class="mt-2 text-sm text-muted-foreground">{day.events.length} events</p>
+                <h3 class="text-xl leading-tight text-foreground transition-colors group-hover:text-brass">
+                  {s.label}
+                </h3>
+                <p class="text-sm leading-relaxed text-muted-foreground">{s.body}</p>
               </a>
             ))
           }
@@ -190,14 +232,35 @@ const stats = [
       </div>
     </section>
 
-    <section class="mx-auto max-w-6xl px-5 py-16">
+    <!-- Coverage roadmap — no dates until they are sourced -->
+    <section class="mx-auto max-w-6xl px-5 py-14">
+      <p class="eyebrow">Also on the Central Coast calendar</p>
+      <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Coverage in progress</h2>
+      <p class="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        These recurring Monterey and Santa Cruz county events are next to be
+        covered. They are listed without dates on purpose — each one gets a page
+        when its date, venue and admission are confirmed against the organizer,
+        not before.
+      </p>
+      <ul class="mt-6 flex flex-wrap gap-2">
+        {
+          upcomingCoverage.map((name) => (
+            <li class="border border-border/70 bg-surface/60 px-4 py-2 text-sm text-muted-foreground">
+              {name}
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="mx-auto max-w-6xl px-5 pb-16">
       <div class="border-l-2 border-brass bg-surface/60 px-6 py-8">
         <p class="eyebrow">Before you drive</p>
-        <h2 class="mt-2 text-4xl leading-none">Expect heavy traffic all week</h2>
+        <h2 class="mt-2 text-4xl leading-none">Peninsula traffic peaks in August</h2>
         <p class="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Highway One, Ocean Avenue and the routes into Pebble Beach and Laguna Seca
-          slow to a crawl during peak event hours. Check live closures before every
-          trip, and text <span class="text-brass">CARWEEK</span> to{" "}
+          slow to a crawl during Car Week event hours. Check live closures before
+          every trip, and text <span class="text-brass">CARWEEK</span> to{" "}
           <span class="text-brass">65513</span> for public safety alerts.
         </p>
         <div class="mt-6 flex flex-wrap gap-3">

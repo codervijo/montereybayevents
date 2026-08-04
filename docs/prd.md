@@ -36,14 +36,16 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | Version | Theme | Acceptance |
 |---|---|---|
 | v0 | scaffold | local builds, CF wrangler.jsonc + public/_headers in place, repo initialized |
-| v1 | <fill in: first real shipped capability> | <fill in: what users get> |
+| v1 | regional calendar with Car Week as its first covered section | a visitor can answer "what's free, when, and where" for Monterey Car Week 2026 from indexable pages; every `/event/` page emits valid `Event` schema; the homepage is a Monterey/Santa Cruz index, not a Car Week overview |
 
 ## 5. Phases
 
 | Phase | Theme | Features | Status |
 |---|---|---|---|
 | **v0.A** | scaffolded | `portfolio new bootstrap` ran; standard files written; git initialized | ✅ |
-| **v1.A** | <fill in> | <fill in> | planned |
+| **v0.B** | Astro port | TanStack Start → Astro; 50 `/event/` pages, schedule, traffic (see `src/lib/server-todo.md` for what was dropped) | ✅ |
+| **v1.A** | section split + free-intent page + valid Event schema | `Event` JSON-LD fixed on all 50 `/event/` pages (`startDate`, `endDate`, `offers`, `organizer`, `PostalAddress`); new `/free/` page with `ItemList`; Car Week hub moved to `/monterey-car-week/` with a 301 from `/schedule/`; homepage rebuilt as a regional index; footer email capture site-wide | built, not deployed |
+| **v1.B** | non-Car-Week event data | the homepage "coverage in progress" list becomes real dated listings — needs a sourced dataset per event (date, venue, admission), see note in `src/pages/index.astro` | planned |
 
 ## 6. Open questions
 

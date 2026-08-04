@@ -1,19 +1,23 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import ScheduleList from "../components/ScheduleList.tsx";
-import { totalEvents } from "../data/events";
+// Moved from src/pages/schedule.astro when Car Week became a section of the
+// site rather than the whole site. /schedule/ 301s here — see public/_redirects.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ScheduleList from "../../components/ScheduleList.tsx";
+import { totalEvents } from "../../data/events";
+import { totalFreeListings } from "../../data/eventIndex";
 
 const site = "https://montereybayevents.com";
 const title = "Monterey Car Week 2026 Schedule — August 7–16";
 const description =
   "The complete day-by-day Monterey Car Week 2026 schedule: concours, auctions, rallies and historic racing, filterable by free, ticketed and private events.";
-const canonical = `${site}/schedule/`;
+const canonical = `${site}/monterey-car-week/schedule/`;
 ---
 
 <BaseLayout>
   <Fragment slot="head">
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -26,6 +30,7 @@ const canonical = `${site}/schedule/`;
     />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:image" content={`${site}/og-carweek.jpg`} />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -35,13 +40,27 @@ const canonical = `${site}/schedule/`;
   </Fragment>
 
   <main class="mx-auto max-w-6xl px-5 py-14">
-    <p class="eyebrow">August 7 – 16, 2026</p>
+    <a
+      href="/monterey-car-week/"
+      class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
+    >
+      ← Car Week overview
+    </a>
+
+    <p class="eyebrow mt-6">August 7 – 16, 2026</p>
     <h1 class="mt-2 text-6xl leading-[0.85] sm:text-8xl">
       The full <span class="text-brass">schedule</span>
     </h1>
     <p class="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
       {totalEvents} listed events across ten days. Times and details are set by each
       organizer — follow an event through to its official page to book.
+    </p>
+    <p class="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground">
+      Skipping the ticketed ones? {totalFreeListings} listings are{" "}
+      <a href="/free/" class="text-brass hover:underline">
+        free for spectators
+      </a>
+      .
     </p>
 
     <ScheduleList client:load />

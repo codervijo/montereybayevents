@@ -13,6 +13,11 @@ export default defineConfig({
   // back "URL is unknown to Google". Make it explicit so every page's
   // canonical matches its served URL. Enforced by CHECK_161.
   trailingSlash: 'always',
+  // Explicit, because trailingSlash: 'always' only makes sense alongside it:
+  // 'directory' emits dist/<route>/index.html so every route is served at
+  // /<route>/. Switching this to 'file' would serve /<route>.html and every
+  // canonical on the site would then point at a 308.
+  build: { format: 'directory' },
   integrations: [sitemap(), react()],
   output: 'static',
   vite: {

@@ -1,0 +1,12 @@
+# Cloudflare Workers static-assets redirects. Copied into dist/ at build.
+# Syntax: <source> <destination> <status>
+#
+# This is NOT an SPA fallback — that stays wrangler.jsonc's not_found_handling.
+# Astro's own `redirects` config can't be used here: under output: 'static' it
+# emits a meta-refresh HTML page, which is a 200, not a 301.
+#
+# /schedule/ was the Car Week schedule until Car Week became a section of the
+# site. Keep this rule indefinitely — the old URL predates launch but may be
+# linked or indexed.
+/schedule/ /monterey-car-week/schedule/ 301
+/schedule /monterey-car-week/schedule/ 301
