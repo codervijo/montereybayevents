@@ -1,3 +1,8 @@
+# Port source (separate repo: codervijo/mccarweek-redux) — never track, and
+# never let it become a gitlink again: a bare gitlink with no .gitmodules
+# entry breaks CI's `git submodule update` at clone time.
+genai/
+
 # Node
 node_modules/
 .pnpm-store/

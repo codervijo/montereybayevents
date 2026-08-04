@@ -5,6 +5,10 @@ request-time server. The following files from `genai/` had no target in the
 static model and were **not** ported. Each is listed with what it did and what
 would have to happen if the behaviour is ever needed here.
 
+`genai/` is no longer checked out here — it was the port source, not a build
+input. The paths below resolve against `git@github.com:codervijo/mccarweek-redux.git`
+at commit `e2ede3d`; re-clone it locally if you need to consult a file.
+
 - `TODO:` **`genai/src/server.ts`** — TanStack Start's request handler
   (`createStartHandler` / fetch entry). Astro's static build has no equivalent.
   If server rendering is ever required, add an adapter (`@astrojs/cloudflare`,
