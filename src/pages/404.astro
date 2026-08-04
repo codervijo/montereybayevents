@@ -1,32 +1,62 @@
 ---
 // Ported from the TanStack root route's notFoundComponent.
+//
+// This page is now actually reachable: wrangler.jsonc's not_found_handling was
+// "single-page-application", which served dist/index.html with a 200 for every
+// unmatched path, so dist/404.html was built and never used. It is "404-page"
+// now, and Cloudflare returns this file with a real 404 status.
+//
+// Deliberately noindex and canonical-free — it is an error response, not a page
+// we want indexed.
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const links = [
+  { href: "/", label: "Monterey Bay events" },
+  { href: "/monterey-car-week/", label: "Monterey Car Week 2026" },
+  { href: "/free/", label: "Free Car Week events" },
+  { href: "/traffic/", label: "Traffic & closures" },
+];
 ---
 
 <BaseLayout>
   <Fragment slot="head">
-    <title>Page not found — Monterey Car Week 2026</title>
-    <meta name="description" content="The page you're looking for doesn't exist or has been moved." />
-    <meta name="robots" content="noindex" />
+    <title>Page not found — Monterey Bay Events</title>
+    <meta
+      name="description"
+      content="The page you're looking for doesn't exist or has been moved."
+    />
+    <meta name="robots" content="noindex, follow" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </Fragment>
 
-  <main class="flex min-h-screen items-center justify-center bg-background px-4">
-    <div class="max-w-md text-center">
-      <h1 class="text-7xl font-bold text-foreground">404</h1>
-      <h2 class="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-      <p class="mt-2 text-sm text-muted-foreground">
-        The page you're looking for doesn't exist or has been moved.
-      </p>
-      <div class="mt-6">
-        <a
-          href="/"
-          class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-        >
-          Go home
-        </a>
-      </div>
-    </div>
+  <main class="mx-auto flex max-w-2xl flex-col items-center px-5 py-24 text-center">
+    <p class="eyebrow">Error 404</p>
+    <h1 class="mt-4 text-6xl leading-none sm:text-8xl">
+      Page <span class="text-brass">not found</span>
+    </h1>
+    <p class="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+      This page doesn't exist or has moved. If you followed a link to the Car Week
+      schedule, it now lives at{" "}
+      <a href="/monterey-car-week/schedule/" class="text-brass hover:underline">
+        /monterey-car-week/schedule/
+      </a>
+      .
+    </p>
+
+    <ul class="mt-10 grid w-full gap-2 sm:grid-cols-2">
+      {
+        links.map((l) => (
+          <li>
+            <a
+              href={l.href}
+              class="block border-l-2 border-border/80 bg-surface/60 px-5 py-4 text-left text-sm text-foreground transition-all hover:border-brass hover:text-brass"
+            >
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </main>
 </BaseLayout>

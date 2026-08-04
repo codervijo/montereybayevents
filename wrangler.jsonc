@@ -4,6 +4,13 @@
   "compatibility_date": "2026-08-03",
   "assets": {
     "directory": "./dist",
-    "not_found_handling": "single-page-application"
+    // "404-page", not "single-page-application": this is a prerendered
+    // multi-page site with no client-side router, so an unknown URL must return
+    // a real 404. The SPA setting served dist/index.html with a 200 for every
+    // unmatched path — soft 404s that Google reports as "Duplicate, Google chose
+    // a different canonical", and dist/404.html never rendered at all.
+    // Cloudflare serves the nearest 404.html with a 404 status; Astro emits
+    // dist/404.html from src/pages/404.astro on every build.
+    "not_found_handling": "404-page"
   }
 }

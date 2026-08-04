@@ -222,6 +222,32 @@ describe('footer email capture', () => {
   });
 });
 
+describe('cloudflare asset handling', () => {
+  // Strip // comments so the jsonc parses; no string literal in this file
+  // contains a "//" sequence other than in a URL, which is not present here.
+  const wrangler = JSON.parse(
+    read('wrangler.jsonc')
+      .split('\n')
+      .filter((l) => !l.trim().startsWith('//'))
+      .join('\n'),
+  );
+
+  it('returns a real 404 for unmatched paths, not a 200 SPA fallback', () => {
+    expect(wrangler.assets.not_found_handling).toBe('404-page');
+  });
+
+  it('has a 404 page for that setting to serve', () => {
+    expect(readdirSync(join(root, 'src', 'pages'))).toContain('404.astro');
+    expect(read('src', 'pages', '404.astro')).toMatch(
+      /name="robots"[^>]*content="noindex/,
+    );
+  });
+
+  it('serves assets from dist', () => {
+    expect(wrangler.assets.directory).toBe('./dist');
+  });
+});
+
 describe('astro config', () => {
   it('serves directory-format URLs with an always-trailing slash', () => {
     expect(config).toMatch(/trailingSlash:\s*'always'/);
