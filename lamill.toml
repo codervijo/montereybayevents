@@ -1,0 +1,55 @@
+# lamill.toml — per-site config consumed by lamill (portfolio/ops) and rankmill (content/audits).
+# [content] = stable identity, authored by hand. [todo] = volatile work state.
+# rankmill output lives in sites/<domain>/rankmill-output/, not here.
+
+schema = "lamill-toml-v1"
+
+[deploy]
+platform = "cf-pages"
+production_branch = "main"
+custom_domains = [
+    "montereybayevents.com",
+]
+
+[index]
+indexnow_key = "73972522172889ae8383c67ccc31ad2b"
+indexnow_enabled = true
+
+[stack]
+framework = "astro"
+
+# Tracked todos for montereybayevents.com. status: "done" | "open".
+[[todo]]
+status = "open"
+priority = "medium"
+task = "Check SEO: GSC indexation + coverage (revisit ~2026-08-17)"
+
+[[todo]]
+status = "open"
+priority = "medium"
+task = "Verify GA4 is receiving data (check Realtime after first traffic)"
+
+[[todo]]
+status = "open"
+priority = "low"
+task = "Confirm GSC verification + sitemap submitted (re-run deploy if it timed out)"
+
+[content]
+# Declarative content identity for this site.
+# Authored by the human; consumed by rankmill to generate drafts and run audits.
+# Leave fields empty until you have a deliberate answer. Empty is better than wrong.
+site_type = "directory"
+primary_keyword = "Monterey events calendar"
+secondary_keywords = [
+    "Monterey Car Week free events",
+    "what's happening in Santa Cruz this weekend",
+    "Capitola Beach Festival 2026 dates",
+    "free events Monterey County",
+    "Santa Cruz events this weekend",
+    "Monterey Car Week 2026",
+]
+icp = "A Monterey Peninsula or Santa Cruz resident, or a Bay Area visitor down for a few days, who knows something is happening but not what, when, or whether it costs money. They search things like \"monterey car week free events,\" \"what's happening in santa cruz this weekend,\" or \"capitola beach festival 2026 dates.\" They bounce off official tourism sites that bury the schedule behind marketing copy, and off county map apps that never load. A meaningful share are Spanish-speaking Monterey County residents — Salinas, Seaside, Watsonville — who are underserved entirely, since almost no local event coverage is published in Spanish."
+urgency_trigger = "Events are imminent — happening this weekend or within 48 hours"
+penalty = "Miss out on free events, buy unnecessary tickets, or show up at the wrong time/place"
+tone = "concise, factual, practical, mobile-first"
+law = ""                  # statute or regulation if applicable, else empty
