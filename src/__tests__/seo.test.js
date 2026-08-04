@@ -5,7 +5,7 @@
 // /schedule/ → /monterey-car-week/schedule/ 301, footer email capture).
 
 import { describe, it, expect } from 'vitest';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 
 const root = process.cwd();
@@ -15,6 +15,10 @@ const body = (src) => src.replace(/^---[\s\S]*?---\n/, '');
 const index = read('src', 'pages', 'index.astro');
 const indexHtml = body(index);
 const free = read('src', 'pages', 'free.astro');
+const eventsIndex = read('src', 'pages', 'events', 'index.astro');
+const monthHub = read('src', 'pages', 'events', '[month].astro');
+const eventPage = read('src', 'pages', 'event', '[slug].astro');
+const regionalPage = read('src', 'components', 'RegionalEventPage.astro');
 const hub = read('src', 'pages', 'monterey-car-week', 'index.astro');
 const hubSchedule = read('src', 'pages', 'monterey-car-week', 'schedule.astro');
 const header = read('src', 'components', 'SiteHeader.tsx');
@@ -168,6 +172,132 @@ describe('site structure — Car Week is a section', () => {
 
   it('has no src/pages/schedule.astro left behind', () => {
     expect(readdirSync(join(root, 'src', 'pages'))).not.toContain('schedule.astro');
+  });
+});
+
+describe('/events/ index and the month hubs', () => {
+  it('declares apex canonicals with a trailing slash', () => {
+    expect(eventsIndex).toContain('const canonical = `${site}/events/`;');
+    expect(monthHub).toContain('const canonical = `${site}${monthHref(monthKey)}`;');
+    // …and monthHref is the single place the hub URL shape is defined.
+    expect(read('src', 'data', 'events-2026.ts')).toContain(
+      'export const monthHref = (key: MonthKey) => `/events/${key}/`;',
+    );
+    for (const [name, src] of [['events index', eventsIndex], ['month hub', monthHub]]) {
+      expect(src, name).toContain('const site = "https://montereybayevents.com";');
+      expect(src, name).not.toContain('www.montereybayevents.com');
+    }
+  });
+
+  it('builds a hub for each of August–December 2026', () => {
+    expect(monthHub).toContain('getStaticPaths');
+    expect(monthHub).toContain('MONTHS.map');
+  });
+
+  it('titles hubs "Central Coast Events in <Month> <Year> — Monterey and Santa Cruz"', () => {
+    expect(read('src', 'data', 'events-2026.ts')).toContain(
+      '`Central Coast Events in ${monthMeta(key).label} — Monterey and Santa Cruz`',
+    );
+  });
+
+  it('shows date, city, county, category and the official link on each hub row', () => {
+    const html = body(monthHub);
+    expect(html).toContain('dateLabel(e)');
+    expect(html).toContain('e.city');
+    expect(html).toContain('{e.county} County');
+    expect(html).toContain('{e.category}');
+    expect(html).toContain('e.officialWebsite');
+  });
+
+  it('links each hub to the previous and next month', () => {
+    const html = body(monthHub);
+    expect(html).toMatch(/rel="prev"/);
+    expect(html).toMatch(/rel="next"/);
+    expect(html).toContain('monthHref(prev.key)');
+    expect(html).toContain('monthHref(next.key)');
+  });
+
+  it('emits an ItemList on both the index and the hubs', () => {
+    for (const [name, src] of [['events index', eventsIndex], ['month hub', monthHub]]) {
+      expect(src, name).toContain('buildItemListJsonLd');
+      expect(body(src), name).toMatch(/application\/ld\+json/);
+    }
+    expect(read('src', 'lib', 'regionalEventSchema.ts')).toMatch(/"@type":\s*"ItemList"/);
+  });
+
+  it('renders the listing server-side, with the filters as an island on top', () => {
+    // The island is Astro-rendered at build, so every listing is in the HTML
+    // whether or not the filter JS runs.
+    expect(body(eventsIndex)).toContain('<EventsList client:load />');
+    const list = read('src', 'components', 'EventsList.tsx');
+    expect(list).toContain('eventsInMonth');
+    expect(list).toMatch(/setCounty|county === /);
+  });
+});
+
+describe('internal linking into the 2026 calendar', () => {
+  it('links the homepage to /events/ and to the current and next month hub', () => {
+    expect(indexHtml).toContain('href="/events/"');
+    expect(index).toContain('currentAndNextMonth(new Date())');
+    expect(indexHtml).toContain('href={m.href}');
+  });
+
+  it('no longer ships the dateless "coverage in progress" placeholder list', () => {
+    expect(index).not.toContain('upcomingCoverage');
+    expect(indexHtml).not.toContain('Coverage in progress');
+  });
+
+  it('links every regional event page back to its month hub', () => {
+    expect(regionalPage).toContain('href={monthHref(month.key)}');
+    expect(body(regionalPage)).toContain('Central Coast events in {month.label}');
+  });
+
+  it('routes both datasets through /event/[slug]/ without moving a Car Week URL', () => {
+    expect(eventPage).toContain('allEventDetails.map');
+    expect(eventPage).toContain('regionalEventPages.map');
+    expect(read('src', 'data', 'events-2026.ts')).toContain('existingSlug');
+  });
+
+  it('labels an unannounced date instead of leaving it blank or guessing', () => {
+    expect(read('src', 'data', 'events-2026.ts')).toContain(
+      'export const DATE_TBA = "Date not yet announced";',
+    );
+    expect(body(regionalPage)).toContain('{dateLabel}');
+    expect(body(monthHub)).toContain('dateLabel(e)');
+  });
+});
+
+describe('sitemap (built output)', () => {
+  const sitemap = join(root, 'dist', 'sitemap-0.xml');
+  const built = existsSync(sitemap);
+  const xml = built ? readFileSync(sitemap, 'utf8') : '';
+
+  // `pnpm test` alone does not build; `make test` runs build first, and so does CI.
+  it.skipIf(!built)('lists /events/ and every month hub', () => {
+    for (const path of [
+      '/events/',
+      '/events/august/',
+      '/events/september/',
+      '/events/october/',
+      '/events/november/',
+      '/events/december/',
+    ]) {
+      expect(xml, path).toContain(`<loc>https://montereybayevents.com${path}</loc>`);
+    }
+  });
+
+  it.skipIf(!built)('lists every generated event page, apex host, trailing slash', async () => {
+    const { allEventDetails } = await import('../data/eventIndex.ts');
+    const { regionalEventPages } = await import('../data/events-2026.ts');
+    for (const slug of [
+      ...allEventDetails.map((e) => e.slug),
+      ...regionalEventPages.map((e) => e.slug),
+    ]) {
+      expect(xml, slug).toContain(
+        `<loc>https://montereybayevents.com/event/${slug}/</loc>`,
+      );
+    }
+    expect(xml).not.toContain('www.montereybayevents.com');
   });
 });
 

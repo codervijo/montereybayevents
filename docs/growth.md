@@ -73,3 +73,41 @@ https://search.google.com/search-console directly.
 - **Action:** Added `/free/` ("Free Monterey Car Week Events 2026", 27 day-listings across all ten days, `ItemList` schema, linked from the homepage hero, the Car Week hub and the schedule page). Fixed `Event` JSON-LD on every `/event/` page: `startDate` (+ `endDate` for multi-day runs and known finish times), `offers`, `organizer`, `PostalAddress` location. Moved the Car Week hub to `/monterey-car-week/`, the schedule to `/monterey-car-week/schedule/` with a 301 from `/schedule/`, and rebuilt the homepage as a regional index with Car Week featured. All 50 `/event/` URLs unchanged. Footer email capture added site-wide.
 - **Result:** TBD — review 2026-08-31
 - **Learning:** TBD — the specific thing to check is whether `/free/` outperforms the schedule page on free-intent queries. If it does, the same "one page per intent, not one filter per intent" pattern is worth repeating for parking, road closures and family-friendly events, and on sister sites.
+
+## 2026-08-03 — Turn the site from a Car Week page into a year-round calendar, and own month-and-city intent
+- **Status:** active
+- **Hypothesis:** The two entries above bet on Car Week's August spike. This one
+  bets on the other eleven months. Car Week gives the site one indexable cluster
+  with a hard seasonal ceiling: for most of the year the homepage had nothing
+  dated on it, which is a weak signal to send a crawler and a weaker one to send
+  a returning reader. Regional event search splits along two axes people
+  actually type — month ("santa cruz events october 2026") and city ("capitola
+  beach festival 2026 dates") — and neither is served by a single big calendar
+  page. So: one durable URL per month, each with its own title, ItemList and
+  prev/next links, plus a page per event carrying the date, city, county and
+  official link. The same "one page per intent, not one filter per intent"
+  pattern the `/free/` page is testing, applied to time instead of price. The
+  filters on `/events/` are the convenience version; the hubs are the crawlable
+  one.
+- **KPI:** indexed-page count for `/events/` and the five month hubs; impressions
+  on month-intent and city-intent queries; whether traffic survives the drop-off
+  after Car Week week (Aug 17 onward) instead of going to zero
+- **Baseline:** 0 clicks / 0 impressions / 0 indexed pages — still not deployed
+- **Action:** Imported 61 Monterey and Santa Cruz county events for August–December
+  2026 from a committed CSV source of record into `src/data/events-2026.ts`.
+  Added `/events/` (all 61, by month, county + month filters), `/events/<month>/`
+  hubs for August through December, and 54 new `/event/` pages with `Event`
+  JSON-LD. Seven CSV rows are Car Week events that already have pages; they link
+  to those rather than duplicating them, so no live URL moved. The homepage's
+  dateless "coverage in progress" list is now real dated listings for the current
+  and next month. Three events with no announced date ship labelled
+  "Date not yet announced" and emit no Event node.
+- **Result:** TBD — review 2026-08-31
+- **Learning:** TBD — the thing to watch is whether the month hubs pick up
+  impressions that `/events/` does not. If the hubs win, city hubs are the next
+  cut of the same dataset and the pattern is worth repeating on sister sites. If
+  `/events/` alone absorbs it, the hubs are overhead and the next cut should be
+  by category (fairs, holiday markets) instead. Also worth watching: the 58
+  events with `Event` markup have no `offers`, because the source carries no
+  admission data — if rich results underperform Car Week's, missing admission is
+  the first suspect.

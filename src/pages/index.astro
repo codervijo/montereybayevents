@@ -5,19 +5,36 @@
 // featured section rather than the subject of the whole page. The Car Week hub
 // (with its own Event JSON-LD) is at /monterey-car-week/.
 //
-// SCOPE NOTE: the only event data in this repo is Monterey Car Week 2026
-// (src/data/events.ts). The "also on the calendar" section below therefore lists
-// what the site covers next, NOT invented listings — no county fair, parade or
-// festival is named with a date until real data exists for it. Add sources to
-// src/data/ and this section becomes real listings.
+// SCOPE NOTE: two datasets back this page. Monterey Car Week 2026 in full
+// (src/data/events.ts), and the regional Aug–Dec 2026 calendar sourced from
+// data/monterey_santacruz_events_aug_dec_2026.csv (src/data/events-2026.ts).
+// Nothing on this page is invented: an event with no announced date is listed
+// as "date not yet announced" rather than given a plausible one.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { ROAD_CLOSURES_URL, schedule, totalEvents } from "../data/events";
 import { totalFreeListings } from "../data/eventIndex";
+import {
+  DATE_TBA,
+  currentAndNextMonth,
+  eventHref,
+  eventsInMonth,
+  monthHref,
+  totalRegionalEvents,
+} from "../data/events-2026";
 
 const site = "https://montereybayevents.com";
 const title = "Monterey Bay Events — Monterey & Santa Cruz County Event Calendar";
-const description =
-  "What's on across Monterey and Santa Cruz counties: verified dates, locations and free-or-ticketed status. Currently covering Monterey Car Week 2026 in full, August 7–16.";
+const description = `What's on across Monterey and Santa Cruz counties: ${totalRegionalEvents} public events from August to December 2026 with verified dates, cities and official links, plus Monterey Car Week in full.`;
+
+// The month hubs to feature, resolved from the build date and clamped to the
+// months the dataset covers — see currentAndNextMonth().
+const { current, next } = currentAndNextMonth(new Date());
+const featuredMonths = [current, ...(next ? [next] : [])].map((m) => ({
+  ...m,
+  href: monthHref(m.key),
+  events: eventsInMonth(m.key).slice(0, 5),
+  count: eventsInMonth(m.key).length,
+}));
 // Canonical MUST match the served URL incl. trailing slash (trailingSlash:
 // 'always' in astro.config.mjs). For a sub-page, derive it the same way:
 //   const canonical = `${site}/<route>/`;   // e.g. `${site}/free/`
@@ -26,6 +43,11 @@ const canonical = `${site}/`;
 
 // Sections of the site that exist today, in the order a visitor needs them.
 const sections = [
+  {
+    href: "/events/",
+    label: "The 2026 calendar",
+    body: `All ${totalRegionalEvents} Central Coast events, August to December, by county and month.`,
+  },
   {
     href: "/monterey-car-week/schedule/",
     label: "Full Car Week schedule",
@@ -41,18 +63,6 @@ const sections = [
     label: "Traffic, closures & safety",
     body: "Live county closures, Caltrans cameras and public safety text alerts.",
   },
-];
-
-// Coverage the calendar is being extended to. Deliberately dateless: these are
-// the recurring regional events this site will cover, and naming a date before
-// one is sourced would put a wrong date in front of someone planning a trip.
-const upcomingCoverage = [
-  "Monterey County Fair",
-  "Santa Cruz County Fair",
-  "Capitola Begonia Festival",
-  "Pacific Grove Butterfly Parade",
-  "Castroville Artichoke Festival",
-  "Watsonville holiday markets",
 ];
 ---
 
@@ -120,13 +130,19 @@ const upcomingCoverage = [
         <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
           Verified dates, locations and free-or-ticketed status for public events
           across the Central Coast — the details that official calendars bury.
-          Monterey Car Week 2026 is covered in full; the rest of the regional
-          calendar is being built out event by event.
+          {totalRegionalEvents} events from August to December 2026, county fairs
+          to holiday markets, plus Monterey Car Week covered day by day.
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
-            href="/monterey-car-week/"
+            href="/events/"
             class="bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            All 2026 events
+          </a>
+          <a
+            href="/monterey-car-week/"
+            class="border border-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brass transition-colors hover:bg-brass hover:text-primary-foreground"
           >
             Monterey Car Week 2026
           </a>
@@ -214,7 +230,7 @@ const upcomingCoverage = [
       <div class="mx-auto max-w-6xl px-5 py-14">
         <p class="eyebrow">Start here</p>
         <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Plan the week</h2>
-        <div class="mt-8 grid gap-3 sm:grid-cols-3">
+        <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {
             sections.map((s) => (
               <a
@@ -232,25 +248,68 @@ const upcomingCoverage = [
       </div>
     </section>
 
-    <!-- Coverage roadmap — no dates until they are sourced -->
+    <!-- What's on now and next, straight from the 2026 dataset -->
     <section class="mx-auto max-w-6xl px-5 py-14">
       <p class="eyebrow">Also on the Central Coast calendar</p>
-      <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Coverage in progress</h2>
+      <h2 class="mt-2 text-4xl leading-none sm:text-5xl">On now and next</h2>
       <p class="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        These recurring Monterey and Santa Cruz county events are next to be
-        covered. They are listed without dates on purpose — each one gets a page
-        when its date, venue and admission are confirmed against the organizer,
-        not before.
+        County fairs, festivals, parades and holiday markets across both counties.
+        Dates are the organizer's published dates — where a 2026 date has not been
+        announced, the listing says so instead of guessing.
       </p>
-      <ul class="mt-6 flex flex-wrap gap-2">
+
+      <div class="mt-8 grid gap-8 sm:grid-cols-2">
         {
-          upcomingCoverage.map((name) => (
-            <li class="border border-border/70 bg-surface/60 px-4 py-2 text-sm text-muted-foreground">
-              {name}
-            </li>
+          featuredMonths.map((m) => (
+            <div>
+              <div class="flex flex-wrap items-end gap-x-3 border-b border-border/70 pb-2">
+                <h3 class="text-3xl leading-none text-brass">
+                  <a href={m.href} class="hover:underline">
+                    {m.label}
+                  </a>
+                </h3>
+                <span class="pb-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  {m.count} events
+                </span>
+              </div>
+              <ul class="mt-4 space-y-2">
+                {m.events.map((e) => (
+                  <li>
+                    <a
+                      href={eventHref(e)}
+                      class="group flex flex-wrap items-baseline gap-x-3 border-l-2 border-border/80 bg-surface/60 px-4 py-2.5 transition-colors hover:border-brass"
+                    >
+                      <span class="text-base text-foreground transition-colors group-hover:text-brass">
+                        {e.name}
+                      </span>
+                      <span
+                        class={`text-[0.6rem] font-semibold uppercase tracking-[0.16em] ${
+                          e.start ? "text-brass" : "text-muted-foreground"
+                        }`}
+                      >
+                        {e.dateText || DATE_TBA}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={m.href}
+                class="mt-4 inline-block text-[0.65rem] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-brass"
+              >
+                All {m.label} events →
+              </a>
+            </div>
           ))
         }
-      </ul>
+      </div>
+
+      <a
+        href="/events/"
+        class="mt-10 inline-block border border-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brass transition-colors hover:bg-brass hover:text-primary-foreground"
+      >
+        The full 2026 calendar
+      </a>
     </section>
 
     <section class="mx-auto max-w-6xl px-5 pb-16">

@@ -1,44 +1,67 @@
 ---
 // Static per-event detail pages. TanStack's loader + notFound() becomes
 // getStaticPaths(): every slug in the event index is pre-rendered at build.
+//
+// Two datasets share this route, and their slugs are disjoint:
+//   - Monterey Car Week 2026 (src/data/events.ts) — rendered inline below.
+//   - the regional Aug–Dec 2026 calendar (src/data/events-2026.ts) — rendered by
+//     RegionalEventPage.astro, which knows a county/city/date-range rather than
+//     a per-day admission schedule.
+// A row in the regional CSV that IS a Car Week event carries `existingSlug` and
+// builds no page here; it links to the Car Week page that already exists, so no
+// live /event/ URL moves and no two pages compete for the same event.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import RegionalEventPage from "../../components/RegionalEventPage.astro";
 import { allEventDetails, mapUrl, type EventDetail } from "../../data/eventIndex";
 import { ROAD_CLOSURES_URL } from "../../data/events";
+import { regionalEventPages, type RegionalEvent } from "../../data/events-2026";
 import { buildEventJsonLd, formatTime } from "../../lib/eventSchema";
 
 export function getStaticPaths() {
-  return allEventDetails.map((event) => ({
-    params: { slug: event.slug },
-    props: { event },
-  }));
+  return [
+    ...allEventDetails.map((event) => ({
+      params: { slug: event.slug },
+      props: { event, regional: undefined },
+    })),
+    ...regionalEventPages.map((regional) => ({
+      params: { slug: regional.slug },
+      props: { event: undefined, regional },
+    })),
+  ];
 }
 
-const { event } = Astro.props as { event: EventDetail };
+const { event, regional } = Astro.props as {
+  event?: EventDetail;
+  regional?: RegionalEvent;
+};
 
 const site = "https://montereybayevents.com";
-const dates = event.days.map((d) => d.short).join(", ");
-const fullDescription =
-  event.description ??
-  `${event.title} during Monterey Car Week 2026 — ${dates}. ${event.accessLabel}${
-    event.venue ? ` at ${event.venue.venue}.` : "."
-  }`;
-const title = `${event.title} — Monterey Car Week 2026`;
-const canonical = `${site}/event/${event.slug}/`;
+const dates = event ? event.days.map((d) => d.short).join(", ") : "";
+const fullDescription = event
+  ? (event.description ??
+    `${event.title} during Monterey Car Week 2026 — ${dates}. ${event.accessLabel}${
+      event.venue ? ` at ${event.venue.venue}.` : "."
+    }`)
+  : "";
+const title = event ? `${event.title} — Monterey Car Week 2026` : "";
+const canonical = event ? `${site}/event/${event.slug}/` : "";
 const image = `${site}/og-carweek.jpg`;
 const desc = fullDescription.slice(0, 155);
-const keywords = [
-  event.title,
-  "Monterey Car Week 2026",
-  event.venue?.venue,
-  event.accessLabel,
-  "Monterey Bay events",
-]
-  .filter(Boolean)
-  .join(", ");
+const keywords = event
+  ? [
+      event.title,
+      "Monterey Car Week 2026",
+      event.venue?.venue,
+      event.accessLabel,
+      "Monterey Bay events",
+    ]
+      .filter(Boolean)
+      .join(", ")
+  : "";
 
 // Event JSON-LD, incl. the required startDate — built in src/lib/eventSchema.ts
 // so it can be unit-tested against every event in the dataset.
-const jsonLd = buildEventJsonLd(event, site);
+const jsonLd = event ? buildEventJsonLd(event, site) : null;
 
 const accessStyles = {
   free: "border-brass/60 text-brass",
@@ -46,11 +69,16 @@ const accessStyles = {
   private: "border-border/60 text-muted-foreground",
 } as const;
 
-const others = allEventDetails
-  .filter((e) => e.slug !== event.slug && e.days[0]?.id === event.days[0]?.id)
-  .slice(0, 6);
+const others = event
+  ? allEventDetails
+      .filter((e) => e.slug !== event.slug && e.days[0]?.id === event.days[0]?.id)
+      .slice(0, 6)
+  : [];
 ---
 
+{!event && regional && <RegionalEventPage event={regional} />}
+
+{event && (
 <BaseLayout>
   <Fragment slot="head">
     <title>{title}</title>
@@ -231,5 +259,13 @@ const others = allEventDetails
         </section>
       )
     }
+
+    <a
+      href="/events/"
+      class="mt-10 inline-block text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
+    >
+      All 2026 Central Coast events →
+    </a>
   </main>
 </BaseLayout>
+)}

@@ -34,6 +34,9 @@ per-stack work to the central builder at `~/work/projects/builder/`.
 
 - `src/` — application source
 - `public/` — static assets copied to `dist/` at build (favicons, OG images, `_headers`)
+- `data/` — committed source-of-record datasets. `monterey_santacruz_events_aug_dec_2026.csv`
+  backs `src/data/events-2026.ts`; when the two disagree the CSV wins, and
+  `src/__tests__/events2026.test.js` fails the build if they drift.
 - `docs/` — PRD, Prompts log
 - `Makefile` — thin forwarder to `../Makefile`
 - `wrangler.jsonc` — Cloudflare deploy config

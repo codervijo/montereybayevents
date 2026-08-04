@@ -1,0 +1,116 @@
+---
+// src/pages/events/index.astro — the full 2026 Central Coast calendar.
+//
+// Every event in src/data/events-2026.ts, grouped by month and sorted by date,
+// with county and month filters. The filters are an Astro island; the list is
+// rendered to static HTML at build, so all listings are in the served markup.
+// The crawlable version of the month filter is the hub set at /events/<month>/.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EventsList from "../../components/EventsList.tsx";
+import {
+  MONTHS,
+  monthHref,
+  regionalEvents,
+  totalRegionalEvents,
+  totalUndated,
+  eventHref,
+} from "../../data/events-2026";
+import { buildItemListJsonLd } from "../../lib/regionalEventSchema";
+
+const site = "https://montereybayevents.com";
+const title = "Central Coast Events 2026 — Monterey & Santa Cruz County Calendar";
+const description = `All ${totalRegionalEvents} public events across Monterey and Santa Cruz counties, August to December 2026 — county fairs, festivals, parades and holiday markets with dates, cities and official links.`;
+const canonical = `${site}/events/`;
+const image = `${site}/og-carweek.jpg`;
+
+const monteryCount = regionalEvents.filter((e) => e.county === "Monterey").length;
+const santaCruzCount = regionalEvents.filter((e) => e.county === "Santa Cruz").length;
+
+const jsonLd = buildItemListJsonLd(
+  regionalEvents,
+  site,
+  eventHref,
+  "Central Coast events, August–December 2026",
+);
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={image} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+  </Fragment>
+
+  <main class="mx-auto max-w-5xl px-5 py-14">
+    <p class="eyebrow">Monterey &amp; Santa Cruz counties</p>
+    <h1 class="mt-3 text-5xl leading-[0.88] sm:text-7xl">
+      Central Coast events
+      <br />
+      <span class="text-brass">August – December 2026</span>
+    </h1>
+    <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
+      {totalRegionalEvents} public events across both counties — {monteryCount} in
+      Monterey County, {santaCruzCount} in Santa Cruz County. Each one carries the
+      date as its organizer published it, the city, and a link to the official page.
+      {
+        totalUndated > 0 && (
+          <>
+            {" "}{totalUndated} are listed without a date because the 2026 date has
+            not been announced; we would rather say so than guess.
+          </>
+        )
+      }
+    </p>
+
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Jump to a month">
+      {
+        MONTHS.map((m) => (
+          <a
+            href={monthHref(m.key)}
+            class="border border-border px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:border-brass hover:text-brass"
+          >
+            {m.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <EventsList client:load />
+
+    <section class="mt-16 border-t border-border/70 pt-8">
+      <h2 class="text-2xl text-brass">Also on the site</h2>
+      <div class="mt-4 grid gap-2 sm:grid-cols-2">
+        <a
+          href="/monterey-car-week/"
+          class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass"
+        >
+          Monterey Car Week 2026 — the full ten-day section
+        </a>
+        <a
+          href="/free/"
+          class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass"
+        >
+          Free Car Week events, grouped by day
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

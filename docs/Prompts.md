@@ -31,3 +31,25 @@ to surface "last AI prompt" per project. Keep entries append-only.
 > Deviation worth knowing: times are NOT synthesised. Only one event in the
 > dataset has an organizer-stated clock time, so `startDate` is date-only
 > elsewhere (schema.org accepts "Date or DateTime"). See `CarEvent.startTime`.
+
+## 2026-08-03 — v1.B: regional event import, /events/ index, month hubs
+
+> Import the 61 Aug–Dec 2026 Central Coast events from
+> `data/monterey_santacruz_events_aug_dec_2026.csv` (committed as the source of
+> record) into `src/data/events-2026.ts`; drop the `expected_visitor_level`
+> column entirely as unsourced judgement. Build `/events/` (all events, sorted by
+> date, filterable by county and month), `/events/<month>/` hubs for August
+> through December 2026, and `/event/<slug>/` pages matching the Car Week
+> template. Same Event JSON-LD rules; three events with no confirmed date ship
+> with an empty date, a visible "Date not yet announced" label, and no Event
+> node at all. Homepage links to `/events/` and the current + next month hub;
+> hubs link prev/next; event pages link back to their month hub.
+>
+> Two deviations worth knowing. (1) Seven CSV rows are Car Week events that
+> already have pages — four collide exactly on slug — so they carry
+> `existingSlug`/`hubHref`, appear in the index and hubs, and link to the
+> existing page instead of getting a duplicate. 54 new `/event/` pages, not 61;
+> no live Car Week URL moved. (2) The CSV has no clock times, so `startDate` is
+> date-only; `pacificOffset()` implements the -07:00/-08:00 rule and is wired in
+> but emits nothing until a sourced time exists. Times are never synthesised —
+> same rule as v1.A.
