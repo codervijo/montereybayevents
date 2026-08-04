@@ -6,10 +6,32 @@ non-features that aren't obvious from the code or git history.
 
 ## Project
 
-<1-2 sentence description — fill in: what does this site do, who is
-the user, what is the stack (montereybayevents.com runs on the sites/* workspace
-shared infra: Vite or Astro + pnpm + Cloudflare Pages, with Makefile
-forwarding to the central builder).>
+A mobile-first, indexable calendar of public events across Monterey and
+Santa Cruz counties — county fairs, festivals, parades, holiday markets
+and Monterey Car Week — for locals and visitors deciding what to do this
+weekend, usually on a phone and usually within 48 hours. Every listing
+carries a date, a city, a free-or-ticketed status where known, and a link
+to the organizer.
+
+Stack: Astro + React islands + Tailwind v4, pnpm-only, on the sites/*
+workspace shared infra, with `Makefile` forwarding to the central builder.
+Deployed to Cloudflare Workers static assets via `wrangler.jsonc` — see
+AI_AGENTS.md § Deployment info, which is authoritative for anything that
+touches deploys.
+
+Two datasets back the site and they are shaped differently:
+
+  - `src/data/events.ts` — Monterey Car Week 2026, tracked per day with
+    per-day admission (`free` / `ticketed` / `private`). Drives
+    `/monterey-car-week/`, `/free/`, and 50 `/event/` pages.
+  - `src/data/events-2026.ts` — the regional Aug–Dec 2026 calendar,
+    transcribed from `data/monterey_santacruz_events_aug_dec_2026.csv`.
+    One row per event with county, city, date range and category, no
+    admission. Drives `/events/`, the month hubs, and 54 `/event/` pages.
+
+Both feed `/event/<slug>/`; their slugs are disjoint and the route picks a
+template per slug. When the CSV and `events-2026.ts` disagree, the CSV
+wins — `src/__tests__/events2026.test.js` fails the build on drift.
 
 ## Commands
 
@@ -63,5 +85,54 @@ mistakes at the point of writing, not at quarterly cleanup time.
 
 ## Deferred decisions
 
-<Things deliberately *not* shipped. Append entries with rationale so
-future Claude sessions don't re-propose them.>
+Things deliberately *not* shipped, with the rationale, so they don't get
+re-proposed. Append; don't rewrite.
+
+- **Clock times are never synthesised** (v1.A, reaffirmed v1.B). Only one
+  Car Week event has an organizer-stated time, and the regional CSV has
+  none at all, so `startDate` is date-only almost everywhere. schema.org
+  accepts date-only ("Date or DateTime"). Padding a date out to midnight
+  would publish a start time we do not have to someone deciding when to
+  show up. `pacificOffset()` in `events-2026.ts` implements the
+  PDT-through-Nov-1 / PST-after rule and is wired in — it starts emitting
+  the moment a real time is sourced. Don't "fix" the date-only values.
+
+- **No `offers` on regional events** (v1.B). The CSV carries no admission
+  data, so those 58 Event nodes publish no price and no availability. An
+  Offer with a guessed price is worse than no Offer, and `InStock` on a
+  paid event asserts tickets are still on sale, which we can't verify.
+  Tracked as v1.B.1 — it needs sourced admission data, not a default.
+
+- **No second page for a CSV row that is already a Car Week event**
+  (v1.B). Seven rows overlap; four collide exactly on slug. They carry
+  `existingSlug` (or `hubHref` for the umbrella row), appear in `/events/`
+  and their month hub, and link to the page that already exists. Two pages
+  for one event is duplicate content competing with itself, and the Car
+  Week URLs are live and must not move. Reversible: delete the mapping and
+  seven more pages generate.
+
+- **`expected_visitor_level` is not imported** (v1.B). The column is
+  unsourced judgement ("Very High" / "Local"). It has no place on the
+  site and a test asserts it never reaches the data.
+
+- **Listing descriptions are written from the CSV's own fields only**
+  (v1.B) — category, venue, city, county, date. Nothing is copied from the
+  reference URLs and nothing is inferred beyond those fields. An event with
+  no factual basis for a sentence gets no description.
+
+- **`/events/` is not in the header nav** (v1.B). The nav is frozen at
+  Events / Car Week / Traffic by a test asserting exactly that structure;
+  `/events/` is reached from the homepage hero, the "Start here" cards and
+  every month hub instead. Worth revisiting — if the 2026 calendar becomes
+  the primary entry point rather than Car Week, the nav is the honest place
+  to say so, and that's a deliberate call plus a test edit, not a drive-by.
+
+- **No city or category hubs yet** (v1.B). The dataset supports both cuts,
+  but the month hubs are the live experiment — see `docs/growth.md`
+  2026-08-03. Whether to slice again by city or by category depends on
+  whether the month hubs pick up impressions that `/events/` doesn't.
+  Don't build them speculatively.
+
+- **No SPA fallback**, ever. See Conventions above and AI_AGENTS.md —
+  `wrangler.jsonc`'s `not_found_handling: "404-page"` is what serves real
+  404s, and `public/_redirects` is load-bearing for real 301s.
