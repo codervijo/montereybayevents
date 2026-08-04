@@ -1,0 +1,33 @@
+---
+// Shared chrome for every page: <head> boilerplate, fonts, the sticky header
+// island and the footer. Page-specific SEO tags (title, description,
+// canonical, OG/Twitter, JSON-LD) are passed in through the named `head` slot
+// so each page owns its own metadata literally — see src/pages/index.astro.
+import "../styles/global.css";
+import SiteHeader from "../components/SiteHeader.tsx";
+import SiteFooter from "../components/SiteFooter.astro";
+
+const pathname = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+    />
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="min-h-screen">
+      <SiteHeader client:load pathname={pathname} />
+      <slot />
+      <SiteFooter />
+    </div>
+  </body>
+</html>

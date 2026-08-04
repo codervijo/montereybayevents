@@ -1,0 +1,63 @@
+---
+import { ROAD_CLOSURES_URL } from "../data/events";
+---
+
+<footer class="border-t border-border/70 bg-surface">
+  <div class="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:grid-cols-3">
+    <div>
+      <p class="font-display text-3xl leading-none text-brass">
+        Monterey
+        <br />
+        Car Week 2026
+      </p>
+      <p class="mt-3 text-sm text-muted-foreground">
+        August 7 – August 16, 2026 · Monterey Peninsula, California
+      </p>
+    </div>
+    <div class="text-sm">
+      <p class="eyebrow mb-3">Explore</p>
+      <ul class="space-y-2 text-muted-foreground">
+        <li>
+          <a href="/schedule/" class="transition-colors hover:text-foreground">
+            Full ten-day schedule
+          </a>
+        </li>
+        <li>
+          <a href="/traffic/" class="transition-colors hover:text-foreground">
+            Traffic, closures & safety
+          </a>
+        </li>
+        <li>
+          <a
+            href={ROAD_CLOSURES_URL}
+            target="_blank"
+            rel="noreferrer"
+            class="transition-colors hover:text-foreground"
+          >
+            County road closure info
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="text-sm text-muted-foreground">
+      <p class="eyebrow mb-3">Permits & public safety</p>
+      <p>
+        County of Monterey Permit Center
+        <br />
+        <a href="tel:8317555025" class="text-foreground hover:text-brass">
+          831-755-5025
+        </a>
+      </p>
+      <p class="mt-3">
+        Text <span class="text-brass">CARWEEK</span> to{" "}
+        <span class="text-brass">65513</span> for public safety alerts.
+      </p>
+    </div>
+  </div>
+  <div
+    class="border-t border-border/70 px-5 py-5 text-center text-xs text-muted-foreground"
+  >
+    A guide from Monterey Bay Events · montereybayevents.com — event details are
+    provided by organizers and subject to change.
+  </div>
+</footer>

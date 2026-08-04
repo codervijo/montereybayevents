@@ -1,6 +1,8 @@
 // astro.config.mjs
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import react from '@astrojs/react';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://montereybayevents.com',
@@ -11,6 +13,9 @@ export default defineConfig({
   // back "URL is unknown to Google". Make it explicit so every page's
   // canonical matches its served URL. Enforced by CHECK_161.
   trailingSlash: 'always',
-  integrations: [sitemap()],
+  integrations: [sitemap(), react()],
   output: 'static',
+  vite: {
+    plugins: [tailwindcss()],
+  },
 });

@@ -1,0 +1,49 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ScheduleList from "../components/ScheduleList.tsx";
+import { totalEvents } from "../data/events";
+
+const site = "https://montereybayevents.com";
+const title = "Monterey Car Week 2026 Schedule — August 7–16";
+const description =
+  "The complete day-by-day Monterey Car Week 2026 schedule: concours, auctions, rallies and historic racing, filterable by free, ticketed and private events.";
+const canonical = `${site}/schedule/`;
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta
+      property="og:description"
+      content="Day-by-day listings for all ten days of Monterey Car Week 2026, filterable by admission type."
+    />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:image" content={`${site}/og-carweek.jpg`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${site}/og-carweek.jpg`} />
+  </Fragment>
+
+  <main class="mx-auto max-w-6xl px-5 py-14">
+    <p class="eyebrow">August 7 – 16, 2026</p>
+    <h1 class="mt-2 text-6xl leading-[0.85] sm:text-8xl">
+      The full <span class="text-brass">schedule</span>
+    </h1>
+    <p class="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
+      {totalEvents} listed events across ten days. Times and details are set by each
+      organizer — follow an event through to its official page to book.
+    </p>
+
+    <ScheduleList client:load />
+  </main>
+</BaseLayout>

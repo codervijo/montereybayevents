@@ -1,0 +1,236 @@
+---
+// Static per-event detail pages. TanStack's loader + notFound() becomes
+// getStaticPaths(): every slug in the event index is pre-rendered at build.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { allEventDetails, mapUrl, type EventDetail } from "../../data/eventIndex";
+import { ROAD_CLOSURES_URL } from "../../data/events";
+
+export function getStaticPaths() {
+  return allEventDetails.map((event) => ({
+    params: { slug: event.slug },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props as { event: EventDetail };
+
+const site = "https://montereybayevents.com";
+const dates = event.days.map((d) => d.short).join(", ");
+const fullDescription =
+  event.description ??
+  `${event.title} during Monterey Car Week 2026 — ${dates}. ${event.accessLabel}${
+    event.venue ? ` at ${event.venue.venue}.` : "."
+  }`;
+const title = `${event.title} — Monterey Car Week 2026`;
+const canonical = `${site}/event/${event.slug}/`;
+const image = `${site}/og-carweek.jpg`;
+const desc = fullDescription.slice(0, 155);
+const keywords = [
+  event.title,
+  "Monterey Car Week 2026",
+  event.venue?.venue,
+  event.accessLabel,
+  "Monterey Bay events",
+]
+  .filter(Boolean)
+  .join(", ");
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: event.title,
+  description: fullDescription.slice(0, 300),
+  url: canonical,
+  eventStatus: "https://schema.org/EventScheduled",
+  ...(event.venue
+    ? {
+        location: {
+          "@type": "Place",
+          name: event.venue.venue,
+          address: event.venue.address,
+        },
+      }
+    : {}),
+};
+
+const accessStyles = {
+  free: "border-brass/60 text-brass",
+  ticketed: "border-border text-foreground",
+  private: "border-border/60 text-muted-foreground",
+} as const;
+
+const others = allEventDetails
+  .filter((e) => e.slug !== event.slug && e.days[0]?.id === event.days[0]?.id)
+  .slice(0, 6);
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={desc} />
+    <meta name="keywords" content={keywords} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+    <!-- Real dimensions of public/og-carweek.jpg, verified with a JPEG SOF
+         read. The TanStack source declared 1536x1024, which the file is not. -->
+    <meta property="og:image:width" content="1920" />
+    <meta property="og:image:height" content="1088" />
+    <meta property="og:image:alt" content={`${event.title} — Monterey Car Week 2026`} />
+    <meta property="article:section" content="Monterey Car Week 2026" />
+    {
+      event.days.map((d) => (
+        <meta property="article:tag" content={`${d.weekday} ${d.date}`} />
+      ))
+    }
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={image} />
+    <meta name="twitter:image:alt" content={`${event.title} — Monterey Car Week 2026`} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+  </Fragment>
+
+  <main class="mx-auto max-w-4xl px-5 py-14">
+    <a
+      href="/schedule/"
+      class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
+    >
+      ← Full schedule
+    </a>
+
+    <p class="eyebrow mt-6">
+      {event.days.map((d) => `${d.weekday} ${d.date}`).join(" · ")}
+    </p>
+    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">{event.title}</h1>
+
+    <div class="mt-5 flex flex-wrap items-center gap-3">
+      <span
+        class={`border px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.16em] ${accessStyles[event.access]}`}
+      >
+        {event.accessLabel}
+      </span>
+      <span class="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+        {event.days.length} {event.days.length === 1 ? "day" : "days"}
+      </span>
+    </div>
+
+    {
+      event.description && (
+        <p class="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+          {event.description}
+        </p>
+      )
+    }
+
+    <div class="mt-12 grid gap-10 sm:grid-cols-2">
+      <section>
+        <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">When</h2>
+        <ul class="mt-4 space-y-2">
+          {
+            event.days.map((d) => (
+              <li class="flex items-baseline gap-3">
+                <a href={`/schedule/#${d.id}`} class="text-base text-foreground hover:text-brass">
+                  {d.weekday}, {d.date}
+                </a>
+                {d.label && (
+                  <span class="text-[0.6rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                    {d.label}
+                  </span>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+          Start times are set by the organizer and can shift — confirm on the official
+          page before you travel.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">Where</h2>
+        {
+          event.venue ? (
+            <div class="mt-4">
+              <p class="text-base text-foreground">{event.venue.venue}</p>
+              <p class="mt-1 text-sm leading-relaxed text-muted-foreground">
+                {event.venue.address}
+              </p>
+              <a
+                href={mapUrl(event.venue)}
+                target="_blank"
+                rel="noreferrer"
+                class="mt-4 inline-block border border-border px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:border-brass hover:text-brass"
+              >
+                Open in maps ↗
+              </a>
+            </div>
+          ) : (
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Location is released to attendees by the organizer.
+            </p>
+          )
+        }
+        <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+          Peninsula traffic peaks mid-week —{" "}
+          <a href="/traffic/" class="text-brass hover:underline">
+            check closures and cameras
+          </a>{" "}
+          or the{" "}
+          <a
+            href={ROAD_CLOSURES_URL}
+            target="_blank"
+            rel="noreferrer"
+            class="text-brass hover:underline"
+          >
+            county closure list
+          </a>
+          .
+        </p>
+      </section>
+    </div>
+
+    {
+      event.url && (
+        <a
+          href={event.url}
+          target="_blank"
+          rel="noreferrer"
+          class="mt-12 inline-block border border-brass bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-opacity hover:opacity-85"
+        >
+          Official event page ↗
+        </a>
+      )
+    }
+
+    {
+      others.length > 0 && (
+        <section class="mt-16 border-t border-border/70 pt-8">
+          <h2 class="text-2xl text-brass">Also on {event.days[0]?.date}</h2>
+          <div class="mt-4 grid gap-2 sm:grid-cols-2">
+            {others.map((o) => (
+              <a
+                href={`/event/${o.slug}/`}
+                class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass"
+              >
+                {o.title}
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>
