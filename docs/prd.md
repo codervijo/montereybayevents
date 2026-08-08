@@ -4,7 +4,7 @@ prd_version: 1
 project_version: v1.B
 status: built, not deployed
 owner: Vijo
-last_updated: 2026-08-03
+last_updated: 2026-08-07
 ---
 
 # montereybayevents.com — PRD
@@ -86,6 +86,7 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 |---|---|---|
 | v0 | scaffold | local builds, CF wrangler.jsonc + public/_headers in place, repo initialized |
 | v1 | regional calendar with Car Week as its first covered section | a visitor can answer "what's free, when, and where" for Monterey Car Week 2026 from indexable pages; every `/event/` page emits valid `Event` schema; the homepage is a Monterey/Santa Cruz index, not a Car Week overview |
+| v2 | assisted ingestion — flyer images and venue feeds become proposed listings | an operator turns a flyer image or a venue feed into a published listing without retyping it; every proposal is approved by a human before it enters `data/*.csv`, and no field reaches the site that the pipeline inferred rather than read |
 
 ## 5. Phases
 
@@ -95,7 +96,12 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v0.B** | Astro port | TanStack Start → Astro; 50 `/event/` pages, schedule, traffic (see `src/lib/server-todo.md` for what was dropped) | ✅ |
 | **v1.A** | section split + free-intent page + valid Event schema | `Event` JSON-LD fixed on all 50 `/event/` pages (`startDate`, `endDate`, `offers`, `organizer`, `PostalAddress`); new `/free/` page with `ItemList`; Car Week hub moved to `/monterey-car-week/` with a 301 from `/schedule/`; homepage rebuilt as a regional index; footer email capture site-wide | built, not deployed |
 | **v1.B** | non-Car-Week event data | 61 Aug–Dec 2026 Central Coast events imported from `data/monterey_santacruz_events_aug_dec_2026.csv` into `src/data/events-2026.ts`; `/events/` index (county + month filters); `/events/<month>/` hubs for August–December; 54 new `/event/` pages with `Event` JSON-LD; homepage "coverage in progress" replaced with real dated listings | built, not deployed |
-| **v1.B.1** | admission data for the regional set | the CSV carries no free-or-ticketed status, so regional listings show category and date but no admission badge and emit no `offers` — the site's free-intent angle currently only covers Car Week | planned |
+| **v1.C** *(renumbered 2026-08-07; was v1.B.1)* | follow-up polish after v1.B shipped | (1) **own brand favicon** — replaced Lovable's generic blue `M` with a brass-on-warm-dark calendar mark drawn from `src/styles/global.css` tokens; `public/favicon.svg` rewritten, `public/favicon.ico` rebuilt as a 16/32/48 multi-resolution icon. (2) **admission data for the regional set** — the CSV carries no free-or-ticketed status, so regional listings show category and date but no admission badge and emit no `offers`; the site's free-intent angle currently covers only Car Week | in progress — favicon done, admission data pending |
+| **v2.A** | kickoff / decisions lock | no build. Supply audit of 8–10 real Central Coast organiser accounts (are event details in the *image* or the caption? consistent hashtags? complete date+venue+admission? does the venue already publish ICS/RSS?); Meta App Review go/no-go; whether the pipeline lives here or in `portfolio`; what the operator review surface is | planned |
+| **v2.B** | extraction from manual input | operator drops flyer images in a folder → vision extraction to a strict JSON schema with per-field provenance and confidence → dedupe (perceptual hash + normalised-title match against both datasets) → proposals queue → operator approves rows into `data/*.csv` → regenerate `src/data/*.ts`. No network acquisition at all | planned |
+| **v2.C** | permissionless pull adapters | ICS / RSS / embedded JSON-LD `Event` pulled from venue and chamber sites into the same dedupe → propose → approve path. Highest supply-to-effort ratio and no ToS exposure | planned |
+| **v2.D** | Instagram hashtag adapter | Graph API Hashtag Search as one adapter among several. Gated on Meta app review + business verification, and on v2.A's audit showing the supply is actually there. No scraping under any circumstance | planned — conditional on v2.A |
+| **v2.E** | submissions inbox | organisers email flyers to a submissions address; same extraction pipeline on the back end. Inverts acquisition from pull to push and doubles as organiser outreach | planned |
 
 ## 6. Open questions
 
@@ -115,6 +121,32 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
   and links to the page that already exists rather than getting a second one — so
   no live URL moves and no two pages compete for the same event. 54 of the 61 rows
   get a new page. Reversible: drop the mapping and 7 more pages generate.
+- **2026-08-07 — v2: is there actually supply on social, or is this an ICS
+  problem wearing a computer-vision costume?** The extraction half of v2 is
+  solved technology; acquisition is the whole risk. Instagram's only public
+  read primitive is Graph API Hashtag Search, behind Meta App Review and
+  business verification (verify current scopes and rate limits against Meta's
+  docs before committing — the constraints recorded here are recollection, not
+  a citation). Facebook's public Events endpoints are withdrawn. The open
+  platforms (Bluesky, Mastodon) are trivially readable and almost certainly
+  carry no Central Coast event flyers. Meanwhile the venue and chamber sites
+  the PRD calls broken may already expose ICS feeds. v2.A's audit answers this
+  before anything is built; if venues publish feeds, v2.C is the project and
+  v2.D is a distraction.
+- **2026-08-07 — where does the ingestion pipeline live?** Several sibling
+  sites plausibly want the same "images → proposed rows" tool. Building it here
+  is faster; building it in `portfolio` is reusable. Expensive to unwind after
+  the fact, so it is a v2.A decision, not a v2.B discovery.
+- **2026-08-07 — does v2 auto-publish? No, and that is load-bearing.** A vision
+  model reading a flyer is a probabilistic source: it will misread 8/15 for
+  8/16, supply a year the poster never stated, and read "Free!" off a banner
+  that meant free parking. § 3's "no listing ships with an estimated date" and
+  the three deferred decisions in `docs/CLAUDE.md` all rest on every published
+  fact being sourced. So the pipeline is a proposal generator, not a publisher —
+  it writes to `data/*.csv` only through operator approval, and the existing
+  CSV-vs-`events-2026.ts` drift test stays as a free correctness check on the
+  whole ingest. A variant of v2 that removes the human contradicts the site's
+  reason for existing.
 - **2026-08-03 — no start times anywhere in the regional dataset.** The CSV has no
   clock times, so `startDate` is date-only (valid per schema.org "Date or
   DateTime"). `pacificOffset()` implements the PDT-through-Nov-1 / PST-after rule

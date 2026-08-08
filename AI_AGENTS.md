@@ -170,8 +170,17 @@ in `sites/portfolio/AI_AGENTS.md`):
 - **`vN.X`** — phase letter within a tier (A / B / C / …). Internal slicing of
   build work; signals "order/scope can shift." Each phase still ships
   independently.
-- **`vN.X.Y`** — numeric sub-phase for follow-up work that lands AFTER `vN.X`
-  shipped (e.g. polish, bug fixes, scope cuts).
+
+**Two levels only. Never a third.** When follow-up work emerges inside an
+existing tier, push subsequent phase letters down to make room rather than
+appending a numeric sub-phase. The renumbered row in `docs/prd.md` carries a
+lineage marker so the history survives; this file never carries one.
+
+**`vN.A` is always the planning / decisions-lock phase.** Every tier opens
+with its `.A` reserved for kickoff — locking design decisions, scope, schema
+shape and any ADR — *before* implementation. Build work starts at `.B`. If a
+tier's first instinct is code, its planning still gets its own `.A` row above
+it.
 
 Two-layer notation separates **external version** (what consumers see) from
 **internal phasing** (how the team slices work). Letters signal *un-promised* —
@@ -180,7 +189,7 @@ nobody mistakes `v1.B` for a SemVer minor release.
 **Always use this numbering when planning or shipping work on this project.**
 Specifically:
 
-- Every entry in `docs/prd.md`'s phases table uses `vN.X` (or `vN.X.Y`).
+- Every entry in `docs/prd.md`'s phases table uses `vN.X`.
 - Every commit message that ships a phase mentions its version (e.g.
   `v1.B — auth flow`).
 - Every entry in `docs/Prompts.md` references the version of the work it
@@ -189,8 +198,14 @@ Specifically:
 Don't introduce a parallel scheme (no `0.1.0` / `Sprint 3` / etc.). When in
 doubt, the canonical statement is `sites/portfolio/AI_AGENTS.md`.
 
-Track this project's progress in `docs/prd.md` against this taxonomy. v0.A is
-the bootstrap (this scaffold); v1.A is the first real shipped capability.
+Track this project's progress in `docs/prd.md` against this taxonomy.
+
+**Grandfathered:** `v0.A` (bootstrap) and `v1.A` (Event schema fix, `/free/`,
+Car Week as a section) both carry build work, predating the
+`.A`-is-planning rule above. They are *not* renumbered — shipped commit
+subjects reference those identifiers and rewriting them would break the trail
+between `docs/Prompts.md`, `docs/growth.md` and git history. The rule applies
+from `v2` forward, where `v2.A` is a decisions-lock phase with no build work.
 
 ## Conventions
 

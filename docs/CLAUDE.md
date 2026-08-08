@@ -101,7 +101,7 @@ re-proposed. Append; don't rewrite.
   data, so those 58 Event nodes publish no price and no availability. An
   Offer with a guessed price is worse than no Offer, and `InStock` on a
   paid event asserts tickets are still on sale, which we can't verify.
-  Tracked as v1.B.1 — it needs sourced admission data, not a default.
+  Tracked as v1.C — it needs sourced admission data, not a default.
 
 - **No second page for a CSV row that is already a Car Week event**
   (v1.B). Seven rows overlap; four collide exactly on slug. They carry
