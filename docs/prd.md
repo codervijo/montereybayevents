@@ -87,6 +87,7 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | v0 | scaffold | local builds, CF wrangler.jsonc + public/_headers in place, repo initialized |
 | v1 | regional calendar with Car Week as its first covered section | a visitor can answer "what's free, when, and where" for Monterey Car Week 2026 from indexable pages; every `/event/` page emits valid `Event` schema; the homepage is a Monterey/Santa Cruz index, not a Car Week overview |
 | v2 | assisted ingestion — flyer images and venue feeds become proposed listings | an operator turns a flyer image or a venue feed into a published listing without retyping it; every proposal is approved by a human before it enters `data/*.csv`, and no field reaches the site that the pipeline inferred rather than read |
+| v3 | analytics — the live site's behaviour is observable | every page reports to GA4; sessions, entry pages and outbound organizer-link clicks are queryable, so the `docs/growth.md` experiments can be reviewed against behaviour and not only GSC impressions |
 
 ## 5. Phases
 
@@ -102,6 +103,9 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 | **v2.C** | permissionless pull adapters | ICS / RSS / embedded JSON-LD `Event` pulled from venue and chamber sites into the same dedupe → propose → approve path. Highest supply-to-effort ratio and no ToS exposure | planned |
 | **v2.D** | Instagram hashtag adapter | Graph API Hashtag Search as one adapter among several. Gated on Meta app review + business verification, and on v2.A's audit showing the supply is actually there. No scraping under any circumstance | planned — conditional on v2.A |
 | **v2.E** | submissions inbox | organisers email flyers to a submissions address; same extraction pipeline on the back end. Inverts acquisition from pull to push and doubles as organiser outreach | planned |
+| **v3.A** | kickoff / decisions lock | no build. GA4 chosen 2026-08-09 over self-hosted Umami. Remaining to lock: create the GA4 property and get its measurement ID; whether consent/cookie banner is in scope for an EU-reachable site; which events are custom (outbound organizer-link clicks, month-hub filter use) versus default pageviews | planned |
+| **v3.B** | instrument the site | GA4 tag on every page via `BaseLayout.astro` (the head is per-page today, so the tag goes in the shared layout, not 11 copies). Measurement ID injected as `VITE_GA_ID` from the Cloudflare Workers env — already the documented pattern in AI_AGENTS.md § Deployment info — so it is not committed. Clears `CHECK_080` | planned |
+| **v3.C** | outbound + intent events | custom GA4 events for organizer-link clicks off `/event/` pages and for `/free/` and month-hub entry, so `docs/growth.md`'s "does `/free/` outperform the schedule page" question is answerable from behaviour rather than inference | planned |
 
 ## 6. Open questions
 
