@@ -23,8 +23,21 @@ import {
 } from "../data/events-2026";
 
 const site = "https://montereybayevents.com";
-const title = "Monterey Bay Events — Monterey & Santa Cruz County Event Calendar";
-const description = `What's on across Monterey and Santa Cruz counties: ${totalRegionalEvents} public events from August to December 2026 with verified dates, cities and official links, plus Monterey Car Week in full.`;
+// Title is kept at or under 60 chars and description within 120-160 so neither
+// is truncated in a SERP (CHECK_070 / CHECK_071). `description` is written to
+// land in range as-is — do NOT reintroduce a `.slice()` here: the old
+// `description.slice(0, 155)` cut mid-word, shipping "…plus Monte" to search
+// results, and it also defeated the conformance checker's Astro head resolver,
+// which cannot parse a method call with arguments and read the literal string
+// "{description.slice(0," as a 21-character description.
+//
+// The literal is also kept short enough that it stays inside 120-160 BOTH as
+// rendered (`${totalRegionalEvents}` -> "61", 129 chars) and as raw source with
+// the placeholder unexpanded (149 chars) — that checker measures the source and
+// does not evaluate template interpolation. Adding ~20 chars here passes in the
+// browser but trips CHECK_071 at 161+.
+const title = "Monterey Bay Events — Monterey & Santa Cruz Event Calendar";
+const description = `Monterey and Santa Cruz county events: ${totalRegionalEvents} public events, August to December 2026, with verified dates, cities and official links.`;
 
 // The month hubs to feature, resolved from the build date and clamped to the
 // months the dataset covers — see currentAndNextMonth().
@@ -69,7 +82,7 @@ const sections = [
 <BaseLayout>
   <Fragment slot="head">
     <title>{title}</title>
-    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -78,7 +91,7 @@ const sections = [
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content="Monterey Bay Events" />
     <meta property="og:locale" content="en_US" />
@@ -87,7 +100,7 @@ const sections = [
     <!-- Twitter card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${site}/og-carweek.jpg`} />
 
     <!-- Site-level JSON-LD. The Monterey Car Week Event object lives on its own

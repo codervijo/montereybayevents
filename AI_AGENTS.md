@@ -91,8 +91,25 @@ docker exec -w /usr/src/app <name> make test proj=montereybayevents.com
   (avoids the bun-detection trap kwizicle.com hit). Idempotent; safe to re-run.
 - **Vite version:** must be ≥ 6.0.0 — Wrangler's Vite integration rejects Vite 5.
 - **Env vars:** set `VITE_*` vars (e.g. `VITE_GA_ID`) in the Cloudflare Workers project's environment-variable settings — they're inlined at build time.
-- **Live URL:** https://montereybayevents.com/  *(update once first deploy succeeds)*
+- **Live URL:** https://montereybayevents.com/ — **live and serving** (confirmed
+  2026-08-09: apex 200, 115 URLs in the sitemap, 104 `/event/` pages). Cloudflare's
+  Git integration auto-deploys on push to `main`; commit `a4fa6f4` reached the
+  live host without any manual `wrangler deploy`.
 - **Canonical host:** the **apex** (`https://montereybayevents.com/`) is the ONLY canonical host fleet-wide — `www` and `http` must 308→apex, and there is no `www`-canonical option. Set Astro's `site: "https://montereybayevents.com"` (apex, never `www`) so every `<link rel="canonical">` and the generated sitemap `<loc>` URLs use the apex. Enforced by CHECK_150 (redirect) + CHECK_158 (canonical tags) + CHECK_159 (sitemap) + CHECK_160 (GSC-registered sitemap).
+  **How `www` is redirected (fixed 2026-08-09).** `www.montereybayevents.com` is
+  a *proxied CNAME to the apex*, but no Worker is bound to that hostname — so
+  Cloudflare accepted the request, matched no route, tried to reach a
+  non-existent origin and returned **522** for every `www` URL. CHECK_150 caught
+  it. The fix is a **Cloudflare Page Rule**, not anything in this repo:
+  `www.montereybayevents.com/*` → forwarding URL `https://montereybayevents.com/$1`,
+  301, priority 1. Path is preserved (`/free/` → `/free/`).
+  **Don't delete that Page Rule** — without it `www` returns to serving 522, and
+  nothing in this repository can restore it.
+  Note for anyone automating this: the fleet `CF_API_TOKEN` can read zones, DNS,
+  Workers domains and Page Rules, and can *write* Page Rules — but it is denied
+  on the modern Rules API (`/rulesets` → `10000 Authentication error`), so a
+  Redirect Rule is not reachable with the current token scope. The zone is on
+  the Free plan (3 Page Rules; 1 now used).
 - **Legacy:** if a `vercel.json` or `.vercelignore` is present from a Lovable export, it's inert on Cloudflare and safe to delete.
 
 ## Content strategy
@@ -103,10 +120,25 @@ Three page types. Event pages: one per event, server-rendered, JSON-LD Event sch
 
 ### Post-deploy checklist (do these once after the first successful deploy)
 
-- [ ] Verify in **Google Search Console** at https://search.google.com/search-console — add as `sc-domain:montereybayevents.com` property; verify via DNS TXT record. Until this is done, no SEO traffic data is observable for this site (and the workspace-wide `30 commercial sites with traffic` goal can't credit it).
-- [ ] Submit the sitemap (`https://montereybayevents.com/sitemap-index.xml` — the apex host; `@astrojs/sitemap` emits `-index`, not `/sitemap.xml`) inside GSC. *(The deploy pipeline auto-submits the robots.txt-declared sitemap; this is the manual fallback.)*
-- [ ] Update the **Live URL** above with the actual deploy URL.
-- [ ] Run `make run ARGS="cleanup"` from `sites/portfolio/` so `data/portfolio.json` reflects the new project's state (and `project status montereybayevents.com` resolves cleanly).
+*Walked and verified 2026-08-09. All but the last item were already complete —
+this list had gone stale rather than staying pending.*
+
+- [x] **Verified in Google Search Console.** Property `sc-domain:montereybayevents.com`
+      exists with `siteOwner` permission (confirmed via `portfolio settings gsc status`).
+- [x] **Sitemap submitted.** 1 sitemap registered — `https://montereybayevents.com/sitemap-index.xml`,
+      status OK, last fetched 3 days before 2026-08-09. Note the `-index` suffix:
+      `@astrojs/sitemap` emits `sitemap-index.xml`, not `/sitemap.xml`.
+      Indexation on the sampled set is 10/10 `submitted_indexed` (100%), crawled 4–5 days ago.
+- [x] **Live URL updated** — see Deployment info above.
+- [ ] ~~`make run ARGS="cleanup"` from `sites/portfolio/`~~ — **this command does not
+      exist.** The portfolio CLI surface is `new` / `fleet` / `project` / `settings`;
+      there is no `cleanup` verb under any of them. The nearest match is
+      `portfolio fleet sync`, which rebuilds `data/portfolio.json` for the *entire
+      fleet* from registrar CSVs — a much broader, shared-state operation than this
+      line implies, so it should not be run as a per-project post-deploy step.
+      Read-only `portfolio project check montereybayevents.com` already resolves this
+      project cleanly. **Someone needs to decide what this line was meant to say and
+      rewrite it**; until then, don't run a substitute on a guess.
 
 ## How to run
 

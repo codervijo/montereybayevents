@@ -1,10 +1,10 @@
 ---
 project: montereybayevents.com
 prd_version: 1
-project_version: v1.B
-status: built, not deployed
+project_version: v1.C
+status: deployed and serving; GSC verification pending
 owner: Vijo
-last_updated: 2026-08-07
+last_updated: 2026-08-09
 ---
 
 # montereybayevents.com — PRD
@@ -94,8 +94,8 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
 |---|---|---|---|
 | **v0.A** | scaffolded | `portfolio new bootstrap` ran; standard files written; git initialized | ✅ |
 | **v0.B** | Astro port | TanStack Start → Astro; 50 `/event/` pages, schedule, traffic (see `src/lib/server-todo.md` for what was dropped) | ✅ |
-| **v1.A** | section split + free-intent page + valid Event schema | `Event` JSON-LD fixed on all 50 `/event/` pages (`startDate`, `endDate`, `offers`, `organizer`, `PostalAddress`); new `/free/` page with `ItemList`; Car Week hub moved to `/monterey-car-week/` with a 301 from `/schedule/`; homepage rebuilt as a regional index; footer email capture site-wide | built, not deployed |
-| **v1.B** | non-Car-Week event data | 61 Aug–Dec 2026 Central Coast events imported from `data/monterey_santacruz_events_aug_dec_2026.csv` into `src/data/events-2026.ts`; `/events/` index (county + month filters); `/events/<month>/` hubs for August–December; 54 new `/event/` pages with `Event` JSON-LD; homepage "coverage in progress" replaced with real dated listings | built, not deployed |
+| **v1.A** | section split + free-intent page + valid Event schema | `Event` JSON-LD fixed on all 50 `/event/` pages (`startDate`, `endDate`, `offers`, `organizer`, `PostalAddress`); new `/free/` page with `ItemList`; Car Week hub moved to `/monterey-car-week/` with a 301 from `/schedule/`; homepage rebuilt as a regional index; footer email capture site-wide | ✅ shipped — live |
+| **v1.B** | non-Car-Week event data | 61 Aug–Dec 2026 Central Coast events imported from `data/monterey_santacruz_events_aug_dec_2026.csv` into `src/data/events-2026.ts`; `/events/` index (county + month filters); `/events/<month>/` hubs for August–December; 54 new `/event/` pages with `Event` JSON-LD; homepage "coverage in progress" replaced with real dated listings | ✅ shipped — live |
 | **v1.C** *(renumbered 2026-08-07; was v1.B.1)* | follow-up polish after v1.B shipped | (1) **own brand favicon** — replaced Lovable's generic blue `M` with a brass-on-warm-dark calendar mark drawn from `src/styles/global.css` tokens; `public/favicon.svg` rewritten, `public/favicon.ico` rebuilt as a 16/32/48 multi-resolution icon. (2) **admission data for the regional set** — the CSV carries no free-or-ticketed status, so regional listings show category and date but no admission badge and emit no `offers`; the site's free-intent angle currently covers only Car Week | in progress — favicon done, admission data pending |
 | **v2.A** | kickoff / decisions lock | no build. Supply audit of 8–10 real Central Coast organiser accounts (are event details in the *image* or the caption? consistent hashtags? complete date+venue+admission? does the venue already publish ICS/RSS?); Meta App Review go/no-go; whether the pipeline lives here or in `portfolio`; what the operator review surface is | planned |
 | **v2.B** | extraction from manual input | operator drops flyer images in a folder → vision extraction to a strict JSON schema with per-field provenance and confidence → dedupe (perceptual hash + normalised-title match against both datasets) → proposals queue → operator approves rows into `data/*.csv` → regenerate `src/data/*.ts`. No network acquisition at all | planned |
@@ -133,6 +133,40 @@ Two-level versioning convention (canonical: `sites/portfolio/AI_AGENTS.md`):
   the PRD calls broken may already expose ICS feeds. v2.A's audit answers this
   before anything is built; if venues publish feeds, v2.C is the project and
   v2.D is a distraction.
+- **2026-08-08 — v2.A supply audit, partially answered.** Probed the 19 unique
+  `official_website` values in the committed CSV, then 12 candidate aggregator
+  hosts. Two clean classes emerged:
+  - **Single-festival organiser sites: 0/19** expose iCalendar, an events REST
+    API, or `Event` JSON-LD. (7/19 serve a generic WordPress `/feed/`, which is
+    a blog feed, not events.) A site for one annual festival has no calendar to
+    publish, so this is structural, not neglect. These are the *only* sites the
+    CSV records, which is why the gap wasn't visible before.
+  - **Aggregator hosts: machine-readable and good.** `santacruz.org` (Visit
+    Santa Cruz County, The Events Calendar) serves `/events/?ical=1` →
+    **30 VEVENTs**; `watsonville.gov` (CivicPlus) serves its iCalendar module →
+    **163 VEVENTs**; `ci.seaside.ca.us` (CivicPlus) serves 1. Both CivicPlus
+    hosts also serve RSS (20 and 25 items). `seemonterey.com` runs Simpleview
+    but the two guessed REST paths 404'd — unknown, not disproven.
+  - **Field coverage on the two live feeds is 6/6 on every event** — `SUMMARY`,
+    `DTSTART`, `DTEND`, `LOCATION`, `DESCRIPTION`, `URL`, with `DTSTART`
+    carrying `TZID=America/Los_Angeles` and a real clock time.
+  - **Consequence for the deferred no-synthesised-times rule:** these feeds
+    are a *sourced* time supply. `pacificOffset()` is already wired in and
+    emitting nothing; an ICS adapter is the first thing that could legitimately
+    make it emit. That is a stronger argument for feeds-first than anything in
+    the original v2 sketch.
+  - **Content is not uniformly on-target.** `santacruz.org` is (Boardwalk
+    Fiesta en la Playa, Ironman 70.3, Antiques Faire, Shakespeare in the Park);
+    Watsonville's 163 are largely library and municipal programming (storytimes,
+    RPG nights), which needs a relevance filter before anything is proposed.
+    Worth noting separately: a visible share of Watsonville's programming is
+    explicitly bilingual, which is live evidence for the Spanish-language
+    question above rather than a guess about that audience.
+  - **Still unanswered:** whether organisers put event details in the *image*
+    or the caption on Instagram, and whether hashtags are consistent enough for
+    Hashtag Search. The CSV records an Instagram handle for only 2 of 61 events
+    and a TikTok for 0, so it carries no sample to audit — that half needs
+    hand-checking against live accounts before v2.D can be judged.
 - **2026-08-07 — where does the ingestion pipeline live?** Several sibling
   sites plausibly want the same "images → proposed rows" tool. Building it here
   is faster; building it in `portfolio` is reusable. Expensive to unwind after
