@@ -222,22 +222,39 @@ describe('Event JSON-LD — organizer and location', () => {
     }
   });
 
-  it('location, where present, is a Place with a name and an address', () => {
-    for (const { slug, detail, ld } of nodes) {
-      if (!detail.venue) {
-        expect(ld.location, slug).toBeUndefined();
-        continue;
-      }
+  // `location` is a REQUIRED property of schema.org/Event, and Google drops the
+  // whole event rich result when it is absent. It used to be emitted only when
+  // venues.ts happened to have an entry keyed by the event's exact title, so a
+  // single missing key silently produced an invalid Event node —
+  // /event/breakfast-club-rally-x-mcw/ shipped that way. This asserts the
+  // property can never go missing again, whatever the venue lookup does.
+  it('EVERY event has a location — no exceptions', () => {
+    for (const { slug, ld } of nodes) {
+      expect(ld.location, `${slug} has no location`).toBeDefined();
       expect(ld.location['@type'], slug).toBe('Place');
+    }
+  });
+
+  it('every venue in the dataset has a venues.ts entry', () => {
+    const missing = nodes.filter(({ detail }) => !detail.venue).map(({ slug }) => slug);
+    expect(missing, `no venues.ts entry for: ${missing.join(', ')}`).toEqual([]);
+  });
+
+  it('location is a Place with a name and a structured address', () => {
+    for (const { slug, detail, ld } of nodes) {
       expect(ld.location.name, slug).toBe(detail.venue.venue);
       const addr = ld.location.address;
-      if (typeof addr === 'string') {
-        expect(addr.length, slug).toBeGreaterThan(0);
-      } else {
-        expect(addr['@type'], slug).toBe('PostalAddress');
-        expect(addr.addressRegion, slug).toBe('CA');
+      expect(typeof addr, `${slug}: address fell back to plain text`).toBe('object');
+      expect(addr['@type'], slug).toBe('PostalAddress');
+      expect(addr.addressLocality, slug).toBeTruthy();
+      expect(addr.addressRegion, slug).toBe('CA');
+      expect(addr.addressCountry, slug).toBe('US');
+      // postalCode is optional: a rally covering 100 miles of public road and an
+      // event whose organizer withholds the address both legitimately have no
+      // single ZIP. When one IS present it must be a real 5-digit code, never a
+      // partial or invented value.
+      if (addr.postalCode !== undefined) {
         expect(addr.postalCode, slug).toMatch(/^\d{5}$/);
-        expect(addr.addressCountry, slug).toBe('US');
       }
     }
   });
@@ -256,6 +273,53 @@ describe('Event JSON-LD — organizer and location', () => {
     expect(postalAddress('somewhere on the peninsula')).toBe(
       'somewhere on the peninsula',
     );
+  });
+});
+
+// A multi-day event is stored as one entry per day, so a per-day edit can leave
+// the same event describing itself three different ways. That shipped once: The
+// Quail Rally was relabelled "Roadside viewing only" on its Tuesday entry while
+// its Monday and Wednesday entries still said "Free for spectators", which /free/
+// renders as three listings that contradict each other.
+//
+// Admission genuinely CAN vary by day — the Bonhams preview is free on Tuesday
+// and ticketed after — so the invariant is keyed on (title, access): for a given
+// event on a given access tier, the label and the admission note must match.
+describe('multi-day events describe themselves consistently', () => {
+  const byTitleAccess = new Map();
+  for (const day of schedule) {
+    for (const e of day.events) {
+      const key = `${e.title} ${e.access}`;
+      if (!byTitleAccess.has(key)) byTitleAccess.set(key, []);
+      byTitleAccess.get(key).push({ iso: day.iso, e });
+    }
+  }
+  const multi = [...byTitleAccess.entries()].filter(([, v]) => v.length > 1);
+
+  it('has multi-day events to check', () => {
+    expect(multi.length).toBeGreaterThan(3);
+  });
+
+  it('uses one accessLabel per (title, access)', () => {
+    for (const [key, entries] of multi) {
+      const labels = [...new Set(entries.map(({ e }) => e.accessLabel))];
+      expect(
+        labels,
+        `${key.split(' ')[0]} has ${labels.length} labels across ${entries
+          .map((x) => x.iso)
+          .join(', ')}: ${labels.join(' | ')}`,
+      ).toHaveLength(1);
+    }
+  });
+
+  it('uses one admission / admissionNote per (title, access)', () => {
+    for (const [key, entries] of multi) {
+      const title = key.split(' ')[0];
+      const adm = [...new Set(entries.map(({ e }) => e.admission ?? ''))];
+      expect(adm, `${title}: admission differs by day`).toHaveLength(1);
+      const notes = [...new Set(entries.map(({ e }) => e.admissionNote ?? ''))];
+      expect(notes, `${title}: admissionNote differs by day`).toHaveLength(1);
+    }
   });
 });
 

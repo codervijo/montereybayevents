@@ -149,6 +149,46 @@ const others = event
       )
     }
 
+    <!-- Contextual cross-links. The wording changes with admission because the
+         reader's next question changes with it: a free event's visitor wants the
+         rest of the free list, a ticketed one's may be looking for an
+         alternative that costs nothing. Both want to know about parking. -->
+    <p class="mt-6 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+      {
+        event.access === "free" ? (
+          <Fragment>
+            This is one of the{" "}
+            <a href="/free/" class="text-brass hover:underline">
+              free Car Week events
+            </a>{" "}
+            — that list has every no-ticket listing across the ten days, with the
+            admission claim checked against each organizer's own page.
+          </Fragment>
+        ) : event.access === "ticketed" ? (
+          <Fragment>
+            This one is ticketed. If you would rather not pay, the{" "}
+            <a href="/free/" class="text-brass hover:underline">
+              free Car Week events list
+            </a>{" "}
+            covers everything across the week that costs nothing to watch.
+          </Fragment>
+        ) : (
+          <Fragment>
+            This is a private event and not open to spectators. The{" "}
+            <a href="/free/" class="text-brass hover:underline">
+              free Car Week events list
+            </a>{" "}
+            covers what you can actually walk up to across the ten days.
+          </Fragment>
+        )
+      }{" "}
+      Before you set off, the{" "}
+      <a href="/traffic/" class="text-brass hover:underline">
+        traffic and parking guide
+      </a>{" "}
+      has closures by day and where to park at each venue.
+    </p>
+
     <div class="mt-12 grid gap-10 sm:grid-cols-2">
       <section>
         <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">When</h2>
@@ -213,7 +253,7 @@ const others = event
         <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
           Peninsula traffic peaks mid-week —{" "}
           <a href="/traffic/" class="text-brass hover:underline">
-            check closures and cameras
+            check closures, parking and shuttles for this venue
           </a>{" "}
           or the{" "}
           <a

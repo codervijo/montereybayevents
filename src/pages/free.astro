@@ -1,13 +1,33 @@
 ---
 // Prerendered at build time (output: 'static' in astro.config.mjs) — the HTML
 // ships complete, no client-side routing or hydration for the listing itself.
+//
+// SOURCING CONTRACT. Every listing states what is known about the cost of
+// turning up, and every statement is one we can defend — see CarEvent.admission.
+//
+// There is deliberately no "unverified" badge. A to-do marker on a live page is
+// an admission that we published a claim we had not stood up, and the fix for
+// that is not a caveat, it is to stop making the claim: say the organizer is
+// silent, say the street is public, say the parking costs $40. Each of those is
+// a fact. "We think this is free but haven't checked" is not.
+//
+// A 2026-08-12 audit of all 20 listings against organizer sites removed two
+// that were never free (Exotics on Broadway, $40; Ferrari Owners Club Concours
+// Carmel, donation tickets from $50) and corrected a third that is free to
+// enter but charges $40 to park (Werks Reunion). Re-run that audit before
+// reusing this page for another year.
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { freeEventsByDay, totalFreeListings } from "../data/eventIndex";
+import {
+  freeConfirmedCount,
+  freeEventsByDay,
+  freeWithCostToArriveCount,
+  totalFreeListings,
+} from "../data/eventIndex";
 import { formatTime } from "../lib/eventSchema";
 
 const site = "https://montereybayevents.com";
 const title = "Free Monterey Car Week Events 2026";
-const description = `Every Monterey Car Week 2026 event that is free for spectators — ${totalFreeListings} listings across August 7–16, grouped by day with location, time where known and a link to each event.`;
+const description = `Every Monterey Car Week 2026 event that is free for spectators — ${totalFreeListings} listings across August 7–16, grouped by day, each with times, location, what you'll see and whether the organizer actually confirms it is free.`;
 const canonical = `${site}/free/`;
 
 const days = freeEventsByDay();
@@ -41,6 +61,35 @@ const itemList = {
     url: `${site}${e.href}`,
   })),
 };
+
+// The status shown on each listing. Every label is a claim about the public
+// record, not a hedge about our own diligence.
+const STATUS = {
+  "confirmed-free": {
+    label: "Organizer confirms free",
+    lead: "Confirmed free:",
+  },
+  "cost-to-arrive": {
+    label: "Free entry · costs to arrive",
+    lead: "Free to watch, but:",
+  },
+  "public-street": {
+    label: "Public street",
+    lead: "On a public street:",
+  },
+  "not-published": {
+    label: "Organizer publishes no price",
+    lead: "Nobody publishes this:",
+  },
+  "not-spectator": {
+    label: "Not a spectator event",
+    lead: "Not open to spectators:",
+  },
+} as const;
+
+const FALLBACK_LEAD = "Nobody publishes this:";
+const FALLBACK_NOTE =
+  "The organizer's page gives the date and the place but says nothing about admission either way, so there is nothing here for us to quote. Ask them directly before you plan around it.";
 ---
 
 <BaseLayout>
@@ -74,16 +123,40 @@ const itemList = {
       Free Monterey <span class="text-brass">Car Week</span> Events 2026
     </h1>
     <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
-      {totalFreeListings} of the week's listings are free for spectators — street
-      concours on Ocean Avenue, the Tour d'Elegance along Highway One, auction
-      previews and the Concours Village. Each one is grouped under the day it runs.
-      Where an entry has a cost attached to something other than admission — paid
-      parking, paid entrant registration — the badge says so.
+      Car Week is famous for six-figure auctions and $650 show-field tickets. It is
+      also, for most of the week, a free street show — cars worth more than houses
+      parked on public avenues where anyone can walk up to them. These are the
+      {totalFreeListings} listings across the ten days that cost nothing to watch.
     </p>
-    <p class="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-      Start times come from the organizer and are only shown where one is
-      published. Follow an event through to its page for the venue address, a map
-      link and the official site.
+
+    <div
+      class="mt-8 max-w-2xl border-l-2 border-brass/60 bg-surface/60 px-5 py-4 text-sm leading-relaxed text-muted-foreground"
+    >
+      <p>
+        <span class="font-semibold text-brass">How we check "free."</span>{" "}
+        {freeConfirmedCount} of these {totalFreeListings} listings are confirmed free
+        in the organizer's own words, and we quote them. {freeWithCostToArriveCount}{" "}
+        are free to enter but charge you to arrive — parking or a gate fee — and the
+        badge says so, because "free event, $40 to park" is not what most people mean
+        by free. The rest sit on public streets with no ticket on sale anywhere, or
+        have organizers who publish nothing about admission at all.
+      </p>
+      <p class="mt-3">
+        Every listing says which of those it is. None of them says "we haven't
+        checked" — where a price is genuinely unpublished, that is the answer, and
+        the note tells you who to ask instead. A chamber listing or a roundup article
+        is not the organizer and never counts as confirmation.
+      </p>
+    </div>
+
+    <p class="mt-6 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+      Times are the organizer's published hours and are shown only where one exists;
+      we never pad a date out to a start time we don't have. Follow any listing
+      through for the venue address, a map link and the official site. Before you
+      drive to any of these, check{" "}
+      <a href="/traffic/" class="text-brass hover:underline"
+        >road closures, parking and shuttles</a
+      > — several of these streets close for the events themselves.
     </p>
 
     <div class="mt-14 space-y-14">
@@ -98,41 +171,83 @@ const itemList = {
             </div>
             <ul class="mt-5 grid gap-3">
               {day.events.map((e) => (
-                <li>
-                  <a
-                    href={e.href}
-                    class="group flex flex-col gap-2 border-l-2 border-border/80 bg-surface/60 px-5 py-4 transition-all hover:border-brass hover:bg-surface-raised"
-                  >
-                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                      <h3 class="text-xl leading-tight text-foreground transition-colors group-hover:text-brass">
+                <li class="border-l-2 border-border/80 bg-surface/60 px-5 py-5 transition-colors hover:border-brass">
+                  <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <h3 class="text-xl leading-tight">
+                      <a
+                        href={e.href}
+                        class="text-foreground transition-colors hover:text-brass"
+                      >
                         {e.title}
-                      </h3>
-                      {e.label && (
-                        <span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                          {e.label}
-                        </span>
-                      )}
-                    </div>
-                    <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
-                      <span class="w-fit border border-brass/50 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-brass">
-                        {e.accessLabel}
+                      </a>
+                    </h3>
+                    {e.label && (
+                      <span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                        {e.label}
                       </span>
-                      <span class="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
-                        {day.weekday}, {day.date}
-                      </span>
-                      {e.startTime && (
-                        <span class="text-[0.65rem] uppercase tracking-[0.14em] text-brass">
-                          {formatTime(e.startTime)}
-                          {e.endTime ? ` – ${formatTime(e.endTime)}` : ""}
-                        </span>
-                      )}
-                    </div>
-                    {e.venue && (
-                      <p class="text-sm leading-relaxed text-muted-foreground">
-                        {e.venue.venue} · {e.venue.address}
-                      </p>
                     )}
-                  </a>
+                    <span class="border border-brass/50 px-2 py-0.5 text-[0.6rem] font-bold uppercase tracking-[0.16em] text-brass">
+                      {(STATUS[e.admission!] ?? STATUS["not-published"]).label}
+                    </span>
+                  </div>
+
+                  <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <span class="w-fit border border-brass/50 px-2 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-brass">
+                      {e.accessLabel}
+                    </span>
+                    <span class="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+                      {day.weekday}, {day.date}
+                    </span>
+                    {e.startTime ? (
+                      <span class="text-[0.65rem] uppercase tracking-[0.14em] text-brass">
+                        {formatTime(e.startTime)}
+                        {e.endTime ? ` – ${formatTime(e.endTime)}` : ""}
+                      </span>
+                    ) : (
+                      <span class="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground/70">
+                        No published start time
+                      </span>
+                    )}
+                  </div>
+
+                  {e.venue && (
+                    <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                      <span class="font-semibold text-foreground">Where.</span>{" "}
+                      {e.venue.venue} · {e.venue.address}
+                    </p>
+                  )}
+
+                  {e.description && (
+                    <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+                      <span class="font-semibold text-foreground">
+                        What you'll see.
+                      </span>{" "}
+                      {e.description}
+                    </p>
+                  )}
+
+                  <p class="mt-3 border-l border-brass/40 pl-3 text-xs leading-relaxed text-muted-foreground/90">
+                    <span class="font-semibold text-brass">
+                      {(STATUS[e.admission!] ?? { lead: FALLBACK_LEAD }).lead}
+                    </span>{" "}
+                    {e.admissionNote ?? FALLBACK_NOTE}
+                  </p>
+
+                  <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs">
+                    <a href={e.href} class="text-brass hover:underline">
+                      Full details, address &amp; map →
+                    </a>
+                    {e.url && (
+                      <a
+                        href={e.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="text-brass hover:underline"
+                      >
+                        Organizer's official page ↗
+                      </a>
+                    )}
+                  </div>
                 </li>
               ))}
             </ul>
@@ -142,8 +257,33 @@ const itemList = {
     </div>
 
     <section class="mt-16 border-t border-border/70 pt-8">
+      <h2 class="text-3xl leading-none text-brass">Listed as free elsewhere, but isn't</h2>
+      <p class="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+        Two events widely described as free for spectators sell admission, and we
+        removed them from the list above on 12 August 2026 after checking the
+        organizers' own pages.{" "}
+        <a href="/event/exotics-on-broadway/" class="text-brass hover:underline"
+          >Exotics on Broadway</a
+        >{" "}
+        charges $40 general admission, with under-12s free alongside a ticketed
+        adult. The{" "}
+        <a
+          href="/event/ferrari-owners-club-4th-annual-concours-carmel/"
+          class="text-brass hover:underline">Ferrari Owners Club Concours Carmel</a
+        >{" "}
+        sells donation-based tickets from $50. Both are still worth seeing; neither
+        is free.
+      </p>
+    </section>
+
+    <section class="mt-12 border-t border-border/70 pt-8">
       <p class="text-sm leading-relaxed text-muted-foreground">
-        Looking for the whole week, ticketed events included? See the{" "}
+        Getting to the free events is mostly a parking problem, and the{" "}
+        <a href="/traffic/" class="text-brass hover:underline"
+          >traffic, closures and parking guide</a
+        >{" "}
+        covers where to leave the car at each venue, which shuttles are free, and
+        when to arrive. Looking for the whole week, ticketed events included? See the{" "}
         <a href="/monterey-car-week/schedule/" class="text-brass hover:underline">
           full Car Week schedule
         </a>{" "}
@@ -151,11 +291,10 @@ const itemList = {
         <a href="/monterey-car-week/" class="text-brass hover:underline">
           Car Week overview
         </a>
-        . Before you drive, check{" "}
-        <a href="/traffic/" class="text-brass hover:underline">
-          traffic and road closures
-        </a>
-        .
+        . For the rest of the year, see{" "}
+        <a href="/events/" class="text-brass hover:underline"
+          >all 2026 Central Coast events</a
+        >.
       </p>
     </section>
   </main>

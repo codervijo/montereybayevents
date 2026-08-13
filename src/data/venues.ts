@@ -18,6 +18,16 @@ export const venues: Record<string, Venue> = {
     venue: "Monterey Peninsula roads",
     address: "Carmel-by-the-Sea, CA 93923",
   },
+  // The organizer publishes the city and withholds the address on purpose:
+  // "Meet at an undisclosed Carmel location", "no spectators are permitted at
+  // start points" (breakfastclubrally.com/events/bcrxmcw2026, read 2026-08-12).
+  // So the Place carries the city that IS published and no street or ZIP.
+  // Without this entry the event emitted no `location` at all, which is a
+  // required property — see the guard in src/__tests__/eventSchema.test.js.
+  "Breakfast Club Rally x MCW": {
+    venue: "Undisclosed start location, Carmel-by-the-Sea",
+    address: "Carmel-by-the-Sea, CA",
+  },
   "Central Coast Poker Rally": {
     venue: "Monterey Peninsula",
     address: "Monterey, CA 93940",
@@ -26,9 +36,12 @@ export const venues: Record<string, Venue> = {
     venue: "Embassy Suites Monterey Bay",
     address: "1441 Canyon Del Rey Blvd, Seaside, CA 93955",
   },
+  // CORRECTED 2026-08-12. Was listed at Corral de Tierra Country Club in
+  // Salinas. jags.org/event-details/monterey-british-2026 publishes the Carmel
+  // Valley Historical Society address below.
   "Monterey British Car Event": {
-    venue: "Corral de Tierra Country Club",
-    address: "81 Corral De Tierra Rd, Salinas, CA 93908",
+    venue: "Carmel Valley Historical Society",
+    address: "77 W Carmel Valley Rd, Carmel Valley, CA 93924",
   },
   "Porsche Monterey Classic": {
     venue: "Porsche Monterey",
@@ -137,9 +150,12 @@ export const venues: Record<string, Venue> = {
     address: "Carmel-by-the-Sea, CA 93921",
   },
   Bugatti: { venue: "Carmel-by-the-Sea", address: "Carmel-by-the-Sea, CA 93921" },
+  // CORRECTED 2026-08-12. Was listed at Corral de Tierra Country Club in
+  // Salinas — a different venue 20 minutes away. werksreunion.com/monterey.cfm
+  // publishes this address.
   "Werks Reunion Monterey": {
-    venue: "Corral de Tierra Country Club",
-    address: "81 Corral De Tierra Rd, Salinas, CA 93908",
+    venue: "Monterey Pines Golf Course",
+    address: "1250 Garden Rd, Monterey, CA 93940",
   },
   "The Quail, A Motorsports Gathering": {
     venue: "Quail Lodge & Golf Club",

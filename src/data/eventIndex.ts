@@ -1,4 +1,4 @@
-import { schedule, type Access, type CarEvent } from "./events";
+import { schedule, type Access, type Admission, type CarEvent } from "./events";
 import { venues, type Venue } from "./venues";
 import { organizers, type Organizer } from "./organizers";
 
@@ -113,6 +113,13 @@ export type FreeListing = {
   venue?: Venue | undefined;
   startTime?: string | undefined;
   endTime?: string | undefined;
+  /** See CarEvent.admission — drives the status label on /free/. */
+  admission?: Admission | undefined;
+  admissionNote?: string | undefined;
+  /** The organizer's own page, which is what a reader should check against. */
+  url?: string | undefined;
+  /** One line on what is actually on display, for the listing body. */
+  description?: string | undefined;
 };
 
 export type FreeDay = {
@@ -155,6 +162,10 @@ export function freeEventsByDay(): FreeDay[] {
             venue: venues[e.title],
             startTime: e.startTime,
             endTime: e.endTime,
+            admission: e.admission,
+            admissionNote: e.admissionNote,
+            url: e.url,
+            description: e.description,
           };
         }),
     }))
@@ -163,5 +174,22 @@ export function freeEventsByDay(): FreeDay[] {
 
 export const totalFreeListings = freeEventsByDay().reduce(
   (n, d) => n + d.events.length,
+  0,
+);
+
+/**
+ * Day-listings whose free admission is confirmed in the organizer's own words.
+ * /free/ leads with this number rather than the raw listing count, because
+ * "25 free events" and "25 events, 12 of them confirmed free by the organizer"
+ * are different claims and only the second one is ours to make.
+ */
+export const freeConfirmedCount = freeEventsByDay().reduce(
+  (n, d) => n + d.events.filter((e) => e.admission === "confirmed-free").length,
+  0,
+);
+
+/** Free to get into, but with a parking or gate charge attached to arriving. */
+export const freeWithCostToArriveCount = freeEventsByDay().reduce(
+  (n, d) => n + d.events.filter((e) => e.admission === "cost-to-arrive").length,
   0,
 );

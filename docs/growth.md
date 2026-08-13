@@ -111,3 +111,48 @@ https://search.google.com/search-console directly.
   events with `Event` markup have no `offers`, because the source carries no
   admission data — if rich results underperform Car Week's, missing admission is
   the first suspect.
+
+## 2026-08-12 — v1.D: audit every "free" claim against the organizer, and build /traffic/ into a real logistics page
+- **Status:** active
+- **Hypothesis:** The two pages with live search demand this week are `/traffic/`
+  (pos 12.7, 8.1% CTR) and `/free/` (272 impressions, 4.8% CTR, pos 10.5). Both
+  rank on intent the site only partly answers: `/traffic/` was four link cards and
+  five generic tips, and `/free/` was a bare list with no times, no "what you'll
+  see" and — it turns out — three wrong admission claims. The bet is that depth
+  plus *verifiable* accuracy wins these queries, and that visibly showing our
+  work (marking what we could not confirm rather than quietly asserting it) is a
+  differentiator against the roundup sites that recycle each other's errors,
+  including a widely-syndicated closure table that is still 2023 data.
+- **KPI:** CTR and position on `/traffic/` and `/free/`; impressions on
+  parking/closure/shuttle queries that `/traffic/` previously could not match;
+  whether `/free/` holds position after two listings were removed from it
+- **Baseline:** `/traffic/` 8.1% CTR at pos 12.7; `/free/` 272 impressions, 4.8%
+  CTR at pos 10.5; http:// apex indexed separately at 188 impressions, pos 20.6
+- **Action:** Audited all 20 free listings against organizer pages. Removed two
+  that are not free (Exotics on Broadway, $40 GA; Ferrari Owners Club Concours
+  Carmel, donation tickets from $50) and relabelled Werks Reunion (free entry,
+  $40 cash parking). Corrected two wrong venues — Werks Reunion and Monterey
+  British Car Event were both listed at Corral de Tierra in Salinas; they are at
+  Monterey Pines Golf Course and the Carmel Valley Historical Society. Sourced 14
+  organizer-published start/end times, which is the first time `startDate` has
+  carried a real clock time and Pacific offset for these events. Rebuilt
+  `/traffic/` from `src/data/traffic.ts` with closures by day, Highway 1/68/218/101
+  routing, parking for six venues, shuttles and arrival times, every fact carrying
+  `confidence: "official" | "derived" | "unpublished"` and a source link. Rebuilt
+  `/free/` with per-listing times, location, what-you'll-see and a per-listing
+  admission status (12 of 22 confirmed free in the organizer's own words, 3 free to
+  enter but charging to park or to pass a gate, 1 public street with no ticket on
+  sale anywhere, 6 whose organizer publishes no price at all). Dropped the
+  invitation-only Quail Rally off `/free/` entirely — it was never a spectator
+  event. Fixed the missing `location` on
+  `/event/breakfast-club-rally-x-mcw/` and added a test that fails the build if any
+  Event node ever loses `location` again. Added contextual `/traffic/` + `/free/`
+  links to all 104 event pages and both Car Week hubs.
+- **Result:** TBD — review 2026-09-09
+- **Learning:** TBD — two things to watch. First, whether `/traffic/` converts its
+  existing high CTR into position now that it actually answers parking and shuttle
+  queries; if it does, the same "one page per logistics intent" cut is worth
+  repeating for road closures specifically. Second, whether visible `[VERIFY]`
+  labelling costs anything in engagement. The assumption is that it does not and
+  may help, but it is an assumption — if `/free/` CTR drops while position holds,
+  the badges are the first suspect.

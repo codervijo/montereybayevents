@@ -38,12 +38,21 @@ export function formatTime(time: string): string {
   return `${hour12}:${String(m).padStart(2, "0")} ${suffix}`;
 }
 
-const ADDRESS_RE = /^(?:(?<street>.+), )?(?<city>[^,]+), (?<region>[A-Z]{2}) (?<zip>\d{5})$/;
+// The ZIP is optional. Some venues genuinely have no single postal code — a
+// rally that runs 100 miles of public road, or an event whose organizer
+// publishes the city but withholds the address — and for those a structured
+// city + state beats either a plain-text passthrough or an invented ZIP.
+const ADDRESS_RE =
+  /^(?:(?<street>.+), )?(?<city>[^,]+), (?<region>[A-Z]{2})(?: (?<zip>\d{5}))?$/;
 
 /**
  * Splits "1021 Monterey Salinas Hwy, Salinas, CA 93908" into a PostalAddress.
- * Every address in venues.ts matches `[street, ]city, ST zip`; anything that
+ * Every address in venues.ts matches `[street, ]city, ST[ zip]`; anything that
  * does not is passed through as plain text, which Place.address also accepts.
+ *
+ * A component absent from the source string is omitted from the output — never
+ * defaulted. `postalCode` in particular is dropped rather than guessed: a wrong
+ * ZIP puts a map pin in the wrong town.
  */
 export function postalAddress(address: string): JsonLd | string {
   const m = ADDRESS_RE.exec(address.trim());
@@ -54,7 +63,7 @@ export function postalAddress(address: string): JsonLd | string {
     ...(street ? { streetAddress: street } : {}),
     addressLocality: city,
     addressRegion: region,
-    postalCode: zip,
+    ...(zip ? { postalCode: zip } : {}),
     addressCountry: "US",
   };
 }
