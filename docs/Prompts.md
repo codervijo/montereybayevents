@@ -120,3 +120,37 @@ to surface "last AI prompt" per project. Keep entries append-only.
 > 831-625-8536, which is exactly where and when the Motoring Classic arrives.
 > Stillwater Cove coastal access is closed August 13–16, a closure the page had
 > been missing entirely.
+
+## 2026-08-14 — v1.E: Timber Fire incident banner + Tour d'Elegance route correction
+
+> The Timber Fire started in Big Sur on 9 August and closed Highway 1 mid-Car-Week.
+> Asked to research current status, find event impacts, add a warning to /traffic/
+> and link the fire status from the pages.
+>
+> **TAKEDOWN REQUIRED.** Set `timberFire.active = false` in `src/data/traffic.ts`
+> when the incident closes and the banner disappears everywhere. A stale emergency
+> notice is worse than none — it discredits every other fact on the page. This is
+> the only thing on this site with a deliberate expiry.
+>
+> Findings worth keeping. (1) The Pebble Beach Tour d'Elegance was **rerouted** on
+> 11–12 August because of the fire — it stayed inside Pebble Beach and Monterey
+> instead of running the coast to Big Sur, confirmed on the Concours' own updates
+> page. Our description still said "along a scenic route on Highway One", which
+> stopped being true; corrected with the actual route and the chairman's quote.
+> (2) The Concours itself on Sunday 16 August was NOT cancelled, and the banner
+> says so, because that is the question most readers arrive with. (3) A Cars and
+> Coffee at Asilomar was cancelled — not in our dataset, so no change. (4) Big Sur
+> venues (Henry Miller Library, Fernwood) cancelled events indefinitely; Esalen
+> closed to 23 August; all four Big Sur state parks closed.
+>
+> Two deliberate design calls. The banner is **not a live feed** and says so:
+> acreage and containment carry an explicit "as of" and link to CAL FIRE, because
+> a cached acreage read as current could tell someone a fire is smaller than it
+> is. And it renders on Car Week pages plus **Monterey County** regional events
+> only — a wildfire banner on a December Santa Cruz holiday parade is noise, and
+> noise is how readers learn to ignore the banner on the page where it matters.
+> 73 of 104 event pages carry it.
+>
+> fire.ca.gov and readymontereycounty.org both block automated reads, so figures
+> come from CBS, Lookout, KQED and BigSurKate quoting CAL FIRE, not from CAL FIRE
+> directly. Every one of them links back to the incident page.

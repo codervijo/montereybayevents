@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import FireAlert from "../components/FireAlert.astro";
 import { ROAD_CLOSURES_URL } from "../data/events";
 import {
   SOURCES,
@@ -112,7 +113,9 @@ const webPage = {
   </Fragment>
 
   <main class="mx-auto max-w-4xl px-5 py-14">
-    <p class="eyebrow">August 7 – 16, 2026 · Plan your movement</p>
+    <FireAlert variant="full" />
+
+    <p class="eyebrow mt-14">August 7 – 16, 2026 · Plan your movement</p>
     <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">
       Car Week <span class="text-brass">traffic</span>, closures &amp; parking
     </h1>

@@ -466,10 +466,15 @@ export const schedule: DaySchedule[] = [
         accessLabel: "Free for spectators",
         startTime: "09:30",
         admission: "confirmed-free",
+        // ROUTE CHANGED 2026-08-11/12 because of the Timber Fire. The Concours'
+        // own updates page announced the Tour would stay inside Pebble Beach and
+        // Monterey rather than running down the coast to Big Sur, so the old
+        // "scenic route on Highway One" description no longer describes what
+        // actually happened on the day.
         admissionNote:
-          "Organizer states “the public is invited to view the Tour, without fee, at several points.” Cars line up from before 7:00 a.m. and leave promptly at 9:30 a.m. The organizer does not publish the route or the viewing points on this page.",
+          "Organizer states “the public is invited to view the Tour, without fee, at several points.” Cars gathered from 7:00 a.m. and left Portola Road near Concours Village at 9:30 a.m. The route was changed because of the Timber Fire: instead of running down the coast to Big Sur it stayed in Pebble Beach and Monterey — out along 17-Mile Drive to Highway 1, north-east through Monterey to Highway 68, and back via Olmsted and Aguajito roads. Chairman Sandra Button: “We quickly came to this decision because we don't want to impact the efforts of firefighters.”",
         description:
-          "Elegance in motion: more than 150 Concours entrants prove their roadworthiness along a scenic route on Highway One.",
+          "Elegance in motion: more than 150 Concours entrants prove their roadworthiness on a route rerouted away from Big Sur, staying inside Pebble Beach and Monterey while the Timber Fire burns.",
       },
       {
         // CORRECTED 2026-08-12. Was published as "Free for spectators". The

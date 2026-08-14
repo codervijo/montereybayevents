@@ -11,6 +11,7 @@
 // builds no page here; it links to the Car Week page that already exists, so no
 // live /event/ URL moves and no two pages compete for the same event.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FireAlert from "../../components/FireAlert.astro";
 import RegionalEventPage from "../../components/RegionalEventPage.astro";
 import { allEventDetails, mapUrl, type EventDetail } from "../../data/eventIndex";
 import { ROAD_CLOSURES_URL } from "../../data/events";
@@ -118,6 +119,8 @@ const others = event
   </Fragment>
 
   <main class="mx-auto max-w-4xl px-5 py-14">
+    <FireAlert />
+
     <a
       href="/monterey-car-week/schedule/"
       class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"

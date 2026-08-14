@@ -17,6 +17,7 @@
 // enter but charges $40 to park (Werks Reunion). Re-run that audit before
 // reusing this page for another year.
 import BaseLayout from "../layouts/BaseLayout.astro";
+import FireAlert from "../components/FireAlert.astro";
 import {
   freeConfirmedCount,
   freeEventsByDay,
@@ -118,7 +119,9 @@ const FALLBACK_NOTE =
   </Fragment>
 
   <main class="mx-auto max-w-4xl px-5 py-14">
-    <p class="eyebrow">August 7 – 16, 2026 · No ticket required</p>
+    <FireAlert />
+
+    <p class="eyebrow mt-8">August 7 – 16, 2026 · No ticket required</p>
     <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">
       Free Monterey <span class="text-brass">Car Week</span> Events 2026
     </h1>

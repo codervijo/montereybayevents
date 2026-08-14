@@ -93,7 +93,99 @@ export const SOURCES = {
     label: "Caltrans QuickMap",
     url: "https://quickmap.dot.ca.gov/",
   },
+  calFireTimber: {
+    label: "CAL FIRE — Timber Fire incident page",
+    url: "https://www.fire.ca.gov/incidents/2026/8/8/timber-fire",
+  },
+  readyMonterey: {
+    label: "County of Monterey — Timber Fire emergency info",
+    url: "https://www.readymontereycounty.org/emergency/incident-archive/2026-timber-fire",
+  },
+  concoursUpdates: {
+    label: "Pebble Beach Concours — Official Updates",
+    url: "https://www.pebblebeachconcours.net/updates/",
+  },
 } as const satisfies Record<string, Source>;
+
+/* ------------------------------------------------------------------ *
+ * Active incident
+ *
+ * A wildfire is the one thing on this site that changes faster than the site
+ * does. So this block deliberately does NOT try to be a live feed: it carries
+ * the facts that stay useful for hours (what road is shut, which zones are
+ * evacuated, what is closed) and sends every volatile number to CAL FIRE with
+ * an explicit "as of". A cached acreage read as current is worse than none —
+ * someone could believe a fire is smaller than it is.
+ *
+ * REMOVE THIS BLOCK once the incident closes, and set `active: false` the
+ * moment it stops being current. A stale emergency banner destroys trust in
+ * every other thing the page says.
+ * ------------------------------------------------------------------ */
+
+export type Incident = {
+  active: boolean;
+  name: string;
+  where: string;
+  /** One line: what a reader needs to do differently because of this. */
+  headline: string;
+  /** Timestamp for the volatile figures below, in the reader's terms. */
+  asOf: string;
+  size: string;
+  containment: string;
+  started: string;
+  roadClosure: string;
+  evacuationOrders: string[];
+  evacuationWarnings: string[];
+  closures: string[];
+  eventImpact: string[];
+  detour: string;
+  evacuationPoint: string;
+  sources: Source[];
+};
+
+export const timberFire: Incident = {
+  active: true,
+  name: "Timber Fire",
+  where: "Big Sur, Los Padres National Forest, Monterey County",
+  headline:
+    "Highway 1 is closed through Big Sur and the whole Big Sur coast is under evacuation orders or warnings. If your plans involve driving south of Carmel, they need to change.",
+  asOf: "Thursday, 13 August 2026 — CAL FIRE's most recent figures at the time of writing",
+  size: "Over 4,000 acres",
+  containment: "7% contained",
+  started: "Sunday, 9 August, on Los Padres National Forest land; cause under investigation",
+  roadClosure:
+    "Highway 1 is closed between mile marker 45.1, near the Big Sur Bakery at the north end, and mile marker 37 at Julia Pfeiffer Burns State Park at the south end. Still closed as of Friday morning, 14 August.",
+  evacuationOrders: ["MRY-F023", "MRY-F025", "MRY-F026", "MRY-F027", "MRY-F028-A"],
+  evacuationWarnings: [
+    "MRY-F021-B",
+    "MRY-F022",
+    "MRY-F024",
+    "MRY-F028-B",
+    "MRY-F029",
+  ],
+  closures: [
+    "All four Big Sur state parks are closed: Andrew Molera, Julia Pfeiffer Burns, Pfeiffer Big Sur and Point Sur.",
+    "Nepenthe and the Henry Miller Memorial Library are closed. The Esalen Institute is closed until 23 August.",
+    "Henry Miller Library and Fernwood Resort have cancelled concerts and cultural events indefinitely.",
+    "Hotels including Deetjen's Big Sur Inn, Post Ranch Inn and Alila Ventana have been evacuated.",
+  ],
+  eventImpact: [
+    "The Pebble Beach Tour d'Elegance ran on Thursday 13 August with a route changed because of this fire — it stayed inside Pebble Beach and Monterey rather than running down to Big Sur.",
+    "A Cars and Coffee gathering at Asilomar was cancelled, with emergency resources committed to the fire.",
+    "The Pebble Beach Concours d'Elegance on Sunday 16 August has not been cancelled or moved; the Concours' own updates page carries no change for the 14th, 15th or 16th.",
+    "Smoke has reached the Monterey Peninsula. The Monterey Bay Air Resources District had not reported dangerous levels as of midday Wednesday, but air quality is worth checking on the day if you are sensitive to smoke.",
+  ],
+  detour:
+    "See Monterey is advising Car Week visitors to approach on Highway 101 north instead of Highway 1 from the south.",
+  evacuationPoint:
+    "The Temporary Evacuation Point is Carmel Valley Library, 65 W. Carmel Valley Road, open Friday 14 August through Monday 17 August, 10:00 a.m. to 5:00 p.m.",
+  sources: [
+    SOURCES.calFireTimber,
+    SOURCES.readyMonterey,
+    SOURCES.quickmap,
+    SOURCES.concoursUpdates,
+  ],
+};
 
 /* ------------------------------------------------------------------ *
  * Road closures and access restrictions
@@ -118,6 +210,24 @@ export type Closure = {
 };
 
 export const closures: Closure[] = [
+  {
+    road: "Highway 1 — Big Sur",
+    segment: "mile marker 45.1 (Big Sur Bakery) to mile marker 37 (Julia Pfeiffer Burns State Park)",
+    city: "Big Sur",
+    dates: [
+      "2026-08-11",
+      "2026-08-12",
+      "2026-08-13",
+      "2026-08-14",
+      "2026-08-15",
+      "2026-08-16",
+    ],
+    when: "Closed since Tuesday, August 11 — still closed Friday morning, August 14",
+    reason:
+      "Closed for public and firefighter safety because of the Timber Fire. This is an active incident with no announced reopening, so treat the southern approach to the Peninsula as unavailable and come in on Highway 101 instead. See the full detail and live links at the top of this page.",
+    confidence: "official",
+    source: SOURCES.readyMonterey,
+  },
   {
     road: "17-Mile Drive",
     city: "Pebble Beach",
@@ -208,7 +318,7 @@ export const highways: Highway[] = [
     name: "Highway 1",
     role: "The peninsula's spine — Monterey to Carmel, and the only direct approach to the Highway 68 junction.",
     guidance:
-      "Every Pebble Beach and Carmel event loads onto Highway 1, and it is also the Tour d'Elegance route on Thursday. Caltrans QuickMap carries live cameras and incident reports for the whole corridor; check it before you leave rather than after you are already in it.",
+      "Every Pebble Beach and Carmel event loads onto Highway 1. South of Carmel it is currently CLOSED through Big Sur for the Timber Fire, so it is not a through route to or from the south at all this week — See Monterey is directing visitors onto Highway 101 north instead. North of Carmel it is open and carrying the whole week's traffic. Caltrans QuickMap has live cameras and incidents for the corridor; check it before you leave rather than after you are already in it.",
     confidence: "official",
     source: SOURCES.quickmap,
   },

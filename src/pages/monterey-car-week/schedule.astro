@@ -2,6 +2,7 @@
 // Moved from src/pages/schedule.astro when Car Week became a section of the
 // site rather than the whole site. /schedule/ 301s here — see public/_redirects.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FireAlert from "../../components/FireAlert.astro";
 import ScheduleList from "../../components/ScheduleList.tsx";
 import { totalEvents } from "../../data/events";
 import { totalFreeListings } from "../../data/eventIndex";
@@ -40,6 +41,8 @@ const canonical = `${site}/monterey-car-week/schedule/`;
   </Fragment>
 
   <main class="mx-auto max-w-6xl px-5 py-14">
+    <FireAlert />
+
     <a
       href="/monterey-car-week/"
       class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"

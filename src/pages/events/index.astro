@@ -6,6 +6,7 @@
 // rendered to static HTML at build, so all listings are in the served markup.
 // The crawlable version of the month filter is the hub set at /events/<month>/.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FireAlert from "../../components/FireAlert.astro";
 import EventsList from "../../components/EventsList.tsx";
 import {
   MONTHS,
@@ -60,6 +61,8 @@ const jsonLd = buildItemListJsonLd(
   </Fragment>
 
   <main class="mx-auto max-w-5xl px-5 py-14">
+    <FireAlert />
+
     <p class="eyebrow">Monterey &amp; Santa Cruz counties</p>
     <h1 class="mt-3 text-5xl leading-[0.88] sm:text-7xl">
       Central Coast events

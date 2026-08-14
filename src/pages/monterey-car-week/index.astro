@@ -6,6 +6,7 @@
 // Car Week 2026 lives here now (its url points at this page); the homepage keeps
 // the site-level Organization + WebSite graph.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import FireAlert from "../../components/FireAlert.astro";
 import EventCard from "../../components/EventCard.tsx";
 import { ROAD_CLOSURES_URL, schedule, totalEvents } from "../../data/events";
 import { totalFreeListings } from "../../data/eventIndex";
@@ -86,6 +87,8 @@ const carWeekEvent = {
   </Fragment>
 
   <main>
+    <FireAlert />
+
     <section class="relative">
       <img
         src="/hero-carweek.jpg"

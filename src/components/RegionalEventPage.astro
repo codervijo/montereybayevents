@@ -9,6 +9,7 @@
 // The three events with no confirmed date render "Date not yet announced" and
 // emit no Event JSON-LD, because schema.org/Event requires startDate.
 import BaseLayout from "../layouts/BaseLayout.astro";
+import FireAlert from "./FireAlert.astro";
 import {
   DATE_TBA,
   eventHref,
@@ -88,6 +89,8 @@ const others = eventsInMonth(month.key)
   </Fragment>
 
   <main class="mx-auto max-w-4xl px-5 py-14">
+    {event.county === "Monterey" && <FireAlert />}
+
     <a
       href={monthHref(month.key)}
       class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"

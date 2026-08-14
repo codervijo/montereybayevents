@@ -11,6 +11,7 @@
 // Nothing on this page is invented: an event with no announced date is listed
 // as "date not yet announced" rather than given a plausible one.
 import BaseLayout from "../layouts/BaseLayout.astro";
+import FireAlert from "../components/FireAlert.astro";
 import { ROAD_CLOSURES_URL, schedule, totalEvents } from "../data/events";
 import { totalFreeListings } from "../data/eventIndex";
 import {
@@ -132,6 +133,8 @@ const sections = [
   </Fragment>
 
   <main>
+    <FireAlert />
+
     <section class="border-b border-border/70">
       <div class="mx-auto max-w-6xl px-5 py-14 sm:py-20">
         <p class="eyebrow">Monterey &amp; Santa Cruz counties</p>
