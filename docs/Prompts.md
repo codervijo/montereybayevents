@@ -154,3 +154,78 @@ to surface "last AI prompt" per project. Keep entries append-only.
 > fire.ca.gov and readymontereycounty.org both block automated reads, so figures
 > come from CBS, Lookout, KQED and BigSurKate quoting CAL FIRE, not from CAL FIRE
 > directly. Every one of them links back to the incident page.
+
+## 2026-08-17 — v1.F: Timber Fire banner refreshed to day-10 figures
+
+> Asked to check the fire status and take the banner down. Checked first, and
+> the takedown was wrong: on day 10 the Timber Fire was **5,153 acres and 17%
+> contained** — about 1,100 acres *larger* than when the banner was written —
+> with Highway 1 still shut between MM 45.1 and MM 37 and all five evacuation
+> orders and five warnings still in force. The defect was **staleness, not
+> expiry**, which is the distinction the maintenance comment in `traffic.ts`
+> already draws: set `active: false` "the moment it stops being current." It
+> hadn't. Car Week ending changed *who* was reading, not whether the road was
+> shut. Surfaced that, offered refresh / take down / refresh-and-narrow, and the
+> operator chose refresh.
+>
+> Sourcing was the same problem v1.E hit, in both directions. fire.ca.gov still
+> 403s automated reads. The Big Sur Chamber page is stale the *other* way —
+> last updated 10 August, still saying "Highway One is currently open" six days
+> after the closure — which is a good argument for never treating a page's
+> presence as evidence of its currency. Figures came from BigSurKate's day-10
+> morning update and Local News Matters, both quoting CAL FIRE.
+>
+> Corrected the start date to Saturday 8 August: CAL FIRE's own incident path
+> (`/incidents/2026/8/8/`), Local News Matters and BigSurKate's day-count all
+> agree. "Sunday, 9 August" was internally consistent — Aug 9 *is* a Sunday —
+> and still a day late, which is the kind of error that survives review.
+>
+> `eventImpact` was entirely expired; all four entries were Car Week. Replaced
+> with what is true now, including the one listing in our own dataset the fire
+> actually reaches: Big Sur Food & Wine (5–7 November) has paused ticket sales,
+> quoted in the organisers' own words, dates unchanged.
+>
+> **Next thing to go stale:** the Carmel Valley Library evacuation point is
+> published only through 17 August with no extension announced. The end date is
+> stated explicitly plus the county line, so a reader tomorrow sees a window
+> that has visibly closed rather than a false claim.
+
+## 2026-08-17 — v1.G: Turkish festival factual fixes, Place schema, neutral OG card
+
+> Eight fixes to `/event/california-turkish-arts-culture-festival/`: two-day run,
+> venue + full address, per-day hours, `Place` schema, neutral OG image, delete
+> the provenance block, keep the slug, drop the year from `<title>`.
+>
+> The load-bearing discovery was that **most of the asks lived in
+> `RegionalEventPage.astro`**, which renders all 54 regional event pages — so
+> "delete the provenance block" and "no year in the title" were site-wide
+> changes wearing a single-page costume. Asked before writing; operator scoped
+> both to this page. Implemented as named optional fields on `RegionalEvent`
+> (`seoTitle`, `headline`, `hideSources`) rather than a slug hardcoded into a
+> shared component, then verified the blast radius: 53 other pages still carry
+> their year-in-title and their provenance block.
+>
+> **`[VERIFY]` was asked for and deliberately not used.** v1.D removed it from
+> this site on the operator's own constraint — "don't leave it as VERIFY and
+> also don't guess" — and the `write-lamill-seo-page` skill says an unresolved
+> `[VERIFY]` ships `noindex` and leaves the sitemap, which would have taken a
+> live page out of the index over unconfirmed door hours. Offered the options;
+> operator chose the v1.D confidence vocabulary. So the hours carry
+> `timesConfidence: "unconfirmed"` and the page states a fact about the public
+> record instead of a note about our diligence: the organiser has not published
+> door hours on its own page, these come from a secondary listing, and they are
+> therefore kept out of the structured data while the dates are not. Visible to
+> the reader, absent from the JSON-LD. Flip to `"official"` when TAAC confirms
+> and the note rewrites itself.
+>
+> Two things worth keeping. `streetAddress` / `postalCode` emit **only** where a
+> real sourced address exists and are never derived from a venue name — a maps
+> result will happily route someone to a guess. And the OG card is the one
+> change that is not page-scoped: it is a single constant, so all 54 regional
+> pages now serve `og-default.jpg` instead of a Concours photograph that
+> misdescribed every non-Car-Week listing it was attached to. The card is drawn
+> from the site's own oklch tokens converted to sRGB — the conversion reproduces
+> the two values `favicon.svg` already documents, which is how it was checked —
+> and reuses the favicon's calendar mark. `public/og-default.svg` is the source;
+> re-render the jpg if it changes. Set in DejaVu Sans Condensed because Bebas
+> Neue is not installed locally.

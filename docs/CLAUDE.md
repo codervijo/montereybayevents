@@ -136,3 +136,28 @@ re-proposed. Append; don't rewrite.
 - **No SPA fallback**, ever. See Conventions above and AI_AGENTS.md —
   `wrangler.jsonc`'s `not_found_handling: "404-page"` is what serves real
   404s, and `public/_redirects` is load-bearing for real 301s.
+
+- **Displayed hours and schema times are two different things** (v1.G).
+  The "clock times are never synthesised" rule above is intact and still
+  binding — but it governs the *schema*, not the page. `RegionalEvent.times`
+  holds per-day door hours for display, tagged by `timesConfidence`:
+  `"official"` when the organiser publishes them, `"unconfirmed"` when they
+  come from a secondary listing. Only `"official"` hours may ever reach
+  `startDate`. An `"unconfirmed"` row shows its hours to the reader
+  alongside a plain statement of who has and has not published them, and
+  `buildRegionalEventJsonLd` keeps them out of the JSON-LD entirely — a
+  structured-data time gets quoted in a search result stripped of every
+  qualifier around it, so it has to be the organiser's own. Do not "tidy"
+  this by feeding `times` into `isoDateTime`.
+
+- **`[VERIFY]` markers are not used on this site** (v1.D, reaffirmed
+  v1.G). The rule is: don't leave it as VERIFY and don't guess either. A
+  page does not have to make a claim it can't stand behind — it can make a
+  *different, true* claim about the public record instead ("nobody
+  publishes a Pacific Grove parking plan" is a finding; "we haven't
+  checked" is a to-do leaking onto a live page). The vocabulary for this is
+  `confidence` on `/traffic/`, the `Admission` union on `/free/`, and
+  `timesConfidence` on regional events. Note that the
+  `write-lamill-seo-page` skill prescribes `[VERIFY]` plus `noindex`; where
+  it conflicts with this, this wins, because `noindex` on a live earning
+  page is a much larger cost than the skill accounts for.
