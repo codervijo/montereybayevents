@@ -105,6 +105,14 @@ export const SOURCES = {
     label: "Pebble Beach Concours — Official Updates",
     url: "https://www.pebblebeachconcours.net/updates/",
   },
+  kazuTimber: {
+    label: "90.3 KAZU — Timber Fire: information, resources and map",
+    url: "https://www.kazu.org/timberfire",
+  },
+  bigSurFoodWine: {
+    label: "Big Sur Food & Wine Festival — official site",
+    url: "https://www.bigsurfoodandwine.org/festival",
+  },
 } as const satisfies Record<string, Source>;
 
 /* ------------------------------------------------------------------ *
@@ -149,12 +157,12 @@ export const timberFire: Incident = {
   where: "Big Sur, Los Padres National Forest, Monterey County",
   headline:
     "Highway 1 is closed through Big Sur and the whole Big Sur coast is under evacuation orders or warnings. If your plans involve driving south of Carmel, they need to change.",
-  asOf: "Thursday, 13 August 2026 — CAL FIRE's most recent figures at the time of writing",
-  size: "Over 4,000 acres",
-  containment: "7% contained",
-  started: "Sunday, 9 August, on Los Padres National Forest land; cause under investigation",
+  asOf: "Monday, 17 August 2026, 7:11 a.m. — the most recent figures at the time of writing",
+  size: "5,153 acres",
+  containment: "17% contained",
+  started: "Saturday, 8 August, on Los Padres National Forest land; cause under investigation",
   roadClosure:
-    "Highway 1 is closed between mile marker 45.1, near the Big Sur Bakery at the north end, and mile marker 37 at Julia Pfeiffer Burns State Park at the south end. Still closed as of Friday morning, 14 August.",
+    "Highway 1 is closed between mile marker 45.1, near the Big Sur Bakery at the north end, and mile marker 37 at Julia Pfeiffer Burns State Park at the south end. Still closed as of Monday morning, 17 August — day 10 of the incident — with no reopening announced.",
   evacuationOrders: ["MRY-F023", "MRY-F025", "MRY-F026", "MRY-F027", "MRY-F028-A"],
   evacuationWarnings: [
     "MRY-F021-B",
@@ -165,25 +173,27 @@ export const timberFire: Incident = {
   ],
   closures: [
     "All four Big Sur state parks are closed: Andrew Molera, Julia Pfeiffer Burns, Pfeiffer Big Sur and Point Sur.",
-    "Nepenthe and the Henry Miller Memorial Library are closed. The Esalen Institute is closed until 23 August.",
+    "Los Padres National Forest has closure orders in force on trails and roads across the fire area.",
+    "Nepenthe and the Henry Miller Memorial Library are closed. The Esalen Institute has cancelled all workshops and day reservations and stays closed through 23 August.",
     "Henry Miller Library and Fernwood Resort have cancelled concerts and cultural events indefinitely.",
     "Hotels including Deetjen's Big Sur Inn, Post Ranch Inn and Alila Ventana have been evacuated.",
   ],
   eventImpact: [
-    "The Pebble Beach Tour d'Elegance ran on Thursday 13 August with a route changed because of this fire — it stayed inside Pebble Beach and Monterey rather than running down to Big Sur.",
-    "A Cars and Coffee gathering at Asilomar was cancelled, with emergency resources committed to the fire.",
-    "The Pebble Beach Concours d'Elegance on Sunday 16 August has not been cancelled or moved; the Concours' own updates page carries no change for the 14th, 15th or 16th.",
-    "Smoke has reached the Monterey Peninsula. The Monterey Bay Air Resources District had not reported dangerous levels as of midday Wednesday, but air quality is worth checking on the day if you are sensitive to smoke.",
+    "The Big Sur Food & Wine Festival, listed here for 5–7 November, has paused ticket sales. The organisers' own wording: “At present, Big Sur has an uncontained active fire. Ticket sales are temporarily paused out of respect for the community and what the brave first responders are currently managing.” The dates themselves have not changed.",
+    "Anything on this site taking place in Big Sur, or reached by driving Highway 1 south of Carmel, should be confirmed with its organiser before you travel. The closed stretch has no announced reopening.",
+    "Events on the Monterey Peninsula itself — Carmel, Monterey, Pacific Grove, Seaside, Salinas — are going ahead. No listing north of the closure has been cancelled because of this fire.",
+    "Monterey Car Week concluded on Sunday 16 August and ran to schedule, apart from the Pebble Beach Tour d'Elegance, which was rerouted away from Big Sur on 13 August, and a Cars and Coffee at Asilomar that was cancelled.",
   ],
   detour:
-    "See Monterey is advising Car Week visitors to approach on Highway 101 north instead of Highway 1 from the south.",
+    "Approach the Peninsula on Highway 101 from the north or east rather than Highway 1 from the south. There is no through route on Highway 1 between the Peninsula and San Simeon while this closure holds.",
   evacuationPoint:
-    "The Temporary Evacuation Point is Carmel Valley Library, 65 W. Carmel Valley Road, open Friday 14 August through Monday 17 August, 10:00 a.m. to 5:00 p.m.",
+    "The Temporary Evacuation Point is Carmel Valley Library, 65 W. Carmel Valley Road, open Friday 14 August through Monday 17 August, 10:00 a.m. to 5:00 p.m. No extension past the 17th has been published; the county's information line is (831) 647-7760.",
   sources: [
     SOURCES.calFireTimber,
     SOURCES.readyMonterey,
     SOURCES.quickmap,
-    SOURCES.concoursUpdates,
+    SOURCES.kazuTimber,
+    SOURCES.bigSurFoodWine,
   ],
 };
 
@@ -221,10 +231,11 @@ export const closures: Closure[] = [
       "2026-08-14",
       "2026-08-15",
       "2026-08-16",
+      "2026-08-17",
     ],
-    when: "Closed since Tuesday, August 11 — still closed Friday morning, August 14",
+    when: "Closed since Tuesday, August 11 — still closed Monday morning, August 17, with no reopening announced",
     reason:
-      "Closed for public and firefighter safety because of the Timber Fire. This is an active incident with no announced reopening, so treat the southern approach to the Peninsula as unavailable and come in on Highway 101 instead. See the full detail and live links at the top of this page.",
+      "Closed for public and firefighter safety because of the Timber Fire. This is an active incident with no announced reopening, so treat the southern approach to the Peninsula as unavailable and come in on Highway 101 instead. Because this closure outlasts the dates listed here, check Caltrans QuickMap for the live state of the road before you travel. See the full detail and live links at the top of this page.",
     confidence: "official",
     source: SOURCES.readyMonterey,
   },
