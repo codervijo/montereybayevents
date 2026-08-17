@@ -27,9 +27,13 @@ const site = "https://montereybayevents.com";
 const month = monthMeta(primaryMonth(event));
 const dateLabel = event.dateText || DATE_TBA;
 
-const title = `${event.name} — ${month.label}`;
+const title = event.seoTitle ?? `${event.name} — ${month.label}`;
+const heading = event.headline ?? event.name;
 const canonical = `${site}/event/${event.slug}/`;
-const image = `${site}/og-carweek.jpg`;
+// Neutral brand card, not the Car Week photograph. These are regional listings
+// — a Concours photo on a Watsonville street fair describes the wrong event.
+// Rendered from public/og-default.svg; re-render if that file changes.
+const image = `${site}/og-default.jpg`;
 const fallbackDescription = `${event.name} in ${event.city ?? event.county + " County"}, ${event.county} County — ${dateLabel}.`;
 const desc = (event.description ?? fallbackDescription).slice(0, 155);
 const keywords = [
@@ -46,9 +50,15 @@ const keywords = [
 // those pages ship with no Event markup rather than a guessed date.
 const jsonLd = buildRegionalEventJsonLd(event, site);
 
-const mapQuery = [event.venue, event.city, `${event.county} County`, "CA"]
-  .filter(Boolean)
-  .join(", ");
+// A sourced street address beats the county fallback — it puts the maps pin on
+// the venue rather than on the middle of the city.
+const mapQuery = event.streetAddress
+  ? [event.venue, event.streetAddress, event.city, "CA", event.postalCode]
+      .filter(Boolean)
+      .join(", ")
+  : [event.venue, event.city, `${event.county} County`, "CA"]
+      .filter(Boolean)
+      .join(", ");
 const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
 
 const others = eventsInMonth(month.key)
@@ -101,7 +111,7 @@ const others = eventsInMonth(month.key)
     <p class={`eyebrow mt-6 ${event.start ? "" : "text-muted-foreground"}`}>
       {dateLabel}
     </p>
-    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">{event.name}</h1>
+    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">{heading}</h1>
 
     <div class="mt-5 flex flex-wrap items-center gap-3">
       <span class="border border-border px-3 py-1 text-[0.6rem] font-semibold uppercase tracking-[0.16em] text-foreground">
@@ -124,11 +134,28 @@ const others = eventsInMonth(month.key)
       <section>
         <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">When</h2>
         <p class="mt-4 text-base text-foreground">{dateLabel}</p>
+
+        {
+          event.times && (
+            <ul class="mt-4 space-y-1">
+              {event.times.map((t) => (
+                <li class="text-sm text-foreground">
+                  <span class="text-muted-foreground">{t.day}</span> — {t.hours}
+                </li>
+              ))}
+            </ul>
+          )
+        }
+
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
           {
-            event.start
-              ? "We don't have a confirmed start time for this one — the date is the organizer's published date. Check the official page before you travel."
-              : "The organizer has not published a 2026 date yet. This page will carry the date once one is announced — we don't estimate them."
+            event.times && event.timesConfidence === "unconfirmed"
+              ? "These hours come from a secondary listing. The organiser has not published door hours on its own page, so they are not carried in this page's structured data — the dates are. Confirm with the organiser before you plan a day around them."
+              : event.times
+                ? "Hours as published by the organiser."
+                : event.start
+                  ? "We don't have a confirmed start time for this one — the date is the organizer's published date. Check the official page before you travel."
+                  : "The organizer has not published a 2026 date yet. This page will carry the date once one is announced — we don't estimate them."
           }
         </p>
         <a
@@ -143,9 +170,13 @@ const others = eventsInMonth(month.key)
         <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">Where</h2>
         <div class="mt-4">
           {event.venue && <p class="text-base text-foreground">{event.venue}</p>}
+          {event.streetAddress && (
+            <p class="mt-1 text-sm text-muted-foreground">{event.streetAddress}</p>
+          )}
           <p class={event.venue ? "mt-1 text-sm text-muted-foreground" : "text-base text-foreground"}>
             {event.city ?? event.cityText}
             {event.city ? `, ${event.county} County, CA` : ""}
+            {event.postalCode ? ` ${event.postalCode}` : ""}
           </p>
           <a
             href={mapUrl}
@@ -173,7 +204,7 @@ const others = eventsInMonth(month.key)
     }
 
     {
-      event.referenceUrls.length > 0 && (
+      !event.hideSources && event.referenceUrls.length > 0 && (
         <section class="mt-12">
           <h2 class="text-2xl text-brass">Where this listing comes from</h2>
           <p class="mt-3 text-sm leading-relaxed text-muted-foreground">

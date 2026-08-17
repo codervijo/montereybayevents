@@ -20,10 +20,15 @@
  * and emit no Event JSON-LD at all, because schema.org/Event requires startDate
  * and an Event node without one is invalid. See `buildRegionalEventJsonLd`.
  *
- * No clock times exist in this dataset, so `start` / `end` are date-only ISO
- * 8601 — which schema.org accepts ("Date or DateTime"). `pacificOffset` is here
- * for the day a sourced start time arrives; padding a date out to midnight would
- * put a time we do not have in front of someone deciding when to show up.
+ * The CSV carries no clock times, so `start` / `end` are date-only ISO 8601 —
+ * which schema.org accepts ("Date or DateTime"). Padding a date out to midnight
+ * would put a time we do not have in front of someone deciding when to show up.
+ *
+ * Where door hours have since been sourced from outside the CSV they live in
+ * `times`, tagged with `timesConfidence`. Hours the organiser has not published
+ * are shown to the reader alongside a plain statement of who has and has not
+ * published them, and are kept out of the Event JSON-LD — structured data is
+ * quoted without its qualifiers, so only an organiser-published time earns it.
  */
 
 export type County = "Monterey" | "Santa Cruz";
@@ -42,6 +47,31 @@ export type RegionalEvent = {
   city?: string;
   /** Venue parsed out of `cityText`'s parenthetical, where the CSV gives one. */
   venue?: string;
+  /**
+   * Street address of the venue. Set only where a real published address has
+   * been sourced — never derived from the venue name. Feeds schema.org
+   * PostalAddress.streetAddress.
+   */
+  streetAddress?: string;
+  /** ZIP, on the same terms as `streetAddress`. */
+  postalCode?: string;
+  /**
+   * Door hours, one entry per day of the run. Absent for every row transcribed
+   * from the CSV, which carries no clock times.
+   */
+  times?: { day: string; hours: string }[];
+  /**
+   * Where `times` came from, in the same vocabulary `/traffic/` uses for its
+   * closures: `official` when the organiser publishes the hours themselves,
+   * `unconfirmed` when they are recorded from a secondary listing and the
+   * organiser has not published or confirmed them.
+   *
+   * `unconfirmed` hours are shown to the reader — with the page saying plainly
+   * who has and has not published them — but are kept out of the Event JSON-LD.
+   * A time in structured data can surface in a search result stripped of every
+   * qualifier around it, so only an organiser-published time earns that.
+   */
+  timesConfidence?: "official" | "unconfirmed";
   /** Month hub(s) this event belongs to. More than one only when it spans them. */
   months: MonthKey[];
   /** Human-readable date text from the CSV; empty when no date is confirmed. */
@@ -54,6 +84,22 @@ export type RegionalEvent = {
   officialWebsite?: string;
   referenceUrls: string[];
   description?: string;
+  /**
+   * Overrides the default `<title>` (`${name} — ${month.label}`). Set only where
+   * the default is wrong for a specific page — the default carries the year, and
+   * a title that names a year goes stale in the SERP the moment the year turns
+   * while the H1 and dateline can carry it safely.
+   */
+  seoTitle?: string;
+  /** Overrides the H1. The H1 serves the reader; the title serves the SERP. */
+  headline?: string;
+  /**
+   * Suppresses the "Where this listing comes from" block on this page alone.
+   * Set where the sources have been superseded by directly-sourced facts and
+   * listing the original reference would misdescribe where the page's content
+   * actually came from.
+   */
+  hideSources?: boolean;
   /**
    * Set when this CSV row is the same real-world event as a page that already
    * exists in the Monterey Car Week dataset (`src/data/events.ts`). Those pages
@@ -260,14 +306,27 @@ export const regionalEvents: RegionalEvent[] = [
     slug: "california-turkish-arts-culture-festival",
     name: "California Turkish Arts & Culture Festival",
     county: "Monterey",
-    cityText: "Monterey",
+    cityText: "Monterey (Custom House Plaza)",
     city: "Monterey",
+    venue: "Custom House Plaza",
+    streetAddress: "20 Custom House Plaza",
+    postalCode: "93940",
     months: ["august"],
-    dateText: "August 29, 2026",
+    dateText: "August 29-30, 2026",
     start: "2026-08-29",
+    end: "2026-08-30",
+    times: [
+      { day: "Saturday, August 29", hours: "11:00 a.m. – 7:00 p.m." },
+      { day: "Sunday, August 30", hours: "11:00 a.m. – 6:00 p.m." },
+    ],
+    timesConfidence: "unconfirmed",
     category: "Cultural Festival",
     referenceUrls: ["https://whatsupmonterey.com/events"],
-    description: "A one-day Turkish arts and culture festival in Monterey.",
+    description:
+      "A two-day Turkish arts and culture festival at Custom House Plaza in Monterey.",
+    seoTitle: "California Turkish Arts & Culture Festival — Monterey",
+    headline: "California Turkish Arts & Culture Festival 2026",
+    hideSources: true,
   },
   {
     slug: "monterey-county-fair",

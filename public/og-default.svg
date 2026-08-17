@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1088" viewBox="0 0 1920 1088" role="img" aria-label="Monterey Bay Events">
+  <!-- Neutral default Open Graph card.
+       Deliberately carries no event, no season and no photograph, so it is
+       correct on every page that has no image of its own. og-carweek.jpg was a
+       Car Week photograph and misdescribed the ~100 regional listings it was
+       being served for.
+
+       Colors are the site's own tokens from src/styles/global.css, converted
+       from oklch to sRGB with the same conversion used for public/favicon.svg
+       (which it reproduces exactly for the two tokens that file already names):
+         background       oklch(0.16 0.008 60)  -> #100c0a
+         surface          oklch(0.20 0.009 60)  -> #191512
+         border           oklch(0.32 0.012 65)  -> #37322d
+         muted-foreground oklch(0.70 0.012 78)  -> #a39e96
+         brass            oklch(0.78 0.13 85)   -> #ddb049
+         brass-soft       oklch(0.88 0.08 88)   -> #eed59b
+         foreground       oklch(0.95 0.008 80)  -> #f1eee9
+
+       Sized 1920x1088 to match the og:image:width / og:image:height already
+       declared in the page templates. public/og-default.jpg is rendered from
+       this file; re-render it if this changes. -->
+
+  <rect width="1920" height="1088" fill="#100c0a"/>
+  <rect x="0" y="0" width="1920" height="14" fill="#ddb049"/>
+
+  <!-- Faint horizon band, echoing the site's surface token. -->
+  <rect x="0" y="742" width="1920" height="346" fill="#191512"/>
+  <rect x="0" y="742" width="1920" height="2" fill="#37322d"/>
+
+  <!-- The brand mark from public/favicon.svg, scaled 64 -> 168. -->
+  <g transform="translate(168, 300) scale(2.625)">
+    <rect width="64" height="64" rx="13" fill="#ddb049"/>
+    <rect x="20" y="9" width="6" height="10" rx="3" fill="#100c0a"/>
+    <rect x="38" y="9" width="6" height="10" rx="3" fill="#100c0a"/>
+    <rect x="11" y="15" width="42" height="40" rx="6" fill="#100c0a"/>
+    <rect x="17" y="26" width="30" height="2.5" rx="1.25" fill="#ddb049" opacity="0.55"/>
+    <rect x="18" y="34" width="12" height="12" rx="2.5" fill="#ddb049"/>
+  </g>
+
+  <text x="168" y="620" font-family="DejaVu Sans Condensed, Arial Narrow, sans-serif"
+        font-size="150" font-weight="bold" letter-spacing="4" fill="#f1eee9">MONTEREY BAY</text>
+  <text x="168" y="770" font-family="DejaVu Sans Condensed, Arial Narrow, sans-serif"
+        font-size="150" font-weight="bold" letter-spacing="4" fill="#ddb049">EVENTS</text>
+
+  <rect x="168" y="838" width="120" height="5" fill="#ddb049"/>
+
+  <text x="168" y="920" font-family="DejaVu Sans, sans-serif" font-size="46"
+        letter-spacing="2" fill="#eed59b">Monterey &amp; Santa Cruz counties</text>
+  <text x="168" y="984" font-family="DejaVu Sans, sans-serif" font-size="38"
+        letter-spacing="1" fill="#a39e96">montereybayevents.com</text>
+</svg>

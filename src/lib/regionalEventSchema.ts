@@ -37,15 +37,24 @@ export function isoDateTime(iso: string, time?: string): string {
   return time ? `${iso}T${time}:00${pacificOffset(iso)}` : iso;
 }
 
-/** The Place node: venue name where the CSV gives one, city + CA either way. */
+/**
+ * The Place node: venue name where one is known, city + CA either way.
+ *
+ * `streetAddress` and `postalCode` are emitted only for the rows that carry a
+ * real sourced address. They are never derived from the venue name — a Place
+ * whose address is a guess is worse than a Place with only a locality, because
+ * a maps result will happily send someone to the guess.
+ */
 export function buildPlace(event: RegionalEvent): JsonLd {
   return {
     "@type": "Place",
     name: event.venue ?? event.city ?? event.cityText,
     address: {
       "@type": "PostalAddress",
+      ...(event.streetAddress ? { streetAddress: event.streetAddress } : {}),
       ...(event.city ? { addressLocality: event.city } : {}),
       addressRegion: "CA",
+      ...(event.postalCode ? { postalCode: event.postalCode } : {}),
       addressCountry: "US",
     },
   };
