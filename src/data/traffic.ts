@@ -157,12 +157,12 @@ export const timberFire: Incident = {
   where: "Big Sur, Los Padres National Forest, Monterey County",
   headline:
     "Highway 1 is closed through Big Sur and the whole Big Sur coast is under evacuation orders or warnings. If your plans involve driving south of Carmel, they need to change.",
-  asOf: "Monday, 17 August 2026, 7:11 a.m. — the most recent figures at the time of writing",
+  asOf: "Monday, 17 August 2026, 7:11 a.m. — still the most recent acreage and containment anyone has published. Re-checked Tuesday 18 August: no newer reading, and the fire is not out",
   size: "5,153 acres",
   containment: "17% contained",
   started: "Saturday, 8 August, on Los Padres National Forest land; cause under investigation",
   roadClosure:
-    "Highway 1 is closed between mile marker 45.1, near the Big Sur Bakery at the north end, and mile marker 37 at Julia Pfeiffer Burns State Park at the south end. Still closed as of Monday morning, 17 August — day 10 of the incident — with no reopening announced.",
+    "Highway 1 is closed between mile marker 45.1, near the Big Sur Bakery at the north end, and Julia Pfeiffer Burns State Park at the south end. Still closed on Tuesday 18 August, day 11 of the incident, with no reopening announced. Sources do not agree on the southern limit — some place it at mile marker 37 and others at mile marker 31, the Julia Pfeiffer Burns vista point — so treat the whole stretch as shut and check Caltrans QuickMap for the live boundary before you drive it.",
   evacuationOrders: ["MRY-F023", "MRY-F025", "MRY-F026", "MRY-F027", "MRY-F028-A"],
   evacuationWarnings: [
     "MRY-F021-B",
@@ -187,7 +187,7 @@ export const timberFire: Incident = {
   detour:
     "Approach the Peninsula on Highway 101 from the north or east rather than Highway 1 from the south. There is no through route on Highway 1 between the Peninsula and San Simeon while this closure holds.",
   evacuationPoint:
-    "The Temporary Evacuation Point is Carmel Valley Library, 65 W. Carmel Valley Road, open Friday 14 August through Monday 17 August, 10:00 a.m. to 5:00 p.m. No extension past the 17th has been published; the county's information line is (831) 647-7760.",
+    "The overnight shelter is Carmel Middle School, 4380 Carmel Valley Road, Carmel, open since Monday 10 August. The separate Temporary Evacuation Point at Carmel Valley Library was published only for 14–17 August and that window has now passed, with no extension announced. The county's information line is (831) 647-7760.",
   sources: [
     SOURCES.calFireTimber,
     SOURCES.readyMonterey,
@@ -232,8 +232,9 @@ export const closures: Closure[] = [
       "2026-08-15",
       "2026-08-16",
       "2026-08-17",
+      "2026-08-18",
     ],
-    when: "Closed since Tuesday, August 11 — still closed Monday morning, August 17, with no reopening announced",
+    when: "Closed since Tuesday, August 11 — still closed Tuesday, August 18, with no reopening announced",
     reason:
       "Closed for public and firefighter safety because of the Timber Fire. This is an active incident with no announced reopening, so treat the southern approach to the Peninsula as unavailable and come in on Highway 101 instead. Because this closure outlasts the dates listed here, check Caltrans QuickMap for the live state of the road before you travel. See the full detail and live links at the top of this page.",
     confidence: "official",
