@@ -765,8 +765,14 @@ export const regionalEvents: RegionalEvent[] = [
     city: "Monterey",
     venue: "Historic downtown adobes",
     months: ["december"],
-    dateText: "December 11, 2026",
+    dateText: "December 11-12, 2026",
     start: "2026-12-11",
+    end: "2026-12-12",
+    times: [
+      { day: "Friday, December 11", hours: "5:00 - 9:00 p.m." },
+      { day: "Saturday, December 12", hours: "5:00 - 9:00 p.m." },
+    ],
+    timesConfidence: "official",
     category: "Holiday / Heritage",
     officialWebsite: "https://www.mshpa.org/christmasintheadobes",
     referenceUrls: [
