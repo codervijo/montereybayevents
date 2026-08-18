@@ -19,7 +19,7 @@ import {
   primaryMonth,
   type RegionalEvent,
 } from "../data/events-2026";
-import { buildRegionalEventJsonLd } from "../lib/regionalEventSchema";
+import { buildFaqJsonLd, buildRegionalEventJsonLd } from "../lib/regionalEventSchema";
 
 const { event } = Astro.props as { event: RegionalEvent };
 
@@ -35,7 +35,7 @@ const canonical = `${site}/event/${event.slug}/`;
 // Rendered from public/og-default.svg; re-render if that file changes.
 const image = `${site}/og-default.jpg`;
 const fallbackDescription = `${event.name} in ${event.city ?? event.county + " County"}, ${event.county} County — ${dateLabel}.`;
-const desc = (event.description ?? fallbackDescription).slice(0, 155);
+const desc = (event.metaDescription ?? event.description ?? fallbackDescription).slice(0, 160);
 const keywords = [
   event.name,
   `${event.city ?? event.county} events`,
@@ -49,6 +49,8 @@ const keywords = [
 // null for the undated events — an Event node without startDate is invalid, so
 // those pages ship with no Event markup rather than a guessed date.
 const jsonLd = buildRegionalEventJsonLd(event, site);
+// Only emitted when the same questions render visibly below.
+const faqJsonLd = buildFaqJsonLd(event);
 
 // A sourced street address beats the county fallback — it puts the maps pin on
 // the venue rather than on the middle of the city.
@@ -96,6 +98,7 @@ const others = eventsInMonth(month.key)
     <meta name="twitter:image:alt" content={`${event.name} — ${month.label}`} />
 
     {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {faqJsonLd && <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />}
   </Fragment>
 
   <main class="mx-auto max-w-4xl px-5 py-14">
@@ -123,9 +126,9 @@ const others = eventsInMonth(month.key)
     </div>
 
     {
-      event.description && (
-        <p class="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-          {event.description}
+      (event.intro ?? event.description) && (
+        <p class="mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+          {event.intro ?? event.description}
         </p>
       )
     }
@@ -225,6 +228,45 @@ const others = eventsInMonth(month.key)
               </li>
             ))}
           </ul>
+        </section>
+      )
+    }
+
+    {
+      event.sections && event.sections.length > 0 && (
+        <div class="mt-14 max-w-3xl space-y-10">
+          {event.sections.map((sec) => (
+            <section>
+              <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">
+                {sec.heading}
+              </h2>
+              {sec.body.map((para) => (
+                <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+                  {para}
+                </p>
+              ))}
+            </section>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      event.faq && event.faq.length > 0 && (
+        <section class="mt-14 max-w-3xl">
+          <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">
+            Common questions
+          </h2>
+          <dl class="mt-6 space-y-6">
+            {event.faq.map((f) => (
+              <div>
+                <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
+                <dd class="mt-2 text-base leading-relaxed text-muted-foreground">
+                  {f.a}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </section>
       )
     }

@@ -104,3 +104,23 @@ export function buildItemListJsonLd(
     })),
   };
 }
+
+/**
+ * FAQPage JSON-LD, emitted only when the page renders the same questions
+ * visibly. Google's guidance and plain honesty agree here: marking up an
+ * answer a reader cannot see on the page is the definition of misleading
+ * structured data, so this is driven off the very array the template renders
+ * and there is no second source of truth to drift from.
+ */
+export function buildFaqJsonLd(event: RegionalEvent): JsonLd | null {
+  if (!event.faq?.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: event.faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  };
+}

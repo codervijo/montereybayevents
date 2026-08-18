@@ -94,6 +94,24 @@ export type RegionalEvent = {
   /** Overrides the H1. The H1 serves the reader; the title serves the SERP. */
   headline?: string;
   /**
+   * Overrides the meta description. The default reuses `description`, which is
+   * written from CSV facts and says what an event IS; a researched page can say
+   * what the reader GETS instead, which is what earns the click.
+   */
+  metaDescription?: string;
+  /**
+   * Long-form body for a page we have actually researched, rather than the
+   * one-line `description` every CSV row gets. Present on the handful of
+   * listings where an organiser publishes enough to write something useful;
+   * absent everywhere else, and absent is the honest default — a padded page
+   * is worse than a short one.
+   */
+  intro?: string;
+  sections?: { heading: string; body: string[] }[];
+  /** Rendered visibly AND emitted as FAQPage JSON-LD. Never one without the other. */
+  faq?: { q: string; a: string }[];
+
+  /**
    * Suppresses the "Where this listing comes from" block on this page alone.
    * Set where the sources have been superseded by directly-sourced facts and
    * listing the original reference would misdescribe where the page's content
@@ -301,6 +319,86 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A two-day arts, music and community festival in Sand City on the last full weekend of August.",
+    officialWebsite: "https://westendcelebration.com/",
+    venue: "West End district, Sand City",
+    seoTitle: "West End Celebration 2026 \u2014 Dates, Parking & Free Shuttle",
+    metaDescription:
+      "Free, 22\u201323 August 2026 in Sand City. Six blocks closed to cars, three stages. Where to park, the free MST shuttle, and why listings show the wrong dates.",
+    headline: "Sand City West End Celebration 2026",
+    hideSources: true,
+    intro:
+      "The West End Celebration runs Saturday 22 and Sunday 23 August 2026 in Sand City, and it is free \u2014 the organisers state plainly that \u201cthere is no admission fee for the West End Celebration.\u201d Six blocks of the West End district close to cars for the weekend, along Ortiz Avenue and Redwood Avenue between Contra Costa Street and Holly Street. Expect three stages of live music, open galleries and more than 150 artists, vendors and local nonprofits. Opening times for 2026 have not been published yet.",
+    sections: [
+      {
+        heading: "Check the year before you trust a date",
+        body: [
+          "This is the thing most likely to send you on the wrong weekend. A lot of what is still circulating online \u2014 event aggregators, festival directories, cached listing pages \u2014 carries the 2025 dates of 23 and 24 August. The 2026 event is Saturday 22 and Sunday 23 August, one day earlier in the week, and that is what the organisers publish on their own site.",
+          "The same trap applies to the shuttle. The most findable page describing an MST free bus for this festival, complete with route number, pickup points and a timetable, is an announcement from 2010. Its details are sixteen years old. Do not plan around them.",
+        ],
+      },
+      {
+        heading: "What it actually is",
+        body: [
+          "Sand City is the smallest city on the Monterey Peninsula, and for one weekend its industrial West End is given over to pedestrians. Streets that normally carry cars become the venue: galleries open their doors, artists set up on the sidewalk, and three stages carry local and regional musicians continuously through the day.",
+          "The organisers put the count at more than 150 vendors, artists and local nonprofits, alongside food vendors and bars serving beer and wine. It has run for over twenty years and is produced by By The Glass Design. The character is closer to a neighbourhood block party that happens to have three stages than to a ticketed music festival \u2014 which is why it stays free.",
+        ],
+      },
+      {
+        heading: "Parking, the shuttle and the bike valet",
+        body: [
+          "Parking is the part people underestimate. The organisers say parking is available in designated areas around Sand City but that spaces fill quickly, and they actively encourage arriving another way. Six blocks of the street grid are closed, so the parking that does exist is further from the festival than a map suggests.",
+          "MST runs a free shuttle for the weekend. The organisers confirm the service for 2026 \u2014 free, serving various points around Sand City \u2014 but no 2026 route, pickup list or timetable has been published anywhere we can find. If you are relying on it, check mst.org or ask the organisers directly before the weekend rather than turning up expecting the 2010 schedule.",
+          "If you can ride there, do. A complimentary bike valet is provided by Greed Pedal Couriers, which sidesteps the parking problem entirely and is the single best piece of logistics advice for this event.",
+        ],
+      },
+      {
+        heading: "What it costs once you are inside",
+        body: [
+          "Admission is free and there is no ticket to buy. Money is spent inside: food vendors, and bars serving beer and wine. Open containers are permitted on the celebration footprint only \u2014 so a drink bought inside can travel between stages, but it cannot leave the closed streets, and outside alcohol is not allowed in.",
+          "Bring both cash and cards. The organisers recommend carrying both, and they do not publish an ATM location.",
+        ],
+      },
+      {
+        heading: "Rules that catch people out",
+        body: [
+          "Dogs are welcome, with a caveat the organisers put well: be sure your dog can handle large crowds and loud music. Three stages in six closed blocks is a lot of sound in a small footprint.",
+          "Left at home: outside alcohol and coolers, large bags and backpacks, drones, and unauthorised recording equipment. Worth bringing: comfortable shoes, sunscreen, a hat and a reusable water bottle \u2014 the West End is flat, exposed and short on shade.",
+        ],
+      },
+      {
+        heading: "What has not been published",
+        body: [
+          "Opening and closing times for 2026. The organisers\u2019 own FAQ says only that \u201cevent opening times will be announced soon,\u201d so this page carries no hours rather than repeating last year\u2019s. When they are announced, they land here.",
+          "The 2026 shuttle route and timetable, the music lineup and stage times, and any ATM or accessibility provision. None of these are published by the organisers at the time of writing, and none of them are guessed here.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the West End Celebration in 2026?",
+        a: "Saturday 22 and Sunday 23 August 2026. Note that many listings still show the 2025 dates of 23 and 24 August \u2014 the 2026 event is a day earlier.",
+      },
+      {
+        q: "Is the West End Celebration free?",
+        a: "Yes. The organisers state that there is no admission fee. Food, drink and anything you buy from vendors are not.",
+      },
+      {
+        q: "Where exactly is it held?",
+        a: "In Sand City\u2019s West End district, along Ortiz Avenue and Redwood Avenue between Contra Costa Street and Holly Street. Six blocks are closed to traffic for the weekend.",
+      },
+      {
+        q: "What time does it start?",
+        a: "Not yet announced. The organisers\u2019 FAQ says opening times will be published closer to the event, so no start time is listed here \u2014 last year\u2019s hours are not a safe guide.",
+      },
+      {
+        q: "Where do I park, and is there a shuttle?",
+        a: "Parking is in designated areas around Sand City and fills quickly. MST provides a free shuttle for the weekend, but no 2026 route or timetable has been published \u2014 check mst.org before you travel. There is also a free bike valet from Greed Pedal Couriers.",
+      },
+      {
+        q: "Can I bring my dog?",
+        a: "Yes, friendly dogs are welcome. The organisers ask that you make sure your dog can handle large crowds and loud music, which is a fair warning for three stages in six closed blocks.",
+      },
+    ],
   },
   {
     slug: "california-turkish-arts-culture-festival",
