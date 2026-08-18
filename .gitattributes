@@ -1,0 +1,16 @@
+# Line endings.
+#
+# The repo had exactly one CRLF file — the events CSV, which is the declared
+# source of record for src/data/events-2026.ts. Editing it from a script that
+# normalises newlines rewrote all 62 lines and buried a one-field change in a
+# 124-line diff. Normalising to LF everywhere makes that class of noise
+# impossible rather than something each editor has to remember.
+* text=auto eol=lf
+
+# Binary assets — never line-ending-converted, never diffed as text.
+*.ico  binary
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.webp binary
+*.pdf  binary
