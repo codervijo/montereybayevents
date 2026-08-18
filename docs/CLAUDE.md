@@ -55,6 +55,20 @@ git push            # Cloudflare Pages auto-builds on push to main
   - Stack: pnpm-only. No `package-lock.json` / `bun.lockb` / `yarn.lock`.
   - Deploy: Cloudflare Pages via `wrangler.jsonc`. No `_redirects`
     SPA fallback (uses CF's `not_found_handling` instead).
+  - **The `docs/prd.md` row ships in the version's own commit.** When you
+    commit a `vN.X` change, `git add docs/prd.md` alongside the source —
+    the phase-table row plus `project_version` and `last_updated` in the
+    frontmatter, all in the same commit. Never as a follow-up docs commit.
+    This is a rule because the follow-up kept not happening: v1.E shipped
+    and went live with no row at all, v1.D sat for five days still marked
+    "not yet deployed", and the frontmatter drifted four phases behind at
+    `project_version: v1.C`. Note the frontmatter sits *above* the H1, so
+    read from line 1 rather than jumping to the phase table — that is how
+    it got missed. Status reads `✅ shipped — built and tested locally,
+    not yet deployed` until a deploy is confirmed against the live URL,
+    then `✅ shipped — live (deploy confirmed YYYY-MM-DD)`. What the row
+    is *for* is the part the diff cannot carry: why a decision went the
+    way it did, what was deliberately not done, and any trap left behind.
 
 ## Heading hygiene
 
