@@ -606,6 +606,40 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A Greek cultural and food festival at Custom House Plaza in Monterey. The 2026 date has not been announced.",
+    metaDescription:
+      "The 2026 date is not announced, but the organisers hold it every Labor Day weekend, Saturday to Monday, at Custom House Plaza in Monterey.",
+    intro:
+      "The Monterey Bay Greek Festival has no announced 2026 date, and this page will not guess one. What the organisers do publish is the pattern: Saint John the Baptist Greek Orthodox Church of Monterey County holds it every Labor Day weekend, Saturday to Monday, at Custom House Plaza beside Old Fisherman\u2019s Wharf. If you are planning around it, that is the weekend to keep free.",
+    sections: [
+      {
+        heading: "What \u201cevery Labor Day weekend\u201d means for 2026",
+        body: [
+          "Labor Day 2026 falls on Monday 7 September. So if the festival runs to its usual pattern, it would land on 5\u20137 September \u2014 but that is arithmetic on a recurring rule, not a date anyone has announced, and it is not what this page publishes. The date field above stays empty and this listing carries no event date in its structured data until the organisers announce one.",
+          "That distinction matters more than it sounds. A date computed from a pattern looks identical to a confirmed one once it has been copied into a few calendars, and by then nobody can tell which it was. Treat 5\u20137 September as the weekend to hold, and confirm before you book anything around it.",
+        ],
+      },
+      {
+        heading: "What it is",
+        body: [
+          "It is the parish\u2019s largest fundraiser of the year rather than a commercial festival, which shapes the whole character of it: the food is cooked by parishioners to recipes and techniques carried over from Greece, not brought in by caterers. Expect Greek cuisine, wine and pastries, live Greek music and dancing, on the waterfront plaza at Custom House.",
+          "Custom House Plaza sits inside Monterey State Historic Park, flat and paved, immediately beside Old Fisherman\u2019s Wharf and walkable from downtown Monterey. It is the same plaza the Turkish festival uses in August.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Monterey Bay Greek Festival in 2026?",
+        a: "Not yet announced. The organisers hold it every Labor Day weekend, Saturday to Monday. Labor Day 2026 is Monday 7 September, so that weekend is the one to keep free \u2014 but no 2026 date has been published and this page does not estimate one.",
+      },
+      {
+        q: "Who runs it?",
+        a: "Saint John the Baptist Greek Orthodox Church of Monterey County. The festival is the parish\u2019s largest fundraising event of the year.",
+      },
+      {
+        q: "Where is it held?",
+        a: "Custom House Plaza in Monterey, inside Monterey State Historic Park and directly beside Old Fisherman\u2019s Wharf.",
+      },
+    ],
   },
   {
     slug: "gridlife-laguna-festival",
