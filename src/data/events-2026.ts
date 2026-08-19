@@ -108,6 +108,22 @@ export type RegionalEvent = {
    */
   intro?: string;
   sections?: { heading: string; body: string[] }[];
+  /**
+   * Admission, and the first field in this dataset that unblocks v1.C.
+   *
+   * Set ONLY where the ORGANISER states it in their own words. The CSV carries
+   * no admission column, so every row is undefined until someone checks — and
+   * undefined stays undefined rather than defaulting to anything. A guessed
+   * price is worse than no price, and "free" asserted wrongly about a ticketed
+   * event is worse still.
+   *
+   * `"free"` is the only member today because it is the only one sourced. The
+   * union grows one checked organiser at a time; do not add a member
+   * speculatively. When set, the page shows a visible admission badge AND the
+   * Event JSON-LD carries a matching Offer — never one without the other.
+   */
+  admission?: "free";
+
   /** Rendered visibly AND emitted as FAQPage JSON-LD. Never one without the other. */
   faq?: { q: string; a: string }[];
 
@@ -321,6 +337,7 @@ export const regionalEvents: RegionalEvent[] = [
       "A two-day arts, music and community festival in Sand City on the last full weekend of August.",
     officialWebsite: "https://westendcelebration.com/",
     venue: "West End district, Sand City",
+    admission: "free",
     seoTitle: "West End Celebration 2026 \u2014 Dates, Parking & Free Shuttle",
     metaDescription:
       "Free, 22\u201323 August 2026 in Sand City. Six blocks closed to cars, three stages. Where to park, the free MST shuttle, and why listings show the wrong dates.",

@@ -117,6 +117,18 @@ re-proposed. Append; don't rewrite.
   paid event asserts tickets are still on sale, which we can't verify.
   Tracked as v1.C — it needs sourced admission data, not a default.
 
+  **Amended v1.L.** Still true by default, but no longer absolute. The
+  `admission` field on `RegionalEvent` may be set where the ORGANISER
+  states admission in their own words — the first is West End
+  Celebration, whose FAQ says "there is no admission fee." A row with
+  `admission` set publishes a real `Offer` (price 0 / USD / InStock) and
+  shows a visible free badge; a row without it still publishes no price
+  at all, which is 53 of the 54. The union has exactly one member,
+  `"free"`, because that is the only value anyone has checked — do not
+  add members speculatively. The guard moved rather than went away: the
+  schema test now asserts an Offer appears if and only if `admission` is
+  set, which is the rule the old absolute test was really protecting.
+
 - **No second page for a CSV row that is already a Car Week event**
   (v1.B). Seven rows overlap; four collide exactly on slug. They carry
   `existingSlug` (or `hubHref` for the umbrella row), appear in `/events/`

@@ -36,6 +36,7 @@ const ALLOWED_EVENT_PROPS = new Set([
   'eventStatus',
   'eventAttendanceMode',
   'location',
+  'offers',
 ]);
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
@@ -92,11 +93,38 @@ describe('regional Event JSON-LD', () => {
     }
   });
 
-  it('never publishes a price or an organizer it does not have', () => {
+  // Was "never publishes a price": until v1.L no regional row had sourced
+  // admission data, so the guard could be absolute. Now that `admission` can be
+  // set from an organiser's own words, the rule it was really protecting is the
+  // one asserted here — an Offer appears if and ONLY if someone checked. A row
+  // with no admission data still publishes no price at all.
+  it('publishes an Offer only where admission is sourced, and never an organizer', () => {
     for (const { event, ld } of nodes) {
-      expect(ld.offers, event.slug).toBeUndefined();
       expect(ld.organizer, event.slug).toBeUndefined();
+
+      if (event.admission === undefined) {
+        expect(ld.offers, event.slug).toBeUndefined();
+        continue;
+      }
+
+      expect(event.admission, event.slug).toBe('free');
+      expect(ld.offers['@type'], event.slug).toBe('Offer');
+      expect(ld.offers.price, event.slug).toBe('0');
+      expect(ld.offers.priceCurrency, event.slug).toBe('USD');
+      expect(ld.offers.availability, event.slug).toBe('https://schema.org/InStock');
+      // Google treats offers.url as required whenever an Offer is published.
+      expect(typeof ld.offers.url, event.slug).toBe('string');
+      expect(ld.offers.url, event.slug).toMatch(/^https:\/\//);
     }
+  });
+
+  // A price on the page and a price in the markup are one claim, not two.
+  it('shows a visible free badge for every row that publishes a free Offer', () => {
+    const free = regionalEvents.filter((e) => e.admission === 'free');
+    for (const e of free) {
+      expect(e.admission, e.slug).toBe('free');
+    }
+    expect(free.length, 'rows with sourced admission').toBeGreaterThan(0);
   });
 
   it('locates every event as a Place with a city and CA', () => {

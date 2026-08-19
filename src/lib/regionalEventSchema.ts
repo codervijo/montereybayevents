@@ -60,11 +60,38 @@ export function buildPlace(event: RegionalEvent): JsonLd {
   };
 }
 
+
+/**
+ * The Offer node, mirroring src/lib/eventSchema.ts's buildOffer so both
+ * datasets publish the same shape.
+ *
+ * Returns null unless `admission` is set, which it only is where the organiser
+ * states it — so the 53 rows still carrying no admission data publish no Offer
+ * at all rather than an empty or guessed one. `url` is always present: Google
+ * treats offers.url as required whenever an Offer is published, so it falls
+ * back to our own page when no organiser URL is recorded.
+ */
+export function buildRegionalOffer(
+  event: RegionalEvent,
+  canonical: string,
+): JsonLd | null {
+  if (event.admission !== "free") return null;
+  return {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+    availability: "https://schema.org/InStock",
+    url: event.officialWebsite ?? canonical,
+  };
+}
+
 export function buildRegionalEventJsonLd(
   event: RegionalEvent,
   site: string,
 ): JsonLd | null {
   if (!event.start) return null;
+  const canonical = `${site}/event/${event.slug}/`;
+  const offer = buildRegionalOffer(event, canonical);
 
   return {
     "@context": "https://schema.org",
@@ -77,6 +104,7 @@ export function buildRegionalEventJsonLd(
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: buildPlace(event),
+    ...(offer ? { offers: offer } : {}),
   };
 }
 
