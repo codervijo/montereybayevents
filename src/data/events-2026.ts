@@ -415,14 +415,83 @@ export const regionalEvents: RegionalEvent[] = [
     end: "2026-08-30",
     times: [
       { day: "Saturday, August 29", hours: "11:00 a.m. – 7:00 p.m." },
-      { day: "Sunday, August 30", hours: "11:00 a.m. – 6:00 p.m." },
+      { day: "Sunday, August 30", hours: "11:00 a.m. – 7:00 p.m." },
     ],
-    timesConfidence: "unconfirmed",
+    timesConfidence: "official",
     category: "Cultural Festival",
     referenceUrls: ["https://whatsupmonterey.com/events"],
     description:
       "A two-day Turkish arts and culture festival at Custom House Plaza in Monterey.",
-    seoTitle: "California Turkish Arts & Culture Festival — Monterey",
+    intro:
+      "The Turkish festival at Custom House Plaza returns for its 26th year on Saturday 29 and Sunday 30 August 2026, at Custom House Plaza on the Monterey waterfront, and admission is free. It is presented by the Turkish American Association of California, a 501(c)(3) nonprofit founded in 1975. Expect Whirling Dervishes, folk and belly dancing, live Turkish music, artisan booths and a full Turkish menu. The organisers publish hours of 11:00 a.m. to 7:00 p.m. on both days — though several listings disagree about Sunday, which is worth knowing before you plan a late afternoon.",
+    sections: [
+      {
+        heading: "Two things to check before you go",
+        body: [
+          "The first is the name, because this festival is listed under at least three of them. The organisers themselves use Monterey Turkish Arts & Culture Festival. Local listings variously use Monterey Turkish Arts and Cultural Festival and California Turkish Arts & Culture Festival. All three are the same event, on the same plaza, on the same weekend — so if a search turns up what looks like two festivals, it is one.",
+          "The second matters more on the day. The Turkish American Association of California publishes hours of 11:00 a.m. to 7:00 p.m. on both Saturday and Sunday. Several secondary listings, including local ones, show Sunday closing an hour earlier at 6:00 p.m. We publish the organiser's hours because they are the organiser's — but if you are arriving late on Sunday specifically to see something, treat 6:00 p.m. as the safe assumption rather than 7:00.",
+        ],
+      },
+      {
+        heading: "What actually happens there",
+        body: [
+          "The signature act is the Whirling Dervishes, performing the sema — the Mevlevi turning ceremony — with teaching demonstrations alongside it, so you get an explanation rather than only a spectacle. Sources differ on whether they appear both days or Saturday only.",
+          "Around that runs continuous live music and dance: Turkish folk dances including the Horon, Dirmil and Silifke, belly dancing, and in 2026 the Group Taksim Big Band. Past years have included a mini Turkish wedding dance taught to the audience, which is the sort of thing that makes this feel like a community event rather than a performance watched from behind a rope.",
+          "The artisan side is the quieter half and easy to miss. Booths demonstrate traditional crafts including ebru, the art of water marbling, and Turkish carpet weaving — both slow, hands-on, and far more interesting up close than any stage act at fifty metres.",
+        ],
+      },
+      {
+        heading: "The food is why many people come",
+        body: [
+          "The kitchen runs to a real menu rather than festival snacks: Adana kebap and doner kebap, borek, gözleme cooked to order, simit, and baklava with kaymak. Turkish coffee and tea are served throughout.",
+          "This is one of the few places on the Peninsula to eat this food, which is why the queues at the food booths tend to be longer than the queues for anything else. If eating is the priority, arrive nearer opening than closing.",
+        ],
+      },
+      {
+        heading: "Where it is, and bringing children",
+        body: [
+          "Custom House Plaza sits inside Monterey State Historic Park at 20 Custom House Plaza, immediately beside Old Fisherman's Wharf. It is the plaza in front of the Custom House itself: flat, paved, walkable from downtown Monterey and directly on the waterfront.",
+          "Children's activities are a real part of the programme rather than a corner with crayons — puppet making, face painting, colouring, games, and folk dancing children are pulled into rather than shown. Admission is free for everyone, so a short visit costs nothing but parking.",
+        ],
+      },
+      {
+        heading: "What has not been published",
+        body: [
+          "A stage schedule. There is no published running order for either day, so which act is on when is not something this page can tell you — and that includes the Dervish performances.",
+          "Any parking guidance from the organisers. Custom House Plaza has no parking of its own, and while downtown Monterey's garages and waterfront lots are the usual answer, the organisers publish nothing official about them and neither will we.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Monterey Turkish festival in 2026?",
+        a: "Saturday 29 and Sunday 30 August 2026 — its 26th year. The organisers publish 11:00 a.m. to 7:00 p.m. on both days, though several listings show Sunday closing at 6:00 p.m.",
+      },
+      {
+        q: "Is it free?",
+        a: "Yes. Admission is free on both days, for all ages. Food, drink and anything bought from the artisan booths are not.",
+      },
+      {
+        q: "Why do I see it under different names?",
+        a: "It is listed as the Monterey Turkish Arts & Culture Festival, the Monterey Turkish Arts and Cultural Festival, and the California Turkish Arts & Culture Festival. Same event, same plaza. The organisers use the first.",
+      },
+      {
+        q: "Will the Whirling Dervishes perform on both days?",
+        a: "Sources disagree. Some say both Saturday and Sunday; the organisers' own page lists Saturday. No running order has been published, so if this is why you are going, Saturday is the safer choice.",
+      },
+      {
+        q: "Where exactly is Custom House Plaza?",
+        a: "20 Custom House Plaza, Monterey CA 93940, inside Monterey State Historic Park and directly beside Old Fisherman's Wharf. Flat, paved and walkable from downtown Monterey.",
+      },
+      {
+        q: "Who runs it?",
+        a: "The Turkish American Association of California, also known as CalTurks — a California 501(c)(3) nonprofit founded in 1975. This is their 26th year running the Monterey festival.",
+      },
+    ],
+    officialWebsite: "https://www.turkfestca.org/",
+    seoTitle: "Turkish Festival Monterey 2026 — Dates, Hours & What’s On",
+    metaDescription:
+      "Free, 29–30 August 2026 at Custom House Plaza. Whirling Dervishes, Turkish food, hours — and why some listings show a different name and a shorter Sunday.",
     headline: "California Turkish Arts & Culture Festival 2026",
     hideSources: true,
   },
