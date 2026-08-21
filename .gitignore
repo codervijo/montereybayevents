@@ -33,3 +33,6 @@ build/
 
 # Caches
 .eslintcache
+
+# lamill consumer-data exchange (transient, refreshed per crawl)
+.lamill/

@@ -159,6 +159,25 @@ re-proposed. Append; don't rewrite.
   whether the month hubs pick up impressions that `/events/` doesn't.
   Don't build them speculatively.
 
+  **Reaffirmed 2026-08-21**, when city hubs (`/events/monterey/`,
+  `/events/salinas/`, `/events/santa-cruz/`) were proposed again. The
+  original condition still has not been evaluated, and there is now a
+  sharper argument: GSC shows Google has not re-crawled a single
+  `/event/` page since 4 August. Adding URLs to a site whose existing
+  URLs are not being revisited spreads the same crawl budget thinner.
+  Wrong direction while crawl is the constraint.
+
+- **Three things that keep getting re-proposed are already shipped**
+  (recorded 2026-08-21 so they stop coming back). Every event page
+  already carries **6** outbound `/event/` links via "Also in {month}".
+  Sitemap `lastmod` already exists and is truthful — six URLs carry a
+  real date, 109 carry none, per v1.S. `Event` JSON-LD is already on
+  **101 of 104** event pages with `startDate`/`endDate`/`location`/`url`,
+  and `offers` on 46; the three without it are the deliberately undated
+  rows, where schema.org requires a `startDate` we do not have. Check
+  the built output before accepting a recommendation that any of these
+  is missing.
+
 - **No SPA fallback**, ever. See Conventions above and AI_AGENTS.md —
   `wrangler.jsonc`'s `not_found_handling: "404-page"` is what serves real
   404s, and `public/_redirects` is load-bearing for real 301s.
