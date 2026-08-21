@@ -539,7 +539,96 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-09-03",
     end: "2026-09-07",
     category: "County Fair",
+    streetAddress: "2004 Fairground Road",
+    postalCode: "93940",
+    updated: "2026-08-21",
+    times: [
+      { day: "Thursday 3 – Sunday 6 September", hours: "11:00 a.m. – 11:00 p.m." },
+      { day: "Monday 7 September", hours: "10:00 a.m. – 11:00 p.m." },
+    ],
+    timesConfidence: "unconfirmed",
     officialWebsite: "https://montereycountyfair.com/monterey-county-fair/",
+    metaDescription:
+      "3–7 September 2026. Advance adult admission $16.95, three free-entry days, $25 parking off-site — and the arena tickets fair admission does not cover.",
+    intro:
+      "The Monterey County Fair runs Thursday 3 to Monday 7 September 2026 at the Monterey County Fair & Event Center, 2004 Fairground Road. Advance adult admission is $16.95, and there are three separate days when a whole category gets in free. Five nights of headline concerts are included with admission — but the rodeo and arena events are not, which is the single thing most likely to catch you out.",
+    sections: [
+      {
+        heading: "Check the day of the week, not just the date",
+        body: [
+          "Several listings circulating for this fair pair the right dates with the wrong weekdays — \"Friday, September 3\" turns up repeatedly, and 3 September 2026 is a Thursday. The same listings put Left of Centre on the Payton Stage on the opening night. The organisers have Eli Young Band on Payton that night; Left of Centre plays the Turf Stage, twice a night, Thursday through Sunday.",
+          "The fair itself runs Thursday 3 through Monday 7 September, five days ending on Labor Day. If a listing shows you a weekday, check it against the date before you plan around it.",
+        ],
+      },
+      {
+        heading: "What admission costs, and the three days it costs nothing",
+        body: [
+          "Advance prices are $16.95 for adults 13–61, $13.56 for seniors 62 and over, and $9.04 for children 6–12. Children 5 and under are free every day. Prices rise once the fair opens on 3 September, so buying ahead is worth real money rather than a token discount.",
+          "Three days carry a full free-entry category. Thursday 3 September is Seniors Day — anyone 62 or better is admitted free all day. Friday 4 September is Military and Veterans Day, with all military, veterans and their dependents free all day. Monday 7 September is Kids Day, with everyone 12 and under free all day.",
+          "There is also a military pre-sale at $12 for adults and $6 for children 6–12, valid with military ID and including dependents. It runs through 28 August, so it closes before the fair does.",
+        ],
+      },
+      {
+        heading: "The tickets that fair admission does NOT cover",
+        body: [
+          "This is where money goes unexpectedly. Arena events are separately ticketed, from $5.65 to $20.34, and fair admission is not included in them. Carnival rides are separate too: an unlimited single-day wristband is $35 in pre-sale, or $55 with front-of-line access.",
+          "The Flying U Rodeo is a mixed case worth reading carefully. General admission is free with fair entry on Friday, Saturday and Sunday, and box seats are $17. But the Sunday performance is separately ticketed at $14 for adults and $7 for children 6–12, with under-5s free. Mutton Bustin\u2019 for ages 4 to 7 costs $10 to enter, and runs Friday 6 p.m., Saturday 6 p.m., and twice on Sunday at 2 p.m. and 6 p.m.",
+          "Two add-ons exist if you plan to eat and play: a Family Meal Deal at $55 that the fair values at $111, and a Game Pass at $55 for $100 of credits.",
+        ],
+      },
+      {
+        heading: "Parking is off-site and limited",
+        body: [
+          "Parking is at Monterey Pines Golf Course at $25 per vehicle — not at the fairgrounds themselves. The organisers describe parking as extremely limited and actively encourage carpooling, taxis, public transport or the shuttle service instead.",
+          "That matters more than it sounds for a fair that runs to 11 p.m. Arriving late on a Saturday with a car and no plan is the version of this day that goes badly.",
+        ],
+      },
+      {
+        heading: "The concerts are free with admission",
+        body: [
+          "Five headline nights on the Payton Stage, all at 7:30 p.m. and all included with fair admission: Eli Young Band on Thursday 3rd, Devotional \u2014 The Depeche Mode Experience featuring Freddie Morales on Friday 4th, Journey Revisited on Saturday 5th, Amigo Bronco The Tribute on Sunday 6th, and Twist On Taylor on Monday 7th.",
+          "The Turf Stage at the Buckaroos and Brews Saloon runs Left of Centre twice nightly, at 6 p.m. and 9 p.m., Thursday through Sunday. The Island Stage rotates daily with Salsa Steel Drums from 1 p.m. and Jimmy Becker from 5 p.m.",
+          "Around them run the acts that make a county fair a county fair: Master Hypnotist Tina Marie, Frank Thurston\u2019s family comedy magic, The Wilder Show, the stilt-walking Slim & Curly, Brad\u2019s World Reptiles, the K9 Kings Flying Dog Show, and All Creatures Barnyard Races \u2014 pigs, goats, sheep, ducks, turkeys, chickens and geese. Twenty-plus regional community performers fill the rest.",
+        ],
+      },
+      {
+        heading: "What has not been published",
+        body: [
+          "Confirmed gate hours. The hours shown above \u2014 11:00 a.m. to 11:00 p.m. Thursday to Sunday and 10:00 a.m. to 11:00 p.m. on Monday \u2014 come from a secondary listing rather than from the fair\u2019s own site, so they are not carried in this page\u2019s structured data. They fit the Thursday-to-Monday run exactly, which is a point in their favour, but the fair has not published them itself. Call (831) 372-5863 if the opening time decides your day.",
+          "Set times for the community stages, and the exhibit and livestock judging schedule.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Monterey County Fair in 2026?",
+        a: "Thursday 3 to Monday 7 September 2026, five days ending on Labor Day, at 2004 Fairground Road, Monterey. Note that 3 September is a Thursday \u2014 several listings pair these dates with the wrong weekdays.",
+      },
+      {
+        q: "How much is admission?",
+        a: "In advance, $16.95 for adults 13\u201361, $13.56 for seniors 62 and over, and $9.04 for children 6\u201312. Children 5 and under are free every day. Prices go up once the fair opens on 3 September.",
+      },
+      {
+        q: "Are there free days?",
+        a: "Three. Thursday 3 September is Seniors Day (62+ free all day), Friday 4 September is Military and Veterans Day (military, veterans and dependents free all day), and Monday 7 September is Kids Day (12 and under free all day).",
+      },
+      {
+        q: "Are the concerts included with admission?",
+        a: "Yes. All five Payton Stage headliners at 7:30 p.m. are free with fair admission, as are the Turf Stage and Island Stage acts. Carnival rides and arena events are not.",
+      },
+      {
+        q: "What is not included in fair admission?",
+        a: "Arena events, which are separately ticketed from $5.65 to $20.34. Carnival rides, at $35 for an unlimited single-day wristband or $55 with front-of-line access. And the Sunday rodeo performance, which is $14 for adults and $7 for children 6\u201312 even though Friday and Saturday rodeo is free with fair entry.",
+      },
+      {
+        q: "Where do I park?",
+        a: "At Monterey Pines Golf Course, $25 per vehicle \u2014 not at the fairgrounds. The organisers call parking extremely limited and recommend carpooling, taxis, public transport or the shuttle.",
+      },
+      {
+        q: "What time does the fair open?",
+        a: "Not published by the fair itself. A secondary listing gives 11:00 a.m. to 11:00 p.m. Thursday to Sunday and 10:00 a.m. to 11:00 p.m. on Monday, which fits the run, but this page does not treat it as confirmed. The fair\u2019s number is (831) 372-5863.",
+      },
+    ],
     referenceUrls: [
       "https://www.seemonterey.com/event/monterey-county-fair/",
       "https://www.montereyhotel.com/local-events",

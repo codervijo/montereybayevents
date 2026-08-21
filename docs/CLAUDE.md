@@ -55,6 +55,26 @@ git push            # Cloudflare Pages auto-builds on push to main
   - Stack: pnpm-only. No `package-lock.json` / `bun.lockb` / `yarn.lock`.
   - Deploy: Cloudflare Pages via `wrangler.jsonc`. No `_redirects`
     SPA fallback (uses CF's `not_found_handling` instead).
+  - **Cross-check every weekday against its date with `date -d`.** Any
+    source that pairs a day name with a date — "Friday, September 3",
+    "Saturday and Sunday, August 29-30" — is asserting two facts, and on
+    an events site a mismatch between them is the single most common way
+    stale information travels. Run `date -d 2026-09-03 +%A` before you
+    trust the pair, and before you write one yourself.
+
+    This is not theoretical. It caught prior-year data being served as
+    current for the Monterey County Fair, where several listings say
+    "Friday, September 3" and 3 September 2026 is a Thursday; the same
+    listings put the wrong act on the opening night. It also caught the
+    Timber Fire's start date being a day off (v1.F), and confirmed the
+    Greek festival's Labor Day arithmetic (v1.M). A weekday that does not
+    match its date means you are reading last year's page — treat every
+    other fact on it as suspect, and go to the organiser.
+
+    The reverse is also worth doing: when you write "Saturday 22 and
+    Sunday 23 August", verify both. A wrong weekday on our page is
+    exactly the error we exist to correct on other people's.
+
   - **The `docs/prd.md` row ships in the version's own commit.** When you
     commit a `vN.X` change, `git add docs/prd.md` alongside the source —
     the phase-table row plus `project_version` and `last_updated` in the
