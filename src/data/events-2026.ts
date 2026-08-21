@@ -668,7 +668,88 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-09-04",
     end: "2026-09-06",
     category: "Motorsports",
+    updated: "2026-08-21",
+    times: [
+      { day: "Friday 4 September", hours: "On track 9:00 a.m. – 5:30 p.m." },
+      { day: "Saturday 5 September", hours: "On track 9:00 a.m. – 4:33 p.m." },
+      { day: "Sunday 6 September", hours: "On track from 9:38 a.m.; race green flag 12:05 p.m." },
+    ],
+    timesConfidence: "official",
     officialWebsite: "https://weathertechraceway.com/",
+    metaDescription:
+      "4–6 September 2026, the INDYCAR season finale at Laguna Seca. Full on-track schedule, what general admission includes — and a child-ticket rule two official pages disagree on.",
+    intro:
+      "The INDYCAR Grand Prix of Monterey runs Friday 4 to Sunday 6 September 2026 at WeatherTech Raceway Laguna Seca, and it is the finale of both the NTT INDYCAR Series and INDY NXT seasons — the 2026 champion is crowned here. The green flag drops at 12:05 p.m. on Sunday. General admission includes paddock access and the hillsides, which at this circuit means the Corkscrew.",
+    sections: [
+      {
+        heading: "The child-ticket rule: two official pages disagree",
+        body: [
+          "Check this before you buy. The raceway's own ticket-information page states that “children 15 and under are free with a paid adult”, and INDYCAR's announcement of this race said the same — under-15s admitted free with an adult ticket holder. But the event's own page at the raceway says “children regardless of age must have a separate ticket”.",
+          "Those cannot both be true as written. It may be that the stricter line applies only to premium seating — the ticket-information page does carve out Premier Pit Row Suites, where children pay full price with a Youth Legends Club rate for ages 5 to 15. But that is an inference, not something either page states, so it is not published here as the answer. If you are bringing children, confirm with the box office rather than assuming the more generous rule applies.",
+        ],
+      },
+      {
+        heading: "The full on-track schedule",
+        body: [
+          "Friday 4 September opens with Porsche Sprint Challenge practice at 9:00 a.m., a Historic INDYCAR Exhibition at 10:00, the first NTT INDYCAR Series practice from 2:00 to 3:20 p.m., and Porsche qualifying from 4:45 to 5:30 p.m.",
+          "Saturday 5 September is the busiest day: Porsche Sprint Challenge race one at 9:00 a.m., INDYCAR practice two from 10:05 to 11:25, INDYCAR qualifying from 1:35 to 2:55 p.m., and INDY NXT race one from 3:38 to 4:33 p.m. If you are coming for a single day and want the most track action, this is it.",
+          "Sunday 6 September has INDY NXT race two from 9:38 to 10:28 a.m., then the main event — green flag at 12:05 p.m., running to about 2:10 p.m. Sunday is the shorter day on track but it is the one that decides the championship.",
+        ],
+      },
+      {
+        heading: "What general admission actually gets you",
+        body: [
+          "More than at most circuits. General admission includes paddock access — the “cold garage” area where race teams set up their trailers and displays. It does not include hot pit access, which is the distinction people get wrong.",
+          "Seating is first-come, first-served: uncovered grandstands near Turn 4 and Turn 11, or the hillsides. The hillside at Turn 2 and above the Corkscrew at Turn 8 is why people rate Laguna Seca as a spectating circuit — the Corkscrew's drop is something television does not convey, and standing there costs nothing extra.",
+          "Bring blankets, umbrellas and folding chairs for the hillsides. Small ice chests are permitted. No glass.",
+        ],
+      },
+      {
+        heading: "Parking and camping",
+        body: [
+          "General parking is the Purple 10 area, entered from South Boundary Road. Preferred parking in the Green Lakebed area can be bought. Note that there is no overnight parking in either the general or preferred areas — leaving a vehicle overnight requires a camping pass.",
+          "General camping is first-come, first-served near Turns 9 to 11, and tent camping runs 3–7 September, so you can arrive the day before. No picnic tables, barbecues or fire pits are provided; you may bring your own barbecue and a self-contained fire pit, but fires cannot be in the ground. Every camper needs an admission ticket as well as the camping pass.",
+          "Premium trackside camping and the new-for-2026 Turn 3 VIP Club — overlooking the Andretti Hairpin, Turn 3 and Turn 4, with chef-prepared breakfast and lunch buffets on Saturday and Sunday — are sold separately. The Champions Club is already sold out for 2026.",
+        ],
+      },
+      {
+        heading: "What has not been published",
+        body: [
+          "Ticket prices. The raceway sells through an external platform and lists no prices on the pages describing this event, so none appear here. Buy through the official site rather than a resale listing.",
+          "Gate opening times for this weekend specifically. The venue says gates “typically” open at 7 a.m. and close between 10 p.m. and midnight depending on the event, which is a general statement about the circuit rather than a published time for these three days. The on-track times above are the organiser's own and are firm.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the INDYCAR race at Laguna Seca in 2026?",
+        a: "Friday 4 to Sunday 6 September 2026. The Grand Prix itself takes the green flag at 12:05 p.m. on Sunday 6 September.",
+      },
+      {
+        q: "Is this the INDYCAR season finale?",
+        a: "Yes. It closes both the NTT INDYCAR Series and INDY NXT by Firestone seasons, and the 2026 champion is crowned here.",
+      },
+      {
+        q: "Are children free?",
+        a: "The two official pages disagree. The raceway's ticket-information page and INDYCAR's own announcement both say children 15 and under are free with a paid adult; the event page at the raceway says children of any age need a separate ticket. Confirm with the box office before you travel rather than assuming the more generous rule.",
+      },
+      {
+        q: "Does general admission include the paddock?",
+        a: "Yes. General admission includes paddock access — the cold garage area where teams set up. It does not include hot pit access.",
+      },
+      {
+        q: "Where can I sit or stand on a general admission ticket?",
+        a: "Uncovered grandstands near Turn 4 and Turn 11, first-come first-served, or the hillsides at Turn 2 and above the Corkscrew at Turn 8. Blankets, umbrellas, folding chairs and a small ice chest are all allowed; glass is not.",
+      },
+      {
+        q: "Can I camp at the track?",
+        a: "Yes. General camping is first-come, first-served near Turns 9–11, with tent camping available 3–7 September. No barbecues or fire pits are provided, though you may bring your own barbecue and a self-contained fire pit; fires cannot be in the ground. Every camper needs an admission ticket too, and overnight parking is not allowed in the general or preferred lots without a camping pass.",
+      },
+      {
+        q: "How much are tickets?",
+        a: "Not published on the raceway's event pages — they sell through an external platform, so no price is listed here. The Champions Club is sold out for 2026; the Turn 3 VIP Club is new this year.",
+      },
+    ],
     referenceUrls: [
       "https://www.weathertechracing.com/2026-full-schedule",
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
