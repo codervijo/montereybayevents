@@ -187,6 +187,17 @@ re-proposed. Append; don't rewrite.
   URLs are not being revisited spreads the same crawl budget thinner.
   Wrong direction while crawl is the constraint.
 
+- **See Monterey's compiled annual-events PDF has produced two wrong
+  dates.** `2026-Annual-Events-Monterey-County-CA.pdf` is a
+  `referenceUrl` on 15 rows and is where several original dates came
+  from. It had Christmas in the Adobes as one evening when the organiser
+  publishes two (fixed v1.J), and Festa Italia as 4–6 September when it
+  is 11–13 — a full week early, fixed v1.U.3. Treat it as a discovery
+  source for *which* events exist, never as authority for *when*. Rows
+  still carrying only that PDF and no organiser check: Castroville
+  Artichoke, PURE Insurance Championship, Meet the Makers, First Night
+  Monterey. Verify each against its organiser before trusting the date.
+
 - **Three things that keep getting re-proposed are already shipped**
   (recorded 2026-08-21 so they stop coming back). Every event page
   already carries **6** outbound `/event/` links via "Also in {month}".

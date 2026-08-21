@@ -645,10 +645,81 @@ export const regionalEvents: RegionalEvent[] = [
     city: "Monterey",
     venue: "Custom House Plaza",
     months: ["september"],
-    dateText: "September 4-6, 2026",
-    start: "2026-09-04",
-    end: "2026-09-06",
+    dateText: "September 11-13, 2026",
+    start: "2026-09-11",
+    end: "2026-09-13",
     category: "Cultural Festival",
+    updated: "2026-08-21",
+    streetAddress: "20 Custom House Plaza",
+    postalCode: "93940",
+    times: [
+      { day: "Friday 11 September", hours: "3:00 p.m. – 9:00 p.m." },
+      { day: "Saturday 12 September", hours: "10:00 a.m. – 9:00 p.m." },
+      { day: "Sunday 13 September", hours: "10:00 a.m. – 6:00 p.m." },
+    ],
+    timesConfidence: "unconfirmed",
+    officialWebsite: "https://festaitaliamonterey.org/",
+    metaDescription:
+      "11–13 September 2026 at Custom House Plaza — a week later than several listings say. Monterey's Santa Rosalia Fisherman's Festival, 93rd year, free to attend.",
+    intro:
+      "Festa Italia — Monterey's Santa Rosalia Fisherman's Festival — runs Friday 11 to Sunday 13 September 2026 at Custom House Plaza, in its 93rd year. It celebrates the city's Sicilian heritage and honours its fishermen, past and present, and it is free to attend. Note the dates carefully: several published listings, including this page until 21 August, had it a week earlier.",
+    sections: [
+      {
+        heading: "The date is wrong in a lot of places, including here until recently",
+        body: [
+          "This festival is 11–13 September 2026. A number of listings circulating — among them See Monterey's compiled 2026 annual-events PDF, which is where this site originally took the date — show 4–6 September, a full week early. At least one other shows 6–8 September.",
+          "All three are Friday-to-Sunday runs, so checking the weekday against the date does not catch this one; only going to the organiser does. Old Fisherman's Wharf, KAZU, Old Monterey and What's Up Monterey all give 11–13 September, and the Festa Italia Foundation runs it on the second weekend. If you arrive on the 4th you will find an empty plaza.",
+        ],
+      },
+      {
+        heading: "What it actually commemorates",
+        body: [
+          "Santa Rosalia is the patron saint of Palermo, and the festival came to Monterey with the Sicilian families who built its fishing industry. It is a heritage festival with a working-community spine rather than a generic food fair: the point is the fishermen, living and dead, and the families who have been landing fish here for a century.",
+          "It is run by the Festa Italia Foundation, a 501(c)(3) non-profit, and takes place at 20 Custom House Plaza inside Monterey State Historic Park, immediately beside Old Fisherman's Wharf — which is not a coincidence of venue.",
+        ],
+      },
+      {
+        heading: "Music and what happens across the three days",
+        body: [
+          "The 2026 bill includes Pasquale Esposito, Mike Marotta and the Italian Allstars, and the Anthony Lane Band, with two acts new for 2026: The Musica of Jimmy Rossi and Luca DePaolis, and the Lost and Found Band. The Money Band plays Saturday only.",
+          "Around the music: a bocce tournament, a calamari cooking demonstration, Tarantella dance lessons on the Sunday, raffles, and Italian food with beer and wine. It is a plaza festival, flat and walkable, on the waterfront.",
+        ],
+      },
+      {
+        heading: "What has not been confirmed",
+        body: [
+          "The hours above — Friday 3 to 9 p.m., Saturday 10 a.m. to 9 p.m., Sunday 10 a.m. to 6 p.m. — come from Old Fisherman's Wharf rather than from the Festa Italia Foundation directly, whose own site does not render for us. They are consistent across the listings that carry them, but they are not the organiser's own words, so they are kept out of this page's structured data.",
+          "Admission is reported as free by every listing we can reach, and has been free historically, but for the same reason it is not published here as a confirmed price and this page emits no Offer.",
+          "Whether the Santa Rosalia procession and the blessing of the fishing fleet run in 2026, and at what time. These are traditional elements of this festival, but no 2026 schedule for them has been published where we can see it — so this page does not promise them.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is Festa Italia in Monterey in 2026?",
+        a: "Friday 11 to Sunday 13 September 2026 at Custom House Plaza. Several listings — including See Monterey's annual PDF — show 4–6 September, which is a week early.",
+      },
+      {
+        q: "Why do I see two different dates?",
+        a: "Compiled listing sources carry 4–6 September and at least one shows 6–8. Old Fisherman's Wharf, KAZU, Old Monterey and What's Up Monterey all give 11–13 September for the 93rd annual festival. Go with the second weekend.",
+      },
+      {
+        q: "Is it free?",
+        a: "Every listing we can reach says yes, and it has been free historically. The organiser's own site does not render for us, so this page reports that rather than confirming it — and publishes no price in its structured data.",
+      },
+      {
+        q: "What is Santa Rosalia's connection to Monterey?",
+        a: "Santa Rosalia is the patron saint of Palermo. The festival arrived with the Sicilian families who built Monterey's fishing industry, and it honours the city's fishermen past and present. That is why it is held on the plaza next to Old Fisherman's Wharf.",
+      },
+      {
+        q: "Who plays in 2026?",
+        a: "Pasquale Esposito, Mike Marotta and the Italian Allstars, and the Anthony Lane Band, plus two acts new for 2026 — The Musica of Jimmy Rossi and Luca DePaolis, and the Lost and Found Band. The Money Band plays Saturday only.",
+      },
+      {
+        q: "What else is on besides music?",
+        a: "A bocce tournament, a calamari cooking demonstration, Tarantella dance lessons on Sunday, raffles, and Italian food with beer and wine.",
+      },
+    ],
     referenceUrls: [
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
       "https://whatsupmonterey.com/events",
