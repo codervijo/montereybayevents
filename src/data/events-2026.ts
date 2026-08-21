@@ -832,9 +832,8 @@ export const regionalEvents: RegionalEvent[] = [
     slug: "castroville-artichoke-festival",
     name: "Castroville Artichoke Festival",
     county: "Monterey",
-    cityText: "Monterey (Monterey County Fairgrounds)",
-    city: "Monterey",
-    venue: "Monterey County Fairgrounds",
+    cityText: "Castroville",
+    city: "Castroville",
     months: ["september"],
     dateText: "September 5, 2026",
     start: "2026-09-05",
@@ -844,7 +843,76 @@ export const regionalEvents: RegionalEvent[] = [
       "https://www.seemonterey.com/events/annual-events/",
     ],
     description:
-      "A one-day food and agricultural festival built around the artichoke, held at the Monterey County Fairgrounds.",
+      "The Castroville Artichoke Festival returns to Castroville on 5 September 2026, revived by the Castroville Coalition after the original festival closed in 2025.",
+    updated: "2026-08-21",
+    metaDescription:
+      "Yes, it is happening — 5 September 2026, back in Castroville. But the 65-year festival closed in 2025; this is a smaller revival by a different organisation.",
+    intro:
+      "The Castroville Artichoke Festival returns on Saturday 5 September 2026, back in Castroville itself for the first time since 2014. It needs one piece of context that most listings leave out: the festival that ran for 65 years shut down permanently in May 2025, and this is a revival by a different organisation — the Castroville Coalition — deliberately starting smaller, with around 50 vendors expected.",
+    sections: [
+      {
+        heading: "What happened to the festival, and what this one is",
+        body: [
+          "The original Artichoke Festival closed for good on 9 May 2025 after 65 years. Its board cited money: \u201cthe financial realities we now face are insurmountable\u201d. Executive director Linda Scherer said at the time that \u201cthe memories we\u2019ve made, the people we\u2019ve touched and the good we\u2019ve done together will live on far beyond this decision\u201d. That organisation is gone.",
+          "What returns on 5 September 2026 is a revival led by the Castroville Coalition, supported by the North County Recreation and Park District. It is deliberately smaller \u2014 organisers have talked about roughly 50 vendors, against a festival that drew about 20,000 people in 2011. Going in expecting the old event at full scale is the way to be disappointed by a good thing.",
+        ],
+      },
+      {
+        heading: "It is back in Castroville, which is the point",
+        body: [
+          "The festival began in Castroville in 1959 and stayed there until 2014, when it outgrew the town and moved to the Monterey County Fair and Event Center. Its final editions were further away still \u2014 the last one ran in June 2025 at the Sheriff\u2019s Posse Grounds in Salinas.",
+          "Coming home matters here in a way it would not for a generic food festival. Castroville calls itself the Artichoke Center of the World, and the festival grew out of the town\u2019s earlier May Days Parade. A revival held anywhere else would be a food event with an artichoke theme; held in Castroville it is the town\u2019s own festival again.",
+          "Organisers have noted that timing depends partly on Merritt Street construction, Castroville\u2019s main street \u2014 so the exact footprint within the town is worth checking close to the day.",
+        ],
+      },
+      {
+        heading: "Marilyn Monroe, and the queens",
+        body: [
+          "The best-known fact about this festival predates it. In 1948 Marilyn Monroe \u2014 then still Norma Jeane \u2014 was named Castroville\u2019s first Honorary Artichoke Queen, eleven years before the festival itself began.",
+          "The festival crowned its own royalty from 1961, when Sally DeSante Hebert became the first Festival Queen; the first Artichoke King, Andrew O\u2019Desky, followed in 1974. In 2006 the crown went to William Hung. Whether the revived festival continues the tradition has not been announced.",
+        ],
+      },
+      {
+        heading: "There is a second, larger festival planned for later in 2026",
+        body: [
+          "The September event is the first of two. Organisers have said a larger festival is expected somewhere between October and November 2026, with the September one serving as the smaller return.",
+          "No date, venue or detail has been published for that second event, so it does not appear as a listing on this site. When a date is announced it will get its own page.",
+        ],
+      },
+      {
+        heading: "What has not been published",
+        body: [
+          "Hours, admission price, and the specific venue or street footprint within Castroville. None of these have been published anywhere we can find, and this page does not estimate them.",
+          "The original festival\u2019s website, artichokefestival.org, still shows the June 2025 dates at the Salinas Posse Grounds and belongs to the organisation that closed \u2014 it is not the source for this event. Follow the Castroville Coalition for 2026 details.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Is the Castroville Artichoke Festival happening in 2026?",
+        a: "Yes \u2014 Saturday 5 September 2026, in Castroville. But it is a revival by the Castroville Coalition, not the original festival, which closed permanently in May 2025 after 65 years.",
+      },
+      {
+        q: "Didn\u2019t the Artichoke Festival close down?",
+        a: "It did. The original organisation shut down on 9 May 2025, citing insurmountable financial realities after 65 years. The Castroville Coalition, with the North County Recreation and Park District, is bringing it back as a new, smaller event.",
+      },
+      {
+        q: "Where is it held now?",
+        a: "Back in Castroville, for the first time since 2014 \u2014 the festival had moved to the Monterey County Fair and Event Center that year, and its final edition in June 2025 was at the Sheriff\u2019s Posse Grounds in Salinas. The exact venue within Castroville has not been published, and timing depends partly on Merritt Street construction.",
+      },
+      {
+        q: "How big will it be?",
+        a: "Smaller than the festival people remember. Organisers have talked about roughly 50 vendors; the old festival drew around 20,000 visitors in 2011. A second, larger festival is expected between October and November 2026.",
+      },
+      {
+        q: "Was Marilyn Monroe really the Artichoke Queen?",
+        a: "Yes. In 1948 she was named Castroville\u2019s first Honorary Artichoke Queen \u2014 eleven years before the festival itself started in 1959.",
+      },
+      {
+        q: "How much does it cost and what time does it start?",
+        a: "Not published. No admission price, hours or specific venue have been announced for the 2026 return, and this page does not estimate them.",
+      },
+    ],
   },
   {
     slug: "monterey-bay-greek-festival",
