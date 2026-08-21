@@ -157,17 +157,20 @@ export const timberFire: Incident = {
   where: "Big Sur, Los Padres National Forest, Monterey County",
   headline:
     "Highway 1 is closed through Big Sur and the whole Big Sur coast is under evacuation orders or warnings. If your plans involve driving south of Carmel, they need to change.",
-  asOf: "Monday, 17 August 2026, 7:11 a.m. — still the most recent acreage and containment anyone has published. Re-checked Tuesday 18 August: no newer reading, and the fire is not out",
-  size: "5,153 acres",
-  containment: "17% contained",
+  asOf: "Wednesday, 19 August 2026 — the most recent published figures. Checked again on Thursday 20 August: no newer reading had been issued",
+  size: "5,526 acres",
+  containment: "24% contained — up from 17% on Monday",
   started: "Saturday, 8 August, on Los Padres National Forest land; cause under investigation",
   roadClosure:
-    "Highway 1 is closed between mile marker 45.1, near the Big Sur Bakery at the north end, and Julia Pfeiffer Burns State Park at the south end. Still closed on Tuesday 18 August, day 11 of the incident, with no reopening announced. Sources do not agree on the southern limit — some place it at mile marker 37 and others at mile marker 31, the Julia Pfeiffer Burns vista point — so treat the whole stretch as shut and check Caltrans QuickMap for the live boundary before you drive it.",
-  evacuationOrders: ["MRY-F023", "MRY-F025", "MRY-F026", "MRY-F027", "MRY-F028-A"],
+    "Highway 1 is closed between mile marker 44.5, just south of Post Ranch Inn and Alila Ventana at the north end, and mile marker 37 at Julia Pfeiffer Burns State Park at the south end. The northern limit moved half a mile south on Tuesday 18 August as the fire slowed, and crews have been clearing debris from firing operations along the highway specifically to reopen it — so this closure is now shrinking rather than holding. Still no reopening date. Check Caltrans QuickMap before you drive it.",
+  evacuationOrders: ["MRY-F027", "MRY-F028-A"],
   evacuationWarnings: [
     "MRY-F021-B",
     "MRY-F022",
+    "MRY-F023",
     "MRY-F024",
+    "MRY-F025",
+    "MRY-F026",
     "MRY-F028-B",
     "MRY-F029",
   ],
@@ -222,7 +225,7 @@ export type Closure = {
 export const closures: Closure[] = [
   {
     road: "Highway 1 — Big Sur",
-    segment: "mile marker 45.1 (Big Sur Bakery) to mile marker 37 (Julia Pfeiffer Burns State Park)",
+    segment: "mile marker 44.5 (south of Post Ranch Inn) to mile marker 37 (Julia Pfeiffer Burns State Park)",
     city: "Big Sur",
     dates: [
       "2026-08-11",
@@ -233,8 +236,10 @@ export const closures: Closure[] = [
       "2026-08-16",
       "2026-08-17",
       "2026-08-18",
+      "2026-08-19",
+      "2026-08-20",
     ],
-    when: "Closed since Tuesday, August 11 — still closed Tuesday, August 18, with no reopening announced",
+    when: "Closed since Tuesday, August 11 — still closed Thursday, August 20; the northern limit moved half a mile south on the 18th",
     reason:
       "Closed for public and firefighter safety because of the Timber Fire. This is an active incident with no announced reopening, so treat the southern approach to the Peninsula as unavailable and come in on Highway 101 instead. Because this closure outlasts the dates listed here, check Caltrans QuickMap for the live state of the road before you travel. See the full detail and live links at the top of this page.",
     confidence: "official",
