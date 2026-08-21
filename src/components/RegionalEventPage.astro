@@ -20,12 +20,17 @@ import {
   type RegionalEvent,
 } from "../data/events-2026";
 import { buildFaqJsonLd, buildRegionalEventJsonLd } from "../lib/regionalEventSchema";
+import { isPastDate } from "../lib/isPast";
 
 const { event } = Astro.props as { event: RegionalEvent };
 
 const site = "https://montereybayevents.com";
 const month = monthMeta(primaryMonth(event));
 const dateLabel = event.dateText || DATE_TBA;
+// Build-time, not view-time — see src/lib/isPast.ts.
+const isPast = isPastDate(event.start, event.end);
+// Car Week 2026 ran 7–16 August; the footer promo is written in both tenses.
+const carWeekIsPast = isPastDate("2026-08-07", "2026-08-16");
 
 const title = event.seoTitle ?? `${event.name} — ${month.label}`;
 const heading = event.headline ?? event.name;
@@ -159,13 +164,17 @@ const others = eventsInMonth(month.key)
 
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
           {
-            event.times && event.timesConfidence === "unconfirmed"
-              ? "These hours come from a secondary listing. The organiser has not published door hours on its own page, so they are not carried in this page's structured data — the dates are. Confirm with the organiser before you plan a day around them."
-              : event.times
-                ? "Hours as published by the organiser."
-                : event.start
-                  ? "We don't have a confirmed start time for this one — the date is the organizer's published date. Check the official page before you travel."
-                  : "The organizer has not published a 2026 date yet. This page will carry the date once one is announced — we don't estimate them."
+            isPast
+              ? event.times
+                ? "This event has finished. The hours above are what was published for it at the time."
+                : "This event has finished. No start time was published for it."
+              : event.times && event.timesConfidence === "unconfirmed"
+                ? "These hours come from a secondary listing. The organiser has not published door hours on its own page, so they are not carried in this page's structured data — the dates are. Confirm with the organiser before you plan a day around them."
+                : event.times
+                  ? "Hours as published by the organiser."
+                  : event.start
+                    ? "We don't have a confirmed start time for this one — the date is the organizer's published date. Check the official page before you travel."
+                    : "The organizer has not published a 2026 date yet. This page will carry the date once one is announced — we don't estimate them."
           }
         </p>
         <a
@@ -304,17 +313,38 @@ const others = eventsInMonth(month.key)
 
     <section class="mt-12 border-t border-border/70 pt-8">
       <p class="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        Visiting the Peninsula in August? Monterey Car Week runs August 7–16 and
-        reshapes traffic across both counties while it does. The{" "}
-        <a href="/free/" class="text-brass hover:underline">
-          free Car Week events list
-        </a>{" "}
-        covers everything you can watch without a ticket, and the{" "}
-        <a href="/traffic/" class="text-brass hover:underline">
-          traffic, closures and parking guide
-        </a>{" "}
-        covers the road closures and parking that affect getting anywhere on the
-        Peninsula that week — including to events that have nothing to do with cars.
+        {
+          carWeekIsPast ? (
+            <Fragment>
+              Monterey Car Week ran August 7–16 and reshapes traffic across both
+              counties while it does. The{" "}
+              <a href="/monterey-car-week/" class="text-brass hover:underline">
+                Car Week section
+              </a>{" "}
+              keeps the 2026 schedule, and the{" "}
+              <a href="/traffic/" class="text-brass hover:underline">
+                traffic, closures and parking guide
+              </a>{" "}
+              covers road closures across the Peninsula, including the Highway 1
+              closure through Big Sur that is still in force.
+            </Fragment>
+          ) : (
+            <Fragment>
+              Visiting the Peninsula in August? Monterey Car Week runs August 7–16
+              and reshapes traffic across both counties while it does. The{" "}
+              <a href="/free/" class="text-brass hover:underline">
+                free Car Week events list
+              </a>{" "}
+              covers everything you can watch without a ticket, and the{" "}
+              <a href="/traffic/" class="text-brass hover:underline">
+                traffic, closures and parking guide
+              </a>{" "}
+              covers the road closures and parking that affect getting anywhere on
+              the Peninsula that week — including to events that have nothing to do
+              with cars.
+            </Fragment>
+          )
+        }
       </p>
     </section>
   </main>

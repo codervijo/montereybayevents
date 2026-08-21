@@ -17,6 +17,7 @@ import { allEventDetails, mapUrl, type EventDetail } from "../../data/eventIndex
 import { ROAD_CLOSURES_URL } from "../../data/events";
 import { regionalEventPages, type RegionalEvent } from "../../data/events-2026";
 import { buildEventJsonLd, formatTime } from "../../lib/eventSchema";
+import { isPastDate } from "../../lib/isPast";
 
 export function getStaticPaths() {
   return [
@@ -62,6 +63,12 @@ const keywords = event
 
 // Event JSON-LD, incl. the required startDate — built in src/lib/eventSchema.ts
 // so it can be unit-tested against every event in the dataset.
+// Past once the LAST day of the run is behind us. Build-time, not view-time —
+// see src/lib/isPast.ts.
+const carEventIsPast = event
+  ? isPastDate(undefined, event.days[event.days.length - 1]!.iso)
+  : false;
+
 const jsonLd = event ? buildEventJsonLd(event, site) : null;
 
 const accessStyles = {
@@ -222,9 +229,13 @@ const others = event
         </ul>
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
           {
-            event.days.some((d) => d.startTime)
-              ? "Times are the organizer's published hours and can shift — confirm on the official page before you travel."
-              : "We don't have a confirmed start time for this one yet. Check the official page before you travel."
+            carEventIsPast
+              ? event.days.some((d) => d.startTime)
+                ? "This event has finished. The times above are the organizer's published hours for it."
+                : "This event has finished. No start time was published for it."
+              : event.days.some((d) => d.startTime)
+                ? "Times are the organizer's published hours and can shift — confirm on the official page before you travel."
+                : "We don't have a confirmed start time for this one yet. Check the official page before you travel."
           }
         </p>
       </section>
