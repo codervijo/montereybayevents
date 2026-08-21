@@ -863,8 +863,8 @@ export const regionalEvents: RegionalEvent[] = [
         a: "Not in 2026. The organisers have announced the USAF Thunderbirds as the 2026 headline act. Some third-party listings still show the Blue Angels for these dates — those are wrong for this year. Both teams have flown at Salinas over the show's history, but the 2026 bill is the Thunderbirds.",
       },
       {
-        q: "Is the 2026 Salinas airshow cancelled?",
-        a: "No. It is scheduled for 26 and 27 September 2026 and the organisers are selling tickets. Individual performers are always subject to change — military demonstration teams can be withdrawn for operational reasons and weather closes acts on the day — but the show itself is going ahead.",
+        q: "Are any airshows cancelled in 2026?",
+        a: "Not this one. The California International Airshow Salinas is scheduled for 26 and 27 September 2026 and the organisers are selling tickets. What does change at airshows is the flying: the organisers state that performers are subject to change, because military demonstration teams can be withdrawn for operational reasons and weather closes individual acts on the day. That is a different thing from the show being cancelled, and it is the far more likely outcome. We can only speak for Salinas — we do not track other airshows.",
       },
       {
         q: "Can I bring a cooler?",
