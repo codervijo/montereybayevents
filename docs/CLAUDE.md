@@ -194,9 +194,22 @@ re-proposed. Append; don't rewrite.
   publishes two (fixed v1.J), and Festa Italia as 4–6 September when it
   is 11–13 — a full week early, fixed v1.U.3. Treat it as a discovery
   source for *which* events exist, never as authority for *when*. Rows
-  still carrying only that PDF and no organiser check: Castroville
-  Artichoke, PURE Insurance Championship, Meet the Makers, First Night
-  Monterey. Verify each against its organiser before trusting the date.
+  still carrying only that PDF and no organiser check were Castroville
+  Artichoke, PURE Insurance Championship, Meet the Makers and First Night
+  Monterey. **All four have since been checked (2026-08-21):** Artichoke's
+  date was right but its VENUE was wrong (fixed v1.U.4 — it returns to
+  Castroville, not the Monterey Fairgrounds); the other three are correct
+  on date, city, venue and name. So the PDF's failure mode is not random
+  noise — it describes events as they *were*, which makes it wrong
+  whenever something moves or changes length. Date-only checking is not
+  enough; check the venue too.
+
+  All four now carry an `officialWebsite`, which is the actual remedy.
+  A row with no organiser link cannot be verified by anyone later, and
+  that is why these four went unchecked for so long — the same gap that
+  left v1.G publishing the wrong Sunday hours for the Turkish festival.
+  **29 of 61 rows still have no organiser link.** When touching any row,
+  add one if it is missing.
 
 - **Three things that keep getting re-proposed are already shipped**
   (recorded 2026-08-21 so they stop coming back). Every event page

@@ -997,6 +997,7 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-09-18",
     end: "2026-09-20",
     category: "Golf / Sports",
+    officialWebsite: "https://www.pureinsurancechampionship.com/",
     referenceUrls: [
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
       "https://www.seemonterey.com/events/annual-events/",
@@ -1318,6 +1319,7 @@ export const regionalEvents: RegionalEvent[] = [
     dateText: "October 10, 2026",
     start: "2026-10-10",
     category: "Art / Wine Walk",
+    officialWebsite: "https://www.carmelcalifornia.com/event/meet-the-makers/",
     referenceUrls: [
       "https://www.carmelcalifornia.com/annual-events-in-carmel-by-the-sea/",
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
@@ -1398,6 +1400,7 @@ export const regionalEvents: RegionalEvent[] = [
     dateText: "December 31, 2026",
     start: "2026-12-31",
     category: "New Year's Eve / Arts Festival",
+    officialWebsite: "https://www.firstnightmonterey.org/",
     referenceUrls: [
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
       "https://www.seemonterey.com/events/annual-events/",
