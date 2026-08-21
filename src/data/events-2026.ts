@@ -124,6 +124,19 @@ export type RegionalEvent = {
    */
   admission?: "free";
 
+  /**
+   * ISO date this row's CONTENT was last substantively changed — set by hand,
+   * on the same commit that changes it, and only for real content changes.
+   *
+   * Feeds `<lastmod>` in the sitemap. Deliberately not derived from git: every
+   * row lives in this one file, so a git-derived date would tell Google all 54
+   * regional pages changed whenever any one of them did, which is the exact
+   * unreliable-lastmod pattern Google learns to ignore. A page with no
+   * `updated` simply gets no lastmod, which is honest and still leaves the
+   * pages that DID change carrying a real signal.
+   */
+  updated?: string;
+
   /** Rendered visibly AND emitted as FAQPage JSON-LD. Never one without the other. */
   faq?: { q: string; a: string }[];
 
@@ -320,6 +333,7 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "sand-city-west-end-celebration",
+    updated: "2026-08-18",
     name: "Sand City West End Celebration",
     county: "Monterey",
     cityText: "Sand City",
@@ -419,6 +433,7 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "california-turkish-arts-culture-festival",
+    updated: "2026-08-18",
     name: "California Turkish Arts & Culture Festival",
     county: "Monterey",
     cityText: "Monterey (Custom House Plaza)",
@@ -592,6 +607,7 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "monterey-bay-greek-festival",
+    updated: "2026-08-19",
     name: "Monterey Bay Greek Festival",
     county: "Monterey",
     cityText: "Monterey (Custom House Plaza)",
@@ -699,6 +715,7 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "monterey-jazz-festival",
+    updated: "2026-08-21",
     name: "Monterey Jazz Festival (MJF69)",
     county: "Monterey",
     cityText: "Monterey (Monterey County Fairgrounds)",
@@ -792,6 +809,7 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "california-international-airshow-salinas",
+    updated: "2026-08-21",
     name: "California International Airshow Salinas (45th Annual)",
     county: "Monterey",
     cityText: "Salinas (Salinas Municipal Airport)",
@@ -1035,6 +1053,7 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "christmas-in-the-adobes",
+    updated: "2026-08-18",
     name: "Christmas in the Adobes",
     county: "Monterey",
     cityText: "Monterey (historic downtown adobes)",
