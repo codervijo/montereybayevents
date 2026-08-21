@@ -20,8 +20,10 @@ import {
   eventHref,
   eventsInMonth,
   monthHref,
+  regionalEvents,
   totalRegionalEvents,
 } from "../data/events-2026";
+import { isPastDate } from "../lib/isPast";
 
 const site = "https://montereybayevents.com";
 // Title is kept at or under 60 chars and description within 120-160 so neither
@@ -42,17 +44,34 @@ const description = `Monterey and Santa Cruz county events: ${totalRegionalEvent
 
 // The month hubs to feature, resolved from the build date and clamped to the
 // months the dataset covers — see currentAndNextMonth().
+// Car Week 2026 ran 7-16 August. Everything below that leans on it is written
+// in both tenses, so the homepage stops leading with a finished event the day
+// after it ends rather than whenever someone notices.
+const carWeekIsPast = isPastDate("2026-08-07", "2026-08-16");
+
 const { current, next } = currentAndNextMonth(new Date());
 const featuredMonths = [current, ...(next ? [next] : [])].map((m) => ({
   ...m,
   href: monthHref(m.key),
-  events: eventsInMonth(m.key).slice(0, 5),
-  count: eventsInMonth(m.key).length,
+  // Past events are dropped from the homepage. It is a decision surface —
+  // nobody arrives at "what's on" wanting to know what they missed. The month
+  // hubs still list everything, marked, because their job is the full record.
+  // NOTE: this is build-time (see src/lib/isPast.ts) — it is only correct while
+  // the site is rebuilt regularly. See v1.Q in docs/prd.md.
+  events: eventsInMonth(m.key).filter((e) => !isPastDate(e.start, e.end)).slice(0, 5),
+  count: eventsInMonth(m.key).filter((e) => !isPastDate(e.start, e.end)).length,
 }));
 // Canonical MUST match the served URL incl. trailing slash (trailingSlash:
 // 'always' in astro.config.mjs). For a sub-page, derive it the same way:
 //   const canonical = `${site}/<route>/`;   // e.g. `${site}/free/`
 // A no-slash canonical 308-redirects and breaks indexing (CHECK_161).
+// The next things actually happening, for the featured slot once Car Week has
+// been and gone. Undated rows are excluded — they cannot be "next".
+const upcomingEvents = regionalEvents
+  .filter((e) => e.start && !isPastDate(e.start, e.end) && !e.existingSlug && !e.hubHref)
+  .sort((a, b) => (a.start! < b.start! ? -1 : 1))
+  .slice(0, 4);
+
 const canonical = `${site}/`;
 
 // Sections of the site that exist today, in the order a visitor needs them.
@@ -62,16 +81,31 @@ const sections = [
     label: "The 2026 calendar",
     body: `All ${totalRegionalEvents} Central Coast events, August to December, by county and month.`,
   },
-  {
-    href: "/monterey-car-week/schedule/",
-    label: "Full Car Week schedule",
-    body: `All ${totalEvents} listings across ten days, filterable by admission.`,
-  },
-  {
-    href: "/free/",
-    label: "Free Car Week events",
-    body: `${totalFreeListings} listings that cost nothing to spectate, grouped by day.`,
-  },
+  ...(carWeekIsPast
+    ? [
+        {
+          href: monthHref(current.key),
+          label: `What's on in ${current.label.split(" ")[0]}`,
+          body: "Every listed event this month, by county, with dates and official links.",
+        },
+        {
+          href: "/monterey-car-week/",
+          label: "Monterey Car Week 2026",
+          body: `The full ${totalEvents}-listing record of August 7-16, kept for reference.`,
+        },
+      ]
+    : [
+        {
+          href: "/monterey-car-week/schedule/",
+          label: "Full Car Week schedule",
+          body: `All ${totalEvents} listings across ten days, filterable by admission.`,
+        },
+        {
+          href: "/free/",
+          label: "Free Car Week events",
+          body: `${totalFreeListings} listings that cost nothing to spectate, grouped by day.`,
+        },
+      ]),
   {
     href: "/traffic/",
     label: "Traffic, closures & safety",
@@ -147,7 +181,7 @@ const sections = [
           Verified dates, locations and free-or-ticketed status for public events
           across the Central Coast — the details that official calendars bury.
           {totalRegionalEvents} events from August to December 2026, county fairs
-          to holiday markets, plus Monterey Car Week covered day by day.
+          to holiday markets{carWeekIsPast ? "." : ", plus Monterey Car Week covered day by day."}
         </p>
         <div class="mt-8 flex flex-wrap gap-3">
           <a
@@ -163,16 +197,51 @@ const sections = [
             Monterey Car Week 2026
           </a>
           <a
-            href="/free/"
+            href={carWeekIsPast ? monthHref(current.key) : "/free/"}
             class="border border-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brass transition-colors hover:bg-brass hover:text-primary-foreground"
           >
-            Free Car Week events
+            {carWeekIsPast ? current.label : "Free Car Week events"}
           </a>
         </div>
       </div>
     </section>
 
-    <!-- Featured: Car Week -->
+    {
+      /* Featured slot. While Car Week is ahead it is the story; once it is past
+         the slot goes to what is actually next, rather than leaving a finished
+         event with a photograph at the top of the page. */
+    }
+    {
+      carWeekIsPast ? (
+        <section class="mx-auto max-w-6xl px-5 py-14">
+          <p class="eyebrow">Coming up</p>
+          <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Next on the Central Coast</h2>
+          <div class="mt-8 grid gap-3 sm:grid-cols-2">
+            {upcomingEvents.map((e) => (
+              <a
+                href={eventHref(e)}
+                class="group flex flex-col gap-1 border-l-2 border-border/80 bg-surface/60 px-5 py-4 transition-colors hover:border-brass"
+              >
+                <span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-brass">
+                  {e.dateText || DATE_TBA}
+                </span>
+                <span class="text-xl leading-tight text-foreground transition-colors group-hover:text-brass">
+                  {e.name}
+                </span>
+                <span class="text-sm text-muted-foreground">
+                  {e.city ?? e.cityText}, {e.county} County
+                </span>
+              </a>
+            ))}
+          </div>
+          <a
+            href="/events/"
+            class="mt-7 inline-block bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
+          >
+            All 2026 events
+          </a>
+        </section>
+      ) : (
     <section class="mx-auto max-w-6xl px-5 py-14">
       <p class="eyebrow">Featured event</p>
       <div class="mt-4 overflow-hidden border border-border/80 bg-surface">
@@ -240,6 +309,8 @@ const sections = [
         </div>
       </div>
     </section>
+      )
+    }
 
     <!-- Site sections -->
     <section class="border-y border-border/70 bg-surface">
@@ -331,12 +402,25 @@ const sections = [
     <section class="mx-auto max-w-6xl px-5 pb-16">
       <div class="border-l-2 border-brass bg-surface/60 px-6 py-8">
         <p class="eyebrow">Before you drive</p>
-        <h2 class="mt-2 text-4xl leading-none">Peninsula traffic peaks in August</h2>
+        <h2 class="mt-2 text-4xl leading-none">{carWeekIsPast ? "Check the road before you go" : "Peninsula traffic peaks in August"}</h2>
         <p class="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          Highway One, Ocean Avenue and the routes into Pebble Beach and Laguna Seca
-          slow to a crawl during Car Week event hours. Check live closures before
-          every trip, and text <span class="text-brass">CARWEEK</span> to{" "}
-          <span class="text-brass">65513</span> for public safety alerts.
+          {
+            carWeekIsPast ? (
+              <Fragment>
+                Highway 1 through Big Sur is closed by the Timber Fire, and event
+                traffic still reshapes Ocean Avenue and the routes into Pebble
+                Beach and Laguna Seca. Check live closures before every trip.
+              </Fragment>
+            ) : (
+              <Fragment>
+                Highway One, Ocean Avenue and the routes into Pebble Beach and
+                Laguna Seca slow to a crawl during Car Week event hours. Check
+                live closures before every trip, and text{" "}
+                <span class="text-brass">CARWEEK</span> to{" "}
+                <span class="text-brass">65513</span> for public safety alerts.
+              </Fragment>
+            )
+          }
         </p>
         <div class="mt-6 flex flex-wrap gap-3">
           <a

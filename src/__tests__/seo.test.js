@@ -125,10 +125,27 @@ describe('/free/ page', () => {
     expect(body(free)).toContain('formatTime(e.startTime)');
   });
 
-  it('is linked prominently from the homepage hero and the schedule page', () => {
-    // Homepage: hero CTA block, above the featured card.
-    const hero = indexHtml.slice(0, indexHtml.indexOf('Featured event'));
-    expect(hero).toContain('href="/free/"');
+  // Was: "/free/ is linked prominently from the homepage hero". That was right
+  // in v1.A, when Car Week was ahead and /free/ was the site's free-intent
+  // page. Every listing on /free/ is a Car Week event, so from 17 August 2026
+  // it points at a page where nothing is upcoming — and a primary homepage CTA
+  // to a dead page is worse than no CTA. The rule the old test was protecting
+  // is asserted here instead: /free/ stays reachable and stays prominent on the
+  // Car Week pages, where its content actually lives, but the homepage hero
+  // offers it only while Car Week is still ahead.
+  //
+  // When v1.C gives the regional set admission data, /free/ gains year-round
+  // content and this can go back to being unconditional.
+  it('offers /free/ in the homepage hero only while Car Week is ahead', () => {
+    const hero = indexHtml.slice(0, indexHtml.indexOf('Featured slot'));
+    // Still referenced from the hero — but behind the carWeekIsPast branch.
+    expect(hero).toContain('"/free/"');
+    expect(hero).toContain('carWeekIsPast');
+    // Never an unconditional primary CTA in the hero any more.
+    expect(hero).not.toContain('href="/free/"');
+  });
+
+  it('stays prominently linked from the Car Week hub and schedule', () => {
     expect(hubSchedule).toContain('href="/free/"');
     expect(hub).toContain('href="/free/"');
   });
