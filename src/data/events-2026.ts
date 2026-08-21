@@ -851,8 +851,20 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     faq: [
       {
-        q: "When is the Salinas airshow in 2026?",
-        a: "Saturday 26 and Sunday 27 September 2026, at Salinas Municipal Airport. Gates open at 9:00 a.m. both days and flying starts at approximately 11:30 a.m.",
+        q: "What time is the airshow in Salinas?",
+        a: "Gates open at 9:00 a.m. on both Saturday and Sunday, and flying starts at approximately 11:30 a.m. The organisers do not publish a closing time or a full flying schedule in advance.",
+      },
+      {
+        q: "Is there an air show in Salinas?",
+        a: "Yes — the California International Airshow Salinas, held annually at Salinas Municipal Airport since 1981. The 2026 edition runs Saturday 26 and Sunday 27 September.",
+      },
+      {
+        q: "Will the Blue Angels be at the Salinas airshow?",
+        a: "Not in 2026. The organisers have announced the USAF Thunderbirds as the 2026 headline act. Some third-party listings still show the Blue Angels for these dates — those are wrong for this year. Both teams have flown at Salinas over the show's history, but the 2026 bill is the Thunderbirds.",
+      },
+      {
+        q: "Is the 2026 Salinas airshow cancelled?",
+        a: "No. It is scheduled for 26 and 27 September 2026 and the organisers are selling tickets. Individual performers are always subject to change — military demonstration teams can be withdrawn for operational reasons and weather closes acts on the day — but the show itself is going ahead.",
       },
       {
         q: "Can I bring a cooler?",
