@@ -709,7 +709,79 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-09-25",
     end: "2026-09-27",
     category: "Music Festival",
+    streetAddress: "2000 Fairground Road",
+    postalCode: "93940",
     officialWebsite: "https://montereyjazz.org/",
+    metaDescription:
+      "25–27 September 2026 at the Fairgrounds. Ticket tiers and what each actually gets you, the sold-out parking, and the gate times still unannounced.",
+    intro:
+      "The 69th Monterey Jazz Festival runs Friday 25 to Sunday 27 September 2026 across the 20 oak-studded acres of the Monterey County Fair & Event Center, 2000 Fairground Road. Thirty hours of music on six stages, around seventy food and craft vendors, and a 2026 bill led by a first-ever Herbie Hancock and Ron Carter duo. It is ticketed, and which ticket you buy changes the festival you get — that is the part worth understanding before you spend $215.",
+    sections: [
+      {
+        heading: "The ticket tiers, and what each one actually gets you",
+        body: [
+          "There are three single-day tiers, and the gap between them is not just seat quality. Arena tickets are $110 on Friday and $215 on Saturday or Sunday, and they buy a reserved seat for the Jimmy Lyons Stage in the Arena plus access to everything on the four Grounds stages that day. Arena Lawn is $75 Friday and $135 Saturday or Sunday. Grounds tickets are $65 Friday and $90 Saturday or Sunday.",
+          "The distinction that catches people: a Grounds ticket does not get you into the Arena. The headline acts on the Jimmy Lyons Stage — the Hancock and Carter duo, the Jazz at Lincoln Center Orchestra — are Arena shows. If those are why you are coming, Grounds is the wrong ticket at any price. If you are happy to graze five other stages all day, it is much the better value.",
+          "Three-day packages exist alongside the single-day tiers. Premier Club add-on access is sold out for 2026. Prices here are the organisers' own published figures for single-day tickets; check montereyjazz.org before buying, because tiers sell out at different rates.",
+        ],
+      },
+      {
+        heading: "Who is playing in 2026",
+        body: [
+          "The 2026 bill is led by Herbie Hancock and Ron Carter in what the festival bills as their first-ever duo performance — two musicians whose partnership goes back to Miles Davis's second great quintet, playing as a pair for the first time.",
+          "Also announced: the Jazz at Lincoln Center Orchestra with Wynton Marsalis and special guest Cécile McLorin Salvant, Meshell Ndegeocello, the Charles Lloyd Quartet, and the Ravi Coltrane Quartet.",
+          "Six stages carry it: the Jimmy Lyons Stage in the Arena, and on the Grounds the West End Stage, Pacific Jazz Café, Tim Jackson Garden Stage, Courtyard Stage and the Monterey Room.",
+        ],
+      },
+      {
+        heading: "Parking is the problem to solve first",
+        body: [
+          "Fairgrounds parking is sold out for 2026. Monterey Peninsula College parking is expected to be available to buy, with a shuttle. The organisers' own advice if you do not hold parking is to use Uber or Lyft rather than to drive and hope.",
+          "Limited ADA parking is on Fairground Road, first-come first-served. ADA seating is arranged through ticketing or on 831-308-4653, and hearing devices are free at Patron Services against a deposit of valid ID.",
+        ],
+      },
+      {
+        heading: "Rules that will cost you at the gate",
+        body: [
+          "No outside food, coolers, glass bottles or beverages in containers. No lawn, beach or folding chairs — a real constraint at a festival where people expect to sit on grass all afternoon. No detachable-lens cameras, flash equipment or recording devices. No pets, and no strollers inside the arenas.",
+          "Re-entry works on a wristband: your ticket admits you once, and the wristband is what lets you back in. Lose the wristband and you buy another ticket. Worth knowing before you take it off.",
+          "Children are handled differently by area. In the Arena everyone needs a ticket, infants included. On the Grounds, under-2s are free and ages 2 to 12 need a youth ticket.",
+        ],
+      },
+      {
+        heading: "What has not been published",
+        body: [
+          "Gate and box-office times. The festival's own FAQ still says these \"will be announced in early spring 2026\" — a sentence that has outlived the spring it refers to, and is the reason this page carries no opening time. Shuttle schedules are in the same position.",
+          "Set times and the stage-by-stage running order. Knowing who is on the bill is not the same as knowing when, and for a six-stage festival that is the difference between planning a day and wandering one.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Monterey Jazz Festival in 2026?",
+        a: "Friday 25 to Sunday 27 September 2026 — the 69th edition — at the Monterey County Fair & Event Center, 2000 Fairground Road, Monterey.",
+      },
+      {
+        q: "How much are tickets?",
+        a: "Single-day Arena is $110 Friday, $215 Saturday or Sunday. Arena Lawn is $75 Friday, $135 Saturday or Sunday. Grounds is $65 Friday, $90 Saturday or Sunday. Three-day packages are also sold; Premier Club is sold out.",
+      },
+      {
+        q: "Does a Grounds ticket get me into the Arena?",
+        a: "No. Grounds admits you to the four Grounds stages only. The Jimmy Lyons Stage headliners in the Arena need an Arena or Arena Lawn ticket, and that is the most common mistake people make with this festival.",
+      },
+      {
+        q: "Where do I park?",
+        a: "Fairgrounds parking is sold out for 2026. Monterey Peninsula College parking with a shuttle is expected to be available; otherwise the organisers recommend Uber or Lyft. Limited ADA parking on Fairground Road is first-come, first-served.",
+      },
+      {
+        q: "What time do gates open?",
+        a: "Not announced. The organisers' FAQ still says gate and box-office times will be published in early spring 2026, so no opening time is listed here rather than repeating a previous year's.",
+      },
+      {
+        q: "Can I bring a chair?",
+        a: "No. Lawn, beach and folding chairs are all prohibited, as are outside food, coolers, glass, detachable-lens cameras and recording devices.",
+      },
+    ],
     referenceUrls: [
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
       "https://www.montereyhotel.com/local-events",
@@ -730,7 +802,79 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-09-26",
     end: "2026-09-27",
     category: "Airshow / Sports",
+    times: [
+      { day: "Saturday, September 26", hours: "Gates 9:00 a.m.; flying from about 11:30 a.m." },
+      { day: "Sunday, September 27", hours: "Gates 9:00 a.m.; flying from about 11:30 a.m." },
+    ],
+    timesConfidence: "official",
     officialWebsite: "https://www.salinasairshow.com/",
+    metaDescription:
+      "26–27 September 2026 at Salinas Municipal Airport. Thunderbirds headline. Gates 9am, flying from 11:30, $30 parking — and a bag policy that turns people away.",
+    intro:
+      "The California International Airshow Salinas runs Saturday 26 and Sunday 27 September 2026 at Salinas Municipal Airport, with the USAF Thunderbirds headlining. Gates open at 9:00 a.m. both days and flying starts at roughly 11:30 a.m. Parking is $30. The thing most likely to spoil your morning is not the schedule but the bag policy — it is an airport, the rules are federal, and they are stricter than most people expect.",
+    sections: [
+      {
+        heading: "The bag and cooler rules are the ones that catch people",
+        body: [
+          "No coolers of any kind. Not small ones, not soft ones — the organisers are explicit that this is dictated by FAA and Homeland Security requirements rather than by the airshow, so there is no arguing it at the gate.",
+          "A clear bag policy applies: one clear bag no larger than 12x6x12 inches, plus one small clutch or purse no larger than 4.5x8.5 inches, plus one-gallon freezer bags. Specifically prohibited are backpacks, binocular cases, oversized totes, standard purses and mesh bags. A standard purse being on the banned list is the detail that surprises people most.",
+          "Diaper bags, medically necessary items and cameras with cases are allowed as exceptions, but all of them are still subject to search. Pets are not allowed, and the organisers add a warning worth repeating: do not leave them in your vehicle, on an airfield apron in late September.",
+        ],
+      },
+      {
+        heading: "Getting there and parking",
+        body: [
+          "Parking is $30, on airport property close to the admission gates, entered from Skyway Boulevard and Airport Boulevard. Because the parking is on the field itself rather than off-site, the walk in is short — this is not an event where you park a mile away.",
+          "Accessible parking is in a designated area close to the admission gate. It requires a handicapped plate or tag, and the organisers ask that you notify staff on arrival rather than simply following the general traffic flow.",
+        ],
+      },
+      {
+        heading: "Who is flying in 2026",
+        body: [
+          "The USAF Thunderbirds headline. Also announced: Mark Peterson in an A-37 Dragonfly, Goulian Aerosports, Jason Somes in a MiG-17, and Greg Colyer in a T-33 Shooting Star — a bill weighted toward Cold War-era jets alongside the modern demonstration team.",
+          "The organisers note that performers are subject to change, which for airshows is more than boilerplate: military demonstration teams get pulled for operational reasons and weather closes acts on the day.",
+        ],
+      },
+      {
+        heading: "It is a fundraiser, not a commercial airshow",
+        body: [
+          "The airshow has run since 1981 and states that it has raised over nine million dollars for Central Coast charities. That is the point of it rather than a side effect, and it shapes the atmosphere — this is a long-standing community institution that happens to involve fast jets.",
+        ],
+      },
+      {
+        heading: "What has not been published",
+        body: [
+          "Ticket prices. The organisers sell through an external platform rather than listing prices on their own site, so no price appears here. Buy through the official site's ticket link rather than a resale listing.",
+          "A gate closing time and a full flying schedule. Gates open at 9:00 a.m. and flying begins around 11:30 a.m.; when each act performs, and when the day ends, are not published in advance.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Salinas airshow in 2026?",
+        a: "Saturday 26 and Sunday 27 September 2026, at Salinas Municipal Airport. Gates open at 9:00 a.m. both days and flying starts at approximately 11:30 a.m.",
+      },
+      {
+        q: "Can I bring a cooler?",
+        a: "No — no coolers of any kind. The organisers state this is required by the FAA and Homeland Security rather than being their own rule, so it is not negotiable at the gate.",
+      },
+      {
+        q: "What bag can I bring?",
+        a: "One clear bag no bigger than 12x6x12 inches, plus a small clutch no bigger than 4.5x8.5 inches, plus one-gallon freezer bags. Backpacks, binocular cases, oversized totes, standard purses and mesh bags are all prohibited.",
+      },
+      {
+        q: "How much is parking?",
+        a: "$30, on airport property close to the admission gates, entered from Skyway Boulevard and Airport Boulevard. Accessible parking sits near the gate and needs a handicapped plate or tag.",
+      },
+      {
+        q: "Who is performing?",
+        a: "The USAF Thunderbirds headline, with Mark Peterson in an A-37 Dragonfly, Goulian Aerosports, Jason Somes in a MiG-17 and Greg Colyer in a T-33 Shooting Star. Performers are subject to change.",
+      },
+      {
+        q: "How much are tickets?",
+        a: "Not published on the organisers' own site — tickets are sold through an external platform, so no price is listed here. Use the official ticket link rather than a resale site.",
+      },
+    ],
     referenceUrls: [
       "https://www.salinas.gov/Events/Salinas-Airshow-Event",
       "https://www.seemonterey.com/event/california-international-airshow-salinas/",
