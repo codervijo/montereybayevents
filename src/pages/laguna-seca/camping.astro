@@ -1,0 +1,329 @@
+---
+// Guide page: camping at WeatherTech Raceway Laguna Seca, written for people
+// deciding where to sleep for a race weekend — the INDYCAR season finale on
+// 4-6 September 2026 in particular.
+//
+// NOT an event page. It deliberately emits no Event JSON-LD: it describes a
+// facility and a set of policies, not a scheduled occurrence, and marking it up
+// as an Event to win a rich result would be misusing the vocabulary. It shares
+// no copy with the event templates.
+//
+// SOURCING: every fact here comes from weathertechraceway.com and is linked
+// inline at the point it is used. Where the raceway publishes nothing — camping
+// prices, the General Parking charge, quiet hours, generator rules — the page
+// says so and names who to ask. Those absences are findings, not gaps: several
+// of them are the reason this page is worth reading.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const site = "https://montereybayevents.com";
+const title = "Laguna Seca Camping — Areas, Access & What Is Not Published";
+const description =
+  "Every camping area at WeatherTech Raceway Laguna Seca, which gate serves it, the 40-foot RV limit and six-adult cap — plus the prices the raceway does not publish.";
+const canonical = `${site}/laguna-seca/camping/`;
+
+const CAMPING = "https://weathertechraceway.com/pages/camping";
+const TICKETS = "https://weathertechraceway.com/pages/ticket-information";
+const INDYCAR = "https://weathertechraceway.com/pages/indycar-grand-prix-of-monterey";
+const PHONE = "(831) 242-8200";
+
+const premier = [
+  "Chaparral",
+  "Can-Am",
+  "Corkscrew View",
+  'Lower Terrace "E-5"',
+  'Turn 5 Right "T5R"',
+];
+const reserved = [
+  "Grand Prix",
+  "Corkscrew Upper View",
+  'Upper Terrace "E-6"',
+  'Terrace "E-7"',
+];
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={`${site}/og-default.jpg`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={`${site}/og-default.jpg`} />
+    {/* No structured data. This is a guide to a facility, not an event —
+        see the note at the top of this file. */}
+  </Fragment>
+
+  <main class="mx-auto max-w-3xl px-5 py-14">
+    <a
+      href="/events/september/"
+      class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
+    >
+      ← Central Coast events in September 2026
+    </a>
+
+    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-6xl">
+      Camping at <span class="text-brass">Laguna Seca</span>
+    </h1>
+
+    <p class="mt-7 text-lg leading-relaxed text-muted-foreground">
+      WeatherTech Raceway Laguna Seca has ten named camping areas in three
+      tiers, a hard 40-foot limit on RVs and a six-adult cap per site. Every
+      camper needs an event admission ticket as well as a camping pass. What it
+      costs is the part you cannot look up: the raceway publishes no camping
+      rates online at all, and no price for General Parking either, while
+      selling Preferred and season parking passes. Budget for a charge you
+      cannot check in advance, and call
+      <a href={`tel:+18312428200`} class="text-brass hover:underline">{PHONE}</a>
+      before you plan a weekend around a number.
+    </p>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">
+        The three tiers, and the ten areas
+      </h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        The raceway groups camping into Premier, Reserved and General, and the
+        difference is hook-ups and how you book rather than only position.
+      </p>
+
+      <h3 class="mt-8 text-2xl text-foreground">Premier — {premier.length} areas</h3>
+      <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+        {premier.join(" · ")}
+      </p>
+      <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+        These carry <em>“partial hook-ups and/or an excellent view of the
+        track”</em>. Note the “and/or” — the raceway does not say which of the
+        five have hook-ups and which are there for the view, so if you need
+        power, confirm the specific area before booking rather than assuming
+        Premier means serviced.
+      </p>
+
+      <h3 class="mt-8 text-2xl text-foreground">Reserved — {reserved.length} areas</h3>
+      <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+        {reserved.join(" · ")}
+      </p>
+      <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+        These may include a fire pit and a picnic table, with hillside or track
+        views. “May” is the raceway’s word, and it is doing work: it is not a
+        guarantee for any given site.
+      </p>
+
+      <h3 class="mt-8 text-2xl text-foreground">General — outside Turns 9, 10 and 11</h3>
+      <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+        Dry camping. No hook-ups, no picnic tables, no barbecue pits. The
+        raceway’s wording is worth reading precisely: <em>“You are guaranteed
+        space, however there are not designated areas.”</em> You will get in;
+        you will not get a numbered pitch. Arrive early if you want to choose
+        where you sit.
+      </p>
+      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+        Source:{" "}
+        <a href={CAMPING} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+          Camping and Recreation, WeatherTech Raceway Laguna Seca
+        </a>
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">
+        Rules that decide whether you can come at all
+      </h2>
+      <ul class="mt-5 space-y-3">
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span><strong class="text-foreground">RVs: maximum length 40 feet.</strong> A hard limit, not a guideline. Measure before you book a coach.</span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span><strong class="text-foreground">Six adults per site</strong>, with children under 15 not counted against it.</span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span><strong class="text-foreground">Every camper needs an admission ticket</strong> for the duration of the event, children under 15 excepted. A camping pass alone does not get you in.</span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span><strong class="text-foreground">Check-in 2:00–5:00 p.m. daily, check-out 12 noon.</strong> The check-in window is three hours; arriving at seven in the evening is not covered by it.</span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span><strong class="text-foreground">Two pets per site</strong>, fees apply and rabies verification is required — though pet camping fees are waived during premier events.</span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span><strong class="text-foreground">No overnight parking</strong> in the General or Preferred parking areas. Sleeping at the track requires a camping pass, not a parking pass.</span>
+        </li>
+      </ul>
+      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+        Sources:{" "}
+        <a href={CAMPING} target="_blank" rel="noreferrer" class="text-brass hover:underline">Camping and Recreation</a>
+        {" · "}
+        <a href={TICKETS} target="_blank" rel="noreferrer" class="text-brass hover:underline">Ticket Information</a>
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">
+        Getting in: South Boundary Road, not Highway 68
+      </h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        This is the single thing most likely to cost you an hour. For the 2026
+        season the raceway is explicit:{" "}
+        <em>“When entering the park during any of our Major 2026 Season events,
+        you must come in through the South Boundary Rd. entrance to the park.”</em>
+        {" "}The INDYCAR finale is one of those events. Do not route to the
+        Highway 68 main entrance out of habit or because a map app sends you
+        there.
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        General Parking is the Purple 10 area, also reached from South Boundary
+        Road. Preferred Parking is the Green Lakebed area. Will-call runs from
+        7 a.m. until halfway through the last race of the day, again via South
+        Boundary Road.
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        Gates “generally open at 7 a.m. during race events” and close at 10 p.m.
+        or midnight depending on the event — the raceway’s own hedge, not ours.
+        No gate times specific to 4–6 September have been published.
+      </p>
+      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+        Source:{" "}
+        <a href={TICKETS} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+          Ticket Information, WeatherTech Raceway Laguna Seca
+        </a>
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">
+        The INDYCAR weekend, 4–6 September 2026
+      </h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        The Grand Prix of Monterey closes the NTT INDYCAR Series and INDY NXT
+        seasons — the champion is crowned here, which is the kind of weekend
+        that fills a campground. General tent camping is available across
+        3–7 September, so you can be on site the day before running starts and
+        stay the night after the race.
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        Premium trackside camping is sold separately alongside the Turn 3 VIP
+        Club, new for 2026. The Champions Club is already sold out.
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        For the full on-track schedule, ticket tiers and what a general
+        admission ticket includes, see our{" "}
+        <a href="/event/indycar-grand-prix-of-monterey/" class="text-brass hover:underline">
+          INDYCAR Grand Prix of Monterey guide
+        </a>.
+      </p>
+      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+        Source:{" "}
+        <a href={INDYCAR} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+          INDYCAR Grand Prix of Monterey, WeatherTech Raceway Laguna Seca
+        </a>
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">
+        How to book, and why you may have to phone
+      </h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        General camping can be booked online, and walk-ins are taken at the
+        Entry Station until 5:00 p.m. daily. Premier and Reserved sites are
+        different: during premier events — which the INDYCAR finale is — they
+        are <strong class="text-foreground">reservable by phone only</strong>, on{" "}
+        <a href={`tel:+18312428200`} class="text-brass hover:underline">{PHONE}</a>.
+        The office runs weekdays, 8 a.m. to 5 p.m., or{" "}
+        <a href="mailto:tickets@laguna-seca.com" class="text-brass hover:underline">
+          tickets@laguna-seca.com
+        </a>.
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        That matters for planning. If you want a hook-up or a track view for
+        race weekend, you cannot do it at midnight from a laptop — you have to
+        reach a person during California business hours.
+      </p>
+    </section>
+
+    <section class="mt-14 border-l-2 border-brass bg-surface/60 px-6 py-8">
+      <h2 class="text-3xl text-brass">What nobody publishes</h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        These are not gaps in our research. We looked, and the raceway does not
+        put them online.
+      </p>
+      <ul class="mt-5 space-y-4">
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">Camping rates, for any tier.</strong>{" "}
+          No nightly rate, no weekend rate, no indication of whether camping is
+          sold per night or as an event pass. The camping page points to Event
+          Camping Guide PDFs and the ticket office. Ask on {PHONE}.
+        </li>
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">The General Parking price.</strong>{" "}
+          The raceway publishes exactly where General Parking is — the Purple 10
+          area, off South Boundary Road — but not what it costs, while
+          separately selling Preferred Parking and season parking passes. The
+          asymmetry is deliberate enough to be worth stating: budget for a
+          parking charge on arrival and confirm the amount with the ticket
+          office rather than assuming it is free because no price appears.
+        </li>
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">Quiet hours and generator rules.</strong>{" "}
+          Neither appears on the camping page. For a campground where dry
+          sites and RVs share ground outside Turns 9 to 11, that is the
+          question most likely to affect whether you sleep.
+        </li>
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">When camping sells out for the
+          INDYCAR weekend.</strong> No sell-out date, no remaining-capacity
+          indicator, and no waitlist is published for camping. The Champions
+          Club is marked sold out; camping is not marked either way.
+        </li>
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">Whether Watkins Gate opens for this
+          event.</strong> Older Laguna Seca event material describes a Watkins
+          Gate entrance restricted to Saturdays. It does not appear on the
+          raceway’s current ticket information, which names only South Boundary
+          Road for 2026 major events. Treat South Boundary Road as the entrance
+          and ask the ticket office if you specifically need another.
+        </li>
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">Off-site alternatives.</strong> The
+          raceway publishes none, and we are not going to invent drive times
+          from campgrounds it does not endorse. If on-site camping is full, the
+          ticket office is the right first call — they know what the overflow
+          arrangement is for a given weekend and we do not.
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-14 border-t border-border/70 pt-8">
+      <p class="text-base leading-relaxed text-muted-foreground">
+        Driving in for the weekend rather than camping? The{" "}
+        <a href="/traffic/" class="text-brass hover:underline">
+          traffic, closures and parking guide
+        </a>{" "}
+        covers road conditions across the Peninsula, including the Highway 1
+        closure through Big Sur that is still in force. Everything else on the
+        September calendar is on the{" "}
+        <a href="/events/september/" class="text-brass hover:underline">
+          September 2026 events page
+        </a>.
+      </p>
+    </section>
+  </main>
+</BaseLayout>

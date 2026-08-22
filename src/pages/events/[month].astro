@@ -5,6 +5,7 @@
 // month with its own title, its own ItemList and prev/next links, so month-intent
 // queries ("santa cruz events october 2026") have a page that answers literally.
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isPastDate } from "../../lib/isPast";
 import {
   DATE_TBA,
   MONTHS,
@@ -29,6 +30,13 @@ const { monthKey, label } = Astro.props as { monthKey: MonthKey; label: string }
 
 const site = "https://montereybayevents.com";
 const events = eventsInMonth(monthKey);
+// Laguna Seca runs several events a year; the camping and access guide is
+// relevant to whichever month carries one, rather than hard-coded to September.
+const hasLagunaSeca = events.some(
+  (e) =>
+    (e.venue ?? e.cityText).includes("Laguna Seca") &&
+    !isPastDate(e.start, e.end),
+);
 const { prev, next } = adjacentMonths(monthKey);
 
 const monterey = events.filter((e) => e.county === "Monterey");
@@ -192,5 +200,25 @@ const dateLabel = (e: RegionalEvent) => e.dateText || DATE_TBA;
         ))
       }
     </p>
+
+    {
+      hasLagunaSeca && (
+        <a
+          href="/laguna-seca/camping/"
+          class="mt-10 block border-l-2 border-brass bg-surface/60 px-6 py-6 transition-colors hover:bg-surface"
+        >
+          <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Racing at Laguna Seca this month
+          </p>
+          <p class="mt-2 text-2xl leading-tight text-brass">
+            Camping at Laguna Seca →
+          </p>
+          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+            All ten camping areas, which entrance to use, the 40-foot RV limit —
+            and the camping and parking prices the raceway does not publish.
+          </p>
+        </a>
+      )
+    }
   </main>
 </BaseLayout>

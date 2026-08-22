@@ -137,6 +137,13 @@ export type RegionalEvent = {
    */
   updated?: string;
 
+  /**
+   * A link to one of our own guide pages, rendered as a real anchor rather
+   * than smuggled into `sections` prose — those render as plain text, so a
+   * markdown link in them ships literal brackets to the reader.
+   */
+  guideLink?: { href: string; label: string; blurb: string };
+
   /** Rendered visibly AND emitted as FAQPage JSON-LD. Never one without the other. */
   faq?: { q: string; a: string }[];
 
@@ -747,6 +754,12 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     timesConfidence: "official",
     officialWebsite: "https://weathertechraceway.com/",
+    guideLink: {
+      href: "/laguna-seca/camping/",
+      label: "Camping at Laguna Seca",
+      blurb:
+        "All ten camping areas, which gate serves them, the 40-foot RV limit and the six-adult cap — plus the camping and parking prices the raceway does not publish anywhere.",
+    },
     metaDescription:
       "4–6 September 2026, the INDYCAR season finale at Laguna Seca. Full on-track schedule, what general admission includes — and a child-ticket rule two official pages disagree on.",
     intro:

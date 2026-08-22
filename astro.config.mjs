@@ -2,6 +2,13 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { regionalEvents } from './src/data/events-2026';
+
+// Hand-set lastmod for non-event pages. Same rule as `updated` on an event
+// row: only pages whose content we know changed, dated by hand in the commit
+// that changed them. Everything absent from here ships with no lastmod.
+const GUIDE_LASTMOD = {
+  '/laguna-seca/camping/': '2026-08-21',
+};
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -31,6 +38,11 @@ export default defineConfig({
       // a usable signal. Deriving from git would be worse than either, because
       // all 54 regional pages come from one data file and would share a date.
       serialize(item) {
+        // Guide pages carry their own hand-set date, on the same terms as an
+        // event row's `updated`: set it in the commit that changes the page.
+        const guide = GUIDE_LASTMOD[new URL(item.url).pathname];
+        if (guide) return { ...item, lastmod: `${guide}T00:00:00-07:00` };
+
         const m = item.url.match(/\/event\/([^/]+)\/$/);
         if (!m) return item;
         const updated = regionalEvents.find((e) => e.slug === m[1])?.updated;
