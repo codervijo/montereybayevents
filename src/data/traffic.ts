@@ -113,6 +113,10 @@ export const SOURCES = {
     label: "Big Sur Food & Wine Festival — official site",
     url: "https://www.bigsurfoodandwine.org/festival",
   },
+  bigSurKate: {
+    label: "BigSurKate — twice-daily Timber Fire updates",
+    url: "https://bigsurkate.blog/",
+  },
 } as const satisfies Record<string, Source>;
 
 /* ------------------------------------------------------------------ *
@@ -156,14 +160,15 @@ export const timberFire: Incident = {
   name: "Timber Fire",
   where: "Big Sur, Los Padres National Forest, Monterey County",
   headline:
-    "Highway 1 is closed through Big Sur and the whole Big Sur coast is under evacuation orders or warnings. If your plans involve driving south of Carmel, they need to change.",
-  asOf: "Thursday, 20 August 2026, evening — the most recent published figures. Checked again on Friday 21 August: no newer reading had been issued",
-  size: "Over 6,000 acres",
-  containment: "29% contained — up from 24% on Wednesday and 17% on Monday",
+    "Caltrans reopened a ten-mile stretch of Highway 1 at 1pm on Saturday 22 August, so Big Sur is reachable from Carmel again. A through route south to San Simeon is not confirmed — check Caltrans QuickMap before you count on driving past Julia Pfeiffer Burns.",
+  asOf: "Saturday, 22 August 2026, 6:29pm, read from CAL FIRE's own incident record",
+  size: "8,665 acres — about 2,600 more than Thursday evening",
+  containment:
+    "25% contained, down from 29%: the fire is spreading into new ground, east into the Ventana Wilderness, faster than crews can cut line around it",
   started: "Saturday, 8 August, on Los Padres National Forest land; cause under investigation",
   roadClosure:
-    "Highway 1 is closed between mile marker 42.6, half a mile south of Deetjen's Big Sur Inn at the north end, and mile marker 37 at Julia Pfeiffer Burns State Park at the south end. The northern limit has now moved south twice as the fire slowed — from 45.1 to 44.5 on 18 August, and to 42.6 by the 20th — so the closed stretch is shrinking. There is still no reopening date and still no through route between the Peninsula and San Simeon. Check Caltrans QuickMap before you drive it.",
-  evacuationOrders: ["MRY-F027", "MRY-F028-A"],
+    "Caltrans announced the reopening of a ten-mile stretch of Highway 1 at 1pm on Saturday 22 August, and by that evening its statewide road-conditions service listed no Timber Fire closure anywhere on Highway 1 in Monterey County. Treat a full through route as unconfirmed rather than restored: the Henry Miller Memorial Library, reopening the same day, still tells visitors it can be reached only from the north until at least midday on Monday 24 August. What is clear is that the Big Sur businesses north of the fire are reachable from Carmel again. What is not is whether you can drive the whole coast to San Simeon. Check Caltrans QuickMap for the live state of the road before you leave.",
+  evacuationOrders: ["MRY-F028-C", "MRY-F029"],
   evacuationWarnings: [
     "MRY-F021-B",
     "MRY-F022",
@@ -172,30 +177,32 @@ export const timberFire: Incident = {
     "MRY-F025",
     "MRY-F026",
     "MRY-F027-A",
+    "MRY-F027-B",
+    "MRY-F028-A",
     "MRY-F028-B",
-    "MRY-F029",
   ],
   closures: [
-    "All four Big Sur state parks are closed: Andrew Molera, Julia Pfeiffer Burns, Pfeiffer Big Sur and Point Sur.",
+    "All four Big Sur state parks remain closed: Andrew Molera, Julia Pfeiffer Burns, Pfeiffer Big Sur and Point Sur.",
     "Los Padres National Forest has closure orders in force on trails and roads across the fire area.",
-    "Nepenthe and the Henry Miller Memorial Library are closed. The Esalen Institute has cancelled all workshops and day reservations and stays closed through 23 August.",
-    "Henry Miller Library and Fernwood Resort have cancelled concerts and cultural events indefinitely.",
-    "Hotels including Deetjen's Big Sur Inn, Post Ranch Inn and Alila Ventana have been evacuated.",
+    "Nepenthe and the Phoenix Shop reopened on Saturday 22 August. The Henry Miller Memorial Library went back to 11am–5pm the same day, but says it is reachable only from the north until at least midday on Monday 24 August.",
+    "The Esalen Institute is temporarily closed because of the fire and has published no reopening date.",
+    "Deetjen's Big Sur Inn, Post Ranch Inn and Alila Ventana were evacuated in the fire's first week. Reopenings are now happening business by business as the warnings come down, so ring the one you are travelling to rather than trusting this line.",
   ],
   eventImpact: [
     "The Big Sur Food & Wine Festival, listed here for 5–7 November, has paused ticket sales. The organisers' own wording: “At present, Big Sur has an uncontained active fire. Ticket sales are temporarily paused out of respect for the community and what the brave first responders are currently managing.” The dates themselves have not changed.",
-    "Anything on this site taking place in Big Sur, or reached by driving Highway 1 south of Carmel, should be confirmed with its organiser before you travel. The closed stretch has no announced reopening.",
+    "Anything on this site taking place in Big Sur, or reached by driving Highway 1 south of Carmel, should still be confirmed with its organiser before you travel. The road reopened faster than venues did, and the fire is still growing on its inland side.",
     "Events on the Monterey Peninsula itself — Carmel, Monterey, Pacific Grove, Seaside, Salinas — are going ahead. No listing north of the closure has been cancelled because of this fire.",
     "Monterey Car Week concluded on Sunday 16 August and ran to schedule, apart from the Pebble Beach Tour d'Elegance, which was rerouted away from Big Sur on 13 August, and a Cars and Coffee at Asilomar that was cancelled.",
   ],
   detour:
-    "Approach the Peninsula on Highway 101 from the north or east rather than Highway 1 from the south. There is no through route on Highway 1 between the Peninsula and San Simeon while this closure holds.",
+    "Coming from the south, approach the Peninsula on Highway 101 rather than Highway 1 until a through route is confirmed. From Carmel, Big Sur itself is open again.",
   evacuationPoint:
-    "The overnight shelter is Carmel Middle School, 4380 Carmel Valley Road, Carmel, open since Monday 10 August. The separate Temporary Evacuation Point at Carmel Valley Library was published only for 14–17 August and that window has now passed, with no extension announced. The county's information line is (831) 647-7760.",
+    "The evacuation shelter at Carmel Middle School closed on Wednesday 19 August; the Big Sur River Inn is assisting the evacuees who remain. Zone MRY-F028 was split into MRY-F028-A, B, C and D on Saturday 22 August — the sheriff published a status for A and C, and none yet for D. The county's information line is (831) 647-7760.",
   sources: [
     SOURCES.calFireTimber,
     SOURCES.readyMonterey,
     SOURCES.quickmap,
+    SOURCES.bigSurKate,
     SOURCES.kazuTimber,
     SOURCES.bigSurFoodWine,
   ],
@@ -240,10 +247,11 @@ export const closures: Closure[] = [
       "2026-08-19",
       "2026-08-20",
       "2026-08-21",
+      "2026-08-22",
     ],
-    when: "Closed since Tuesday, August 11 — still closed Friday, August 21; the northern limit has moved south twice, to mile marker 42.6",
+    when: "Closed Tuesday, August 11 to Saturday, August 22 — Caltrans reopened a ten-mile stretch at 1pm on the 22nd",
     reason:
-      "Closed for public and firefighter safety because of the Timber Fire. This is an active incident with no announced reopening, so treat the southern approach to the Peninsula as unavailable and come in on Highway 101 instead. Because this closure outlasts the dates listed here, check Caltrans QuickMap for the live state of the road before you travel. See the full detail and live links at the top of this page.",
+      "Closed for public and firefighter safety because of the Timber Fire, after the northern limit moved south twice, to mile marker 42.6. Caltrans reopened a ten-mile stretch at 1pm on Saturday 22 August; whether that restores a full through route to San Simeon is not yet confirmed, so check Caltrans QuickMap for the live state of the road before you travel and come in on Highway 101 if you are approaching from the south. See the full detail and live links at the top of this page.",
     confidence: "official",
     source: SOURCES.readyMonterey,
   },
