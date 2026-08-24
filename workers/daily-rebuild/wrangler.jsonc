@@ -1,0 +1,31 @@
+// Cron-only Worker that triggers a daily Pages rebuild. See src/index.js for why.
+//
+// NOTE: this is NOT the site's deploy config — that is ../../wrangler.jsonc.
+// The site itself is a Cloudflare PAGES project (montereybayevents.pages.dev,
+// GitHub-integrated, `pnpm run build` → dist, production branch main). This
+// Worker exists only because Pages has no scheduler of its own.
+//
+// It was uploaded through the Cloudflare API rather than `wrangler deploy`,
+// because wrangler is not installed on the operator's host. This file is the
+// source of record for what was uploaded, and is what to edit before
+// re-uploading.
+//
+// The DEPLOY_HOOK secret is deliberately absent here — it is set as a
+// secret_text binding at upload time and never committed.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "mbe-daily-rebuild",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-24",
+
+  // 13:00 UTC every day. Cloudflare cron is always UTC with no DST handling,
+  // so this is 06:00 Pacific in summer (PDT, UTC-7) and 05:00 in winter (PST,
+  // UTC-8). Deliberately the earlier of the two: the rebuild has always
+  // happened BY 6am Pacific rather than slipping to 7am for half the year.
+  "triggers": {
+    "crons": ["0 13 * * *"]
+  },
+
+  // No routes and no fetch handler: nothing public can trigger a deploy.
+  "workers_dev": false
+}
