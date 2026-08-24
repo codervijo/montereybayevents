@@ -80,17 +80,57 @@ docker exec -w /usr/src/app <name> make test proj=montereybayevents.com
 
 ## Deployment info
 
-- **Platform:** Cloudflare Workers (Static Assets) — *not* Vercel.
-- **Config:** `wrangler.jsonc` at the repo root — points `assets.directory` at `./dist` and uses `not_found_handling: "404-page"`, which serves `dist/404.html` with a real 404 status. **Do not set this back to `"single-page-application"`** — this site is prerendered multi-page HTML with no client-side router, and the SPA setting returned `dist/index.html` with a 200 for every unmatched path (soft 404s, and `src/pages/404.astro` never rendered).
-- **Headers:** `public/_headers` — cache (`/assets/*` immutable, HTML no-cache) + security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`). Vite copies `public/` into `dist/` at build, so the file ships with the assets.
-- **Build:** `pnpm build` → `dist/`. Wrangler picks up `dist/` via `wrangler.jsonc`.
-- **Deploy:** `wrangler deploy` (locally) or via Cloudflare's Git integration on push.
+- **Platform:** Cloudflare **Pages** — *not* Vercel, and **not** Workers Static
+  Assets, which this section claimed until 2026-08-24. Verified against the CF
+  API: project `montereybayevents` (`montereybayevents.pages.dev`), source type
+  `github` on `codervijo/montereybayevents`, production branch `main`,
+  `build_command: pnpm run build`, `destination_dir: dist`. The account has no
+  Worker named `montereybayevents` and never has, so nothing here was ever
+  deployed as a Worker.
+- **`wrangler.jsonc` at the repo root is INERT. Nothing reads it.** It is a
+  Workers-static-assets config (`assets.directory`, `not_found_handling`) sitting
+  in a Pages project. It is not what deploys the site, and it is not a valid
+  Pages config either — Pages would need `pages_build_output_dir`, which it does
+  not have, so Pages ignores it and the build succeeds anyway. Its comment about
+  `"single-page-application"` describes a setting that is not in play. **Do not
+  edit it expecting the live site to change**, and do not delete it on the
+  strength of this paragraph alone — see the `wrangler deploy` trap below.
+  Left in place rather than removed because removing it is a separate decision
+  with its own blast radius.
+- **Real 404s come from Pages' native behaviour, not from config.** Pages serves
+  the build output's `404.html` with a genuine 404 status for any unmatched path,
+  and Astro emits `dist/404.html` from `src/pages/404.astro` on every build.
+  Verified live 2026-08-24: a bogus path returns HTTP 404 and renders the 404
+  page. The outcome the old `not_found_handling` note wanted is real; its
+  explanation of the mechanism was not.
+- **Headers:** `public/_headers` — cache (`/assets/*` immutable, HTML no-cache) + security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`). Vite copies `public/` into `dist/` at build, so the file ships with the assets. `_headers` and `_redirects` are **native Pages features** read from the build output, which is why they work while `wrangler.jsonc` does not. Verified live 2026-08-24: `X-Frame-Options: DENY` is served, and `/schedule/` 301s to `/monterey-car-week/schedule/`.
+- **Build:** `pnpm build` → `dist/`. Cloudflare Pages runs `pnpm run build` and serves `dist/`.
+- **Deploy:** push to `main`; Cloudflare's Git integration builds and deploys.
+  **Do not run `wrangler deploy` here.** This section used to recommend it. On a
+  Pages project with a Workers-shaped `wrangler.jsonc`, it would not update the
+  live site — it would create a *separate* Worker named `montereybayevents`
+  serving the same assets on a different hostname, giving two deployments of one
+  site and no clear source of truth. To force a rebuild without pushing, use the
+  deploy hook instead (see **Scheduled rebuild** below).
   Initial GitHub repo + CF Pages project setup is automated by the portfolio CLI:
   `cd ../portfolio && make run ARGS="deploy montereybayevents.com"` runs `gh repo create` and
   POSTs to the CF Pages API with `build_command="pnpm run build"` set explicitly
   (avoids the bun-detection trap kwizicle.com hit). Idempotent; safe to re-run.
-- **Vite version:** must be ≥ 6.0.0 — Wrangler's Vite integration rejects Vite 5.
-- **Env vars:** set `VITE_*` vars (e.g. `VITE_GA_ID`) in the Cloudflare Workers project's environment-variable settings — they're inlined at build time.
+- **Scheduled rebuild:** a cron-only Worker, `mbe-daily-rebuild`, fires a Pages
+  deploy hook at 13:00 UTC daily — 06:00 Pacific in summer, 05:00 in winter.
+  Source of record is `workers/daily-rebuild/` in this repo; it was uploaded
+  through the CF API because wrangler is not installed on the operator's host.
+  It exists because `src/lib/isPast.ts` is evaluated at BUILD time and the
+  homepage uses it to filter finished events, so without a periodic rebuild
+  "today" stays frozen at the last push. The Worker holds only the deploy-hook
+  URL, never the fleet API token. To force a rebuild by hand, POST to the hook
+  (`.../pages/projects/montereybayevents/deploy_hooks` lists them) or POST to
+  `/accounts/{acct}/pages/projects/montereybayevents/deployments`.
+- **Vite version:** must be ≥ 6.0.0 (CHECK_035). *Note: the old rationale here
+  named Wrangler's Vite integration, which is not the mechanism on Pages. The
+  constraint is left in force because it is fleet-wide and checked; only the
+  explanation was wrong, and it has not been re-derived.*
+- **Env vars:** set `VITE_*` vars (e.g. `VITE_GA_ID`) in the Cloudflare **Pages** project's environment-variable settings — they're inlined at build time.
 - **Live URL:** https://montereybayevents.com/ — **live and serving** (confirmed
   2026-08-09: apex 200, 115 URLs in the sitemap, 104 `/event/` pages). Cloudflare's
   Git integration auto-deploys on push to `main`; commit `a4fa6f4` reached the

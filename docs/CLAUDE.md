@@ -15,9 +15,9 @@ to the organizer.
 
 Stack: Astro + React islands + Tailwind v4, pnpm-only, on the sites/*
 workspace shared infra, with `Makefile` forwarding to the central builder.
-Deployed to Cloudflare Workers static assets via `wrangler.jsonc` — see
+Deployed to Cloudflare **Pages**, built from GitHub on push to `main` — see
 AI_AGENTS.md § Deployment info, which is authoritative for anything that
-touches deploys.
+touches deploys. The root `wrangler.jsonc` is inert; it deploys nothing.
 
 Two datasets back the site and they are shaped differently:
 
@@ -53,8 +53,9 @@ git push            # Cloudflare Pages auto-builds on push to main
   - Build path: this project's `Makefile` → `../Makefile` (parent
     workspace) → `~/work/projects/builder/` (central builder).
   - Stack: pnpm-only. No `package-lock.json` / `bun.lockb` / `yarn.lock`.
-  - Deploy: Cloudflare Pages via `wrangler.jsonc`. No `_redirects`
-    SPA fallback (uses CF's `not_found_handling` instead).
+  - Deploy: Cloudflare Pages, Git-integrated. `wrangler.jsonc` is NOT the
+    deploy config and is not read — corrected 2026-08-24. No `_redirects`
+    SPA fallback: Pages natively serves `dist/404.html` with a real 404.
   - **Cross-check every weekday against its date with `date -d`.** Any
     source that pairs a day name with a date — "Friday, September 3",
     "Saturday and Sunday, August 29-30" — is asserting two facts, and on
@@ -239,9 +240,12 @@ re-proposed. Append; don't rewrite.
   the built output before accepting a recommendation that any of these
   is missing.
 
-- **No SPA fallback**, ever. See Conventions above and AI_AGENTS.md —
-  `wrangler.jsonc`'s `not_found_handling: "404-page"` is what serves real
-  404s, and `public/_redirects` is load-bearing for real 301s.
+- **No SPA fallback**, ever. See Conventions above and AI_AGENTS.md. Real
+  404s come from Cloudflare Pages serving the build output's `404.html`
+  natively — NOT from `wrangler.jsonc`'s `not_found_handling`, which is a
+  Workers setting that nothing reads here. `public/_redirects` is load-bearing
+  for real 301s and IS honoured, because `_redirects` is a native Pages
+  feature. The rule is unchanged; only the mechanism was wrong.
 
 - **Displayed hours and schema times are two different things** (v1.G).
   The "clock times are never synthesised" rule above is intact and still
