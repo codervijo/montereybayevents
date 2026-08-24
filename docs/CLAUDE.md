@@ -75,6 +75,23 @@ git push            # Cloudflare Pages auto-builds on push to main
     Sunday 23 August", verify both. A wrong weekday on our page is
     exactly the error we exist to correct on other people's.
 
+  - **Live-incident refreshes are maintenance, not phases.** Updating the
+    figures, closures or evacuation zones in a live-incident block —
+    `timberFire` in `src/data/traffic.ts` today — does NOT take a `vN.X` phase
+    letter and does NOT get a row in `docs/prd.md`'s phase table. It gets a
+    dated entry in `docs/incidents.md`, which carries the workflow.
+
+    This became a rule on 2026-08-24, when v1 ran out of phase letters: A–Z
+    were all spoken for, and **six of the twenty-six (E, F, H, N, V, X) were
+    refreshes of the same data block.** A phase letter is supposed to mean a
+    new capability, and re-reading a wire feed is not one. Everything the rows
+    were carrying — the figures, what was wrong on the site before the refresh
+    and for how long, what could not be confirmed — moves to the incident log,
+    where it is more useful because it sits next to the previous reading.
+
+    The `v1.X` row stays where it is rather than being retro-fitted; it shipped
+    under the old rule and its commit subject references that identifier.
+
   - **The `docs/prd.md` row ships in the version's own commit.** When you
     commit a `vN.X` change, `git add docs/prd.md` alongside the source —
     the phase-table row plus `project_version` and `last_updated` in the
