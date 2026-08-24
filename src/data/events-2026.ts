@@ -72,6 +72,20 @@ export type RegionalEvent = {
    * qualifier around it, so only an organiser-published time earns that.
    */
   timesConfidence?: "official" | "unconfirmed";
+  /**
+   * 24-hour `HH:MM`, Pacific. The machine-readable counterpart to `times`,
+   * which is display copy and deliberately not parsed — reading a clock time
+   * back out of "2:00pm – 7:00pm" is the kind of string handling that fails
+   * silently on the one row someone typed differently.
+   *
+   * These are the ONLY route by which a clock time reaches `startDate` /
+   * `endDate`, and `buildRegionalEventJsonLd` ignores them unless
+   * `timesConfidence` is `"official"`. A structured-data time gets quoted in a
+   * search result stripped of every qualifier around it, so it has to be the
+   * organiser's own.
+   */
+  startTime?: string;
+  endTime?: string;
   /** Month hub(s) this event belongs to. More than one only when it spans them. */
   months: MonthKey[];
   /** Human-readable date text from the CSV; empty when no date is confirmed. */
@@ -117,12 +131,22 @@ export type RegionalEvent = {
    * price is worse than no price, and "free" asserted wrongly about a ticketed
    * event is worse still.
    *
-   * `"free"` is the only member today because it is the only one sourced. The
-   * union grows one checked organiser at a time; do not add a member
+   * The union grows one checked organiser at a time; do not add a member
    * speculatively. When set, the page shows a visible admission badge AND the
    * Event JSON-LD carries a matching Offer — never one without the other.
+   *
+   * `"free"` was the only member until v1.Y, when Bonny Doon became the first
+   * row whose organiser publishes real ticket prices. Paid admission carries
+   * its own price rather than a bare label, because a ticketed Offer with no
+   * price says nothing that the absence of an Offer did not already say.
+   *
+   * `from` is the LOWEST price at which a person can get through the gate, in
+   * whole currency units. It is deliberately a floor, not a range: Google reads
+   * `price` as the amount payable, and the cheapest real ticket is the only
+   * figure that stays true no matter which tier someone buys. Tiers above it
+   * belong in the visible page copy, where they can be explained.
    */
-  admission?: "free";
+  admission?: "free" | { kind: "ticketed"; from: number; currency: "USD" };
 
   /**
    * ISO date this row's CONTENT was last substantively changed — set by hand,
@@ -1635,16 +1659,97 @@ export const regionalEvents: RegionalEvent[] = [
     county: "Santa Cruz",
     cityText: "Bonny Doon (Santa Cruz)",
     city: "Bonny Doon",
+    venue: "Crest Ranch",
+    streetAddress: "12200 Empire Grade",
+    postalCode: "95060",
     months: ["september"],
     dateText: "September 19, 2026",
     start: "2026-09-19",
+    times: [{ day: "Saturday 19 September", hours: "2:00pm – 7:00pm" }],
+    timesConfidence: "official",
+    startTime: "14:00",
+    endTime: "19:00",
     category: "Art / Wine / Beer Festival",
+    officialWebsite: "https://www.bonnydoonartandwinefestival.com/",
+    admission: { kind: "ticketed", from: 35, currency: "USD" },
+    updated: "2026-08-22",
+    hideSources: true,
     referenceUrls: [
       "https://www.santacruz.org/upcoming-events/category/festival/",
       "https://www.santacruz.org/upcoming-event/bonny-doon-art-wine-and-beer-festival/",
     ],
     description:
       "A one-day art, wine and beer festival in Bonny Doon, in the hills above Santa Cruz.",
+    metaDescription:
+      "Saturday 19 September 2026, 2–7pm at Crest Ranch. Tickets $35–$150 and cheaper online than at the door, 21-and-over. What each tier includes.",
+    intro:
+      "The Bonny Doon Art, Wine and Beer Festival runs from 2pm to 7pm on Saturday 19 September 2026 at Crest Ranch, 12200 Empire Grade, in the hills above Santa Cruz. It is a ticketed, 21-and-over fundraiser for the arts and academics programmes at Bonny Doon School, with unlimited wine, beer and cider tastings on the two higher tiers, live music in two sets, a makers marketplace, food vendors and a silent auction. Tickets are $35, $65 or $150 depending on what you want to drink, and the organiser says every price goes up at the door — so this is an event to buy for in advance.",
+    sections: [
+      {
+        heading: "What the three tickets actually get you",
+        body: [
+          "The organiser sells three tiers, and the difference between them is almost entirely about alcohol rather than access. General Admission is $65 and covers entry, festival glassware, unlimited wine, beer and cider tastings, live music, the marketplace, the makers space and the food vendors, where food is bought separately.",
+          "VIP is $150. On top of everything in General Admission it adds a reserved seating area, wine pour service, a swag bag and hors d'oeuvres prepared by local chef Jessica Yarr.",
+          "The Non-Alcoholic ticket is $35 and is the cheapest way through the gate. It covers entry, live music, the marketplace and the food vendors, and the organiser is explicit that it is strictly non-alcoholic: guests holding one have no access to alcoholic drinks for the duration of the event. That makes it a real option for a designated driver on a road where you would not want to guess, rather than a token cheap tier.",
+          "All three prices are the online prices. The organiser states plainly that prices go up at the door and asks people to buy ahead, so the figures here are a floor rather than a guarantee of what you would pay on the day.",
+        ],
+      },
+      {
+        heading: "The running order",
+        body: [
+          "The organiser publishes a schedule for the day, which is unusual enough among the events on this site to be worth reproducing in full. Gates open at 2:00pm. The first music set runs 3:15pm to 5:00pm and the second 5:30pm to 7:00pm. The silent auction closes at 6:00pm. Alcohol service ends at 6:30pm, half an hour before the festival itself ends at 7:00pm.",
+          "Two of those times are the ones worth planning around. If you are coming for the auction you need to be settled well before 6:00pm, because a silent auction closing is a hard stop rather than a wind-down. And if the tastings are why you bought a ticket, 6:30pm is when they stop — arriving at six means half an hour of drinking and an hour of festival.",
+        ],
+      },
+      {
+        heading: "Getting there, and the 21-and-over rule",
+        body: [
+          "Crest Ranch is at 12200 Empire Grade, up in the hills north-west of Santa Cruz rather than in the city. Empire Grade is a narrow, winding two-lane road and the venue is a working ranch, so allow more time than a map estimate suggests and expect no street lighting on the way back down after 7pm.",
+          "The organiser says parking is available on site and encourages carpooling. That combination — unlimited tastings, a rural road, and an event that ends after dark in September — is the reason the $35 non-alcoholic ticket exists, and it is a sensible way to bring a group without anyone driving Empire Grade after a tasting session.",
+          "Admission is 21 and over. The organiser states this without qualification, so this is not an event to bring children to, even to the non-alcoholic tier.",
+        ],
+      },
+      {
+        heading: "Where the money goes",
+        body: [
+          "This is a school fundraiser rather than a commercial festival. It is hosted by the Bonny Doon Community School Foundation, a registered 501(c)(3) non-profit, and the organiser states that ticket purchases and the silent auction support Bonny Doon School's arts and academics programmes.",
+          "That shows up in how the event is put together. Alongside the tastings there is a bike sweepstakes and a silent auction, and the sponsor tiers are named for local trees — Oak, Madrone and Manzanita. Applications for food vendors, wineries, breweries, non-alcoholic sponsors and performing musicians were still open when this page was written.",
+        ],
+      },
+      {
+        heading: "One thing we could not confirm",
+        body: [
+          "The organiser publishes a Participating Wineries, Breweries and Cideries page, but as of 22 August 2026 it carries no list — the page exists and is empty. So we cannot tell you who is pouring. If that is what decides whether the ticket is worth $65 to you, check that page closer to the date rather than assuming the line-up matches a previous year.",
+          "Worth knowing about the name, too: the organiser now calls this the Bonny Doon Art, Wine and Brew Festival. This page keeps the older \"and Beer\" wording because that is how the event is recorded across the Santa Cruz County listings most people arrive from, but the festival, the venue and the beneficiary are the same event.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "What time does the Bonny Doon Art, Wine and Beer Festival start?",
+        a: "Gates open at 2:00pm on Saturday 19 September 2026 and the festival ends at 7:00pm. Alcohol service stops at 6:30pm and the silent auction closes at 6:00pm.",
+      },
+      {
+        q: "How much are tickets?",
+        a: "$65 general admission, $150 VIP, and $35 for a non-alcoholic ticket. Those are the online prices; the organiser says prices go up at the door.",
+      },
+      {
+        q: "Is it free to get in?",
+        a: "No. Every tier is ticketed and the cheapest way through the gate is the $35 non-alcoholic ticket, which includes no alcoholic drinks at all.",
+      },
+      {
+        q: "Can I bring children?",
+        a: "No. The organiser states the event is 21 and over, and that applies to the non-alcoholic ticket as well.",
+      },
+      {
+        q: "Where is it held, and is there parking?",
+        a: "Crest Ranch, 12200 Empire Grade, Santa Cruz, up in the hills north-west of the city. The organiser says parking is available on site and encourages carpooling.",
+      },
+      {
+        q: "Who does the festival raise money for?",
+        a: "Bonny Doon School's arts and academics programmes. The festival is hosted by the Bonny Doon Community School Foundation, a 501(c)(3) non-profit.",
+      },
+    ],
   },
   {
     slug: "capitola-beach-festival",

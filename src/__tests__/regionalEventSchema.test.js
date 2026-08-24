@@ -15,6 +15,7 @@ import {
   regionalEvents,
   regionalEventPages,
   eventsByMonth,
+  pacificOffset,
 } from '../data/events-2026.ts';
 import {
   buildRegionalEventJsonLd,
@@ -75,18 +76,29 @@ describe('regional Event JSON-LD', () => {
     }
   });
 
-  it('always carries a valid startDate', () => {
+  it('always carries a valid startDate on the right day', () => {
     for (const { event, ld } of nodes) {
       expect(isDateOrDateTime(ld.startDate), `${event.slug}: ${ld.startDate}`).toBe(true);
-      expect(ld.startDate).toBe(event.start);
+      // Date-only until v1.Y; a row with organiser-published hours now carries
+      // a clock time, so the invariant is the DAY, not the exact string.
+      expect(ld.startDate.slice(0, 10), event.slug).toBe(event.start);
     }
   });
 
-  it('carries endDate only for multi-day runs, and never before startDate', () => {
+  // Was "endDate only for multi-day runs". v1.Y: a single-day event whose
+  // organiser publishes a finish time has a real endDate too — same day, later
+  // clock. The rule that actually matters is that endDate never precedes
+  // startDate, and never appears out of nowhere.
+  it('carries endDate for multi-day runs or a sourced finish time, never before startDate', () => {
     for (const { event, ld } of nodes) {
-      if (event.end) {
+      const expectEnd =
+        Boolean(event.end) ||
+        (event.timesConfidence === 'official' && Boolean(event.endTime));
+
+      if (expectEnd) {
         expect(isDateOrDateTime(ld.endDate), event.slug).toBe(true);
         expect(ld.endDate > ld.startDate, event.slug).toBe(true);
+        expect(ld.endDate.slice(0, 10), event.slug).toBe(event.end ?? event.start);
       } else {
         expect(ld.endDate, event.slug).toBeUndefined();
       }
@@ -107,24 +119,70 @@ describe('regional Event JSON-LD', () => {
         continue;
       }
 
-      expect(event.admission, event.slug).toBe('free');
       expect(ld.offers['@type'], event.slug).toBe('Offer');
-      expect(ld.offers.price, event.slug).toBe('0');
-      expect(ld.offers.priceCurrency, event.slug).toBe('USD');
       expect(ld.offers.availability, event.slug).toBe('https://schema.org/InStock');
       // Google treats offers.url as required whenever an Offer is published.
       expect(typeof ld.offers.url, event.slug).toBe('string');
       expect(ld.offers.url, event.slug).toMatch(/^https:\/\//);
+
+      if (event.admission === 'free') {
+        expect(ld.offers.price, event.slug).toBe('0');
+        expect(ld.offers.priceCurrency, event.slug).toBe('USD');
+        continue;
+      }
+
+      // v1.Y: the only other sourced shape is a ticketed admission carrying its
+      // own floor price. Anything else means a member was added to the union
+      // without teaching the builder about it.
+      expect(event.admission.kind, event.slug).toBe('ticketed');
+      expect(typeof event.admission.from, event.slug).toBe('number');
+      expect(event.admission.from, event.slug).toBeGreaterThan(0);
+      expect(ld.offers.price, event.slug).toBe(String(event.admission.from));
+      expect(ld.offers.priceCurrency, event.slug).toBe(event.admission.currency);
     }
   });
 
   // A price on the page and a price in the markup are one claim, not two.
-  it('shows a visible free badge for every row that publishes a free Offer', () => {
-    const free = regionalEvents.filter((e) => e.admission === 'free');
-    for (const e of free) {
-      expect(e.admission, e.slug).toBe('free');
+  it('sources admission from an organiser for every row that publishes an Offer', () => {
+    const priced = regionalEvents.filter((e) => e.admission !== undefined);
+    for (const e of priced) {
+      const ok =
+        e.admission === 'free' ||
+        (typeof e.admission === 'object' && e.admission.kind === 'ticketed');
+      expect(ok, e.slug).toBe(true);
+      // A paid price is a claim about someone's money — it needs the organiser
+      // page it came from, not just our word for it.
+      if (e.admission !== 'free') {
+        expect(typeof e.officialWebsite, e.slug).toBe('string');
+      }
     }
-    expect(free.length, 'rows with sourced admission').toBeGreaterThan(0);
+    expect(priced.length, 'rows with sourced admission').toBeGreaterThan(0);
+  });
+
+  // v1.Y: pacificOffset() was wired in from v1.B and emitted nothing for four
+  // months because no row had a sourced time. Bonny Doon is the first. The rule
+  // it ships under is the one v1.G wrote down: only an organiser-published hour
+  // reaches structured data, because a time in a search result arrives stripped
+  // of every qualifier the page put around it.
+  it('puts a clock time in startDate only where the organiser published it', () => {
+    for (const { event, ld } of nodes) {
+      const official = event.timesConfidence === 'official';
+
+      if (official && event.startTime) {
+        expect(ld.startDate, event.slug).toBe(
+          `${event.start}T${event.startTime}:00${pacificOffset(event.start)}`,
+        );
+      } else {
+        // Date-only. No midnight padding, ever.
+        expect(ld.startDate, event.slug).toBe(event.start);
+      }
+
+      // An unconfirmed row may still carry display hours; they must not leak.
+      if (!official) {
+        expect(ld.startDate, event.slug).not.toMatch(/T/);
+        expect(ld.endDate ?? '', event.slug).not.toMatch(/T/);
+      }
+    }
   });
 
   it('locates every event as a Place with a city and CA', () => {

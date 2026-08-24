@@ -38,6 +38,22 @@ export function isoDateTime(iso: string, time?: string): string {
 }
 
 /**
+ * The single gate between a row's clock times and its structured data.
+ *
+ * Returns a time ONLY when the organiser published the hours themselves. An
+ * `"unconfirmed"` row still shows its hours to the reader — with the page
+ * saying who has and has not published them — but they stay out of the Event
+ * node, because a time in a search result arrives stripped of that caveat.
+ * Rows with no `timesConfidence` at all are treated as unconfirmed.
+ */
+function officialTime(
+  event: RegionalEvent,
+  field: "startTime" | "endTime",
+): string | undefined {
+  return event.timesConfidence === "official" ? event[field] : undefined;
+}
+
+/**
  * The Place node: venue name where one is known, city + CA either way.
  *
  * `streetAddress` and `postalCode` are emitted only for the rows that carry a
@@ -66,20 +82,31 @@ export function buildPlace(event: RegionalEvent): JsonLd {
  * datasets publish the same shape.
  *
  * Returns null unless `admission` is set, which it only is where the organiser
- * states it — so the 53 rows still carrying no admission data publish no Offer
+ * states it — so the rows still carrying no admission data publish no Offer
  * at all rather than an empty or guessed one. `url` is always present: Google
  * treats offers.url as required whenever an Offer is published, so it falls
  * back to our own page when no organiser URL is recorded.
+ *
+ * Two shapes, one node. `"free"` publishes price 0; a ticketed admission
+ * publishes its `from` floor — the cheapest ticket that actually gets someone
+ * through the gate. Emitting the floor rather than a range is deliberate:
+ * `price` is read as the amount payable, so the only figure that cannot
+ * mislead is the smallest one a reader could really pay.
  */
 export function buildRegionalOffer(
   event: RegionalEvent,
   canonical: string,
 ): JsonLd | null {
-  if (event.admission !== "free") return null;
+  const { admission } = event;
+  if (admission === undefined) return null;
+
+  const price = admission === "free" ? "0" : String(admission.from);
+  const priceCurrency = admission === "free" ? "USD" : admission.currency;
+
   return {
     "@type": "Offer",
-    price: "0",
-    priceCurrency: "USD",
+    price,
+    priceCurrency,
     availability: "https://schema.org/InStock",
     url: event.officialWebsite ?? canonical,
   };
@@ -99,8 +126,15 @@ export function buildRegionalEventJsonLd(
     name: event.name,
     ...(event.description ? { description: event.description.slice(0, 300) } : {}),
     url: `${site}/event/${event.slug}/`,
-    startDate: isoDateTime(event.start),
-    ...(event.end ? { endDate: isoDateTime(event.end) } : {}),
+    startDate: isoDateTime(event.start, officialTime(event, "startTime")),
+    ...(event.end || officialTime(event, "endTime")
+      ? {
+          endDate: isoDateTime(
+            event.end ?? event.start,
+            officialTime(event, "endTime"),
+          ),
+        }
+      : {}),
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: buildPlace(event),
