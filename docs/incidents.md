@@ -53,10 +53,113 @@ Two things that have bitten this log already:
 
 ---
 
-## 2026 Timber Fire
+## 2026 Big Sur fires — Timber and Plaskett
 
-Started Saturday 8 August 2026 on Los Padres National Forest land, Big Sur,
-Monterey County. Cause under investigation. Still active.
+**Timber Fire** started Saturday 8 August 2026 on Los Padres National Forest
+land, Big Sur, Monterey County.
+
+**Plaskett Fire** started Wednesday 26 August 2026 near Los Burros Road, about
+two miles east of Plaskett Creek Campground — roughly 40 miles south of Timber.
+
+Both causes under investigation. Both still active. Renamed from "2026 Timber
+Fire" on 28 August, when the second fire made a single-incident heading wrong.
+
+### 2026-08-28 — a second fire, and Highway 1 closes again. THE SITE WAS WRONG IN THE DANGEROUS DIRECTION
+
+- **Read at:** Friday 28 August 2026, 12:24pm PDT, CAL FIRE incident API.
+  Closure from Caltrans' conditions service at 12:42pm; evacuation zones and
+  business closures from BigSurKate and KQED.
+- **Figures:** Timber **23,343 acres, 21% contained**. Plaskett **2,774 acres,
+  0% contained**, up about a thousand acres overnight.
+- **Direction:** Timber grew 46% in three days (15,998 → 23,343) while
+  containment **fell** from 26% to 21% — a longer perimeter, not undone work.
+  Plaskett did not exist three days ago.
+
+- **THE WORST STALENESS THIS LOG HAS RECORDED.** For three days the live site
+  told readers *"Highway 1 through Big Sur is open again"* while a 40-mile
+  stretch was shut. Every previous entry here recorded the site understating a
+  fire, which is bad. This one recorded the site sending people toward a closed
+  road and an active fire, which is the direction that can actually hurt
+  somebody. Acreage was also published as 12,616 against an actual 23,343 —
+  understated by 46%.
+
+- **Why it went wrong, and it was not the cron.** The daily rebuild Worker ran
+  correctly every morning; a rebuild only re-evaluates `pacificToday()`, and
+  cannot refresh figures hand-written into `src/data/traffic.ts`. **The cron
+  fixes stale dates. It does nothing for stale data.** A refresh written on
+  25 August was also left uncommitted for three days, so even the work that had
+  been done was not live. Both failures are human, and both are invisible from
+  the outside — nothing on the site or in CI goes red when the numbers rot.
+
+- **Highway 1: closed from Gorda (MM 10.2) to Captain Cooper Elementary
+  (MM 50.1)** — about 40 miles, the whole coast rather than a segment, versus
+  MM 37–42.6 in the first closure. Shut on 27 August, no reopening estimate,
+  shelter-in-place near parts of it. The road has now changed state three times
+  in three weeks: closed 11–22 August, open 22–27, closed again from the 27th.
+- **Evacuations:** Plaskett carries an order on `MRY-F036` and warnings on
+  `MRY-F035` and `MRY-F037`. Timber's zones are unchanged from 25 August.
+- **Businesses re-closed.** Nepenthe reopened 20 August and shut again on the
+  27th, at least through Sunday 30 — twice in one month. The Henry Miller
+  Memorial Library reopened 22 August and closed again from the 27th until
+  further notice, posting *"Again, we implore you: Do not come to Big Sur."*
+  All four Big Sur state parks are shut again, and Limekiln's notice names both
+  fires.
+- **Red Flag Warning** for Friday morning 28 August: isolated thunderstorms with
+  lightning and winds to 50mph, which the NWS warns may start new fires.
+
+- **Structural limit now being felt.** `Incident` in `src/data/traffic.ts` and
+  `FireAlert.astro` model exactly ONE incident. Two fires are currently squeezed
+  into one record — the name reads "Timber Fire and Plaskett Fire", `size` and
+  `containment` carry two figures each, and Plaskett's zones are tagged inline
+  in the shared arrays. It is honest but it is a workaround. If a third fire
+  starts, or these two diverge further, the type needs to become a list.
+
+- **Lessons.** (1) A daily rebuild is not a daily *check* — automating the build
+  made the staleness less visible, not less likely. (2) Uncommitted emergency
+  copy is worth nothing; ship it the day it is written. (3) The failure mode
+  finally arrived in the direction the block's own header warns about, and it
+  arrived while the automation was working perfectly.
+
+### 2026-08-25 — 15,998 acres, and the coastal evacuation warnings come back
+
+- **Read at:** Tuesday 25 August 2026, 10:37am PDT, CAL FIRE incident API.
+  Narrative from the USFS Day 18 morning update; evacuation zones from the Day
+  17 evening update, because Day 18 published none and deferred to the county.
+- **Figures:** 15,998 acres, 26% contained. Personnel 1,417. California
+  Interagency Incident Management Team 3 assumed command.
+- **Direction:** up about 3,380 acres overnight with containment moving one
+  point. Over three days the fire has grown by more than half — 8,665 → 12,616
+  → 15,998 — while containment went 25 → 25 → 26. That is a perimeter growing
+  faster than crews can line it, and the flat percentage reads as stability
+  when it is the opposite.
+- **The story changed direction.** Yesterday's entry recorded the fire moving
+  inland *away* from Big Sur. Overnight it crossed the Ventana Creek drainage
+  and began climbing toward **Manuel Peak, above Big Sur village**. It is also
+  working north-east along the Pine Ridge Trail toward the Big Sur River and
+  backing south-west toward Pick Creek. So it is being pushed several ways at
+  once, and one of them is back at the coast.
+- **Was wrong on the site for ~1 day:** acreage published as 12,616,
+  understating by 3,382 (21%). Worse, the copy asserted the fire was "no longer
+  on the coast" and that the coastal zones "have been released" — both true when
+  written on Monday, both false by Monday evening.
+- **Evacuation zones reversed within a day.** The whole MRY-F02x coastal series
+  was released Monday; by Monday evening MRY-F021-B through MRY-F028-D were back
+  under **warning**, and **MRY-F029 was back under an evacuation order** having
+  been dropped entirely the day before. Orders otherwise stay inland. The page
+  now says this explicitly — if you were told your zone was clear on Monday,
+  check again — because a released-then-reissued zone is the case where a
+  resident is most likely to act on a stale reading.
+- **Weather is the thing to watch:** upper 80s to low 90s, single-figure
+  humidity, south-west winds elevating fire-weather concern **through Thursday
+  27 August**, with poor overnight humidity recovery.
+- **Unchanged:** Highway 1 open since 22 August, still absent from the
+  incident's closure list, and no Timber Fire restriction in Caltrans'
+  conditions service at 11:21am. Crews worked above the highway overnight with
+  no flare-ups — the page now frames the road as open but not settled. All four
+  Big Sur state parks still closed, re-verified on their own parks.ca.gov pages.
+- **Lesson for this log:** "released" is not a terminal state. Yesterday's entry
+  reported zone releases as though they were progress. Record them as the
+  current reading, not as a direction of travel.
 
 ### 2026-08-24 — 12,616 acres, the fire moves inland and Highway 1 comes off the closure list
 
