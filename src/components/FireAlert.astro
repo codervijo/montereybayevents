@@ -1,29 +1,57 @@
 ---
 /**
- * Active-incident banner for the Timber Fire.
+ * Active-incident banner for the Big Sur fires.
  *
- * Rendered at the top of every page a reader about to drive somewhere is likely
- * to land on — the Car Week pages while that ran, and Monterey County regional
- * listings for as long as the incident changes anyone's plans. Highway 1 being
- * shut was the original trigger; since it reopened on 22 August the reason to
- * keep this up is the state-park closures and an inland fire still growing.
- * `variant="full"` is the version
- * on /traffic/, which is where the detail belongs; everywhere else gets
- * `variant="compact"` — the one sentence that changes a decision, plus a link
- * through.
+ * Rendered at the top of every page a reader about to travel is likely to land
+ * on — the Car Week pages while that ran, and Monterey County regional listings
+ * for as long as the incident changes anyone's plans.
  *
- * Nothing here is a live feed. Volatile figures carry an explicit "as of" and
- * every one of them links to CAL FIRE, so a reader can see how old our reading
- * is instead of trusting a number that may have doubled since. When the
- * incident closes, set `timberFire.active = false` in src/data/traffic.ts —
- * a stale emergency banner is worse than none at all.
+ * `variant="full"` is the version on /traffic/, where the detail belongs;
+ * everywhere else gets `variant="compact"` — the one statement that changes a
+ * decision, plus a link through.
+ *
+ * THE FIGURES ARE LIVE AS OF THE LAST BUILD. Acreage, containment and the
+ * as-of stamp come from CAL FIRE at build time via src/lib/fireStatus.ts, and
+ * the daily rebuild Worker refreshes them each morning. They are no longer
+ * typed by hand — between 25 and 28 August 2026 the hand-typed acreage went 46%
+ * wrong while the site rebuilt cleanly every day.
+ *
+ * Two things the build cannot do, so the page says them out loud instead:
+ *   - If the CAL FIRE read fails, it falls back to the hand-checked figures in
+ *     src/data/traffic.ts AND states that it has, rather than quietly serving a
+ *     stale number that looks current.
+ *   - If Caltrans reports a wildfire closure on Highway 1 that contradicts
+ *     `fire.roadClaim`, a correction strip renders above the description. The
+ *     prose is still written by a person; this checks the one claim in it whose
+ *     failure could send somebody toward a closed road.
+ *
+ * Everything else here — evacuation zones, what is closed, the narrative — is
+ * hand-written and still goes stale. This narrows the error surface; it does
+ * not remove it.
+ *
+ * The copy states facts and does not advise anyone how to travel. When the
+ * incident closes, set `timberFire.active = false` in src/data/traffic.ts.
  */
 import { timberFire as fire } from "../data/traffic";
+import {
+  fetchFireStatus,
+  formatAcres,
+  formatUpdated,
+} from "../lib/fireStatus";
 
 interface Props {
   variant?: "full" | "compact";
 }
 const { variant = "compact" } = Astro.props;
+
+const status = await fetchFireStatus();
+const live = status.incidents && status.incidents.length > 0 ? status.incidents : null;
+
+// Caltrans and our prose disagree about Highway 1. `null` means the feed could
+// not be read, which is not a disagreement.
+const roadDrift =
+  status.roadClosedForWildfire !== null &&
+  status.roadClosedForWildfire !== (fire.roadClaim === "closed");
 ---
 
 {
@@ -73,12 +101,45 @@ const { variant = "compact" } = Astro.props;
         {fire.headline}
       </p>
 
+      {roadDrift && (
+        <p class="mt-5 border-2 border-destructive bg-destructive/10 px-4 py-3 text-sm leading-relaxed text-foreground">
+          <span class="font-semibold text-destructive">
+            Caltrans and this page disagree.
+          </span>{" "}
+          Caltrans currently reports Highway 1 in Monterey County as{" "}
+          {status.roadClosedForWildfire ? "closed for a wildfire" : "carrying no wildfire closure"},
+          and the description below says the opposite. The description was
+          written by hand and is out of date. Caltrans is the authority.
+        </p>
+      )}
+
       <p class="mt-5 border-l-2 border-brass/50 pl-4 text-sm leading-relaxed text-muted-foreground">
-        <span class="font-semibold text-brass">This is not a live feed.</span> A
-        fire changes faster than this page does. {fire.size}, {fire.containment}, as
-        of {fire.asOf} — check CAL FIRE below for the current figures rather than
-        trusting these, and follow the county for evacuation changes. Started{" "}
-        {fire.started}.
+        {live ? (
+          <Fragment>
+            <span class="font-semibold text-brass">Read from CAL FIRE.</span>{" "}
+            {live.map((i, n) => (
+              <Fragment>
+                {n > 0 && " "}
+                {i.name.trim()}: {formatAcres(i.acres)}, {i.containment}% contained.
+              </Fragment>
+            ))}{" "}
+            Figures as of {formatUpdated(live[0]!.updated)}, taken from CAL FIRE's
+            incident record when this page was last built. A fire changes faster
+            than a page does; the CAL FIRE link below carries the current
+            figures. Started {fire.started}.
+          </Fragment>
+        ) : (
+          <Fragment>
+            <span class="font-semibold text-destructive">
+              Live figures unavailable.
+            </span>{" "}
+            CAL FIRE's incident record could not be read when this page was
+            built, so these are the last figures checked by hand and they may be
+            out of date: {fire.size}, {fire.containment}, as of {fire.asOf}. The
+            CAL FIRE link below carries the current figures. Started{" "}
+            {fire.started}.
+          </Fragment>
+        )}
       </p>
 
       <div class="mt-6 grid gap-6 sm:grid-cols-2">

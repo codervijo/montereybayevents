@@ -29,6 +29,30 @@ wrong, add a new entry saying so.
 
 ### Where the figures come from
 
+**Acreage, containment and the as-of stamp are no longer typed by hand.**
+`src/lib/fireStatus.ts` reads them from CAL FIRE at BUILD time, and the daily
+rebuild Worker refreshes them every morning — so the cron finally does something
+about stale *data*, not just stale dates. It also reads Caltrans and renders a
+correction strip when the feed contradicts the page's own `roadClaim`, which is
+the check that would have caught 25–28 August.
+
+Two things that means for this log:
+
+- **Do not re-type acreage or containment into `src/data/traffic.ts`.** Those
+  three fields are now fallback-only, used when the feed cannot be read, and the
+  page states out loud when it has fallen back to them. Keep them hand-checked
+  but expect them to be unseen.
+- **Everything else is still yours.** Evacuation zones, closures, the narrative
+  and the judgement about whether the banner belongs up at all are in no feed.
+  The automation narrowed the error surface; it did not remove it.
+
+Verified from inside a real Cloudflare Pages build on 2026-08-28: both feeds
+return 200 in under half a second, and CF's build egress reaches `fire.ca.gov`
+even though this operator's own IP gets 403 from it.
+
+The manual commands below still matter for the narrative, and for checking what
+the build will see.
+
 `fire.ca.gov`, `readymontereycounty.org` and most news outlets return 403 to a
 scraper. The JSON behind CAL FIRE's incident map does not:
 

@@ -138,13 +138,29 @@ export type Incident = {
   active: boolean;
   name: string;
   where: string;
-  /** One line: what a reader needs to do differently because of this. */
+  /** One line: what is true right now that changes a plan. State it; don't advise on it. */
   headline: string;
-  /** Timestamp for the volatile figures below, in the reader's terms. */
+  /**
+   * FALLBACK ONLY. `src/lib/fireStatus.ts` reads acreage, containment and the
+   * as-of stamp from CAL FIRE at build time, and those are what render. These
+   * three fields are used only when that read fails, and the page says so when
+   * it falls back to them. Keep them hand-checked but expect them to be unseen.
+   */
   asOf: string;
   size: string;
   containment: string;
   started: string;
+  /**
+   * What the prose in `roadClosure` asserts about Highway 1.
+   *
+   * Compared at build time against Caltrans' own conditions feed. When the two
+   * disagree the page renders a correction strip above the description, because
+   * this is the field that went wrong in the way that could actually hurt
+   * someone: for three days in August 2026 the page said "open" while a 40-mile
+   * stretch was shut. A human still writes the prose; the machine now checks
+   * the one claim in it that matters most.
+   */
+  roadClaim: "open" | "closed";
   roadClosure: string;
   evacuationOrders: string[];
   evacuationWarnings: string[];
@@ -160,7 +176,7 @@ export const timberFire: Incident = {
   name: "Timber Fire and Plaskett Fire",
   where: "Big Sur, Los Padres National Forest, Monterey County",
   headline:
-    "Highway 1 is closed again — a 40-mile stretch from Gorda to Captain Cooper Elementary, with no reopening estimate. There are now two fires burning in Big Sur, the businesses that reopened last week have closed again, and officials are asking people not to travel here. If you were planning a Big Sur trip this weekend, cancel it.",
+    "Highway 1 is closed through Big Sur — about 40 miles, from Gorda to Captain Cooper Elementary, with no reopening estimate. Two fires are burning: the Timber Fire and, since 26 August, the Plaskett Fire. The Big Sur businesses and state parks that reopened last week have closed again, and Monterey County officials have asked people not to travel to Big Sur.",
   asOf: "Friday, 28 August 2026, 12:24pm, read from CAL FIRE's own incident record",
   size:
     "Timber Fire 23,343 acres; Plaskett Fire 2,774 acres and growing by around a thousand acres a day since it started on Wednesday",
@@ -168,8 +184,9 @@ export const timberFire: Incident = {
     "Timber 21% contained — down from 26% on Tuesday, because the fire pushed east and north into the Ventana Wilderness faster than the line grew. Plaskett is 0% contained. A containment figure that falls while acreage climbs means the perimeter is getting longer, not that earlier work was undone",
   started:
     "Timber on Saturday, 8 August, on Los Padres National Forest land; Plaskett on Wednesday, 26 August, near Los Burros Road. Both causes under investigation",
+  roadClaim: "closed",
   roadClosure:
-    "Highway 1 is CLOSED through Big Sur. The closed stretch runs about 40 miles, from Gorda at mile marker 10.2 in the south to Captain Cooper Elementary at mile marker 50.1 in the north — far longer than the closure that ran from 11 to 22 August, and it takes in the whole of the Big Sur coast rather than a segment of it. Caltrans confirmed it at 12:42pm on Friday 28 August, describing it as closed due to a wildfire and advising an alternate route. There is no reopening estimate. A shelter-in-place order applies to some areas near the closure. This page said the road was open until this update; it reopened on 22 August and closed again on the 27th, so treat any account of Highway 1 written before this week as worthless, ours included. Rocky Creek Bridge also has one-way control for construction through 31 August, which is unrelated to either fire.",
+    "Highway 1 is closed through Big Sur. The closed stretch runs about 40 miles, from Gorda at mile marker 10.2 in the south to Captain Cooper Elementary at mile marker 50.1 in the north. The earlier closure, from 11 to 22 August, covered mile markers 37 to 42.6 — this one takes in the whole coast rather than a segment. Caltrans records it as closed due to a wildfire and gives no reopening estimate. A shelter-in-place order applies to some areas near the closure. The road has changed state three times in three weeks: closed 11–22 August, open 22–27 August, closed again from 27 August. Separately and unrelated to either fire, Rocky Creek Bridge has one-way control for construction through 31 August.",
   evacuationOrders: [
     "MRY-D082",
     "MRY-D089",
@@ -209,23 +226,23 @@ export const timberFire: Incident = {
   closures: [
     "All four Big Sur state parks are closed — Andrew Molera, Julia Pfeiffer Burns, Pfeiffer Big Sur and Point Sur — confirmed on each park's own page on parks.ca.gov on 28 August, with no reopening date. Limekiln State Park is closed too, and its notice names both fires.",
     "Los Padres National Forest has closure orders in force on trails and roads across the fire area. This is now the only road closure the incident itself lists.",
-    "The businesses that reopened last week have closed again. Nepenthe reopened on 20 August after ten days shut and closed again on Thursday 27 August, at least through Sunday 30 August. The Henry Miller Memorial Library reopened on 22 August and closed again from Thursday until further notice, telling would-be visitors on Instagram: “Again, we implore you: Do not come to Big Sur.” Ring anywhere you were planning to visit; last week's reopening notices are all out of date.",
+    "The businesses that reopened last week have closed again. Nepenthe reopened on 20 August after ten days shut and closed again on 27 August, at least through Sunday 30 August — twice in one month. The Henry Miller Memorial Library reopened on 22 August and closed again from 27 August until further notice, posting on Instagram: “Again, we implore you: Do not come to Big Sur.”",
     "The Esalen Institute is temporarily closed because of the fire and has published no reopening date.",
     "Deetjen's Big Sur Inn, Post Ranch Inn and Alila Ventana were evacuated in the fire's first week. Reopenings are happening business by business as the warnings come down, so ring the one you are travelling to rather than trusting this line.",
   ],
   eventImpact: [
     "The Big Sur Food & Wine Festival, listed here for 5–7 November, has paused ticket sales. The organisers' own wording: “At present, Big Sur has an uncontained active fire. Ticket sales are temporarily paused out of respect for the community and what the brave first responders are currently managing.” The dates themselves have not changed.",
-    "Anything on this site taking place in Big Sur, or reached by driving Highway 1 south of Carmel, is unreachable by that road for now and should be confirmed with its organiser before you go anywhere. All four state parks are shut, and so is Limekiln.",
+    "Anything listed here that takes place in Big Sur, or is reached from Highway 1 south of Carmel, sits inside or beyond the closed stretch. All four Big Sur state parks are shut, and so is Limekiln.",
     "The Timber Fire has pushed east and north deep into the Ventana Wilderness; CAL FIRE names critical fire weather as the primary driver. The Plaskett Fire started on Wednesday near Los Burros Road, about two miles east of Plaskett Creek Campground, and is the reason the southern end of the closure sits at Gorda.",
     "The National Weather Service issued a Red Flag Warning for Friday morning 28 August — isolated thunderstorms with lightning and winds up to 50mph, which the service warns may start new fires. That is the single most important thing on this page for anyone deciding whether to travel south of Carmel this weekend.",
-    "Do not treat a Big Sur booking as safe because it was fine last week. The road reopened on 22 August and closed again on the 27th, the state parks reopened and re-closed, and Nepenthe has now closed twice in one month. Confirm directly with whoever you booked with, on the day.",
+    "Conditions here have reversed twice in a week. The road reopened on 22 August and closed again on the 27th; the state parks reopened and then closed again; Nepenthe has closed twice in one month. Organisers and venues have been publishing changes daily.",
     "Events on the Monterey Peninsula itself — Carmel, Monterey, Pacific Grove, Seaside, Salinas — are going ahead. No listing north of the closure has been cancelled because of this fire.",
     "Monterey Car Week concluded on Sunday 16 August and ran to schedule, apart from the Pebble Beach Tour d'Elegance, which was rerouted away from Big Sur on 13 August, and a Cars and Coffee at Asilomar that was cancelled.",
   ],
   detour:
-    "There is no through route on Highway 1 between the Monterey Peninsula and San Simeon. Approach the Peninsula on Highway 101 from the north or east instead, and do not plan to drive the coast in either direction.",
+    "While this closure holds there is no through route on Highway 1 between the Monterey Peninsula and San Simeon. Highway 101 is the only continuous north–south route through the region.",
   evacuationPoint:
-    "Two fires means two sets of zones, and the Plaskett ones are marked above. The Plaskett Fire carries an evacuation order on MRY-F036 and warnings on MRY-F035 and MRY-F037; everything else listed belongs to the Timber Fire, whose coastal zones were released on 24 August and then largely reinstated as warnings the following evening. A shelter-in-place order also applies to some areas near the highway closure. Zones on this page have changed direction twice in a week, so treat them as a snapshot and use Ready Monterey County below for the live map. The county's information line is (831) 647-7760. The evacuation shelter at Carmel Middle School closed on 19 August.",
+    "Two fires means two sets of zones, and the Plaskett ones are marked above. The Plaskett Fire carries an evacuation order on MRY-F036 and warnings on MRY-F035 and MRY-F037. The rest belong to the Timber Fire, whose coastal zones were released on 24 August and largely reinstated as warnings the following evening. A shelter-in-place order applies to some areas near the highway closure. The evacuation shelter at Carmel Middle School closed on 19 August. Ready Monterey County, linked below, publishes the live zone map; the county information line is (831) 647-7760.",
   sources: [
     SOURCES.calFireTimber,
     SOURCES.readyMonterey,
@@ -279,7 +296,7 @@ export const closures: Closure[] = [
     ],
     when: "Closed August 11–22, reopened for five days, closed again from Thursday, August 27 — now a 40-mile span with no reopening estimate",
     reason:
-      "Closed for public and firefighter safety, now because of two fires rather than one. The first closure ran 11–22 August and covered mile markers 37 to 42.6; Caltrans reopened it at 1pm on the 22nd, and it held for five days. The Plaskett Fire started on 26 August and the road shut again on the 27th, this time from Gorda at mile marker 10.2 to Captain Cooper Elementary at mile marker 50.1 — roughly 40 miles, the whole coast rather than a segment. No reopening estimate. Come in on Highway 101 instead, and check Caltrans QuickMap before you travel: this stretch has changed state three times in three weeks. See the full detail and live links at the top of this page.",
+      "Closed for public and firefighter safety, now because of two fires rather than one. The first closure ran 11–22 August and covered mile markers 37 to 42.6; Caltrans reopened it at 1pm on the 22nd and it held for five days. The Plaskett Fire started on 26 August and the road shut again on the 27th, this time from Gorda at mile marker 10.2 to Captain Cooper Elementary at mile marker 50.1 — roughly 40 miles, the whole coast rather than a segment. Caltrans gives no reopening estimate. Full detail and live links are at the top of this page.",
     confidence: "official",
     source: SOURCES.readyMonterey,
   },
