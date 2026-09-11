@@ -1062,8 +1062,6 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "monterey-jazz-festival",
-    // Bump this to the date the [VERIFY] blocks are filled, if that is not today
-    // — it feeds <lastmod> and should name the day the content actually changed.
     updated: "2026-09-11",
     name: "Monterey Jazz Festival (MJF69)",
     county: "Monterey",
@@ -1081,85 +1079,92 @@ export const regionalEvents: RegionalEvent[] = [
     metaDescription:
       "25–27 September 2026 at the Fairgrounds. Ticket tiers and what each actually gets you, the sold-out parking, and the gate times still unannounced.",
     intro:
-      "The 69th Monterey Jazz Festival runs Friday 25 to Sunday 27 September 2026 across the 20 oak-studded acres of the Monterey County Fair & Event Center, 2000 Fairground Road. Thirty hours of music on six stages, around seventy food and craft vendors, and a 2026 bill led by a first-ever Herbie Hancock and Ron Carter duo. It is ticketed, and which ticket you buy changes the festival you get — that is the part worth understanding before you spend $215.",
+      "The 69th Monterey Jazz Festival runs Friday 25 to Sunday 27 September 2026 across the 20 oak-studded acres of the Monterey County Fair & Event Center, 2000 Fairground Road. Thirty hours of music on six stages, around seventy food and craft vendors, and a 2026 bill led by a first-ever Herbie Hancock and Ron Carter duo. Gates open at 3pm Friday and 11am at the weekend, and music runs to a 9pm last set all three days. It is ticketed, and which ticket you buy changes the festival you get — that is the part worth understanding before you spend $215.",
     // Section order is deliberate and load-bearing: these nine map to the
     // logistics queries this page is built to win, and collapsing or reordering
     // them undoes that. "Who is playing" is appended AFTER them rather than
     // interleaved, so the nine stay in their specified sequence.
     //
-    // [VERIFY] blocks name the exact question and the source that answers it.
-    // They are scaffolding, not shipping copy — every one must be replaced with
-    // a sourced answer, or with a plain statement that the organiser has not
-    // published it, BEFORE this page is pushed. A [VERIFY] marker reaching the
-    // live site is the failure this convention exists to prevent.
+    // SOURCING: filled 2026-09-11 from montereyjazz.org directly — the FAQ,
+    // Attendee Info, Festival Map, Schedule and the 10 April 2026 package-ticket
+    // press release. That is why `hideSources` is set: the CSV reference URLs
+    // this row was imported with no longer describe where the content came from.
+    // Where the festival publishes nothing, the page says so and names what is
+    // missing, rather than carrying a marker or a guess.
     sections: [
       {
         heading: "Dates, times, gates",
         body: [
-          "The 69th Monterey Jazz Festival runs Friday 25, Saturday 26 and Sunday 27 September 2026 at the Monterey County Fair & Event Center. Three days, around thirty hours of music across six stages.",
-          "Gate times are the one thing this page cannot yet tell you, and the reason is worth stating plainly: the festival's own FAQ has said gate and box-office times \"will be announced in early spring 2026\" since before that spring arrived, and it still says it. Rather than repeat a previous year's opening time as though it were this year's, no time is listed here.",
-          "[VERIFY] — From montereyjazz.org: what time do gates open on each of Friday, Saturday and Sunday, and what time does music end each night? Are Arena and Grounds gate times different? If the festival still has not published them, say so in those words and name the FAQ page as where it will appear.",
+          "The 69th Monterey Jazz Festival runs Friday 25, Saturday 26 and Sunday 27 September 2026 at the Monterey County Fair & Event Center, 2000 Fairground Road, Monterey CA 93940.",
+          "Gates open at 3pm on Friday and at 11am on Saturday and Sunday. Music runs late all three days: the last sets start at 9pm on each of Friday, Saturday and Sunday.",
+          "First music is at 3:30pm Friday, midday Saturday and 11:15am Sunday — so on Saturday and Sunday the gates open an hour or so before anything starts, and on Friday only half an hour before.",
         ],
       },
       {
         heading: "Seating chart and stages",
         body: [
-          "Six stages carry the festival, and they divide into two zones that your ticket decides between. The Arena holds the Jimmy Lyons Stage, which is where the headline acts play. The Grounds hold the other five: the West End Stage, the Pacific Jazz Café, the Tim Jackson Garden Stage, the Courtyard Stage and the Monterey Room.",
-          "That division is the single most important thing to understand before buying, and it is covered in full under ticket prices below: a Grounds ticket does not admit you to the Arena.",
-          "[VERIFY] — From montereyjazz.org: the Arena seating chart. Which numbered sections are sold as Arena (reserved seat) and which as Arena Lawn? Is Arena seating assigned by row and seat number, or is it general admission within a section? Link the chart image or interactive map if the festival publishes one.",
+          "Six stages carry the festival, and they divide into two zones that your ticket decides between. The Arena holds the Jimmy Lyons Stage, a 5,400-seat outdoor venue at the east end of the fairgrounds, and it is where the headline acts play. The Grounds hold the other five: the Ray Drummond West End Stage, the Pacific Jazz Café, the Tim Jackson Garden Stage, the Courtyard Stage and the Monterey Room.",
+          "Arena seating is assigned, not general admission — your ticket names a seat. It sells in three grades: arena Lawn, arena sectional, and side bleacher, in ascending price order.",
+          "The festival does not publish a numbered Arena seating chart. It names the three grades and prices them, but nothing on its site maps which sections fall into which grade, so if a particular sightline matters, the seat map in the Etix checkout is the only place that shows it before you buy.",
         ],
       },
       {
         heading: "Parking at the Fairgrounds",
         body: [
-          "Fairgrounds parking is sold out for 2026. That is the organisers' own statement, not an inference from demand, and it changes how everyone else on this page gets there.",
-          "Limited ADA parking is on Fairground Road, first-come first-served. ADA seating is arranged through ticketing or on 831-308-4653, and hearing devices are free at Patron Services against a deposit of valid ID.",
-          "[VERIFY] — From montereyjazz.org: is there any remaining paid parking at the Fairgrounds itself, or is on-site parking entirely sold out including day-of sales? Is there a drop-off point for rideshare and private cars, and where is it? Confirm the ADA parking entrance and whether a placard alone is sufficient or advance arrangement is required.",
+          "Fairgrounds parking is sold out for 2026. That is the festival's own statement, not an inference from demand, and it changes how everyone else on this page gets there.",
+          "A limited number of ADA parking spaces are on Fairground Road, first-come first-served. ADA seating is arranged through ticketing or on 831-308-4653, and hearing devices are free at Patron Services against a deposit of valid ID.",
+          "There is no published rideshare or private-car drop-off point. If you are being dropped off, the festival does not say where — which, with on-site parking gone, is the one logistical gap left in its own guidance.",
         ],
       },
       {
         heading: "Getting there and shuttles",
         body: [
-          "Monterey Peninsula College parking is expected to be available to buy, with a shuttle to the Fairgrounds. The organisers' own advice to anyone not holding a parking pass is to use Uber or Lyft rather than to drive and hope for a space.",
-          "[VERIFY] — From montereyjazz.org: confirm the MPC park-and-ride. Is it on sale, what does it cost, what are the shuttle's first and last runs each day, how often does it run, and where exactly does it pick up at both ends? Shuttle schedules were unpublished as of the last check on this page.",
-          "[VERIFY] — From montereyjazz.org: the Fairgrounds street number. This page and its structured data currently publish 2000 Fairground Road, Monterey CA 93940, but 2004 Fairground Road also appears in circulation. Confirm which the festival and the venue themselves use, and correct `streetAddress` on this row if it is 2004 — the number ships in the Event JSON-LD, so a wrong one goes into map results.",
+          "With Fairgrounds parking sold out, the park-and-ride at Monterey Peninsula College is the festival's answer for anyone driving. Monterey-Salinas Transit runs shuttles between the MPC lots and the festival roughly every 15 minutes during festival hours.",
+          "MPC parking passes are sold online only up to 24 September. From Friday 25 to Sunday 27 September you buy them on site instead, at the MPC Lot A shuttle tent at the intersection of Via Lavandera and the Lot A bus stop.",
+          "If you bought a pass in advance, take it to that same shuttle tent and exchange it for a hand stamp — the stamp, not the pass, is what boards the shuttle. Worth knowing before you queue at the wrong place.",
+          "The festival does not publish a price for the MPC parking pass, or a separate fare for the shuttle. It publishes a shuttle map and timetable but no first and last run in plain text, so if you are planning around the last shuttle out after a 9pm set, check that map on the day.",
         ],
       },
       {
         heading: "Wristband and ticket pickup",
         body: [
+          "Tickets are electronic. Three-day packages were released on 4 September; single-day tickets release 21 days before the date on them. Either can be printed at home or carried on a phone.",
+          "The box office is at 2000 Fairground Road and opens before the festival does: 10am to 5pm on Wednesday 23 and Thursday 24 September, 10am to 9pm on Friday 25 and Saturday 26, and 10am to 8pm on Sunday 27.",
           "Re-entry works on a wristband. Your ticket admits you once; the wristband is what lets you back in. Lose the wristband and you buy another ticket — worth knowing before you take it off at the end of a long afternoon.",
-          "[VERIFY] — From montereyjazz.org: how are tickets delivered for 2026 — mobile, print-at-home, or mailed? Where and when do wristbands get collected, and is collection required before first entry or handled at the gate? Give the box office location and its opening hours for each day, and the will-call hours if they differ.",
         ],
       },
       {
         heading: "Grounds map",
         body: [
-          "[VERIFY] — From montereyjazz.org: is a grounds map published for 2026? If so, link it and describe the layout in a sentence or two — where the six stages sit relative to the main gate, and where food, merchandise, Patron Services and accessible facilities are. If no map is published, say that plainly rather than describing the grounds from memory of a previous year.",
+          "The festival publishes a 2026 grounds map — the MJF69 Fairgrounds Map, as an image and a PDF, both linked from its Festival Map page. It is the authority on where the six stages, the gates, food, merchandise and Patron Services sit.",
+          "This page does not reproduce the layout in words. The map is redrawn each year and the gate arrangement has changed between editions, so describing it from a previous year's version is exactly the error that makes a map page worth less than the map.",
         ],
       },
       {
         heading: "Ticket prices and what each pass includes",
         body: [
-          "There are three single-day tiers, and the gap between them is not just seat quality. Arena tickets are $110 on Friday and $215 on Saturday or Sunday, and they buy a reserved seat for the Jimmy Lyons Stage in the Arena plus access to everything on the Grounds stages that day. Arena Lawn is $75 Friday and $135 Saturday or Sunday. Grounds tickets are $65 Friday and $90 Saturday or Sunday.",
+          "Single-day tickets come in three tiers, and the gap between them is not just seat quality. Arena is $110 on Friday and $215 on Saturday or Sunday, and buys an assigned seat for the Jimmy Lyons Stage plus access to everything on the Grounds stages that day. Arena Lawn is $75 Friday and $135 Saturday or Sunday. Grounds is $65 Friday and $90 Saturday or Sunday.",
+          "Full-weekend packages are the other way in. A Grounds package is $230 and covers around 60 performances across the four Grounds stages. Arena packages begin at $325 for lawn seating and $465 and up for sectional and side-bleacher seats, and include a reserved seat at each of the 13 Jimmy Lyons Stage shows as well as the Grounds stages.",
           "The distinction that catches people: a Grounds ticket does not get you into the Arena. The headline acts on the Jimmy Lyons Stage — the Hancock and Carter duo, the Jazz at Lincoln Center Orchestra — are Arena shows. If those are why you are coming, Grounds is the wrong ticket at any price. If you are happy to graze five other stages all day, it is much the better value.",
+          "Premier Club is an add-on rather than a ticket — $395 for the weekend, on top of an Arena or Grounds purchase, for a furnished area with Arena simulcasts, private restrooms and patio seating. It is sold out for 2026.",
           "Children are handled differently by zone. In the Arena everyone needs a ticket, infants included. On the Grounds, under-2s are free and ages 2 to 12 need a youth ticket.",
-          "Three-day packages exist alongside the single-day tiers. Premier Club add-on access is sold out for 2026. The prices above are the organisers' own published single-day figures.",
-          "[VERIFY] — From montereyjazz.org: the three-day package prices for each tier, and whether any tier is sold out. Also resolve a discrepancy: a third-party calendar advertises a $98–$500 range for this festival, which does not match the organiser's published single-day tiers of $65–$215. Check whether $98–$500 reflects three-day packages, fees, or resale — and do not publish that range unless the festival itself states it.",
+          "One note on prices quoted elsewhere: a $98–$500 range circulates on third-party event calendars and matches none of the festival's own published tiers, which run from $65 for a Friday Grounds ticket to $465 and up for a full-weekend Arena seat. Buy from the festival or its ticketing partner and check the figure there.",
         ],
       },
       {
         heading: "Hotels near the Fairgrounds",
         body: [
-          "[VERIFY] — From montereyjazz.org: does the festival publish an official hotel partner, room block or lodging page for 2026? If it does, link it and name the properties and the booking deadline. If it does not, say so — and list only hotels whose distance from 2000 Fairground Road can be stated from a real address, with no rates quoted unless the hotel publishes them.",
+          "The festival publishes no room block, group rate or booking deadline for 2026. It features hotel partners — the Monterey Marriott on the waterfront and the Courtyard Sand City Monterey, which opened in January 2026 — and points at See Monterey and Hipcamp for campgrounds, RV parks and glamping across the county. None of those carries a festival rate.",
+          "That absence is worth knowing rather than working around: there is no discount code to hunt for, and late September is peak season on the Peninsula, so the usual advice about booking early applies with no festival-specific lever to pull.",
         ],
       },
       {
         heading: "Food, vendors, what to bring",
         body: [
           "Around seventy food and craft vendors trade across the grounds over the three days.",
-          "What you cannot bring in is the part that costs people at the gate. No outside food, coolers, glass bottles or beverages in containers. No lawn, beach or folding chairs — a real constraint at a festival where people expect to sit on grass all afternoon. No detachable-lens cameras, flash equipment or recording devices. No pets, and no strollers inside the arenas.",
-          "[VERIFY] — From montereyjazz.org: is an empty or sealed water bottle permitted, and are water refill stations provided? Chairs are prohibited, but are blankets allowed on the Arena Lawn and the Grounds? Is the site cashless, and are ATMs available? If the festival publishes a 2026 vendor or food list, link it.",
+          "The site is cashless for everything the festival runs — tickets, parking and food vendors all take cards only. The bars are cashless too. The exceptions are the arts and crafts vendors and program sales, which do take cash, and there are ATMs inside the Fairgrounds if you need them.",
+          "What you cannot bring in is the part that costs people at the gate. No outside food, coolers, glass bottles, or containerized or alcoholic beverages. No lawn, beach or folding chairs — a real constraint at a festival where people expect to sit on grass all afternoon. No detachable-lens cameras, flash equipment or recording devices. No pets, and no strollers in the Arena or the indoor venues.",
+          "Two things you can bring, and they are the ones people get wrong in the cautious direction: one sealed plastic bottle of water per person is allowed, and picnic blankets are fine. Chairs are out, blankets are in.",
         ],
       },
       {
@@ -1167,7 +1172,7 @@ export const regionalEvents: RegionalEvent[] = [
         body: [
           "The 2026 bill is led by Herbie Hancock and Ron Carter in what the festival bills as their first-ever duo performance — two musicians whose partnership goes back to Miles Davis's second great quintet, playing as a pair for the first time.",
           "Also announced: the Jazz at Lincoln Center Orchestra with Wynton Marsalis and special guest Cécile McLorin Salvant, Meshell Ndegeocello, the Charles Lloyd Quartet, and the Ravi Coltrane Quartet.",
-          "[VERIFY] — From montereyjazz.org: set times and the stage-by-stage running order, once published. Knowing who is on the bill is not the same as knowing when, and for a six-stage festival that is the difference between planning a day and wandering one.",
+          "The full stage-by-stage running order is published. Friday opens at 3:30pm with the USAF Commanders Jazz Ensemble and closes with the Ron Carter Foursight Quartet at 9pm; Saturday runs from a midday DownBeat Blindfold Test through the Ravi Coltrane Quartet at 3:45pm to Isaiah Collier at 8:45pm; Sunday opens with gospel at 11:15am and has the Charles Lloyd Quartet at 6pm. Set times for all six stages are on the festival's schedule page.",
         ],
       },
     ],
@@ -1178,7 +1183,7 @@ export const regionalEvents: RegionalEvent[] = [
       },
       {
         q: "How much are tickets?",
-        a: "Single-day Arena is $110 Friday, $215 Saturday or Sunday. Arena Lawn is $75 Friday, $135 Saturday or Sunday. Grounds is $65 Friday, $90 Saturday or Sunday. Three-day packages are also sold; Premier Club is sold out.",
+        a: "Single-day Arena is $110 Friday, $215 Saturday or Sunday. Arena Lawn is $75 Friday, $135 Saturday or Sunday. Grounds is $65 Friday, $90 Saturday or Sunday. Full-weekend packages are $230 for Grounds, from $325 for Arena lawn and from $465 for Arena sectional and side bleacher. The $395 Premier Club add-on is sold out for 2026.",
       },
       {
         q: "Does a Grounds ticket get me into the Arena?",
@@ -1186,17 +1191,22 @@ export const regionalEvents: RegionalEvent[] = [
       },
       {
         q: "Where do I park?",
-        a: "Fairgrounds parking is sold out for 2026. Monterey Peninsula College parking with a shuttle is expected to be available; otherwise the organisers recommend Uber or Lyft. Limited ADA parking on Fairground Road is first-come, first-served.",
+        a: "Fairgrounds parking is sold out for 2026. Park at Monterey Peninsula College instead and take the MST shuttle, which runs about every 15 minutes. MPC passes are sold online only until 24 September, then on site at the Lot A shuttle tent; an advance pass is exchanged there for a hand stamp, and the stamp is what boards the shuttle. Limited ADA parking on Fairground Road is first-come, first-served.",
       },
       {
         q: "What time do gates open?",
-        a: "Not announced. The organisers' FAQ still says gate and box-office times will be published in early spring 2026, so no opening time is listed here rather than repeating a previous year's.",
+        a: "3pm on Friday, and 11am on Saturday and Sunday. First music is 3:30pm Friday, midday Saturday and 11:15am Sunday, and the last sets start at 9pm all three days.",
       },
       {
         q: "Can I bring a chair?",
         a: "No. Lawn, beach and folding chairs are all prohibited, as are outside food, coolers, glass, detachable-lens cameras and recording devices.",
       },
     ],
+    // Set on the v1.G / v1.Y precedent: this page is now written from
+    // montereyjazz.org directly, so listing the CSV's import-time references
+    // would misdescribe where its content came from. referenceUrls itself is
+    // left untouched — events2026.test.js asserts it matches the CSV exactly.
+    hideSources: true,
     referenceUrls: [
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
       "https://www.montereyhotel.com/local-events",
