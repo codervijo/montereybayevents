@@ -15,18 +15,19 @@
 // would fail the build. Guide-page shape, on the /laguna-seca/camping/
 // precedent.
 //
-// THE DATES ARE NOT YET ESTABLISHED, AND THAT GATES THE STRUCTURED DATA.
-// The brief named "March 6-8, 2026" — but today is 11 September 2026, so that
-// edition is six months PAST, not six months out. The next edition is 2027, and
-// `date -d` says 6 March 2027 is a Saturday: "March 6-8" in 2027 runs Sat-Mon,
-// not the Fri-Sun this festival has run. The Fri-Sun equivalent would be
-// 5-7 March 2027, which is arithmetic, not a source — so nothing is published
-// here until the organiser confirms.
+// DATES: 5-7 March 2027, from the organiser's own homepage. The brief named
+// "March 6-8, 2026", which is the PAST edition — that one ran Fri-Sun too, and
+// the calendar simply moved. Weekday-checked with `date -d`: 5 March 2027 is a
+// Friday and 7 March a Sunday, so the Fri-Sun pattern holds.
 //
-// Consequently EVENT_DATES is null and the Event JSON-LD does not render.
-// schema.org/Event requires startDate; a node without one is invalid, and a
-// node with a guessed one is worse. Fill EVENT_DATES from the organiser and the
-// structured data ships automatically — see the [VERIFY] block below.
+// EVENT_DATES being non-null is what switches the Event JSON-LD on. Set it back
+// to null rather than guessing if a future edition's dates are unannounced;
+// schema.org/Event requires startDate and a node with a guessed one is worse
+// than no node.
+//
+// The JSON-LD location is the Portola, not the Conference Center: the organiser
+// publishes an address for headquarters only, and naming a Place we cannot
+// address would put a guess into map results.
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const site = "https://montereybayevents.com";
@@ -53,16 +54,20 @@ const OFFICIAL = "https://jazzbashmonterey.com/";
  * previous year's page. That check is a standing rule on this site; see
  * docs/CLAUDE.md.
  */
-const EVENT_DATES: { start: string; end: string; text: string } | null = null;
+const EVENT_DATES: { start: string; end: string; text: string } | null = {
+  start: "2027-03-05",
+  end: "2027-03-07",
+  text: "March 5-7, 2027",
+};
 
 const VENUES = [
   {
-    name: "Monterey Conference Center",
-    note: "One of the two venues named by the organiser. Street address not yet confirmed here — see the [VERIFY] under Venues.",
+    name: "Portola Hotel & Spa",
+    note: "2 Portola Plaza, Monterey CA 93940. The organiser calls it festival headquarters, and it is the only venue whose address they publish.",
   },
   {
-    name: "Portola Hotel & Spa",
-    note: "The second named venue, adjacent to the Conference Center in downtown Monterey. Address likewise unconfirmed.",
+    name: "Monterey Conference Center",
+    note: "Adjoining the Portola on Portola Plaza. The festival names it as a venue but publishes no separate address for it.",
   },
 ];
 
@@ -77,11 +82,14 @@ const eventJsonLd = EVENT_DATES
       eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
       location: {
         "@type": "Place",
-        name: "Monterey Conference Center",
+        name: "Portola Hotel & Spa",
+        streetAddress: "2 Portola Plaza",
         address: {
           "@type": "PostalAddress",
+          streetAddress: "2 Portola Plaza",
           addressLocality: "Monterey",
           addressRegion: "CA",
+          postalCode: "93940",
           addressCountry: "US",
         },
       },
@@ -153,18 +161,14 @@ const eventJsonLd = EVENT_DATES
     <section class="mt-14">
       <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Dates</h2>
       <p class="mt-5 text-base leading-relaxed text-muted-foreground">
-        The next edition's dates are not published on this page yet. The
-        festival has historically run Friday to Sunday in early March.
+        Friday 5 to Sunday 7 March 2027, the organiser's own published dates.
+        If you have seen March 6–8 quoted, that was the 2026 festival, which
+        has already happened — the two are a day apart because the festival
+        runs Friday to Sunday and the calendar moved.
       </p>
-      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — From
-        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>:
-        the confirmed dates for the next edition. Note that the March 6–8 dates
-        in circulation are the <em>2026</em> festival, which has already
-        happened. Get the organiser's own 2027 dates, run
-        <code>date -d &lt;ISO&gt; +%A</code> on each one to confirm the weekday
-        matches, then set <code>EVENT_DATES</code> at the top of this file —
-        that switches the Event JSON-LD on.
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        A 2027 band schedule and set times are not published yet. The festival
+        posts its running order as a PDF closer to the date.
       </p>
     </section>
 
@@ -177,27 +181,29 @@ const eventJsonLd = EVENT_DATES
           </li>
         ))}
       </ul>
-      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — From
-        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>:
-        the street address and ZIP of both the Monterey Conference Center and
-        the Portola Hotel &amp; Spa, and which sets and stages run at each.
-        The address feeds the Event JSON-LD's PostalAddress, so it goes into map
-        results — take it from the venue, not from memory. Confirm also whether
-        any third venue is in use.
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        The two sit side by side on Portola Plaza in downtown Monterey and the
+        festival moves between them, so the walk between venues is a short one.
+        Which bands play which rooms is set by the band schedule rather than
+        fixed, and that is not out for 2027 yet.
       </p>
     </section>
 
     <section class="mt-14">
       <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Tickets</h2>
-      <p class="mt-5 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — From
-        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>:
-        the badge and ticket tiers and what each admits you to — all-event badge,
-        single-day, single-set — with prices and any early-bird deadline. State
-        whether under-18s and students go free, which this festival has offered
-        before. Publish a price only if the organiser publishes it; if a tier is
-        listed with no price, say that rather than estimating.
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        Badge prices for 2027 are not published. The festival's own badges page
+        says only "Please check back soon", so there is no all-event price,
+        no single-day price and no early-bird deadline to report yet — and no
+        previous year's figure is repeated here in place of one, because this
+        festival has priced early-bird badges against a January deadline
+        before, and a stale number is worst exactly when someone is deciding
+        whether to buy now.
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        One thing that is published: a Friends of Note donation of $25 or more
+        per person collects a commemorative pin at the festival's will-call
+        desk. That is a donation, not admission.
       </p>
     </section>
 
@@ -209,14 +215,31 @@ const eventJsonLd = EVENT_DATES
         Both venues sit in downtown Monterey, where parking is structured and
         paid rather than on-street and free.
       </p>
-      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — From
-        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>
-        and the City of Monterey: which garages serve the Conference Center and
-        the Portola — name them, give the entrance streets, and state weekend
-        rates and closing times from the city's own published tariff. Confirm
-        whether the Portola offers festival or valet parking to attendees, and
-        whether any festival parking validation exists.
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        Parking at the Portola itself is limited, in the festival's own words.
+        It points instead at two large public garages nearby, the East and West
+        Garages on Portola Plaza. Neither the festival nor its venue page
+        publishes garage rates, closing times or any festival validation, so
+        budget for downtown garage pricing and check the tariff at the gate.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">
+        Where to stay
+      </h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        There is a room block, and it has a deadline. The Portola Hotel &amp;
+        Spa is festival headquarters and holds rooms at $252 single or double.
+        The rate is held until <strong class="text-foreground">Tuesday 2
+        February 2027</strong>, and booking is by phone on (866) 711-1734 —
+        you have to say "Dixieland Jazz Bash Monterey 2027" to get it, which is
+        the festival's older name and not what the website is called.
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        The festival also lists seven RV parks around the county, from the
+        Monterey County Fair &amp; Event Center RV Park to Laguna Seca
+        Recreation Area, and points at See Monterey for everything else.
       </p>
     </section>
 
