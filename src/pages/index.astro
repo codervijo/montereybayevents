@@ -23,7 +23,7 @@ import {
   regionalEvents,
   totalRegionalEvents,
 } from "../data/events-2026";
-import { isPastDate } from "../lib/isPast";
+import { isPastDate, pacificToday } from "../lib/isPast";
 
 const site = "https://montereybayevents.com";
 // Title is kept at or under 60 chars and description within 120-160 so neither
@@ -67,10 +67,37 @@ const featuredMonths = [current, ...(next ? [next] : [])].map((m) => ({
 // A no-slash canonical 308-redirects and breaks indexing (CHECK_161).
 // The next things actually happening, for the featured slot once Car Week has
 // been and gone. Undated rows are excluded — they cannot be "next".
-const upcomingEvents = regionalEvents
+//
+// FEATURE PIN. One event can be hoisted to the front of this list for a fixed
+// window, for a near-term traffic play. It is a pin and not a re-sort: the rest
+// of the list stays chronological, and the pin SELF-RETIRES on two independent
+// conditions — the window expiring, and the event itself going past. After that
+// the module is purely chronological again with no code change needed, which is
+// the point. Do not let this grow into a general "featured events" system
+// without deciding to build one.
+//
+// The daily rebuild Worker is what makes the expiry real; without a rebuild
+// `pacificToday()` freezes at the last push. See v1.Q in docs/prd.md.
+const FEATURED_SLUG = "monterey-jazz-festival";
+/** Last day the pin applies, inclusive. Pin also drops when the event is past. */
+const FEATURED_UNTIL = "2026-09-27";
+/** The "one line" on the pinned card. Kept to one sentence of sourced fact. */
+const FEATURED_BLURB =
+  "Three days and six stages at the Fairgrounds, led by a first-ever Herbie Hancock and Ron Carter duo.";
+
+const today = pacificToday();
+const upcoming = regionalEvents
   .filter((e) => e.start && !isPastDate(e.start, e.end) && !e.existingSlug && !e.hubHref)
-  .sort((a, b) => (a.start! < b.start! ? -1 : 1))
-  .slice(0, 4);
+  .sort((a, b) => (a.start! < b.start! ? -1 : 1));
+
+const pinned =
+  today <= FEATURED_UNTIL
+    ? upcoming.find((e) => e.slug === FEATURED_SLUG)
+    : undefined;
+
+const upcomingEvents = pinned
+  ? [pinned, ...upcoming.filter((e) => e.slug !== pinned.slug)].slice(0, 5)
+  : upcoming.slice(0, 4);
 
 const canonical = `${site}/`;
 
@@ -217,22 +244,45 @@ const sections = [
           <p class="eyebrow">Coming up</p>
           <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Next on the Central Coast</h2>
           <div class="mt-8 grid gap-3 sm:grid-cols-2">
-            {upcomingEvents.map((e) => (
+            {upcomingEvents.map((e) => {
+              // The pinned event leads the grid: full width, brass rule, and
+              // one extra line. Everything else renders exactly as before.
+              const isPinned = pinned !== undefined && e.slug === pinned.slug;
+              return (
               <a
                 href={eventHref(e)}
-                class="group flex flex-col gap-1 border-l-2 border-border/80 bg-surface/60 px-5 py-4 transition-colors hover:border-brass"
+                class={`group flex flex-col gap-1 border-l-2 bg-surface/60 px-5 py-4 transition-colors hover:border-brass ${
+                  isPinned
+                    ? "border-brass sm:col-span-2"
+                    : "border-border/80"
+                }`}
               >
+                {isPinned && (
+                  <span class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                    Featured
+                  </span>
+                )}
                 <span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-brass">
                   {e.dateText || DATE_TBA}
                 </span>
-                <span class="text-xl leading-tight text-foreground transition-colors group-hover:text-brass">
+                <span
+                  class={`leading-tight text-foreground transition-colors group-hover:text-brass ${
+                    isPinned ? "text-3xl" : "text-xl"
+                  }`}
+                >
                   {e.name}
                 </span>
                 <span class="text-sm text-muted-foreground">
                   {e.city ?? e.cityText}, {e.county} County
                 </span>
+                {isPinned && (
+                  <span class="mt-1 text-sm leading-relaxed text-muted-foreground">
+                    {FEATURED_BLURB}
+                  </span>
+                )}
               </a>
-            ))}
+              );
+            })}
           </div>
           <a
             href="/events/"

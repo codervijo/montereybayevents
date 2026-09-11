@@ -1062,7 +1062,9 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "monterey-jazz-festival",
-    updated: "2026-08-21",
+    // Bump this to the date the [VERIFY] blocks are filled, if that is not today
+    // — it feeds <lastmod> and should name the day the content actually changed.
+    updated: "2026-09-11",
     name: "Monterey Jazz Festival (MJF69)",
     county: "Monterey",
     cityText: "Monterey (Monterey County Fairgrounds)",
@@ -1080,13 +1082,84 @@ export const regionalEvents: RegionalEvent[] = [
       "25–27 September 2026 at the Fairgrounds. Ticket tiers and what each actually gets you, the sold-out parking, and the gate times still unannounced.",
     intro:
       "The 69th Monterey Jazz Festival runs Friday 25 to Sunday 27 September 2026 across the 20 oak-studded acres of the Monterey County Fair & Event Center, 2000 Fairground Road. Thirty hours of music on six stages, around seventy food and craft vendors, and a 2026 bill led by a first-ever Herbie Hancock and Ron Carter duo. It is ticketed, and which ticket you buy changes the festival you get — that is the part worth understanding before you spend $215.",
+    // Section order is deliberate and load-bearing: these nine map to the
+    // logistics queries this page is built to win, and collapsing or reordering
+    // them undoes that. "Who is playing" is appended AFTER them rather than
+    // interleaved, so the nine stay in their specified sequence.
+    //
+    // [VERIFY] blocks name the exact question and the source that answers it.
+    // They are scaffolding, not shipping copy — every one must be replaced with
+    // a sourced answer, or with a plain statement that the organiser has not
+    // published it, BEFORE this page is pushed. A [VERIFY] marker reaching the
+    // live site is the failure this convention exists to prevent.
     sections: [
       {
-        heading: "The ticket tiers, and what each one actually gets you",
+        heading: "Dates, times, gates",
         body: [
-          "There are three single-day tiers, and the gap between them is not just seat quality. Arena tickets are $110 on Friday and $215 on Saturday or Sunday, and they buy a reserved seat for the Jimmy Lyons Stage in the Arena plus access to everything on the four Grounds stages that day. Arena Lawn is $75 Friday and $135 Saturday or Sunday. Grounds tickets are $65 Friday and $90 Saturday or Sunday.",
+          "The 69th Monterey Jazz Festival runs Friday 25, Saturday 26 and Sunday 27 September 2026 at the Monterey County Fair & Event Center. Three days, around thirty hours of music across six stages.",
+          "Gate times are the one thing this page cannot yet tell you, and the reason is worth stating plainly: the festival's own FAQ has said gate and box-office times \"will be announced in early spring 2026\" since before that spring arrived, and it still says it. Rather than repeat a previous year's opening time as though it were this year's, no time is listed here.",
+          "[VERIFY] — From montereyjazz.org: what time do gates open on each of Friday, Saturday and Sunday, and what time does music end each night? Are Arena and Grounds gate times different? If the festival still has not published them, say so in those words and name the FAQ page as where it will appear.",
+        ],
+      },
+      {
+        heading: "Seating chart and stages",
+        body: [
+          "Six stages carry the festival, and they divide into two zones that your ticket decides between. The Arena holds the Jimmy Lyons Stage, which is where the headline acts play. The Grounds hold the other five: the West End Stage, the Pacific Jazz Café, the Tim Jackson Garden Stage, the Courtyard Stage and the Monterey Room.",
+          "That division is the single most important thing to understand before buying, and it is covered in full under ticket prices below: a Grounds ticket does not admit you to the Arena.",
+          "[VERIFY] — From montereyjazz.org: the Arena seating chart. Which numbered sections are sold as Arena (reserved seat) and which as Arena Lawn? Is Arena seating assigned by row and seat number, or is it general admission within a section? Link the chart image or interactive map if the festival publishes one.",
+        ],
+      },
+      {
+        heading: "Parking at the Fairgrounds",
+        body: [
+          "Fairgrounds parking is sold out for 2026. That is the organisers' own statement, not an inference from demand, and it changes how everyone else on this page gets there.",
+          "Limited ADA parking is on Fairground Road, first-come first-served. ADA seating is arranged through ticketing or on 831-308-4653, and hearing devices are free at Patron Services against a deposit of valid ID.",
+          "[VERIFY] — From montereyjazz.org: is there any remaining paid parking at the Fairgrounds itself, or is on-site parking entirely sold out including day-of sales? Is there a drop-off point for rideshare and private cars, and where is it? Confirm the ADA parking entrance and whether a placard alone is sufficient or advance arrangement is required.",
+        ],
+      },
+      {
+        heading: "Getting there and shuttles",
+        body: [
+          "Monterey Peninsula College parking is expected to be available to buy, with a shuttle to the Fairgrounds. The organisers' own advice to anyone not holding a parking pass is to use Uber or Lyft rather than to drive and hope for a space.",
+          "[VERIFY] — From montereyjazz.org: confirm the MPC park-and-ride. Is it on sale, what does it cost, what are the shuttle's first and last runs each day, how often does it run, and where exactly does it pick up at both ends? Shuttle schedules were unpublished as of the last check on this page.",
+          "[VERIFY] — From montereyjazz.org: the Fairgrounds street number. This page and its structured data currently publish 2000 Fairground Road, Monterey CA 93940, but 2004 Fairground Road also appears in circulation. Confirm which the festival and the venue themselves use, and correct `streetAddress` on this row if it is 2004 — the number ships in the Event JSON-LD, so a wrong one goes into map results.",
+        ],
+      },
+      {
+        heading: "Wristband and ticket pickup",
+        body: [
+          "Re-entry works on a wristband. Your ticket admits you once; the wristband is what lets you back in. Lose the wristband and you buy another ticket — worth knowing before you take it off at the end of a long afternoon.",
+          "[VERIFY] — From montereyjazz.org: how are tickets delivered for 2026 — mobile, print-at-home, or mailed? Where and when do wristbands get collected, and is collection required before first entry or handled at the gate? Give the box office location and its opening hours for each day, and the will-call hours if they differ.",
+        ],
+      },
+      {
+        heading: "Grounds map",
+        body: [
+          "[VERIFY] — From montereyjazz.org: is a grounds map published for 2026? If so, link it and describe the layout in a sentence or two — where the six stages sit relative to the main gate, and where food, merchandise, Patron Services and accessible facilities are. If no map is published, say that plainly rather than describing the grounds from memory of a previous year.",
+        ],
+      },
+      {
+        heading: "Ticket prices and what each pass includes",
+        body: [
+          "There are three single-day tiers, and the gap between them is not just seat quality. Arena tickets are $110 on Friday and $215 on Saturday or Sunday, and they buy a reserved seat for the Jimmy Lyons Stage in the Arena plus access to everything on the Grounds stages that day. Arena Lawn is $75 Friday and $135 Saturday or Sunday. Grounds tickets are $65 Friday and $90 Saturday or Sunday.",
           "The distinction that catches people: a Grounds ticket does not get you into the Arena. The headline acts on the Jimmy Lyons Stage — the Hancock and Carter duo, the Jazz at Lincoln Center Orchestra — are Arena shows. If those are why you are coming, Grounds is the wrong ticket at any price. If you are happy to graze five other stages all day, it is much the better value.",
-          "Three-day packages exist alongside the single-day tiers. Premier Club add-on access is sold out for 2026. Prices here are the organisers' own published figures for single-day tickets; check montereyjazz.org before buying, because tiers sell out at different rates.",
+          "Children are handled differently by zone. In the Arena everyone needs a ticket, infants included. On the Grounds, under-2s are free and ages 2 to 12 need a youth ticket.",
+          "Three-day packages exist alongside the single-day tiers. Premier Club add-on access is sold out for 2026. The prices above are the organisers' own published single-day figures.",
+          "[VERIFY] — From montereyjazz.org: the three-day package prices for each tier, and whether any tier is sold out. Also resolve a discrepancy: a third-party calendar advertises a $98–$500 range for this festival, which does not match the organiser's published single-day tiers of $65–$215. Check whether $98–$500 reflects three-day packages, fees, or resale — and do not publish that range unless the festival itself states it.",
+        ],
+      },
+      {
+        heading: "Hotels near the Fairgrounds",
+        body: [
+          "[VERIFY] — From montereyjazz.org: does the festival publish an official hotel partner, room block or lodging page for 2026? If it does, link it and name the properties and the booking deadline. If it does not, say so — and list only hotels whose distance from 2000 Fairground Road can be stated from a real address, with no rates quoted unless the hotel publishes them.",
+        ],
+      },
+      {
+        heading: "Food, vendors, what to bring",
+        body: [
+          "Around seventy food and craft vendors trade across the grounds over the three days.",
+          "What you cannot bring in is the part that costs people at the gate. No outside food, coolers, glass bottles or beverages in containers. No lawn, beach or folding chairs — a real constraint at a festival where people expect to sit on grass all afternoon. No detachable-lens cameras, flash equipment or recording devices. No pets, and no strollers inside the arenas.",
+          "[VERIFY] — From montereyjazz.org: is an empty or sealed water bottle permitted, and are water refill stations provided? Chairs are prohibited, but are blankets allowed on the Arena Lawn and the Grounds? Is the site cashless, and are ATMs available? If the festival publishes a 2026 vendor or food list, link it.",
         ],
       },
       {
@@ -1094,29 +1167,7 @@ export const regionalEvents: RegionalEvent[] = [
         body: [
           "The 2026 bill is led by Herbie Hancock and Ron Carter in what the festival bills as their first-ever duo performance — two musicians whose partnership goes back to Miles Davis's second great quintet, playing as a pair for the first time.",
           "Also announced: the Jazz at Lincoln Center Orchestra with Wynton Marsalis and special guest Cécile McLorin Salvant, Meshell Ndegeocello, the Charles Lloyd Quartet, and the Ravi Coltrane Quartet.",
-          "Six stages carry it: the Jimmy Lyons Stage in the Arena, and on the Grounds the West End Stage, Pacific Jazz Café, Tim Jackson Garden Stage, Courtyard Stage and the Monterey Room.",
-        ],
-      },
-      {
-        heading: "Parking is the problem to solve first",
-        body: [
-          "Fairgrounds parking is sold out for 2026. Monterey Peninsula College parking is expected to be available to buy, with a shuttle. The organisers' own advice if you do not hold parking is to use Uber or Lyft rather than to drive and hope.",
-          "Limited ADA parking is on Fairground Road, first-come first-served. ADA seating is arranged through ticketing or on 831-308-4653, and hearing devices are free at Patron Services against a deposit of valid ID.",
-        ],
-      },
-      {
-        heading: "Rules that will cost you at the gate",
-        body: [
-          "No outside food, coolers, glass bottles or beverages in containers. No lawn, beach or folding chairs — a real constraint at a festival where people expect to sit on grass all afternoon. No detachable-lens cameras, flash equipment or recording devices. No pets, and no strollers inside the arenas.",
-          "Re-entry works on a wristband: your ticket admits you once, and the wristband is what lets you back in. Lose the wristband and you buy another ticket. Worth knowing before you take it off.",
-          "Children are handled differently by area. In the Arena everyone needs a ticket, infants included. On the Grounds, under-2s are free and ages 2 to 12 need a youth ticket.",
-        ],
-      },
-      {
-        heading: "What has not been published",
-        body: [
-          "Gate and box-office times. The festival's own FAQ still says these \"will be announced in early spring 2026\" — a sentence that has outlived the spring it refers to, and is the reason this page carries no opening time. Shuttle schedules are in the same position.",
-          "Set times and the stage-by-stage running order. Knowing who is on the bill is not the same as knowing when, and for a six-stage festival that is the difference between planning a day and wandering one.",
+          "[VERIFY] — From montereyjazz.org: set times and the stage-by-stage running order, once published. Knowing who is on the bill is not the same as knowing when, and for a six-stage festival that is the difference between planning a day and wandering one.",
         ],
       },
     ],

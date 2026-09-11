@@ -1,0 +1,232 @@
+---
+// Jazz Bash Monterey — evergreen event page.
+//
+// SEPARATE EVENT FROM THE MONTEREY JAZZ FESTIVAL. Different organiser,
+// different venues, different month, different music. They are not merged and
+// must not be: MJF is September at the Fairgrounds and lives at
+// /event/monterey-jazz-festival/. If you are here to edit one of them, check
+// which.
+//
+// WHY THIS IS A STANDALONE PAGE AND NOT A ROW IN events-2026.ts:
+// that dataset is transcribed from data/monterey_santacruz_events_aug_dec_2026.csv
+// and src/__tests__/events2026.test.js asserts exactly 61 rows, every one
+// present in the CSV and no extras. Jazz Bash is not in the CSV and its dates
+// fall outside the Aug-Dec 2026 window the file covers, so adding a row there
+// would fail the build. Guide-page shape, on the /laguna-seca/camping/
+// precedent.
+//
+// THE DATES ARE NOT YET ESTABLISHED, AND THAT GATES THE STRUCTURED DATA.
+// The brief named "March 6-8, 2026" — but today is 11 September 2026, so that
+// edition is six months PAST, not six months out. The next edition is 2027, and
+// `date -d` says 6 March 2027 is a Saturday: "March 6-8" in 2027 runs Sat-Mon,
+// not the Fri-Sun this festival has run. The Fri-Sun equivalent would be
+// 5-7 March 2027, which is arithmetic, not a source — so nothing is published
+// here until the organiser confirms.
+//
+// Consequently EVENT_DATES is null and the Event JSON-LD does not render.
+// schema.org/Event requires startDate; a node without one is invalid, and a
+// node with a guessed one is worse. Fill EVENT_DATES from the organiser and the
+// structured data ships automatically — see the [VERIFY] block below.
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const site = "https://montereybayevents.com";
+const title = "Jazz Bash Monterey — Dates, Venues, Tickets & Downtown Parking";
+const description =
+  "Traditional jazz and swing across the Monterey Conference Center and the Portola Hotel & Spa. Dates, venues, what a badge costs and where to park downtown.";
+// trailingSlash: 'always' in astro.config.mjs — the canonical MUST end in a
+// slash or it 308-redirects and the page comes back "unknown to Google".
+// Enforced by CHECK_161.
+const canonical = `${site}/jazz-bash-monterey/`;
+
+const OFFICIAL = "https://jazzbashmonterey.com/";
+
+/**
+ * Set this ONLY from the organiser's own published dates — never from
+ * arithmetic on last year's. When it is set, the Event JSON-LD below renders;
+ * while it is null, the page says the dates are not yet confirmed and emits no
+ * Event node at all.
+ *
+ *   { start: "2027-03-05", end: "2027-03-07", text: "March 5-7, 2027" }
+ *
+ * Cross-check the weekday against the date with `date -d <ISO> +%A` before you
+ * write it — a day name that does not match its date means you are reading a
+ * previous year's page. That check is a standing rule on this site; see
+ * docs/CLAUDE.md.
+ */
+const EVENT_DATES: { start: string; end: string; text: string } | null = null;
+
+const VENUES = [
+  {
+    name: "Monterey Conference Center",
+    note: "One of the two venues named by the organiser. Street address not yet confirmed here — see the [VERIFY] under Venues.",
+  },
+  {
+    name: "Portola Hotel & Spa",
+    note: "The second named venue, adjacent to the Conference Center in downtown Monterey. Address likewise unconfirmed.",
+  },
+];
+
+const eventJsonLd = EVENT_DATES
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: "Jazz Bash Monterey",
+      startDate: EVENT_DATES.start,
+      endDate: EVENT_DATES.end,
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      location: {
+        "@type": "Place",
+        name: "Monterey Conference Center",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Monterey",
+          addressRegion: "CA",
+          addressCountry: "US",
+        },
+      },
+      url: OFFICIAL,
+    }
+  : null;
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={`${site}/og-default.jpg`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={`${site}/og-default.jpg`} />
+
+    {/* Renders only once EVENT_DATES is filled from the organiser. An Event
+        node without a startDate is invalid; one with a guessed startDate is
+        worse than invalid. */}
+    {eventJsonLd && (
+      <script
+        type="application/ld+json"
+        set:html={JSON.stringify(eventJsonLd)}
+      />
+    )}
+  </Fragment>
+
+  <main class="mx-auto max-w-3xl px-5 py-14">
+    <a
+      href="/events/"
+      class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
+    >
+      ← All Central Coast events
+    </a>
+
+    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-6xl">
+      Jazz Bash <span class="text-brass">Monterey</span>
+    </h1>
+
+    <p class="mt-4 text-sm uppercase tracking-[0.18em] text-muted-foreground">
+      {EVENT_DATES ? EVENT_DATES.text : "Dates for the next edition not yet confirmed"}
+      {" · "}Downtown Monterey
+    </p>
+
+    <p class="mt-7 text-lg leading-relaxed text-muted-foreground">
+      Jazz Bash Monterey is a traditional jazz and swing festival held across
+      two adjoining downtown venues, the Monterey Conference Center and the
+      Portola Hotel &amp; Spa. It is a different event from the Monterey Jazz
+      Festival, which runs in September at the Fairgrounds — if that is the one
+      you are looking for, it is
+      <a href="/event/monterey-jazz-festival/" class="text-brass hover:underline">
+        here</a>.
+    </p>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Dates</h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        The next edition's dates are not published on this page yet. The
+        festival has historically run Friday to Sunday in early March.
+      </p>
+      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — From
+        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>:
+        the confirmed dates for the next edition. Note that the March 6–8 dates
+        in circulation are the <em>2026</em> festival, which has already
+        happened. Get the organiser's own 2027 dates, run
+        <code>date -d &lt;ISO&gt; +%A</code> on each one to confirm the weekday
+        matches, then set <code>EVENT_DATES</code> at the top of this file —
+        that switches the Event JSON-LD on.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Venues</h2>
+      <ul class="mt-5 space-y-4">
+        {VENUES.map((v) => (
+          <li class="text-base leading-relaxed text-muted-foreground">
+            <span class="text-foreground">{v.name}</span> — {v.note}
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — From
+        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>:
+        the street address and ZIP of both the Monterey Conference Center and
+        the Portola Hotel &amp; Spa, and which sets and stages run at each.
+        The address feeds the Event JSON-LD's PostalAddress, so it goes into map
+        results — take it from the venue, not from memory. Confirm also whether
+        any third venue is in use.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Tickets</h2>
+      <p class="mt-5 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — From
+        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>:
+        the badge and ticket tiers and what each admits you to — all-event badge,
+        single-day, single-set — with prices and any early-bird deadline. State
+        whether under-18s and students go free, which this festival has offered
+        before. Publish a price only if the organiser publishes it; if a tier is
+        listed with no price, say that rather than estimating.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">
+        Parking downtown
+      </h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        Both venues sit in downtown Monterey, where parking is structured and
+        paid rather than on-street and free.
+      </p>
+      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — From
+        <a href={OFFICIAL} class="text-brass hover:underline">jazzbashmonterey.com</a>
+        and the City of Monterey: which garages serve the Conference Center and
+        the Portola — name them, give the entrance streets, and state weekend
+        rates and closing times from the city's own published tariff. Confirm
+        whether the Portola offers festival or valet parking to attendees, and
+        whether any festival parking validation exists.
+      </p>
+    </section>
+
+    <section class="mt-14 border-t border-border/70 pt-8">
+      <p class="text-base leading-relaxed text-muted-foreground">
+        Official site:{" "}
+        <a href={OFFICIAL} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+          jazzbashmonterey.com ↗
+        </a>
+      </p>
+    </section>
+  </main>
+</BaseLayout>

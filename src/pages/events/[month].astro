@@ -5,7 +5,7 @@
 // month with its own title, its own ItemList and prev/next links, so month-intent
 // queries ("santa cruz events october 2026") have a page that answers literally.
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { isPastDate } from "../../lib/isPast";
+import { isPastDate, pacificToday } from "../../lib/isPast";
 import {
   DATE_TBA,
   MONTHS,
@@ -38,6 +38,17 @@ const hasLagunaSeca = events.some(
     !isPastDate(e.start, e.end),
 );
 const { prev, next } = adjacentMonths(monthKey);
+
+// Feature pin, same terms as the homepage's: one event lifted out of the
+// month's list into a callout for a fixed window, self-retiring on BOTH the
+// window expiring and the event going past. It renders only on the hub for the
+// month the event is actually in, so it cannot leak onto another month's page.
+const FEATURED_SLUG = "monterey-jazz-festival";
+const FEATURED_UNTIL = "2026-09-27";
+const featured =
+  pacificToday() <= FEATURED_UNTIL
+    ? events.find((e) => e.slug === FEATURED_SLUG && !isPastDate(e.start, e.end))
+    : undefined;
 
 const monterey = events.filter((e) => e.county === "Monterey");
 const santaCruz = events.filter((e) => e.county === "Santa Cruz");
@@ -201,6 +212,28 @@ const dateLabel = (e: RegionalEvent) => e.dateText || DATE_TBA;
       }
     </p>
 
+    {
+      featured && (
+        <a
+          href={eventHref(featured)}
+          class="mt-10 block border-l-2 border-brass bg-surface/60 px-6 py-6 transition-colors hover:bg-surface"
+        >
+          <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Featured this month
+          </p>
+          <p class="mt-2 text-2xl leading-tight text-brass">
+            {featured.name} → 
+          </p>
+          <p class="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-brass">
+            {dateLabel(featured)}
+          </p>
+          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+            Three days and six stages at the Fairgrounds, led by a first-ever
+            Herbie Hancock and Ron Carter duo.
+          </p>
+        </a>
+      )
+    }
     {
       hasLagunaSeca && (
         <a
