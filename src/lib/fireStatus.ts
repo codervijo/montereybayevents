@@ -127,18 +127,61 @@ async function readCalFire(): Promise<{ incidents: LiveIncident[] | null; error?
 
 /**
  * Does Caltrans currently report a wildfire closure on Highway 1 in Monterey
- * County? The feed is plain text with hard line wraps, so whitespace is
- * normalised before matching and the window is bounded to keep one entry's
- * "closed" from pairing with a different entry's "wildfire".
+ * County? Exported so the tests exercise THIS function rather than a copy of
+ * its pattern — the previous version was duplicated into the test file, so the
+ * suite stayed green for two weeks while the live detector was wrong.
+ *
+ * HOW A CALTRANS ENTRY IS SHAPED. The feed is plain text with hard line wraps.
+ * Each entry states a condition, then a location, then its reason:
+ *
+ *   Is closed <location> - Due to <reason> - <advice>
+ *
+ * So each candidate is bounded to its OWN reason clause. That is what stops one
+ * entry's "Is closed" from pairing with a later entry's "wildfire"; the old
+ * pattern bounded on `[`, the section marker, which let unrelated entries
+ * inside the same section combine.
+ *
+ * WHY THE OLD PATTERN FAILED, LIVE, IN THE DANGEROUS DIRECTION. It required a
+ * literal "(Monterey Co)" parenthetical. Caltrans does use that form, but it
+ * also locates a segment off the county line instead:
+ *
+ *   Is closed to from 11.1 mi north of the San Luis Obispo/Monterey Co Line
+ *   /at Los Burros/ to 19 mi north ... - Due to a wildfire
+ *
+ * No parenthetical, so the detector returned false, and /traffic/ rendered a
+ * red strip telling readers Caltrans reported NO wildfire closure and to
+ * believe that over the page — while about eight miles of Highway 1 were shut.
+ * Matching "Monterey Co" without the brackets covers "(Monterey Co)",
+ * "Monterey Co Line", "Monterey Co." and "Monterey County" alike.
+ *
+ * DELIBERATE BIAS. A closure described relative to the SLO/Monterey line but
+ * lying south of it, in SLO County, will also match. That is the safe
+ * direction: over-reporting a closure on this page costs a reader a detour,
+ * under-reporting one sends them toward a closed road and an active fire. It
+ * is also not really wrong for the reader, since any closure at that end still
+ * severs the through route this page's detour note discusses.
  */
+export function detectMontereyWildfireClosure(raw: string): boolean {
+  const text = raw.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  // `where` is built from a negated token — (?!Due to) on every character — so
+  // it CANNOT span its own reason clause into a following entry. Plain
+  // non-greedy is not enough: it still backtracks and grows across entries when
+  // the nearer reason fails to complete the match, which silently re-creates
+  // the cross-entry pairing this bound exists to prevent.
+  const entry =
+    /Is closed\b((?:(?!Due to)[\s\S]){0,400}?)-\s*Due to\s+([\s\S]{0,60}?)(?:\s-\s|$)/gi;
+  for (const m of text.matchAll(entry)) {
+    const where = m[1] ?? "";
+    const why = m[2] ?? "";
+    if (/fire/i.test(why) && /Monterey Co/i.test(where)) return true;
+  }
+  return false;
+}
+
 async function readCaltrans(): Promise<{ closed: boolean | null; error?: string }> {
   try {
     const body = await getText(CALTRANS_SR1_URL);
-    const text = body
-      .replace(/<[^>]+>/g, " ")
-      .replace(/\s+/g, " ");
-    const closed = /Is closed[^[]{0,400}?\(Monterey Co\)[^[]{0,200}?wildfire/i.test(text);
-    return { closed };
+    return { closed: detectMontereyWildfireClosure(body) };
   } catch (err) {
     return { closed: null, error: `Caltrans feed unreadable (${(err as Error).message})` };
   }

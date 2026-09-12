@@ -10,7 +10,11 @@
 // fireStatus.ts exists to close both gaps; these tests keep it honest.
 
 import { describe, it, expect } from 'vitest';
-import { formatAcres, formatUpdated } from '../lib/fireStatus.ts';
+import {
+  formatAcres,
+  formatUpdated,
+  detectMontereyWildfireClosure,
+} from '../lib/fireStatus.ts';
 import { timberFire } from '../data/traffic.ts';
 
 // The shape CAL FIRE actually returns, trimmed to the fields we read.
@@ -106,11 +110,13 @@ describe('sanity bounds a live reading must satisfy', () => {
 
 // The Caltrans feed is plain text with hard line wraps, so the detector
 // normalises whitespace before matching. These fixtures are the real wording.
+//
+// THE DETECTOR IS IMPORTED, NOT RE-IMPLEMENTED. It used to be copied into this
+// file as a local regex, which meant these tests passed for two weeks while the
+// shipped detector was returning the wrong answer on the live feed. A test that
+// re-states the implementation tests nothing.
 describe('Highway 1 wildfire-closure detection', () => {
-  const detect = (text) =>
-    /Is closed[^[]{0,400}?\(Monterey Co\)[^[]{0,200}?wildfire/i.test(
-      text.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' '),
-    );
+  const detect = detectMontereyWildfireClosure;
 
   it('fires on the real 2026-08-28 closure, across its line wraps', () => {
     const real =
@@ -139,6 +145,37 @@ describe('Highway 1 wildfire-closure detection', () => {
       '[IN THE NORTHERN CALIFORNIA AREA]\n' +
       'Is closed from C to D (Mendocino Co) - Due to a wildfire\n';
     expect(detect(mixed)).toBe(false);
+  });
+
+  it('fires on a segment located off the county LINE, with no parenthetical', () => {
+    // The exact live wording on 2026-09-11 that the previous pattern missed.
+    // It requires no "(Monterey Co)" anywhere, which is why this regressed.
+    const real =
+      '[IN THE CENTRAL CALIFORNIA AREA] Is closed to from 11.1 mi north of the\n' +
+      'San Luis Obispo/Monterey Co Line /at Los Burros/ to 19 mi north of the\n' +
+      'San Luis Obispo/Monterey Co Line /at Kirk Creek Camp/ - Due to a wildfire -\n' +
+      'Motorists are advised to use an alternate route\n';
+    expect(detect(real)).toBe(true);
+  });
+
+  it('does not fire when the only Monterey closure is for construction', () => {
+    // The rest of the same 2026-09-11 feed. A Monterey entry and a wildfire
+    // entry both exist; neither is a Monterey wildfire closure.
+    const real =
+      'Is closed at various locations (Marin Co) - Due to a wildfire - blah ' +
+      '1-way controlled traffic 15.7 mi south of Monterey /at Rocky Creek Bridge/ ' +
+      '(Monterey Co) 24 hrs a day 7 days a week thru 0600 hrs on 11/30/26 - Due to construction';
+    expect(detect(real)).toBe(false);
+  });
+
+  it('matches every form Caltrans uses to name the county', () => {
+    for (const where of ['(Monterey Co)', 'Monterey Co Line', 'in Monterey County']) {
+      expect(detect(`Is closed from A to B ${where} - Due to a wildfire - x`), where).toBe(true);
+    }
+  });
+
+  it('ignores a wildfire closure in another county', () => {
+    expect(detect('Is closed from A to B (Mendocino Co) - Due to a wildfire - x')).toBe(false);
   });
 });
 
