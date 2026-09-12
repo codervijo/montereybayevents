@@ -1,0 +1,7 @@
+Bebas Neue and Barlow are licensed under the SIL Open Font License 1.1.
+Bebas Neue: Copyright (c) Ryoichi Tsunekawa, Dharma Type.
+Barlow: Copyright (c) Jeremy Tribby.
+Full licence text: https://openfontlicense.org/
+These files are vendored so `make og` renders identically on any machine —
+the sites1 container ships with no system fonts at all, and resvg silently
+renders empty text when a family cannot be resolved.
