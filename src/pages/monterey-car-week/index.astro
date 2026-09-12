@@ -12,9 +12,36 @@ import { ROAD_CLOSURES_URL, schedule, totalEvents } from "../../data/events";
 import { totalFreeListings } from "../../data/eventIndex";
 
 const site = "https://montereybayevents.com";
-const title = "Monterey Car Week 2026 — Schedule, Free Events & Traffic";
+// TITLE RULE FOR THIS PAGE. "Monterey Car Week" stays at the front, in that
+// order — it is the phrase the page ranks on. The year and the trailing clause
+// are the only movable parts. BOTH years are carried deliberately: GSC still
+// shows impressions on "monterey car week 2026" against this URL, so dropping
+// the 2026 token to make room for 2027 would trade a ranking we hold for one we
+// do not yet have.
+const title = "Monterey Car Week 2027 — Dates, What's Confirmed & the 2026 Record";
 const description =
-  "Every Monterey Car Week 2026 event from August 7–16: concours, auctions, rallies and races, which ones are free, and road closure and public safety information.";
+  "Monterey Car Week 2027 dates as the organisers confirm them, starting with the Pebble Beach Concours on Sunday 15 August — plus the complete record of all 91 events from Car Week 2026.";
+
+/**
+ * 2027, as the ORGANISERS have published it — not as arithmetic on 2026.
+ *
+ * Confirmed: the Pebble Beach Concours d'Elegance is Sunday 15 August 2027,
+ * stated on pebblebeachconcours.net and corroborated by its own countdown
+ * (338 days from 11 September 2026 lands exactly on 2027-08-15). `date -d`
+ * confirms that is a Sunday, which is the day this event always runs.
+ *
+ * NOT confirmed, and therefore not written anywhere on this page: the overall
+ * Car Week window, and the Rolex Monterey Motorsports Reunion, whose page still
+ * shows 2026 (12-15 August). Car Week has historically run the ten days ending
+ * on Concours Sunday, which would make 2027 roughly 6-15 August — but that is
+ * inference, not a source, and this site does not publish inferred dates.
+ *
+ * WEEK_2027 stays null until the window is sourced. While it is null the page
+ * says so in those words and emits no 2027 Event node, because schema.org/Event
+ * requires a startDate and one built from arithmetic is worse than none.
+ */
+const CONCOURS_2027 = "2027-08-15";
+const WEEK_2027: { start: string; end: string; text: string } | null = null;
 // Canonical MUST match the served URL incl. trailing slash (trailingSlash:
 // 'always' in astro.config.mjs). A no-slash canonical 308-redirects and breaks
 // indexing (CHECK_161).
@@ -31,12 +58,38 @@ const highlights = highlightTitles
   .map((t) => schedule.flatMap((d) => d.events).find((e) => e.title === t))
   .filter((e): e is NonNullable<typeof e> => Boolean(e));
 
+// Forward-looking counters. The 2026 totals move down into the 2026 record
+// section rather than being deleted — they are true of 2026 and were only
+// misleading sitting under a 2027 headline.
 const stats = [
-  { n: "10", l: "Days" },
-  { n: String(totalEvents), l: "Listed events" },
-  { n: String(totalFreeListings), l: "Free for spectators" },
-  { n: "75th", l: "Pebble Beach Concours" },
+  { n: "15 Aug", l: "Concours 2027" },
+  { n: "Sun", l: "Concours falls on a Sunday" },
+  { n: String(totalEvents), l: "Events listed for 2026" },
+  { n: String(totalFreeListings), l: "Were free in 2026" },
 ];
+
+const carWeek2027 = WEEK_2027
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: "Monterey Car Week 2027",
+      startDate: WEEK_2027.start,
+      endDate: WEEK_2027.end,
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      url: `${site}/monterey-car-week/`,
+      location: {
+        "@type": "Place",
+        name: "Monterey Peninsula",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Monterey",
+          addressRegion: "CA",
+          addressCountry: "US",
+        },
+      },
+    }
+  : null;
 
 const carWeekEvent = {
   "@context": "https://schema.org",
@@ -83,7 +136,14 @@ const carWeekEvent = {
     <meta name="twitter:description" content={description.slice(0, 200)} />
     <meta name="twitter:image" content={`${site}/og-carweek.jpg`} />
 
-    <script type="application/ld+json" set:html={JSON.stringify(carWeekEvent)}></script>
+    {/* The 2026 node STAYS. It describes a real event that happened on this
+        URL and is what the page's existing structured data is known on; a 2027
+        node is added beside it rather than replacing it, once WEEK_2027 is
+        sourced. Two Event nodes coexist fine as an array. */}
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(carWeek2027 ? [carWeekEvent, carWeek2027] : carWeekEvent)}
+    ></script>
   </Fragment>
 
   <main>
@@ -100,16 +160,20 @@ const carWeekEvent = {
       <div class="hero-scrim absolute inset-0"></div>
       <div class="absolute inset-0 flex items-end">
         <div class="mx-auto w-full max-w-6xl px-5 pb-10">
-          <p class="eyebrow">August 7 – 16, 2026 · Monterey Peninsula</p>
+          <p class="eyebrow">
+            {WEEK_2027 ? WEEK_2027.text : "Dates being confirmed"} · Monterey Peninsula
+          </p>
           <h1 class="mt-3 text-6xl leading-[0.85] sm:text-8xl md:text-[9rem]">
             Monterey
             <br />
-            <span class="text-brass">Car Week</span> 2026
+            <span class="text-brass">Car Week</span> 2027
           </h1>
           <p class="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            Ten days, {totalEvents} listed events, one peninsula. Concours lawns,
-            historic racing, auctions and dawn drives along Highway One —
-            {totalFreeListings} of them free for spectators.
+            The Pebble Beach Concours d'Elegance is confirmed for Sunday 15
+            August 2027, and the rest of the week builds around it. Dates for
+            the other marquee events are not published yet — this page adds
+            each one as its organiser confirms it, and carries the complete
+            record of all {totalEvents} events from 2026 below.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a
@@ -148,6 +212,152 @@ const carWeekEvent = {
           ))
         }
       </div>
+    </section>
+
+    {/* ---------------- 2027, forward-looking ---------------- *
+      * Everything from here to the "2026 record" marker is NEW and sits ABOVE
+      * the untouched 2026 content. Nothing below was deleted or reordered.
+      * [VERIFY] blocks name the question and the source; each must be replaced
+      * with a sourced answer, or with a plain statement that nobody publishes
+      * it, before this page is pushed.
+      */}
+
+    <section class="mx-auto max-w-6xl px-5 py-16">
+      <p class="eyebrow">Monterey Car Week 2027</p>
+      <h2 class="mt-2 text-5xl leading-none sm:text-6xl">What is confirmed so far</h2>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        <div class="border-l-2 border-brass bg-surface/60 px-6 py-6">
+          <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-brass">Confirmed</p>
+          <p class="mt-3 text-2xl leading-tight text-foreground">
+            Pebble Beach Concours d'Elegance
+          </p>
+          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+            Sunday 15 August 2027, on the 18th fairway at Pebble Beach. This is
+            the organisers' own published date and the fixed point the rest of
+            the week arranges itself around.
+          </p>
+        </div>
+
+        <div class="border-l-2 border-border bg-surface/60 px-6 py-6">
+          <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Not yet published
+          </p>
+          <p class="mt-3 text-2xl leading-tight text-foreground">The rest of the week</p>
+          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+            No organiser has published a 2027 date for the Rolex Monterey
+            Motorsports Reunion, The Quail, or the auction houses. Car Week has
+            historically run the ten days ending on Concours Sunday, but this
+            page will not print a window nobody has announced.
+          </p>
+        </div>
+      </div>
+
+      <p class="mt-6 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — The overall Car Week
+        2027 window. Confirm the first and last day from
+        pebblebeachconcours.net and the Monterey County CVB, then set
+        <code>WEEK_2027</code> at the top of this file — that fills the hero
+        dateline and switches the 2027 Event JSON-LD on. Do not derive it from
+        2026 plus a week.
+      </p>
+      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — Rolex Monterey
+        Motorsports Reunion 2027 dates, from weathertechraceway.com. Its page
+        still shows 2026 (12–15 August) as of 11 September 2026.
+      </p>
+      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — The Quail 2027 date
+        from quaillodgeevents.com, and 2027 auction dates from RM Sotheby's,
+        Gooding, Mecum and Bonhams. Add each as its organiser confirms it rather
+        than waiting for all of them.
+      </p>
+      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — Which edition number
+        the 2027 Concours is. 2026 was the 75th, but the series has skipped a
+        year before, so the ordinal is not safe to derive.
+      </p>
+    </section>
+
+    <section class="border-t border-border/70 bg-surface">
+      <div class="mx-auto max-w-6xl px-5 py-16">
+        <p class="eyebrow">Planning ahead</p>
+        <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Tickets, beds and roads</h2>
+
+        <div class="mt-8 grid gap-8 md:grid-cols-3">
+          <div>
+            <h3 class="border-b border-border/70 pb-2 text-2xl text-brass">
+              When tickets go on sale
+            </h3>
+            <p class="mt-4 border-l-2 border-brass/50 pl-4 text-sm leading-relaxed text-muted-foreground">
+              <strong class="text-foreground">[VERIFY]</strong> — When Concours
+              tickets typically open, from pebblebeachconcours.net, and the same
+              for The Quail, which has sold out by ballot in past years. State
+              the actual published pattern; do not generalise from one year.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="border-b border-border/70 pb-2 text-2xl text-brass">
+              Where to stay
+            </h3>
+            <p class="mt-4 border-l-2 border-brass/50 pl-4 text-sm leading-relaxed text-muted-foreground">
+              <strong class="text-foreground">[VERIFY]</strong> — Whether any
+              official room block or rate exists for Car Week 2027, and when
+              Peninsula hotels typically open August bookings. If there is no
+              block, say so — that absence is the useful fact, as it is on the
+              jazz festival page.
+            </p>
+          </div>
+
+          <div>
+            <h3 class="border-b border-border/70 pb-2 text-2xl text-brass">
+              Traffic and road patterns
+            </h3>
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+              The pattern repeats every year and is the one thing this page can
+              say about 2027 without a new source: Highway 1, Ocean Avenue and
+              the approaches to Pebble Beach and Laguna Seca slow to a crawl
+              during peak event hours, and Concours Sunday is the worst of them.
+            </p>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+              Specific 2027 closures are published by the City of Carmel and
+              Caltrans much closer to the week. Our
+              <a href="/traffic/" class="text-brass hover:underline"> traffic page</a>
+              carries them as they appear, alongside live incident status.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {/* ---------------- 2026 record marker ----------------
+      * Everything BELOW this point is the original page, unchanged: the
+      * marquee cards, the ten-day grid, the free-events block and the traffic
+      * block. Only this heading is new, and it reframes the 91 listings as a
+      * standing record rather than leaving them under a 2027 headline.
+      */}
+    <section class="mx-auto max-w-6xl px-5 pt-16">
+      <p class="eyebrow">Reference</p>
+      <h2 class="mt-2 text-5xl leading-none sm:text-6xl">
+        Monterey Car Week 2026: the full record
+      </h2>
+      <p class="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground">
+        All {totalEvents} events from 7–16 August 2026, exactly as they ran —
+        every concours, auction, rally and race, with venues, published times
+        and which of the {totalFreeListings} were free for spectators. Kept
+        complete because a prior year is how most people work out what a Car
+        Week actually involves before committing to the next one.
+      </p>
+      <p class="mt-5 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
+        <strong class="text-foreground">[VERIFY]</strong> — A short 2026
+        outcomes line, two or three sentences inline here and NOT its own
+        section: total attendance across the week, cars shown at the Concours,
+        Best of Show winner, and combined auction totals with the single highest
+        sale. Sources: the Pebble Beach Concours post-event release, Hagerty's
+        auction round-up and the Monterey County CVB. Every figure needs its
+        source named; none of it is worth a page of its own.
+      </p>
     </section>
 
     <section class="mx-auto max-w-6xl px-5 py-16">
