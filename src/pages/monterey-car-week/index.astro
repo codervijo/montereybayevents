@@ -41,7 +41,39 @@ const description =
  * requires a startDate and one built from arithmetic is worse than none.
  */
 const CONCOURS_2027 = "2027-08-15";
+
+/**
+ * WEEK_2027 stays null ON PURPOSE, even though seven 2027 dates below are now
+ * confirmed. No organiser publishes an overall "Car Week" window — Pebble
+ * Beach's own calendar lists its events individually and states no opening or
+ * closing day, and the events outside their programme (Laguna Seca, The Quail)
+ * have announced nothing. A window spanning only the Pebble Beach cluster would
+ * understate the week; one derived from 2026 would be invented. So the hero
+ * leads on Concours Sunday, which IS published, and no 2027 Event node is
+ * emitted, because schema.org needs a real startDate for the thing it names.
+ */
 const WEEK_2027: { start: string; end: string; text: string } | null = null;
+
+/**
+ * Confirmed 2027 dates, every one from pebblebeachconcours.net's own event
+ * calendar, read 11 September 2026. Weekdays cross-checked with `date -d`.
+ */
+const CONFIRMED_2027 = [
+  { what: "Pebble Beach Motoring Classic", when: "Monday 2 – Wednesday 11 August" },
+  { what: "Pebble Beach Auctions", when: "Wednesday 11 – Saturday 14 August" },
+  { what: "Pebble Beach Tour d'Elegance", when: "Thursday 12 August" },
+  { what: "Concours Village", when: "Thursday 12 – Sunday 15 August" },
+  { what: "Pebble Beach Classic Car Forum", when: "Thursday 12 – Saturday 14 August" },
+  { what: "Pebble Beach RetroAuto", when: "Thursday 12 – Sunday 15 August" },
+  { what: "Pebble Beach Concours d'Elegance (76th)", when: "Sunday 15 August" },
+];
+
+/** Announced by nobody yet, named so the gap is visible rather than implied. */
+const UNANNOUNCED_2027 = [
+  "Rolex Monterey Motorsports Reunion — weathertechraceway.com still shows 2026 (12–15 August)",
+  "The Quail, A Motorsports Gathering — The Peninsula says dates will follow",
+  "Laguna Seca's wider race programme",
+];
 // Canonical MUST match the served URL incl. trailing slash (trailingSlash:
 // 'always' in astro.config.mjs). A no-slash canonical 308-redirects and breaks
 // indexing (CHECK_161).
@@ -63,7 +95,7 @@ const highlights = highlightTitles
 // misleading sitting under a 2027 headline.
 const stats = [
   { n: "15 Aug", l: "Concours 2027" },
-  { n: "Sun", l: "Concours falls on a Sunday" },
+  { n: "76th", l: "Pebble Beach Concours" },
   { n: String(totalEvents), l: "Events listed for 2026" },
   { n: String(totalFreeListings), l: "Were free in 2026" },
 ];
@@ -161,7 +193,7 @@ const carWeekEvent = {
       <div class="absolute inset-0 flex items-end">
         <div class="mx-auto w-full max-w-6xl px-5 pb-10">
           <p class="eyebrow">
-            {WEEK_2027 ? WEEK_2027.text : "Dates being confirmed"} · Monterey Peninsula
+            {WEEK_2027 ? WEEK_2027.text : "Concours Sunday 15 August 2027"} · Monterey Peninsula
           </p>
           <h1 class="mt-3 text-6xl leading-[0.85] sm:text-8xl md:text-[9rem]">
             Monterey
@@ -169,11 +201,11 @@ const carWeekEvent = {
             <span class="text-brass">Car Week</span> 2027
           </h1>
           <p class="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-            The Pebble Beach Concours d'Elegance is confirmed for Sunday 15
-            August 2027, and the rest of the week builds around it. Dates for
-            the other marquee events are not published yet — this page adds
-            each one as its organiser confirms it, and carries the complete
-            record of all {totalEvents} events from 2026 below.
+            The 76th Pebble Beach Concours d'Elegance is Sunday 15 August 2027,
+            and seven events around it now carry confirmed dates. Laguna Seca
+            and The Quail have announced nothing yet — this page adds each one
+            as its organiser publishes it, and carries the complete record of
+            all {totalEvents} events from 2026 below.
           </p>
           <div class="mt-7 flex flex-wrap gap-3">
             <a
@@ -217,66 +249,67 @@ const carWeekEvent = {
     {/* ---------------- 2027, forward-looking ---------------- *
       * Everything from here to the "2026 record" marker is NEW and sits ABOVE
       * the untouched 2026 content. Nothing below was deleted or reordered.
-      * [VERIFY] blocks name the question and the source; each must be replaced
-      * with a sourced answer, or with a plain statement that nobody publishes
-      * it, before this page is pushed.
+      *
+      * Every fact here is from pebblebeachconcours.net, read 11 September 2026,
+      * with weekdays cross-checked against dates. Where nothing is published —
+      * the overall week window, Laguna Seca, The Quail, ticket prices, any room
+      * block — the page says so in those words. Those absences are findings,
+      * not gaps: "no room block exists" saves a reader hunting for a code.
       */}
 
     <section class="mx-auto max-w-6xl px-5 py-16">
       <p class="eyebrow">Monterey Car Week 2027</p>
       <h2 class="mt-2 text-5xl leading-none sm:text-6xl">What is confirmed so far</h2>
 
-      <div class="mt-8 grid gap-4 md:grid-cols-2">
-        <div class="border-l-2 border-brass bg-surface/60 px-6 py-6">
-          <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-brass">Confirmed</p>
-          <p class="mt-3 text-2xl leading-tight text-foreground">
-            Pebble Beach Concours d'Elegance
-          </p>
-          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
-            Sunday 15 August 2027, on the 18th fairway at Pebble Beach. This is
-            the organisers' own published date and the fixed point the rest of
-            the week arranges itself around.
-          </p>
-        </div>
+      <p class="mt-5 max-w-3xl text-base leading-relaxed text-muted-foreground">
+        Seven events have published 2027 dates. Every one below is from the
+        Pebble Beach Concours' own event calendar, and every weekday has been
+        checked against its date.
+      </p>
 
-        <div class="border-l-2 border-border bg-surface/60 px-6 py-6">
-          <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-            Not yet published
-          </p>
-          <p class="mt-3 text-2xl leading-tight text-foreground">The rest of the week</p>
-          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
-            No organiser has published a 2027 date for the Rolex Monterey
-            Motorsports Reunion, The Quail, or the auction houses. Car Week has
-            historically run the ten days ending on Concours Sunday, but this
-            page will not print a window nobody has announced.
-          </p>
-        </div>
+      <div class="mt-8 overflow-x-auto">
+        <table class="w-full min-w-[32rem] border-collapse text-left">
+          <tbody>
+            {CONFIRMED_2027.map((e) => (
+              <tr class="border-b border-border/70">
+                <td class="py-3 pr-6 text-base text-foreground">{e.what}</td>
+                <td class="py-3 text-base text-brass">{e.when} 2027</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      <p class="mt-6 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — The overall Car Week
-        2027 window. Confirm the first and last day from
-        pebblebeachconcours.net and the Monterey County CVB, then set
-        <code>WEEK_2027</code> at the top of this file — that fills the hero
-        dateline and switches the 2027 Event JSON-LD on. Do not derive it from
-        2026 plus a week.
-      </p>
-      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — Rolex Monterey
-        Motorsports Reunion 2027 dates, from weathertechraceway.com. Its page
-        still shows 2026 (12–15 August) as of 11 September 2026.
-      </p>
-      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — The Quail 2027 date
-        from quaillodgeevents.com, and 2027 auction dates from RM Sotheby's,
-        Gooding, Mecum and Bonhams. Add each as its organiser confirms it rather
-        than waiting for all of them.
-      </p>
-      <p class="mt-4 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — Which edition number
-        the 2027 Concours is. 2026 was the 75th, but the series has skipped a
-        year before, so the ordinal is not safe to derive.
-      </p>
+      <div class="mt-8 border-l-2 border-border bg-surface/60 px-6 py-6">
+        <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          Not announced yet
+        </p>
+        <ul class="mt-3 space-y-2">
+          {UNANNOUNCED_2027.map((u) => (
+            <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+              <span class="text-brass">—</span>
+              <span>{u}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+          There is also no published start and end date for Car Week as a whole.
+          Pebble Beach lists its events individually and names no opening or
+          closing day, so this page does not print a window either — the events
+          above are what is actually known.
+        </p>
+      </div>
+
+      <div class="mt-8">
+        <h3 class="border-b border-border/70 pb-2 text-2xl text-brass">
+          What the 76th Concours will show
+        </h3>
+        <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+          The 2027 classes announced so far mark the centennial of Delage's
+          Grand Prix–winning season, alongside Prewar Open-Front Town Cars, a
+          class of Delahayes, and forty years of the Ferrari F40.
+        </p>
+      </div>
     </section>
 
     <section class="border-t border-border/70 bg-surface">
@@ -289,11 +322,19 @@ const carWeekEvent = {
             <h3 class="border-b border-border/70 pb-2 text-2xl text-brass">
               When tickets go on sale
             </h3>
-            <p class="mt-4 border-l-2 border-brass/50 pl-4 text-sm leading-relaxed text-muted-foreground">
-              <strong class="text-foreground">[VERIFY]</strong> — When Concours
-              tickets typically open, from pebblebeachconcours.net, and the same
-              for The Quail, which has sold out by ballot in past years. State
-              the actual published pattern; do not generalise from one year.
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Not yet, and the organisers have said when: "Tickets to the 2027
+              Pebble Beach Concours d'Elegance will become available in late
+              2026." Seven admission types are listed — General Admission, Club
+              d'Elegance, The Venue Above the Concept Lawn, the Concours
+              Gallery, The Pavilion, Patron's Patio and Chairman's Hospitality
+              at The Lodge — with no prices published against any of them yet.
+            </p>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+              The Quail sells separately and has historically gone by
+              application rather than open sale, but The Peninsula has published
+              neither a 2027 date nor a ticketing route, so there is nothing to
+              plan around there yet.
             </p>
           </div>
 
@@ -301,12 +342,17 @@ const carWeekEvent = {
             <h3 class="border-b border-border/70 pb-2 text-2xl text-brass">
               Where to stay
             </h3>
-            <p class="mt-4 border-l-2 border-brass/50 pl-4 text-sm leading-relaxed text-muted-foreground">
-              <strong class="text-foreground">[VERIFY]</strong> — Whether any
-              official room block or rate exists for Car Week 2027, and when
-              Peninsula hotels typically open August bookings. If there is no
-              block, say so — that absence is the useful fact, as it is on the
-              jazz festival page.
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+              No official room block, group rate or hotel package is published
+              for Car Week 2027 — not by the Concours and not by the Peninsula
+              resorts. That absence is the useful part: there is no code to
+              hunt for and no deadline to miss.
+            </p>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+              What that leaves is ordinary supply against the single busiest
+              week of the Monterey year, which is why people book a year out.
+              The Concours falls on Sunday 15 August, so the nights either side
+              of it are the ones that go first.
             </p>
           </div>
 
@@ -349,14 +395,17 @@ const carWeekEvent = {
         complete because a prior year is how most people work out what a Car
         Week actually involves before committing to the next one.
       </p>
-      <p class="mt-5 border-l-2 border-brass/50 pl-4 text-base leading-relaxed text-muted-foreground">
-        <strong class="text-foreground">[VERIFY]</strong> — A short 2026
-        outcomes line, two or three sentences inline here and NOT its own
-        section: total attendance across the week, cars shown at the Concours,
-        Best of Show winner, and combined auction totals with the single highest
-        sale. Sources: the Pebble Beach Concours post-event release, Hagerty's
-        auction round-up and the Monterey County CVB. Every figure needs its
-        source named; none of it is worth a page of its own.
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        How 2026 finished, for the record: 218 cars competed on the 18th
+        fairway — 185 from 30 US states and 33 from 14 other countries — and
+        Best of Show went to a 1935 Duesenberg SSJ Special Speedster shown by
+        Harry Yeaggy of Cincinnati. The week raised over $4.3 million for
+        charity, taking the Concours' cumulative total past $50.1 million.
+        On the auction side Gooding Christie's alone took more than $159
+        million at a 94% sell-through, and a 1964 Shelby Cobra Daytona Coupe
+        sold for nearly $43 million — the most valuable American car ever sold
+        at auction. Total attendance across the week is not published by
+        anyone. Figures from the Concours' own post-event release.
       </p>
     </section>
 
