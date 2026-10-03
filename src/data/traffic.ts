@@ -172,7 +172,7 @@ export type Incident = {
 };
 
 export const timberFire: Incident = {
-  active: true,
+  active: false,
   name: "Timber Fire and Plaskett Fire",
   where: "Big Sur, Los Padres National Forest, Monterey County",
   headline:
@@ -294,9 +294,9 @@ export const closures: Closure[] = [
       "2026-08-21",
       "2026-08-22",
     ],
-    when: "Closed August 11–22, reopened for five days, closed again from Thursday, August 27 — now a 40-mile span with no reopening estimate",
+    when: "Closed August 11–22, and again from August 27 across a 40-mile span — open as of October 3, 2026",
     reason:
-      "Closed for public and firefighter safety, now because of two fires rather than one. The first closure ran 11–22 August and covered mile markers 37 to 42.6; Caltrans reopened it at 1pm on the 22nd and it held for five days. The Plaskett Fire started on 26 August and the road shut again on the 27th, this time from Gorda at mile marker 10.2 to Captain Cooper Elementary at mile marker 50.1 — roughly 40 miles, the whole coast rather than a segment. Caltrans gives no reopening estimate. Full detail and live links are at the top of this page.",
+      "Closed for public and firefighter safety, first for the Timber Fire and then for the Timber and Plaskett fires together. The first closure ran 11–22 August and covered mile markers 37 to 42.6; Caltrans reopened it at 1pm on the 22nd and it held for five days. The Plaskett Fire started on 26 August and the road shut again on the 27th, this time from Gorda at mile marker 10.2 to Captain Cooper Elementary at mile marker 50.1 — roughly 40 miles, the whole coast rather than a segment. As of 3 October 2026 Caltrans lists no wildfire closure on Highway 1 through Big Sur.",
     confidence: "official",
     source: SOURCES.readyMonterey,
   },
@@ -390,7 +390,7 @@ export const highways: Highway[] = [
     name: "Highway 1",
     role: "The peninsula's spine — Monterey to Carmel, and the only direct approach to the Highway 68 junction.",
     guidance:
-      "Every Pebble Beach and Carmel event loads onto Highway 1. South of Carmel it is currently CLOSED through Big Sur for the Timber Fire, so it is not a through route to or from the south at all this week — See Monterey is directing visitors onto Highway 101 north instead. North of Carmel it is open and carrying the whole week's traffic. Caltrans QuickMap has live cameras and incidents for the corridor; check it before you leave rather than after you are already in it.",
+      "Every Pebble Beach and Carmel event loads onto Highway 1. South of Carmel, Rocky Creek Bridge has one-way controlled traffic around the clock for construction through 30 November 2026. Caltrans QuickMap has live cameras and incidents for the corridor; check it before you leave rather than after you are already in it.",
     confidence: "official",
     source: SOURCES.quickmap,
   },

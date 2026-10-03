@@ -85,6 +85,19 @@ const roadDrift =
 }
 
 {
+  !fire.active && variant === "full" && (
+    <p id="timber-fire" class="scroll-mt-32 border-l-2 border-brass/50 px-5 py-3 text-sm leading-relaxed text-muted-foreground">
+      The Timber and Plaskett fire banner is down. As of 3 October 2026, Caltrans
+      lists no wildfire closure on Highway 1 through Big Sur, CAL FIRE records the
+      Plaskett Fire as fully contained, and the Timber Fire at 88% contained.{" "}
+      <a href={fire.sources[0]!.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+        Live status from CAL FIRE ↗
+      </a>
+    </p>
+  )
+}
+
+{
   fire.active && variant === "full" && (
     <section
       id="timber-fire"
