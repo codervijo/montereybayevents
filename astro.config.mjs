@@ -8,6 +8,7 @@ import { regionalEvents } from './src/data/events-2026';
 // that changed them. Everything absent from here ships with no lastmod.
 const GUIDE_LASTMOD = {
   '/laguna-seca/camping/': '2026-08-21',
+  '/monterey-farmers-market/': '2026-10-03',
 };
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';

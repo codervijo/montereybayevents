@@ -156,3 +156,12 @@ https://search.google.com/search-console directly.
   labelling costs anything in engagement. The assumption is that it does not and
   may help, but it is an assumption — if `/free/` CTR drops while position holds,
   the badges are the first suspect.
+
+## 2026-10-03 — v2.I: a year-round recurring-schedule page for "monterey farmers market"
+- **Status:** active
+- **Hypothesis:** The regional calendar runs out in December and Car Week is seasonal. A weekly farmers market is searched every week of the year ("monterey farmers market", 500/mo, plus day/hours/today variants), and the pages ranking for it are tourism roundups that still carry stale details — e.g. the Friday market at MPC 10am–2pm, when the operator now lists Del Monte Center 8am–noon. One page answering day, hours, place, parking and EBT from the operators' own sites, with a build-time "open today" line, should rank on the long tail and give the site traffic that does not decay after an event date.
+- **KPI:** impressions, clicks and position for `/monterey-farmers-market/` on "monterey farmers market" and variants; indexed state of the URL
+- **Baseline:** 0 — new URL, not yet crawled
+- **Action:** Built `/monterey-farmers-market/` (three markets, day table, per-market sections, FAQ + FAQPage, one Event per market with `eventSchedule`); linked from `/events/` and the site footer.
+- **Result:** TBD — review 2026-10-31
+- **Learning:** TBD — if it ranks, the same recurring-rule pattern fits other weekly markets in the two counties (Carmel, Pacific Grove, Santa Cruz), each as a decision rather than a drive-by.
