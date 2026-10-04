@@ -13,6 +13,7 @@ import {
   buildMarketJsonLd,
   weekdayOf,
   formatClock,
+  formatHours,
   monthSpan,
   pacificOffsetOn,
 } from '../data/farmersMarkets.ts';
@@ -62,7 +63,7 @@ describe('weekly rules', () => {
 describe('open-today line', () => {
   it('says closed, and names the next market, on a Saturday', () => {
     expect(openTodayLine('2026-10-03')).toBe(
-      'No farmers market in Monterey today, Saturday 3 October. Next: Tuesday 6 October, Old Monterey Marketplace & Farmers Market, 4pm–7pm at Alvarado Street, downtown Monterey.',
+      'No farmers market in Monterey today, Saturday 3 October. Next: Tuesday 6 October, Old Monterey Marketplace & Farmers Market, 4–7pm at Alvarado Street, downtown Monterey.',
     );
   });
 
@@ -78,6 +79,9 @@ describe('formatting', () => {
     expect(formatClock('16:00')).toBe('4pm');
     expect(formatClock('12:00')).toBe('noon');
     expect(formatClock('08:30')).toBe('8:30am');
+    expect(formatHours({ start: '16:00', end: '19:00' })).toBe('4–7pm');
+    expect(formatHours({ start: '08:00', end: '12:00' })).toBe('8am–noon');
+    expect(formatHours({ start: '10:30', end: '14:00' })).toBe('10:30am–2pm');
     expect(monthSpan([10, 11, 12, 1, 2, 3, 4])).toBe('Oct–Apr');
     expect(monthSpan([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])).toBe('year round');
   });
@@ -114,6 +118,14 @@ describe('Event JSON-LD', () => {
     const node = buildMarketJsonLd(byId['del-monte-sunday'], '2026-10-03');
     expect(node.startDate).toBeUndefined();
     expect(node.eventSchedule[0].byMonth).toEqual([5, 6, 7, 8, 9]);
+  });
+
+  it('vendor lists are the operator\'s, with a source link', () => {
+    expect(byId['monterey-friday'].vendors.length).toBe(49);
+    expect(byId['del-monte-sunday'].vendors.length).toBe(5);
+    for (const m of farmersMarkets) {
+      if (m.vendors) expect(m.vendorsUrl, m.id).toMatch(/^https:\/\/montereybayfarmers\.org\//);
+    }
   });
 
   it('every market cites at least one official source', () => {

@@ -39,6 +39,16 @@ export interface Source {
   url: string;
 }
 
+export type Production = "Organic" | "Conventional" | "Conventional / Organic" | "N/A";
+
+/** One stall, exactly as the operator's vendor list prints it. */
+export interface Vendor {
+  name: string;
+  town: string;
+  /** "N/A" is the operator's own label — bakers, makers and prepared food. */
+  production: Production;
+}
+
 export interface FarmersMarket {
   id: string;
   name: string;
@@ -55,6 +65,11 @@ export interface FarmersMarket {
   locationNote?: string;
   organizer: { name: string; url: string };
   officialUrl: string;
+  /** What the market is like, in the operator's terms. */
+  about: string[];
+  /** Published vendor list, when the operator has one. */
+  vendors?: Vendor[];
+  vendorsUrl?: string;
   parking: string[];
   payment: string[];
   seasonal: string[];
@@ -71,10 +86,77 @@ const MBCFM = "https://montereybayfarmers.org";
 const MBCFM_FRIDAY = `${MBCFM}/markets-hours-2/monterey-farmers-market`;
 const MBCFM_SUNDAY = `${MBCFM}/del-monte-farmers-market`;
 const MBCFM_SERVICES = `${MBCFM}/about-us/services`;
+const MBCFM_FRIDAY_VENDORS = `${MBCFM}/monterey-vendors`;
+const MBCFM_SUNDAY_VENDORS = `${MBCFM}/monterey-farmers-rmarket/del-monte-vendors-sunday`;
 const MBCFM_SEASON_END = `${MBCFM}/market-news/last-market-days-of-the-season-carmel-del-monte-farmers-markets`;
 
 const ALL_MONTHS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 const MAY_TO_SEP = [5, 6, 7, 8, 9];
+
+const v = (name: string, town: string, production: Production): Vendor => ({ name, town, production });
+
+// Transcribed from MBCFM_FRIDAY_VENDORS on SOURCES_CHECKED, in the operator's order.
+const FRIDAY_VENDORS: Vendor[] = [
+  v("Amen Bee Products", "San Martin", "N/A"),
+  v("Astone’s Protea", "Aptos", "Conventional"),
+  v("Bay Area Orchids", "Half Moon Bay", "Conventional"),
+  v("Bay Living Culinary", "Watsonville", "N/A"),
+  v("Beckmann’s Old World Bakery", "Santa Cruz", "N/A"),
+  v("Big Guy Organics", "Hollister", "Organic"),
+  v("Belle Farms", "Watsonville", "Conventional"),
+  v("Bigoli Fresh Artisan Pasta", "Sand City", "N/A"),
+  v("Blue Heron Farms", "Watsonville", "Organic"),
+  v("Borba Family Farms", "Aromas", "Organic"),
+  v("Brokaw Ranch Company", "Santa Paula", "Conventional"),
+  v("Cavanaugh Color Nursery", "Watsonville", "Conventional"),
+  v("CE Farm", "Paicines", "Organic"),
+  v("Clara’s Eggs Farm", "Watsonville", "Conventional"),
+  v("Coastal View Farms", "Salinas", "Conventional"),
+  v("Companion Bakeshop", "Santa Cruz", "N/A"),
+  v("Cortez Farms", "Santa Maria", "Organic"),
+  v("Donna Dirt Farms", "Santa Cruz", "Organic"),
+  v("Fernandez Farms", "Hollister", "Conventional"),
+  v("Fogline Farm", "Santa Cruz", "Organic"),
+  v("Foustman’s Salami", "San Juan Bautista", "N/A"),
+  v("Gatanaga Nursery", "Salinas", "Conventional"),
+  v("Ichigo Farms", "Salinas", "Conventional"),
+  v("Kirk Williams", "Soledad", "Conventional / Organic"),
+  v("Kitchen Table Cultures", "Monterey", "Organic"),
+  v("K T Farms", "Fresno", "Conventional"),
+  v("La Marea of the Sea | Monterey", "Santa Cruz", "N/A"),
+  v("Living Swell Kombucha", "Santa Cruz", "N/A"),
+  v("Market Farms", "Watsonville", "Conventional"),
+  v("MIF Seafood", "Seaside", "N/A"),
+  v("Minazzoli Farms", "Stockton", "Conventional"),
+  v("Munak Ranch", "Paso Robles", "Conventional"),
+  v("Murakami Farms", "Watsonville", "Conventional"),
+  v("New Natives | Greensward", "Watsonville", "Organic"),
+  v("P & K Farms", "Watsonville", "Organic"),
+  v("Pacific Rare Nursery", "Watsonville", "Conventional"),
+  v("Phil Foster Ranch (Pinnacle)", "San Juan Bautista", "Organic"),
+  v("Prevedelli Farms", "Watsonville", "Organic"),
+  v("Pulido Farms", "Hollister", "Conventional"),
+  v("Rancho Padre Farms", "Exeter", "Conventional"),
+  v("Rocky Oaks Goat Creamery", "Clovis", "N/A"),
+  v("Schletewitz Family Farms", "Sanger", "Conventional"),
+  v("Schoch Family Farmstead", "Salinas", "N/A"),
+  v("Spade & Plow Organics", "San Martin", "Organic"),
+  v("Stackhouse Orchards", "Hickman", "Conventional"),
+  v("Sumano Mushrooms", "San Juan Bautista", "Organic"),
+  v("Sweet Elena’s Bakery", "Sand City", "N/A"),
+  v("Wise Goat Organics", "Hollister", "N/A"),
+  v("Zena Foods", "Sacramento", "N/A"),
+];
+
+// Transcribed from MBCFM_SUNDAY_VENDORS on SOURCES_CHECKED. "Minazolli" is the
+// operator's spelling on this list; its Friday list spells it "Minazzoli".
+const SUNDAY_VENDORS: Vendor[] = [
+  v("Big Guy Organics", "Hollister", "Organic"),
+  v("Gatanaga Nursery", "Salinas", "Conventional"),
+  v("Minazolli Farms", "Stockton", "Conventional"),
+  v("Munak Ranch", "Paso Robles", "Conventional"),
+  v("P & K Farm", "Watsonville", "Organic"),
+];
 
 export const farmersMarkets: FarmersMarket[] = [
   {
@@ -92,6 +174,11 @@ export const farmersMarkets: FarmersMarket[] = [
     locationNote: "The market fills three and a half city blocks of Alvarado Street.",
     organizer: { name: "Old Monterey Business Association", url: "https://www.oldmonterey.org/" },
     officialUrl: OMBA,
+    about: [
+      "A street market as much as a farmers market. Running since 1991, it mixes certified and certified-organic produce — growers come from Salinas and Watsonville and from as far as Fresno and Sacramento — with arts and crafts, handmade jewelry, clothing, flowers and international food stalls: Indian, Japanese, Korean, Mexican, Mediterranean and barbecue, plus pastries and breads in what the association calls Baker’s Alley.",
+      "It is also Monterey’s weekly social event. The association says that in summer it is the largest gathering of people in Monterey County, at more than 10,000 locals and visitors, with live music, SPCA dog adoptions and voter registration on some weeks, and costumed carolers in December.",
+      "The event listing gives admission as free.",
+    ],
     parking: [
       "Bicycle parking is provided along Alvarado Street — the association asks that you do not ride through the market itself.",
       "The association publishes no car-parking guidance for the market. Downtown parking is the City's: its lots and on-street meters take the ParkMobile app.",
@@ -122,6 +209,12 @@ export const farmersMarkets: FarmersMarket[] = [
     postalCode: "93940",
     organizer: { name: "Monterey Bay Certified Farmers Markets", url: MBCFM },
     officialUrl: MBCFM_FRIDAY,
+    about: [
+      "The serious shopping market. The operator describes it as a bustling, fast-paced market of about fifty farmers and vendors, most certified organic or farming sustainably.",
+      "What is sold, per the operator: pasture-raised meat and poultry, sustainable fish and oysters, handmade cheese, local olive oil, fresh pasta and sauces, juices, breads and pastries, honey, mushrooms, eggs, flowers, potted plants, seedlings and herbs, alongside California-grown fruit, vegetables and nuts.",
+    ],
+    vendors: FRIDAY_VENDORS,
+    vendorsUrl: MBCFM_FRIDAY_VENDORS,
     parking: ["Free parking at the shopping center."],
     payment: [
       "EBT / CalFresh: processed 8–11am at the Gatanaga Nursery booth — an hour before the market closes, not up to closing.",
@@ -134,6 +227,7 @@ export const farmersMarkets: FarmersMarket[] = [
     sources: [
       { label: "Monterey Bay Certified Farmers Markets — Monterey Farmers Market", url: MBCFM_FRIDAY },
       { label: "Monterey Bay Certified Farmers Markets — Services (EBT, Big Bucks)", url: MBCFM_SERVICES },
+      { label: "Monterey Bay Certified Farmers Markets — Friday vendor list", url: MBCFM_FRIDAY_VENDORS },
     ],
   },
   {
@@ -148,6 +242,12 @@ export const farmersMarkets: FarmersMarket[] = [
     locationNote: "In the back parking area behind California Pizza Kitchen, just off Highway 1 and Munras Avenue.",
     organizer: { name: "Monterey Bay Certified Farmers Markets", url: MBCFM },
     officialUrl: MBCFM_SUNDAY,
+    about: [
+      "A small, relaxed early-morning market. The operator singles out cut flowers from Gatanaga Nursery, organic strawberries from P&K Farms, seasonal produce from Munak Ranch and Minazzoli Farms, and ready-to-eat food from Bay Living Culinary.",
+      "Its published vendor list is five names long, so come for a few specific stalls rather than a big shop — the Friday market at the same address is the full-size one.",
+    ],
+    vendors: SUNDAY_VENDORS,
+    vendorsUrl: MBCFM_SUNDAY_VENDORS,
     parking: ["Free parking at the shopping center."],
     payment: [
       "The operator's services page lists EBT/CalFresh and card-bought Big Bucks at its Friday Monterey market and Saturday Aptos market. It does not list them for this Sunday market.",
@@ -159,10 +259,39 @@ export const farmersMarkets: FarmersMarket[] = [
     sources: [
       { label: "Monterey Bay Certified Farmers Markets — Del Monte Farmers Market", url: MBCFM_SUNDAY },
       { label: "Monterey Bay Certified Farmers Markets — last market days of the season", url: MBCFM_SEASON_END },
+      { label: "Monterey Bay Certified Farmers Markets — Sunday vendor list", url: MBCFM_SUNDAY_VENDORS },
       { label: "Monterey Bay Certified Farmers Markets — Services (EBT, Big Bucks)", url: MBCFM_SERVICES },
     ],
   },
 ];
+
+/**
+ * What MBCFM said was arriving on market tables in its end-of-season post
+ * (late September 2026). Dated, because it is a reading, not a rule.
+ */
+export const FALL_PRODUCE = {
+  asOf: "late September 2026",
+  items: [
+    "apples", "pears", "persimmons", "pomegranates", "Brussels sprouts",
+    "winter squash", "pumpkins", "eggplants", "nuts", "dried fruit",
+  ],
+  source: { label: "Monterey Bay Certified Farmers Markets — last market days of the season", url: MBCFM_SEASON_END },
+};
+
+/** The same operator's other year-round market — outside Monterey, in Aptos (Santa Cruz County). */
+export const NEARBY_YEAR_ROUND = {
+  name: "Aptos Farmers Market at Cabrillo College",
+  day: "Saturday" as Weekday,
+  hours: "8am–noon",
+  url: `${MBCFM}/aptos-farmers-market`,
+  source: { label: "Monterey Bay Certified Farmers Markets — last market days of the season", url: MBCFM_SEASON_END },
+};
+
+/** MBCFM's pet rule, printed on its market pages. OMBA publishes none. */
+export const PET_RULE = {
+  text: "Per California Health and Safety Code, animals are prohibited at certified farmers markets except for service animals.",
+  source: { label: "Monterey Bay Certified Farmers Markets — Del Monte Farmers Market", url: MBCFM_SUNDAY },
+};
 
 /** Checked and deliberately left off the page. */
 export const skippedMarkets: { name: string; reason: string }[] = [
@@ -249,8 +378,12 @@ export function formatClock(hhmm: string): string {
   return m ? `${h12}:${String(m).padStart(2, "0")}${suffix}` : `${h12}${suffix}`;
 }
 
+/** "4–7pm", "8am–noon", "10:30am–2pm" — the suffix is written once when both ends share it. */
 export function formatHours(h: MarketHours): string {
-  return `${formatClock(h.start)}–${formatClock(h.end)}`;
+  const a = formatClock(h.start);
+  const b = formatClock(h.end);
+  const sameSuffix = /[ap]m$/.test(a) && a.slice(-2) === b.slice(-2);
+  return `${sameSuffix ? a.slice(0, -2) : a}–${b}`;
 }
 
 const MONTH_ABBR = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];

@@ -24,12 +24,18 @@ import {
   monthSpan,
   openTodayLine,
   sessionsOn,
+  FALL_PRODUCE,
+  NEARBY_YEAR_ROUND,
+  PET_RULE,
+  type Production,
+  type Vendor,
 } from "../data/farmersMarkets";
+import { MONTHS, monthHref } from "../data/events-2026";
 
 const site = "https://montereybayevents.com";
 const title = "Monterey Farmers Market Schedule (2026): Every Market by Day";
 const description =
-  "Every farmers market in Monterey, CA by day: Old Monterey Marketplace on Alvarado Street on Tuesdays and Del Monte Center on Fridays, with hours, parking and EBT.";
+  "Tuesday on Alvarado Street, Friday at Del Monte Center: every Monterey farmers market by day, with hours, parking, EBT and who sells there.";
 const canonical = `${site}/monterey-farmers-market/`;
 
 const today = pacificToday();
@@ -50,6 +56,27 @@ const byDay = WEEKDAYS.map((day) => ({
   day,
   markets: farmersMarkets.filter((m) => m.day === day),
 }));
+
+// Vendor list grouped by the operator's own production label.
+const PRODUCTION_ORDER: Production[] = ["Organic", "Conventional / Organic", "Conventional", "N/A"];
+const PRODUCTION_LABEL: Record<Production, string> = {
+  Organic: "Organic growers",
+  "Conventional / Organic": "Organic and conventional",
+  Conventional: "Conventional growers",
+  "N/A": "Bakers, makers and prepared food",
+};
+const vendorGroups = (vendors: Vendor[]) =>
+  PRODUCTION_ORDER.map((p) => ({
+    label: PRODUCTION_LABEL[p],
+    vendors: vendors.filter((x) => x.production === p),
+  })).filter((g) => g.vendors.length);
+
+const fridayOrganic = (friday.vendors ?? []).filter((x) => x.production === "Organic").length;
+const fridayMakers = (friday.vendors ?? []).filter((x) => x.production === "N/A").length;
+const fridayVendorCount = friday.vendors?.length ?? 0;
+
+// The month hub for today, while one exists (the 2026 calendar runs Aug–Dec).
+const currentMonth = MONTHS.find((m) => m.iso === today.slice(0, 7));
 
 const todaySessions = sessionsOn(today);
 const todayAnswer = todaySessions.length
@@ -75,6 +102,14 @@ const faq = [
     a: `Tuesday on Alvarado Street: 4–7pm from October to April, 4–8pm from May to September. Friday at Del Monte Center: 8am–noon all year. Sunday at Del Monte Center, May to September: 8am–noon.`,
   },
   {
+    q: "Can I use EBT or CalFresh at the Monterey farmers market?",
+    a: `At the Friday market at Del Monte Shopping Center, yes: EBT is processed from 8 to 11am at the Gatanaga Nursery booth, so arrive before 11 even though the market runs to noon. The operator lists no EBT at its Sunday market, and the Old Monterey Business Association publishes no EBT arrangement for the Tuesday market on Alvarado Street.`,
+  },
+  {
+    q: "Can I bring my dog to the Monterey farmers market?",
+    a: `Not to the Friday or Sunday markets at Del Monte Center. Their operator states: "${PET_RULE.text}" The Old Monterey Business Association publishes no pet policy for the Tuesday market on Alvarado Street.`,
+  },
+  {
     q: "Where do I park for the Monterey farmers market?",
     a: `For the Friday and Sunday markets at Del Monte Shopping Center, parking is free on site. For the Tuesday market on Alvarado Street, use the City of Monterey's downtown lots and meters, which take coins and the ParkMobile app. Since 1 October 2026 the City's meters cannot take credit cards, a change the City calls temporary. Bicycle parking is provided along Alvarado Street.`,
   },
@@ -92,7 +127,9 @@ const faqJsonLd = {
 const marketJsonLd = farmersMarkets.map((m) => buildMarketJsonLd(m, today));
 
 const allSources = [
-  ...new Map(farmersMarkets.flatMap((m) => m.sources).map((s) => [s.url, s])).values(),
+  ...new Map(
+    [...farmersMarkets.flatMap((m) => m.sources), FALL_PRODUCE.source, PET_RULE.source].map((s) => [s.url, s]),
+  ).values(),
 ];
 ---
 
@@ -181,6 +218,69 @@ const allSources = [
       </div>
     </section>
 
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Which market fits your visit</h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        The two year-round markets are different kinds of outing. Tuesday on
+        Alvarado Street is an evening street market with crafts and food stalls
+        as well as produce. Friday at Del Monte Center is a morning market for
+        doing the week's food shopping. Some common situations:
+      </p>
+      <ul class="mt-5 space-y-4">
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span>
+            <strong class="text-foreground">In town for a weekend between October and April.</strong>{" "}
+            This is where most plans go wrong: there is no Saturday or Sunday
+            market in Monterey then. The Sunday market at Del Monte Center runs
+            May to September only, and its 2026 season ended on 27 September.
+            The same operator's nearest year-round weekend market is the{" "}
+            <a href={NEARBY_YEAR_ROUND.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+              {NEARBY_YEAR_ROUND.name}
+            </a>
+            , {NEARBY_YEAR_ROUND.day}s {NEARBY_YEAR_ROUND.hours}. It is in Aptos,
+            Santa Cruz County, not Monterey.
+          </span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span>
+            <strong class="text-foreground">Paying with CalFresh on a Friday.</strong>{" "}
+            EBT is processed 8–11am at the Gatanaga Nursery booth. Arrive at
+            11:30 and the market is still open but EBT has stopped, so come
+            before 11.
+          </span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span>
+            <strong class="text-foreground">Only carrying a card on a Friday.</strong>{" "}
+            Buy Farmers Market Big Bucks at the Information Booth with your card.
+            Every vendor accepts them like cash.
+          </span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span>
+            <strong class="text-foreground">After work on a Tuesday in winter.</strong>{" "}
+            From October to April the Alvarado Street market closes at 7pm, an
+            hour earlier than in summer. If you drive, have coins or the
+            ParkMobile app ready: the City's meters have not taken cards since
+            1 October 2026.
+          </span>
+        </li>
+        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+          <span class="text-brass">—</span>
+          <span>
+            <strong class="text-foreground">A summer Tuesday evening.</strong>{" "}
+            Open until 8pm from May to September and at its busiest — the
+            association puts summer crowds at more than 10,000 people. Bicycle
+            parking along Alvarado Street saves looking for a space.
+          </span>
+        </li>
+      </ul>
+    </section>
+
     {farmersMarkets.map((m) => (
       <section id={m.id} class="mt-14">
         <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">{m.name}</h2>
@@ -203,6 +303,32 @@ const allSources = [
             </span>
           </li>
         </ul>
+
+        <h3 class="mt-8 text-2xl text-foreground">What it's like</h3>
+        {m.about.map((p) => (
+          <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
+        ))}
+
+        {m.vendors && m.vendors.length > 0 && (
+          <>
+            <h3 class="mt-8 text-2xl text-foreground">Who sells here</h3>
+            <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+              {m.vendors.length} names on the operator's{" "}
+              <a href={m.vendorsUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                published vendor list
+              </a>
+              , each with its home town and the operator's own production label.
+              Stalls vary week to week, so this tells you who trades here, not
+              who will be there on a given day.
+            </p>
+            {vendorGroups(m.vendors).map((g) => (
+              <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+                <strong class="text-foreground">{g.label} ({g.vendors.length}):</strong>{" "}
+                {g.vendors.map((x) => `${x.name} (${x.town})`).join(", ")}.
+              </p>
+            ))}
+          </>
+        )}
 
         <h3 class="mt-8 text-2xl text-foreground">Parking</h3>
         {m.parking.map((p) => (
@@ -228,6 +354,24 @@ const allSources = [
       </section>
     ))}
 
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">What's in season</h2>
+      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+        In {FALL_PRODUCE.asOf} the Friday market's operator said these were
+        starting to fill the tables: {FALL_PRODUCE.items.join(", ")}. That was
+        one reading at the turn of the season, not a weekly list. Year round,
+        the Friday market has the widest range — {fridayVendorCount} vendors,{" "}
+        {fridayOrganic} of them labelled organic and {fridayMakers} bakers,
+        makers and prepared-food stalls.
+      </p>
+      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+        Source:{" "}
+        <a href={FALL_PRODUCE.source.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+          {FALL_PRODUCE.source.label}
+        </a>
+      </p>
+    </section>
+
     <section class="mt-14 border-l-2 border-brass bg-surface/60 px-6 py-8">
       <h2 class="text-3xl text-brass">What the operators do not publish</h2>
       <ul class="mt-5 space-y-4">
@@ -244,6 +388,12 @@ const allSources = [
           <strong class="text-foreground">Payment on Tuesdays.</strong> The Old
           Monterey Business Association lists no EBT or card arrangement for
           the Alvarado Street market.
+        </li>
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">A pet policy for Tuesdays.</strong>{" "}
+          The Del Monte operator bans animals other than service animals under
+          state law. The Old Monterey Business Association says nothing either
+          way about the Alvarado Street market.
         </li>
         <li class="text-base leading-relaxed text-muted-foreground">
           <strong class="text-foreground">The Friday market's old location.</strong>{" "}
@@ -279,7 +429,15 @@ const allSources = [
       <p class="mt-4 text-base leading-relaxed text-muted-foreground">
         For festivals, fairs and holiday markets across Monterey and Santa Cruz
         counties, see{" "}
-        <a href="/events/" class="text-brass hover:underline">all Central Coast events</a>.
+        {currentMonth && (
+          <>
+            <a href={monthHref(currentMonth.key)} class="text-brass hover:underline">
+              what's on in {currentMonth.label}
+            </a>{" "}
+            or{" "}
+          </>
+        )}
+        <a href="/events/" class="text-brass hover:underline">the full Central Coast calendar</a>.
       </p>
     </section>
   </main>
