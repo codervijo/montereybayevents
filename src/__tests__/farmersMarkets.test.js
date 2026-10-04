@@ -6,7 +6,9 @@
 
 import { describe, it, expect } from 'vitest';
 import {
-  farmersMarkets,
+  montereyCityMarkets as farmersMarkets,
+  montereyCountyMarkets,
+  santaCruzCountyMarkets,
   sessionsOn,
   nextSessionAfter,
   openTodayLine,
@@ -131,7 +133,54 @@ describe('Event JSON-LD', () => {
   it('every market cites at least one official source', () => {
     for (const m of farmersMarkets) {
       expect(m.sources.length, m.id).toBeGreaterThan(0);
-      expect(m.officialUrl).toMatch(/^https:\/\/(www\.oldmonterey\.org|montereybayfarmers\.org)\//);
+      expect(m.officialUrl).toMatch(/^https:\/\//);
     }
+  });
+});
+
+describe('two counties', () => {
+  const all = [...montereyCountyMarkets, ...santaCruzCountyMarkets];
+  const id = Object.fromEntries(all.map((m) => [m.id, m]));
+
+  it('ids are unique and every row is dated, cited and in its county', () => {
+    expect(new Set(all.map((m) => m.id)).size).toBe(all.length);
+    for (const m of montereyCountyMarkets) expect(m.county, m.id).toBe('Monterey');
+    for (const m of santaCruzCountyMarkets) expect(m.county, m.id).toBe('Santa Cruz');
+    for (const m of all) {
+      expect(m.verified, m.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(m.sources.length, m.id).toBeGreaterThan(0);
+    }
+  });
+
+  it('honours published season dates exactly', () => {
+    // Felton: Tuesdays 5 May – 27 October 2026.
+    expect(sessionsOn('2026-10-27', [id.felton]).length).toBe(1);
+    expect(sessionsOn('2026-10-20', [id.felton]).length).toBe(1);
+    expect(sessionsOn('2026-11-03', [id.felton]).length).toBe(0);
+    // Alisal summer season ends Tuesday 20 October; winter schedule unpublished.
+    expect(sessionsOn('2026-10-20', [id.alisal]).length).toBe(1);
+    expect(sessionsOn('2026-10-27', [id.alisal]).length).toBe(0);
+    // Scotts Valley: last market Saturday 21 November.
+    expect(sessionsOn('2026-11-21', [id['scotts-valley']]).length).toBe(1);
+    expect(sessionsOn('2026-11-28', [id['scotts-valley']]).length).toBe(0);
+  });
+
+  it('open-today line spans the county and names the city when it differs', () => {
+    expect(openTodayLine('2026-10-03', montereyCountyMarkets, 'Monterey County')).toBe(
+      'Open today, Saturday 3 October: Salinas Farmers Market (Oldtown), 9am–2pm at 300 block of Main Street, Oldtown Salinas, Salinas.',
+    );
+    const sc = openTodayLine('2026-10-03', santaCruzCountyMarkets, 'Santa Cruz County');
+    expect(sc).toContain('Westside Santa Cruz Farmers\' Market, 9am–1pm');
+    expect(sc).toContain('Aptos Farmers Market at Cabrillo College, 8am–noon at Cabrillo College, Aptos');
+    expect(sc).toContain('Scotts Valley');
+  });
+
+  it('a caveated closing time stays out of the JSON-LD', () => {
+    const node = buildMarketJsonLd(id['pacific-grove'], '2026-10-03');
+    expect(node.eventSchedule[0].endTime).toBeUndefined();
+    expect(node.endDate).toBeUndefined();
+    expect(node.startDate).toBe('2026-10-05T15:00:00-07:00');
+    expect(node.location.address.addressLocality).toBe('Pacific Grove');
+    expect(node.location.address.postalCode).toBeUndefined();
   });
 });

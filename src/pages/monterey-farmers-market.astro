@@ -1,374 +1,174 @@
 ---
-// Guide page: every weekly farmers market in the City of Monterey, by day.
+// Every farmers market in Monterey County that its operator confirms is
+// running, Monterey Peninsula first — rendered by FarmersMarketPage. Data and
+// all date logic: src/data/farmersMarkets.ts.
 //
-// Data and every date computation live in src/data/farmersMarkets.ts; this file
-// only renders. The "open today" line, the FAQ's "today" answer and each Event
-// node's startDate are computed at BUILD time from the published weekly rules —
-// the daily rebuild keeps them current (see src/lib/isPast.ts).
-//
-// SOURCING: days, hours and addresses come from the two market operators' own
-// sites only — oldmonterey.org and montereybayfarmers.org. A market neither
-// operator confirms is not on this page; `skippedMarkets` records which and why.
-import BaseLayout from "../layouts/BaseLayout.astro";
+// Live since v2.I as a City of Monterey page; widened to the county in v2.J.
+// The URL and H1 are unchanged. The title moved to the county form while the
+// page was hours old and not yet indexed.
+import FarmersMarketPage from "../components/FarmersMarketPage.astro";
 import { pacificToday } from "../lib/isPast";
 import {
-  SOURCES_CHECKED,
-  WEEKDAYS,
-  buildMarketJsonLd,
-  farmersMarkets,
-  formatDay,
-  formatHours,
-  fullAddress,
-  inSeason,
-  mapUrl,
-  monthSpan,
-  openTodayLine,
-  sessionsOn,
   FALL_PRODUCE,
   NEARBY_YEAR_ROUND,
   PET_RULE,
-  type Production,
-  type Vendor,
+  formatHours,
+  inSeason,
+  montereyCountyMarkets as markets,
+  montereySkipped,
+  openTodayLine,
+  sessionsOn,
 } from "../data/farmersMarkets";
 import { MONTHS, monthHref } from "../data/events-2026";
 
-const site = "https://montereybayevents.com";
-const title = "Monterey Farmers Market Schedule (2026): Every Market by Day";
-const description =
-  "Tuesday on Alvarado Street, Friday at Del Monte Center: every Monterey farmers market by day, with hours, parking, EBT and who sells there.";
-const canonical = `${site}/monterey-farmers-market/`;
-
 const today = pacificToday();
-const todayLine = openTodayLine(today);
+const place = "Monterey County";
+const areas = ["Monterey Peninsula", "Carmel", "Salinas", "North County", "Salinas Valley"];
+const ordered = [...markets].sort((a, b) => areas.indexOf(a.area) - areas.indexOf(b.area));
+const byId = Object.fromEntries(markets.map((m) => [m.id, m]));
+const hrs = (id: string) => formatHours(byId[id].hours[0]);
 
-const [, friday, sunday] = farmersMarkets;
-const sundayInSeason = inSeason(sunday, today);
-
-// Hours as the table shows them: one line per seasonal block.
-const hoursLines = (m: (typeof farmersMarkets)[number]) =>
-  m.hours.map((h) =>
-    m.hours.length > 1 || h.months.length < 12
-      ? `${formatHours(h)} (${monthSpan(h.months)})`
-      : formatHours(h),
-  );
-
-const byDay = WEEKDAYS.map((day) => ({
-  day,
-  markets: farmersMarkets.filter((m) => m.day === day),
-}));
-
-// Vendor list grouped by the operator's own production label.
-const PRODUCTION_ORDER: Production[] = ["Organic", "Conventional / Organic", "Conventional", "N/A"];
-const PRODUCTION_LABEL: Record<Production, string> = {
-  Organic: "Organic growers",
-  "Conventional / Organic": "Organic and conventional",
-  Conventional: "Conventional growers",
-  "N/A": "Bakers, makers and prepared food",
-};
-const vendorGroups = (vendors: Vendor[]) =>
-  PRODUCTION_ORDER.map((p) => ({
-    label: PRODUCTION_LABEL[p],
-    vendors: vendors.filter((x) => x.production === p),
-  })).filter((g) => g.vendors.length);
-
+const friday = byId["monterey-friday"];
+const fridayVendorCount = friday.vendors?.length ?? 0;
 const fridayOrganic = (friday.vendors ?? []).filter((x) => x.production === "Organic").length;
 const fridayMakers = (friday.vendors ?? []).filter((x) => x.production === "N/A").length;
-const fridayVendorCount = friday.vendors?.length ?? 0;
+const alisalInSeason = inSeason(byId["alisal"], today);
+const svhInSeason = inSeason(byId["salinas-valley-health"], today);
 
-// The month hub for today, while one exists (the 2026 calendar runs Aug–Dec).
 const currentMonth = MONTHS.find((m) => m.iso === today.slice(0, 7));
 
-const todaySessions = sessionsOn(today);
-const todayAnswer = todaySessions.length
-  ? `Yes — ${todayLine.replace(/^Open today, /, "today, ")}`
-  : `Not today. ${todayLine}`;
+const todayLine = openTodayLine(today, ordered, place);
+const todayAnswer = sessionsOn(today, ordered).length ? `Yes. ${todayLine}` : `Not today. ${todayLine}`;
 
-// Rendered visibly AND emitted as FAQPage JSON-LD, from this one array.
 const faq = [
   {
     q: "Is there a farmers market in Monterey today?",
-    a: `${todayAnswer} Monterey has a market every Tuesday afternoon on Alvarado Street and every Friday morning at Del Monte Center, year round${
-      sundayInSeason
-        ? ", plus a Sunday morning market at Del Monte Center from May to September."
-        : ". The Sunday market at Del Monte Center runs May to September only."
-    }`,
+    a: `${todayAnswer} In the City of Monterey itself, the year-round markets are Tuesday afternoon on Alvarado Street and Friday morning at Del Monte Shopping Center.`,
   },
   {
     q: "What day is the Monterey farmers market?",
-    a: `There are two year-round markets: Tuesday, the Old Monterey Marketplace on Alvarado Street downtown, and Friday, the Monterey Farmers Market at Del Monte Shopping Center. A third market runs at Del Monte Shopping Center on Sundays, from May through September only.`,
+    a: `Monterey has two year-round markets: Tuesday, the Old Monterey Marketplace on Alvarado Street downtown (4–7pm October to April, 4–8pm May to September), and Friday, the Monterey Farmers Market at Del Monte Shopping Center (${hrs("monterey-friday")}). A third runs at Del Monte Shopping Center on Sundays from May through September only.`,
   },
   {
-    q: "What are the hours of the Monterey farmers market?",
-    a: `Tuesday on Alvarado Street: 4–7pm from October to April, 4–8pm from May to September. Friday at Del Monte Center: 8am–noon all year. Sunday at Del Monte Center, May to September: 8am–noon.`,
+    q: "What day is the Salinas farmers market?",
+    a: `Saturday in Oldtown, on the 300 block of Main Street (${hrs("oldtown-salinas")}), and Wednesday at Natividad Medical Center (${hrs("natividad")}), year round. ${
+      svhInSeason ? `Salinas Valley Health's Friday market (${hrs("salinas-valley-health")}) runs until 6 November 2026. ` : ""
+    }${
+      alisalInSeason
+        ? `The Alisal market on East Alisal Street runs Tuesdays ${hrs("alisal")} until 20 October 2026; its winter day and hours have not been published.`
+        : `The Alisal market's winter day and hours have not been published.`
+    }`,
   },
   {
-    q: "Can I use EBT or CalFresh at the Monterey farmers market?",
-    a: `At the Friday market at Del Monte Shopping Center, yes: EBT is processed from 8 to 11am at the Gatanaga Nursery booth, so arrive before 11 even though the market runs to noon. The operator lists no EBT at its Sunday market, and the Old Monterey Business Association publishes no EBT arrangement for the Tuesday market on Alvarado Street.`,
+    q: "What are the hours of the Monterey farmers markets?",
+    a: `Old Monterey (Tuesday): 4–7pm October to April, 4–8pm May to September. Del Monte Center (Friday): ${hrs("monterey-friday")}. Pacific Grove (Monday): ${hrs("pacific-grove")}, closing at 6pm in winter. Seaside (Thursday): ${hrs("seaside")}. Carmel-by-the-Sea (Thursday): ${hrs("carmel-by-the-sea")}. Marina (Sunday): ${hrs("marina")}.`,
   },
   {
-    q: "Can I bring my dog to the Monterey farmers market?",
-    a: `Not to the Friday or Sunday markets at Del Monte Center. Their operator states: "${PET_RULE.text}" The Old Monterey Business Association publishes no pet policy for the Tuesday market on Alvarado Street.`,
+    q: "Are Monterey County farmers markets open year round?",
+    a: `Five say so: Old Monterey (Tuesday), Del Monte Center (Friday), Pacific Grove (Monday), Marina (Sunday) and Natividad (Wednesday). Oldtown Salinas runs every Saturday, rain or shine. Seaside, Carmel-by-the-Sea and Castroville were running in October 2026, but their operators state no season. The Del Monte Sunday, Carmel Barnyard and Soledad markets are summer-only and have finished for 2026.`,
   },
   {
-    q: "Where do I park for the Monterey farmers market?",
-    a: `For the Friday and Sunday markets at Del Monte Shopping Center, parking is free on site. For the Tuesday market on Alvarado Street, use the City of Monterey's downtown lots and meters, which take coins and the ParkMobile app. Since 1 October 2026 the City's meters cannot take credit cards, a change the City calls temporary. Bicycle parking is provided along Alvarado Street.`,
+    q: "Can I use EBT, CalFresh or Market Match?",
+    a: `At the Everyone's Harvest markets — Pacific Grove, Seaside, Marina, Alisal, Natividad and Salinas Valley Health — yes: EBT, WIC and senior benefits are accepted, with Market Match on EBT. Castroville takes EBT with a $15 match. At the Friday market at Del Monte Center, EBT stops at 11am; the operator gives the start as 9am on one page and 8am on another, so come between 9 and 11.`,
   },
-];
-
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faq.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
-const marketJsonLd = farmersMarkets.map((m) => buildMarketJsonLd(m, today));
-
-const allSources = [
-  ...new Map(
-    [...farmersMarkets.flatMap((m) => m.sources), FALL_PRODUCE.source, PET_RULE.source].map((s) => [s.url, s]),
-  ).values(),
+  {
+    q: "Can I bring my dog?",
+    a: `Not to the Del Monte Center markets. Their operator states: "${PET_RULE.text}" The other operators publish no pet policy of their own.`,
+  },
 ];
 ---
 
-<BaseLayout>
-  <Fragment slot="head">
-    <title>{title}</title>
-    <meta name="description" content={description.slice(0, 155)} />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<FarmersMarketPage
+  title="Monterey County Farmers Markets: Schedule by Day (2026)"
+  h1Lead="Monterey Farmers Markets:"
+  h1Accent="Days, Hours & Locations"
+  description="Monterey County farmers markets by day: Old Monterey Tuesdays, Del Monte Center Fridays, plus Pacific Grove, Seaside, Marina, Carmel and Salinas."
+  path="/monterey-farmers-market/"
+  place={place}
+  markets={ordered}
+  areas={areas}
+  intro="There is a farmers market somewhere in Monterey County every day of the week. In Monterey itself, the two year-round markets are Tuesday afternoon on Alvarado Street and Friday morning at Del Monte Shopping Center. Around the Peninsula, Pacific Grove has Mondays, Seaside and Carmel-by-the-Sea Thursdays, and Marina Sundays; Salinas has Wednesday and Saturday markets all year. Every day, time and address here comes from the market operators' own sites."
+  faq={faq}
+  skipped={montereySkipped}
+  extraSources={[FALL_PRODUCE.source, PET_RULE.source]}
+  sibling={{ href: "/santa-cruz-farmers-market/", label: "Santa Cruz County farmers markets" }}
+  today={today}
+>
+  <link slot="head" rel="canonical" href="https://montereybayevents.com/monterey-farmers-market/" />
 
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content={title} />
-    <meta property="og:description" content={description.slice(0, 200)} />
-    <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="Monterey Bay Events" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:image" content={`${site}/og-default.jpg`} />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description.slice(0, 200)} />
-    <meta name="twitter:image" content={`${site}/og-default.jpg`} />
-
-    {marketJsonLd.map((node) => (
-      <script type="application/ld+json" set:html={JSON.stringify(node)} />
-    ))}
-    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-  </Fragment>
-
-  <main class="mx-auto max-w-3xl px-5 py-14">
-    <a
-      href="/events/"
-      class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
-    >
-      ← All Central Coast events
-    </a>
-
-    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-6xl">
-      Monterey Farmers Markets: <span class="text-brass">Days, Hours &amp; Locations</span>
-    </h1>
-
-    <div class="mt-8 border-l-2 border-brass bg-surface/60 px-6 py-6">
-      <p class="text-lg leading-relaxed text-foreground">{todayLine}</p>
-    </div>
-
-    <p class="mt-7 text-lg leading-relaxed text-muted-foreground">
-      Monterey has two farmers markets every week of the year: Tuesday afternoon
-      on Alvarado Street downtown, and Friday morning at Del Monte Shopping
-      Center. A third runs at Del Monte on Sunday mornings from May through
-      September only. Every day, time and address here comes from the market
-      operators' own sites.
+  <section slot="after-table" class="mt-14">
+    <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Which market fits your visit</h2>
+    <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+      Monterey's two year-round markets are different kinds of outing. Tuesday
+      on Alvarado Street is an evening street market with crafts and food
+      stalls as well as produce. Friday at Del Monte Center is a morning market
+      for doing the week's food shopping. Some common situations:
     </p>
+    <ul class="mt-5 space-y-4">
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">A weekend on the Peninsula between October and April.</strong>{" "}
+          This is where plans most often go wrong. Monterey's Sunday market at
+          Del Monte Center is summer-only and finished on 27 September. The
+          Peninsula's Sunday option is Marina (10am–2pm, Reservation Road). On
+          Saturday the nearest is Oldtown Salinas (9am–2pm), or the{" "}
+          <a href={NEARBY_YEAR_ROUND.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+            {NEARBY_YEAR_ROUND.name}
+          </a>{" "}
+          in Santa Cruz County.
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">Paying with CalFresh on a Friday.</strong>{" "}
+          EBT at Del Monte Center stops at 11am, an hour before the market
+          closes. The operator gives the start as 9am on its homepage and 8am
+          on its services page, so come between 9 and 11.
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">Only carrying a card on a Friday.</strong>{" "}
+          Buy Farmers Market Big Bucks at the Information Booth with your card.
+          Every vendor accepts them like cash.
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">After work on a Tuesday in winter.</strong>{" "}
+          From October to April the Alvarado Street market closes at 7pm, an
+          hour earlier than in summer. If you drive, have coins or the
+          ParkMobile app ready: the City's meters have not taken cards since
+          1 October 2026.
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">A Monday in Pacific Grove.</strong>{" "}
+          The market at Central and Grand runs 3–7pm, but closes at 6pm in
+          winter, and its operator does not say which months count as winter.
+          Arrive before 6 from late autumn to spring.
+        </span>
+      </li>
+    </ul>
+  </section>
 
-    <section class="mt-14">
-      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Monterey farmers markets by day</h2>
-      <div class="mt-8 overflow-x-auto">
-        <table class="w-full min-w-[32rem] border-collapse text-left">
-          <tbody>
-            {byDay.map(({ day, markets }) => (
-              <tr class="border-b border-border/70">
-                <td class="py-3 pr-6 text-base text-foreground">{day}</td>
-                {markets.length ? (
-                  <td class="py-3 text-base text-muted-foreground">
-                    {markets.map((m) => (
-                      <p>
-                        <a href={`#${m.id}`} class="text-brass hover:underline">{m.name}</a>
-                        <br />
-                        {hoursLines(m).join(" · ")}
-                        <br />
-                        {fullAddress(m)} ·{" "}
-                        <a href={mapUrl(m)} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-                          Map
-                        </a>
-                      </p>
-                    ))}
-                  </td>
-                ) : (
-                  <td class="py-3 text-base text-muted-foreground">No market in Monterey</td>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="mt-14">
-      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Which market fits your visit</h2>
-      <p class="mt-5 text-base leading-relaxed text-muted-foreground">
-        The two year-round markets are different kinds of outing. Tuesday on
-        Alvarado Street is an evening street market with crafts and food stalls
-        as well as produce. Friday at Del Monte Center is a morning market for
-        doing the week's food shopping. Some common situations:
-      </p>
-      <ul class="mt-5 space-y-4">
-        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-          <span class="text-brass">—</span>
-          <span>
-            <strong class="text-foreground">In town for a weekend between October and April.</strong>{" "}
-            This is where most plans go wrong: there is no Saturday or Sunday
-            market in Monterey then. The Sunday market at Del Monte Center runs
-            May to September only, and its 2026 season ended on 27 September.
-            The same operator's nearest year-round weekend market is the{" "}
-            <a href={NEARBY_YEAR_ROUND.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-              {NEARBY_YEAR_ROUND.name}
-            </a>
-            , {NEARBY_YEAR_ROUND.day}s {NEARBY_YEAR_ROUND.hours}. It is in Aptos,
-            Santa Cruz County, not Monterey.
-          </span>
-        </li>
-        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-          <span class="text-brass">—</span>
-          <span>
-            <strong class="text-foreground">Paying with CalFresh on a Friday.</strong>{" "}
-            EBT is processed 8–11am at the Gatanaga Nursery booth. Arrive at
-            11:30 and the market is still open but EBT has stopped, so come
-            before 11.
-          </span>
-        </li>
-        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-          <span class="text-brass">—</span>
-          <span>
-            <strong class="text-foreground">Only carrying a card on a Friday.</strong>{" "}
-            Buy Farmers Market Big Bucks at the Information Booth with your card.
-            Every vendor accepts them like cash.
-          </span>
-        </li>
-        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-          <span class="text-brass">—</span>
-          <span>
-            <strong class="text-foreground">After work on a Tuesday in winter.</strong>{" "}
-            From October to April the Alvarado Street market closes at 7pm, an
-            hour earlier than in summer. If you drive, have coins or the
-            ParkMobile app ready: the City's meters have not taken cards since
-            1 October 2026.
-          </span>
-        </li>
-        <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-          <span class="text-brass">—</span>
-          <span>
-            <strong class="text-foreground">A summer Tuesday evening.</strong>{" "}
-            Open until 8pm from May to September and at its busiest — the
-            association puts summer crowds at more than 10,000 people. Bicycle
-            parking along Alvarado Street saves looking for a space.
-          </span>
-        </li>
-      </ul>
-    </section>
-
-    {farmersMarkets.map((m) => (
-      <section id={m.id} class="mt-14">
-        <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">{m.name}</h2>
-        <ul class="mt-5 space-y-3">
-          <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-            <span class="text-brass">—</span>
-            <span>
-              <strong class="text-foreground">{m.day}s, {hoursLines(m).join(" · ")}</strong>
-              {m.yearRound ? ", year round." : "."}
-            </span>
-          </li>
-          <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-            <span class="text-brass">—</span>
-            <span>
-              <strong class="text-foreground">{m.venue}</strong> — {fullAddress(m)}.
-              {m.locationNote && <> {m.locationNote}</>}{" "}
-              <a href={mapUrl(m)} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-                Open in Maps
-              </a>
-            </span>
-          </li>
-        </ul>
-
-        <h3 class="mt-8 text-2xl text-foreground">What it's like</h3>
-        {m.about.map((p) => (
-          <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
-        ))}
-
-        {m.vendors && m.vendors.length > 0 && (
-          <>
-            <h3 class="mt-8 text-2xl text-foreground">Who sells here</h3>
-            <p class="mt-3 text-base leading-relaxed text-muted-foreground">
-              {m.vendors.length} names on the operator's{" "}
-              <a href={m.vendorsUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-                published vendor list
-              </a>
-              , each with its home town and the operator's own production label.
-              Stalls vary week to week, so this tells you who trades here, not
-              who will be there on a given day.
-            </p>
-            {vendorGroups(m.vendors).map((g) => (
-              <p class="mt-3 text-base leading-relaxed text-muted-foreground">
-                <strong class="text-foreground">{g.label} ({g.vendors.length}):</strong>{" "}
-                {g.vendors.map((x) => `${x.name} (${x.town})`).join(", ")}.
-              </p>
-            ))}
-          </>
-        )}
-
-        <h3 class="mt-8 text-2xl text-foreground">Parking</h3>
-        {m.parking.map((p) => (
-          <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
-        ))}
-
-        <h3 class="mt-8 text-2xl text-foreground">Paying: cards and EBT</h3>
-        {m.payment.map((p) => (
-          <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
-        ))}
-
-        <h3 class="mt-8 text-2xl text-foreground">Season</h3>
-        {m.seasonal.map((p) => (
-          <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
-        ))}
-
-        <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-          Official site:{" "}
-          <a href={m.officialUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-            {m.organizer.name}
-          </a>
-        </p>
-      </section>
-    ))}
-
+  <Fragment slot="after-markets">
     <section class="mt-14">
       <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">What's in season</h2>
       <p class="mt-5 text-base leading-relaxed text-muted-foreground">
-        In {FALL_PRODUCE.asOf} the Friday market's operator said these were
+        In {FALL_PRODUCE.asOf} the Del Monte markets' operator said these were
         starting to fill the tables: {FALL_PRODUCE.items.join(", ")}. That was
         one reading at the turn of the season, not a weekly list. Year round,
-        the Friday market has the widest range — {fridayVendorCount} vendors,{" "}
-        {fridayOrganic} of them labelled organic and {fridayMakers} bakers,
-        makers and prepared-food stalls.
-      </p>
-      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-        Source:{" "}
-        <a href={FALL_PRODUCE.source.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-          {FALL_PRODUCE.source.label}
-        </a>
+        the Friday market at Del Monte Center has the widest published range on
+        the Peninsula: {fridayVendorCount} vendors, {fridayOrganic} of them
+        labelled organic and {fridayMakers} bakers, makers and prepared-food
+        stalls.
       </p>
     </section>
 
@@ -376,69 +176,44 @@ const allSources = [
       <h2 class="text-3xl text-brass">What the operators do not publish</h2>
       <ul class="mt-5 space-y-4">
         <li class="text-base leading-relaxed text-muted-foreground">
-          <strong class="text-foreground">Holiday closures.</strong> Christmas
-          Day and New Year's Day 2027 both fall on a Friday, and neither operator
-          says whether the Friday market runs on them. Check{" "}
-          <a href={friday.officialUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-            the operator's site
-          </a>{" "}
-          that week.
+          <strong class="text-foreground">Holiday closures in Monterey.</strong>{" "}
+          Christmas Day and New Year's Day 2027 both fall on a Friday, and the
+          Del Monte operator does not say whether the Friday market runs on
+          them. The Everyone's Harvest markets do say: most close for about two
+          weeks over the holidays.
         </li>
         <li class="text-base leading-relaxed text-muted-foreground">
-          <strong class="text-foreground">Payment on Tuesdays.</strong> The Old
-          Monterey Business Association lists no EBT or card arrangement for
-          the Alvarado Street market.
+          <strong class="text-foreground">A season for Seaside, Carmel-by-the-Sea and Castroville.</strong>{" "}
+          All three were running in October 2026, but none of their operators
+          says whether they continue through winter.
         </li>
         <li class="text-base leading-relaxed text-muted-foreground">
-          <strong class="text-foreground">A pet policy for Tuesdays.</strong>{" "}
-          The Del Monte operator bans animals other than service animals under
-          state law. The Old Monterey Business Association says nothing either
-          way about the Alvarado Street market.
+          <strong class="text-foreground">The Alisal market's winter schedule.</strong>{" "}
+          Its winter season starts 28 October 2026 — a Wednesday, where the
+          summer market is on Tuesdays — with no day or hours published yet.
+        </li>
+        <li class="text-base leading-relaxed text-muted-foreground">
+          <strong class="text-foreground">Payment on Tuesdays in Monterey.</strong>{" "}
+          The Old Monterey Business Association lists no EBT or card
+          arrangement for the Alvarado Street market.
         </li>
         <li class="text-base leading-relaxed text-muted-foreground">
           <strong class="text-foreground">The Friday market's old location.</strong>{" "}
-          Older listings still put the Friday market at Monterey Peninsula
-          College. The operator's own pages now list it at Del Monte Shopping
-          Center, 8am to noon.
+          Older listings still put it at Monterey Peninsula College. It moved
+          to Del Monte Shopping Center in March 2020.
         </li>
       </ul>
     </section>
+  </Fragment>
 
-    <section class="mt-14">
-      <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">Common questions</h2>
-      <dl class="mt-6 space-y-6">
-        {faq.map((f) => (
-          <div>
-            <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
-            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</dd>
-          </div>
-        ))}
-      </dl>
-    </section>
-
-    <section class="mt-14 border-t border-border/70 pt-8">
-      <p class="text-sm leading-relaxed text-muted-foreground">
-        Sources, checked {formatDay(SOURCES_CHECKED)} 2026:{" "}
-        {allSources.map((s, i) => (
-          <>
-            {i > 0 && " · "}
-            <a href={s.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">{s.label}</a>
-          </>
-        ))}
-      </p>
-      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
-        For festivals, fairs and holiday markets across Monterey and Santa Cruz
-        counties, see{" "}
-        {currentMonth && (
-          <>
-            <a href={monthHref(currentMonth.key)} class="text-brass hover:underline">
-              what's on in {currentMonth.label}
-            </a>{" "}
-            or{" "}
-          </>
-        )}
-        <a href="/events/" class="text-brass hover:underline">the full Central Coast calendar</a>.
-      </p>
-    </section>
-  </main>
-</BaseLayout>
+  <p slot="footer-links" class="mt-4 text-base leading-relaxed text-muted-foreground">
+    {currentMonth && (
+      <>
+        Festivals, fairs and holiday markets:{" "}
+        <a href={monthHref(currentMonth.key)} class="text-brass hover:underline">
+          what's on in {currentMonth.label}
+        </a>.
+      </>
+    )}
+  </p>
+</FarmersMarketPage>

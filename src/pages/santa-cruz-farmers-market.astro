@@ -1,0 +1,118 @@
+---
+// Every certified farmers market in Santa Cruz County that its operator
+// confirms is running — rendered by FarmersMarketPage. Data and all date logic:
+// src/data/farmersMarkets.ts.
+import FarmersMarketPage from "../components/FarmersMarketPage.astro";
+import { pacificToday } from "../lib/isPast";
+import {
+  formatHours,
+  openTodayLine,
+  santaCruzCountyMarkets as markets,
+  santaCruzSkipped,
+  sessionsOn,
+} from "../data/farmersMarkets";
+
+const today = pacificToday();
+const place = "Santa Cruz County";
+const byId = Object.fromEntries(markets.map((m) => [m.id, m]));
+const hrs = (id: string) => formatHours(byId[id].hours[0]);
+
+const todayLine = openTodayLine(today, markets, place);
+const todayAnswer = sessionsOn(today, markets).length
+  ? `Yes. ${todayLine}`
+  : `Not today. ${todayLine}`;
+
+const faq = [
+  {
+    q: "Is there a farmers market in Santa Cruz today?",
+    a: `${todayAnswer} Year round, Santa Cruz County has a market every Wednesday, Saturday and Sunday.`,
+  },
+  {
+    q: "What day is the Santa Cruz farmers market?",
+    a: `Santa Cruz has three: Wednesday downtown on Cedar Street (${hrs("downtown-santa-cruz")}), Saturday on the Westside at Mission Street Extension and Western Drive (${hrs("westside-santa-cruz")}), and Sunday in Live Oak at 15th Avenue and East Cliff Drive (${hrs("live-oak")}). All three run year round.`,
+  },
+  {
+    q: "What are the hours of the Santa Cruz farmers markets?",
+    a: `Downtown (Wednesday): ${hrs("downtown-santa-cruz")}. Westside (Saturday): ${hrs("westside-santa-cruz")}. Live Oak (Sunday): ${hrs("live-oak")}. Aptos at Cabrillo College (Saturday): ${hrs("aptos-cabrillo")}. Scotts Valley (Saturday, seasonal): ${hrs("scotts-valley")}. Felton (Tuesday, seasonal): ${hrs("felton")}.`,
+  },
+  {
+    q: "Are the Santa Cruz farmers markets open year round?",
+    a: `Four are: Downtown, Westside, Live Oak and Aptos. Two are seasonal. Felton's 2026 season runs to Tuesday 27 October and Scotts Valley's to Saturday 21 November, and neither operator has published a 2027 opening date yet.`,
+  },
+  {
+    q: "Do Santa Cruz farmers markets take EBT and Market Match?",
+    a: `Yes. At all five Santa Cruz Community Farmers' Markets — Downtown, Westside, Live Oak, Scotts Valley and Felton — EBT is redeemed at the information booth and matched dollar for dollar in Market Match tokens for fruit and vegetables, up to $15. At Aptos, EBT is processed 8–11am at the Information Booth; its operator does not mention Market Match.`,
+  },
+];
+---
+
+<FarmersMarketPage
+  title="Santa Cruz County Farmers Markets: Schedule by Day (2026)"
+  h1Lead="Santa Cruz Farmers Markets:"
+  h1Accent="Days, Hours & Locations"
+  description="Santa Cruz County farmers markets by day: Downtown Wednesdays, Westside and Aptos Saturdays, Live Oak Sundays — hours, seasons, EBT and Market Match."
+  path="/santa-cruz-farmers-market/"
+  place={place}
+  markets={markets}
+  areas={["Santa Cruz", "Live Oak", "Aptos", "Scotts Valley", "San Lorenzo Valley"]}
+  intro="Santa Cruz County has four year-round farmers markets: Wednesday afternoon downtown, Saturday morning on the Westside and at Cabrillo College in Aptos, and Sunday morning in Live Oak. Two more, in Scotts Valley and Felton, are seasonal. Every day, time and address here comes from the market operators' own sites."
+  faq={faq}
+  skipped={santaCruzSkipped}
+  sibling={{ href: "/monterey-farmers-market/", label: "Monterey County farmers markets" }}
+  today={today}
+>
+  <link slot="head" rel="canonical" href="https://montereybayevents.com/santa-cruz-farmers-market/" />
+
+  <section slot="after-table" class="mt-14">
+    <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Which market fits your visit</h2>
+    <ul class="mt-5 space-y-4">
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">A weekend in Santa Cruz, any time of year.</strong>{" "}
+          Both days are covered. Saturday has the Westside market (9am–1pm) and
+          Aptos at Cabrillo College (8am–noon). Sunday has Live Oak at 15th and
+          East Cliff (9am–1pm).
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">A weekday lunch break downtown.</strong>{" "}
+          The Downtown market runs Wednesday 12:30–5pm on Cedar Street, between
+          Walnut and Church. It moved there in June 2025, so listings from before
+          then may give its old location.
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">Monday, Thursday or Friday.</strong>{" "}
+          No market on this page runs on those days. Watsonville's Friday
+          market exists, but its hours could not be confirmed from an operator
+          source — see the note at the foot of the page.
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">Felton on a hot afternoon.</strong>{" "}
+          This is the one most likely to catch you out. The operator cancels
+          Felton at 95°F or under a National Weather Service heat advisory, and
+          its season ends on Tuesday 27 October. Check before driving up
+          Highway 9.
+        </span>
+      </li>
+      <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+        <span class="text-brass">—</span>
+        <span>
+          <strong class="text-foreground">Shopping with CalFresh.</strong>{" "}
+          The five Santa Cruz Community Farmers' Markets match EBT up to $15 in
+          Market Match tokens — swipe $15 of EBT and you get another $15 in
+          tokens to spend on fruit and vegetables. At Aptos, EBT stops at 11am, an hour before
+          the market closes.
+        </span>
+      </li>
+    </ul>
+  </section>
+</FarmersMarketPage>

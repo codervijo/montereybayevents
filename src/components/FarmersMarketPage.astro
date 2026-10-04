@@ -1,0 +1,345 @@
+---
+// Shared template for the county farmers-market pages
+// (/monterey-farmers-market/, /santa-cruz-farmers-market/).
+//
+// Renders the parts both pages have: the build-time "open today" line, the
+// day-by-day table, one section per market, the FAQ (+ FAQPage JSON-LD from the
+// same array), one Event node per market, sources and skipped markets. A page
+// adds anything county-specific through the named slots.
+//
+// Every date computation is BUILD time — see src/lib/isPast.ts and the daily
+// rebuild Worker.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  WEEKDAYS,
+  buildMarketJsonLd,
+  formatDay,
+  fullAddress,
+  marketHoursText,
+  inSeason,
+  mapUrl,
+  monthSpan,
+  openTodayLine,
+  type FarmersMarket,
+  type Production,
+  type Source,
+  type Vendor,
+} from "../data/farmersMarkets";
+
+interface Props {
+  title: string;
+  h1Lead: string;
+  h1Accent: string;
+  description: string;
+  path: string;
+  /** "in {place}" in the open-today line. */
+  place: string;
+  markets: FarmersMarket[];
+  /** Area headings, in display order. */
+  areas: string[];
+  intro: string;
+  faq: { q: string; a: string }[];
+  skipped: { name: string; reason: string }[];
+  extraSources?: Source[];
+  sibling: { href: string; label: string };
+  today: string;
+}
+
+const {
+  title,
+  h1Lead,
+  h1Accent,
+  description,
+  path,
+  place,
+  markets,
+  areas,
+  intro,
+  faq,
+  skipped,
+  extraSources = [],
+  sibling,
+  today,
+} = Astro.props as Props;
+
+const site = "https://montereybayevents.com";
+const canonical = `${site}${path}`;
+const areaRank = (m: FarmersMarket) => {
+  const i = areas.indexOf(m.area);
+  return i === -1 ? areas.length : i;
+};
+const ordered = [...markets].sort((a, b) => areaRank(a) - areaRank(b));
+const todayLine = openTodayLine(today, ordered, place);
+
+const hoursLines = (m: FarmersMarket) =>
+  m.hours.map((h) =>
+    m.hours.length > 1 ? `${marketHoursText(m, h)} (${monthSpan(h.months)})` : marketHoursText(m, h),
+  );
+
+const seasonText = (m: FarmersMarket) => {
+  if (m.yearRound) return "Year round";
+  if (m.seasonLabel) return m.seasonLabel;
+  if (m.seasonDates) {
+    const f = formatDay(m.seasonDates.from).replace(/^\w+ /, "");
+    const t = formatDay(m.seasonDates.to).replace(/^\w+ /, "");
+    return `${f} – ${t} ${m.seasonDates.to.slice(0, 4)}`;
+  }
+  return monthSpan([...new Set(m.hours.flatMap((h) => h.months))]);
+};
+
+const statusNow = (m: FarmersMarket) => (m.yearRound || inSeason(m, today) ? "" : " · closed for the season");
+
+const byDay = WEEKDAYS.map((day) => ({ day, markets: ordered.filter((m) => m.day === day) }));
+
+const PRODUCTION_ORDER: Production[] = ["Organic", "Conventional / Organic", "Conventional", "N/A"];
+const PRODUCTION_LABEL: Record<Production, string> = {
+  Organic: "Organic growers",
+  "Conventional / Organic": "Organic and conventional",
+  Conventional: "Conventional growers",
+  "N/A": "Bakers, makers and prepared food",
+};
+const vendorGroups = (vendors: Vendor[]) =>
+  PRODUCTION_ORDER.map((p) => ({
+    label: PRODUCTION_LABEL[p],
+    vendors: vendors.filter((x) => x.production === p),
+  })).filter((g) => g.vendors.length);
+
+const faqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faq.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: { "@type": "Answer", text: f.a },
+  })),
+};
+const marketJsonLd = ordered.map((m) => buildMarketJsonLd(m, today));
+
+const allSources = [
+  ...new Map([...ordered.flatMap((m) => m.sources), ...extraSources].map((s) => [s.url, s])).values(),
+];
+const verifiedDates = [...new Set(ordered.map((m) => m.verified))].sort();
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow" />
+    {/* The canonical lives in each page file (CHECK_161 and seo.test.js read
+        page source), passed in through this slot. */}
+    <slot name="head" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={`${site}/og-default.jpg`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={`${site}/og-default.jpg`} />
+
+    {marketJsonLd.map((node) => (
+      <script type="application/ld+json" set:html={JSON.stringify(node)} />
+    ))}
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
+  <main class="mx-auto max-w-3xl px-5 py-14">
+    <a
+      href="/events/"
+      class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-brass"
+    >
+      ← All Central Coast events
+    </a>
+
+    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-6xl">
+      {h1Lead} <span class="text-brass">{h1Accent}</span>
+    </h1>
+
+    <div class="mt-8 border-l-2 border-brass bg-surface/60 px-6 py-6">
+      <p class="text-lg leading-relaxed text-foreground">{todayLine}</p>
+    </div>
+
+    <p class="mt-7 text-lg leading-relaxed text-muted-foreground">{intro}</p>
+
+    <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+      Looking for the other county?{" "}
+      <a href={sibling.href} class="text-brass hover:underline">{sibling.label}</a>.
+    </p>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Farmers markets by day</h2>
+      <div class="mt-8 overflow-x-auto">
+        <table class="w-full min-w-[32rem] border-collapse text-left">
+          <tbody>
+            {byDay.map(({ day, markets: dayMarkets }) => (
+              <tr class="border-b border-border/70">
+                <td class="py-3 pr-6 text-base text-foreground">{day}</td>
+                {dayMarkets.length ? (
+                  <td class="py-3 text-base text-muted-foreground">
+                    {dayMarkets.map((m) => (
+                      <p class="mt-3">
+                        <a href={`#${m.id}`} class="text-brass hover:underline">{m.name}</a>
+                        <br />
+                        {hoursLines(m).join(" · ")} · {seasonText(m)}{statusNow(m)}
+                        <br />
+                        {fullAddress(m)} ·{" "}
+                        <a href={mapUrl(m)} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                          Map
+                        </a>
+                      </p>
+                    ))}
+                  </td>
+                ) : (
+                  <td class="py-3 text-base text-muted-foreground">No market</td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <slot name="after-table" />
+
+    {areas.map((area) => {
+      const inArea = ordered.filter((m) => m.area === area);
+      return inArea.length > 0 && (
+        <section class="mt-16">
+          <p class="eyebrow">{area}</p>
+          {inArea.map((m) => (
+            <section id={m.id} class="mt-6">
+              <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">{m.name}</h2>
+              <ul class="mt-5 space-y-3">
+                <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                  <span class="text-brass">—</span>
+                  <span>
+                    <strong class="text-foreground">{m.day}s, {hoursLines(m).join(" · ")}</strong>
+                    {" "}· {seasonText(m)}{statusNow(m)}
+                  </span>
+                </li>
+                <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                  <span class="text-brass">—</span>
+                  <span>
+                    <strong class="text-foreground">{m.venue}</strong> — {fullAddress(m)}.
+                    {m.locationNote && <> {m.locationNote}</>}{" "}
+                    <a href={mapUrl(m)} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                      Open in Maps
+                    </a>
+                  </span>
+                </li>
+              </ul>
+
+              {m.about && m.about.length > 0 && (
+                <>
+                  <h3 class="mt-8 text-2xl text-foreground">What it's like</h3>
+                  {m.about.map((p) => (
+                    <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
+                  ))}
+                </>
+              )}
+
+              {m.vendors && m.vendors.length > 0 && (
+                <>
+                  <h3 class="mt-8 text-2xl text-foreground">Who sells here</h3>
+                  <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+                    {m.vendors.length} names on the operator's{" "}
+                    <a href={m.vendorsUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                      published vendor list
+                    </a>
+                    , each with its home town and the operator's own production label.
+                    Stalls vary week to week, so this tells you who trades here, not
+                    who will be there on a given day.
+                  </p>
+                  {vendorGroups(m.vendors).map((g) => (
+                    <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+                      <strong class="text-foreground">{g.label} ({g.vendors.length}):</strong>{" "}
+                      {g.vendors.map((x) => `${x.name} (${x.town})`).join(", ")}.
+                    </p>
+                  ))}
+                </>
+              )}
+
+              <h3 class="mt-8 text-2xl text-foreground">Parking</h3>
+              {m.parking.map((p) => (
+                <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
+              ))}
+
+              <h3 class="mt-8 text-2xl text-foreground">Paying: EBT, Market Match and cards</h3>
+              {m.payment.map((p) => (
+                <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
+              ))}
+
+              <h3 class="mt-8 text-2xl text-foreground">Season</h3>
+              {m.seasonal.map((p) => (
+                <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
+              ))}
+
+              <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+                Official site:{" "}
+                <a href={m.officialUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                  {m.organizer.name}
+                </a>
+                {" "}· Verified {formatDay(m.verified)} {m.verified.slice(0, 4)}
+              </p>
+            </section>
+          ))}
+        </section>
+      );
+    })}
+
+    <slot name="after-markets" />
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">Common questions</h2>
+      <dl class="mt-6 space-y-6">
+        {faq.map((f) => (
+          <div>
+            <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
+            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    {skipped.length > 0 && (
+      <section class="mt-14 border-l-2 border-border bg-surface/60 px-6 py-6">
+        <p class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          Checked and left off this page
+        </p>
+        <ul class="mt-3 space-y-2">
+          {skipped.map((x) => (
+            <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+              <span class="text-brass">—</span>
+              <span><strong class="text-foreground">{x.name}.</strong> {x.reason}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section class="mt-14 border-t border-border/70 pt-8">
+      <p class="text-sm leading-relaxed text-muted-foreground">
+        Sources, checked {verifiedDates.map((d) => `${formatDay(d)} ${d.slice(0, 4)}`).join(" and ")}:{" "}
+        {allSources.map((s, i) => (
+          <>
+            {i > 0 && " · "}
+            <a href={s.url} target="_blank" rel="noreferrer" class="text-brass hover:underline">{s.label}</a>
+          </>
+        ))}
+      </p>
+      <p class="mt-4 text-base leading-relaxed text-muted-foreground">
+        <a href={sibling.href} class="text-brass hover:underline">{sibling.label}</a>
+        {" "}· <a href="/events/" class="text-brass hover:underline">The full Central Coast calendar</a>
+      </p>
+      <slot name="footer-links" />
+    </section>
+  </main>
+</BaseLayout>

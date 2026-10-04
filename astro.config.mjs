@@ -9,6 +9,7 @@ import { regionalEvents } from './src/data/events-2026';
 const GUIDE_LASTMOD = {
   '/laguna-seca/camping/': '2026-08-21',
   '/monterey-farmers-market/': '2026-10-03',
+  '/santa-cruz-farmers-market/': '2026-10-03',
 };
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';

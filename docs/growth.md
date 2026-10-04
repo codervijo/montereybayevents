@@ -165,3 +165,12 @@ https://search.google.com/search-console directly.
 - **Action:** Built `/monterey-farmers-market/` (three markets, day table, per-market sections, FAQ + FAQPage, one Event per market with `eventSchedule`); linked from `/events/` and the site footer.
 - **Result:** TBD — review 2026-10-31
 - **Learning:** TBD — if it ranks, the same recurring-rule pattern fits other weekly markets in the two counties (Carmel, Pacific Grove, Santa Cruz), each as a decision rather than a drive-by.
+
+## 2026-10-03 — v2.J + v2.K: county-wide farmers-market pages for Monterey and Santa Cruz
+- **Status:** active
+- **Hypothesis:** The v2.I bet (a recurring schedule beats an event date for year-round traffic) is stronger with full county coverage. "monterey farmers market" (500/mo) also draws Salinas, Pacific Grove and Seaside searchers, and "santa cruz farmers market" (200/mo) is a separate county with its own operators. Competing pages are directory stubs and hotel blogs carrying stale facts (MPC Friday market, old downtown Santa Cruz location). Pages that are current, operator-sourced and honest about gaps should take the long tail of day/city/hours queries in both counties.
+- **KPI:** impressions, clicks and position for `/monterey-farmers-market/` and `/santa-cruz-farmers-market/` on farmers-market queries; indexed state of both URLs; whether the Monterey page holds the city head term after its title moved to the county form
+- **Baseline:** 0 for both — `/monterey-farmers-market/` went live hours earlier and has not been crawled; `/santa-cruz-farmers-market/` is new
+- **Action:** Monterey page widened to 14 county markets, Peninsula first; Santa Cruz page built with 6; shared template; linked from `/events/` and from each other.
+- **Result:** TBD — review 2026-10-31
+- **Learning:** TBD — watch whether the Monterey page's city queries suffer from the county title. If they do, a city-only H1/title split is the remedy, not a new URL.
