@@ -24,6 +24,7 @@ import {
   type Production,
   type Source,
   type Vendor,
+  OPERATOR_NOTES,
 } from "../data/farmersMarkets";
 
 interface Props {
@@ -70,6 +71,10 @@ const areaRank = (m: FarmersMarket) => {
 };
 const ordered = [...markets].sort((a, b) => areaRank(a) - areaRank(b));
 const todayLine = openTodayLine(today, ordered, place);
+const opSlug = (name: string) => name.toLowerCase().replace(/[^a-z]+/g, "-").replace(/^-|-$/g, "");
+const operators = Object.values(OPERATOR_NOTES)
+  .map((op) => ({ op, names: ordered.filter((m) => m.organizer.url === op.url).map((m) => m.name) }))
+  .filter((x) => x.names.length > 0);
 
 const hoursLines = (m: FarmersMarket) =>
   m.hours.map((h) =>
@@ -91,12 +96,14 @@ const statusNow = (m: FarmersMarket) => (m.yearRound || inSeason(m, today) ? "" 
 
 const byDay = WEEKDAYS.map((day) => ({ day, markets: ordered.filter((m) => m.day === day) }));
 
-const PRODUCTION_ORDER: Production[] = ["Organic", "Conventional / Organic", "Conventional", "N/A"];
+const PRODUCTION_ORDER: Production[] = ["Organic", "Conventional / Organic", "Conventional", "Farmer", "N/A", "Artisan"];
 const PRODUCTION_LABEL: Record<Production, string> = {
   Organic: "Organic growers",
   "Conventional / Organic": "Organic and conventional",
   Conventional: "Conventional growers",
   "N/A": "Bakers, makers and prepared food",
+  Farmer: "Farmers",
+  Artisan: "Food makers and artisans",
 };
 const vendorGroups = (vendors: Vendor[]) =>
   PRODUCTION_ORDER.map((p) => ({
@@ -116,7 +123,9 @@ const faqJsonLd = {
 const marketJsonLd = ordered.map((m) => buildMarketJsonLd(m, today));
 
 const allSources = [
-  ...new Map([...ordered.flatMap((m) => m.sources), ...extraSources].map((s) => [s.url, s])).values(),
+  ...new Map(
+    [...ordered.flatMap((m) => m.sources), ...operators.flatMap((o) => o.op.sources), ...extraSources].map((s) => [s.url, s]),
+  ).values(),
 ];
 const verifiedDates = [...new Set(ordered.map((m) => m.verified))].sort();
 ---
@@ -214,86 +223,125 @@ const verifiedDates = [...new Set(ordered.map((m) => m.verified))].sort();
       return inArea.length > 0 && (
         <section class="mt-16">
           <p class="eyebrow">{area}</p>
-          {inArea.map((m) => (
-            <section id={m.id} class="mt-6">
-              <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">{m.name}</h2>
-              <ul class="mt-5 space-y-3">
-                <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-                  <span class="text-brass">—</span>
-                  <span>
-                    <strong class="text-foreground">{m.day}s, {hoursLines(m).join(" · ")}</strong>
-                    {" "}· {seasonText(m)}{statusNow(m)}
-                  </span>
-                </li>
-                <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
-                  <span class="text-brass">—</span>
-                  <span>
-                    <strong class="text-foreground">{m.venue}</strong> — {fullAddress(m)}.
-                    {m.locationNote && <> {m.locationNote}</>}{" "}
-                    <a href={mapUrl(m)} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-                      Open in Maps
-                    </a>
-                  </span>
-                </li>
-              </ul>
-
-              {m.about && m.about.length > 0 && (
-                <>
-                  <h3 class="mt-8 text-2xl text-foreground">What it's like</h3>
-                  {m.about.map((p) => (
-                    <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
+          {inArea.map((m) => {
+            const op = OPERATOR_NOTES[m.organizer.url];
+            return (
+              <section id={m.id} class="mt-6">
+                <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">{m.name}</h2>
+                <ul class="mt-5 space-y-3">
+                  <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                    <span class="text-brass">—</span>
+                    <span>
+                      <strong class="text-foreground">{m.day}s, {hoursLines(m).join(" · ")}</strong>
+                      {" "}· {seasonText(m)}{statusNow(m)}
+                    </span>
+                  </li>
+                  <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                    <span class="text-brass">—</span>
+                    <span>
+                      {m.venue.startsWith(m.streetAddress) ? (
+                        <strong class="text-foreground">{fullAddress(m)}.</strong>
+                      ) : (
+                        <>
+                          <strong class="text-foreground">{m.venue}</strong> — {fullAddress(m)}.
+                        </>
+                      )}
+                      {m.locationNote && <> {m.locationNote}</>}{" "}
+                      <a href={mapUrl(m)} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                        Open in Maps
+                      </a>
+                    </span>
+                  </li>
+                  {m.transit && (
+                    <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                      <span class="text-brass">—</span>
+                      <span><strong class="text-foreground">By bus:</strong> {m.transit}</span>
+                    </li>
+                  )}
+                  {m.parking.map((p) => (
+                    <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                      <span class="text-brass">—</span>
+                      <span><strong class="text-foreground">Parking:</strong> {p}</span>
+                    </li>
                   ))}
-                </>
-              )}
+                  {m.payment.map((p) => (
+                    <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                      <span class="text-brass">—</span>
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                  {m.seasonal.map((p) => (
+                    <li class="flex gap-3 text-base leading-relaxed text-muted-foreground">
+                      <span class="text-brass">—</span>
+                      <span>{p}</span>
+                    </li>
+                  ))}
+                </ul>
 
-              {m.vendors && m.vendors.length > 0 && (
-                <>
-                  <h3 class="mt-8 text-2xl text-foreground">Who sells here</h3>
-                  <p class="mt-3 text-base leading-relaxed text-muted-foreground">
-                    {m.vendors.length} names on the operator's{" "}
-                    <a href={m.vendorsUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-                      published vendor list
-                    </a>
-                    , each with its home town and the operator's own production label.
-                    Stalls vary week to week, so this tells you who trades here, not
-                    who will be there on a given day.
-                  </p>
-                  {vendorGroups(m.vendors).map((g) => (
+                {m.about && m.about.length > 0 &&
+                  m.about.map((p) => <p class="mt-5 text-base leading-relaxed text-muted-foreground">{p}</p>)}
+
+                {m.vendors && m.vendors.length > 0 && (
+                  <>
+                    <h3 class="mt-8 text-2xl text-foreground">Who sells at {m.name}</h3>
                     <p class="mt-3 text-base leading-relaxed text-muted-foreground">
-                      <strong class="text-foreground">{g.label} ({g.vendors.length}):</strong>{" "}
-                      {g.vendors.map((x) => `${x.name} (${x.town})`).join(", ")}.
+                      {m.vendors.length} names on the operator's{" "}
+                      <a href={m.vendorsUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                        published vendor list</a
+                      >.{" "}
+                      {m.vendorsNote ??
+                        "Each is shown with its home town and the operator's own production label."}{" "}
+                      Stalls vary week to week, so this tells you who trades here, not
+                      who will be there on a given day.
                     </p>
-                  ))}
-                </>
-              )}
+                    {vendorGroups(m.vendors).map((g) => (
+                      <p class="mt-3 text-base leading-relaxed text-muted-foreground">
+                        <strong class="text-foreground">{g.label} ({g.vendors.length}):</strong>{" "}
+                        {g.vendors.map((x) => (x.town ? `${x.name} (${x.town})` : x.name)).join(", ")}.
+                      </p>
+                    ))}
+                  </>
+                )}
 
-              <h3 class="mt-8 text-2xl text-foreground">Parking</h3>
-              {m.parking.map((p) => (
-                <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
-              ))}
-
-              <h3 class="mt-8 text-2xl text-foreground">Paying: EBT, Market Match and cards</h3>
-              {m.payment.map((p) => (
-                <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
-              ))}
-
-              <h3 class="mt-8 text-2xl text-foreground">Season</h3>
-              {m.seasonal.map((p) => (
-                <p class="mt-3 text-base leading-relaxed text-muted-foreground">{p}</p>
-              ))}
-
-              <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-                Official site:{" "}
-                <a href={m.officialUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
-                  {m.organizer.name}
-                </a>
-                {" "}· Verified {formatDay(m.verified)} {m.verified.slice(0, 4)}
-              </p>
-            </section>
-          ))}
+                <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+                  <a href={m.officialUrl} target="_blank" rel="noreferrer" class="text-brass hover:underline">
+                    {m.organizer.name}
+                  </a>
+                  {" "}· checked {formatDay(m.verified).replace(/^\w+ /, "")}
+                  {op && (
+                    <>
+                      {" "}·{" "}
+                      <a href={`#op-${opSlug(op.name)}`} class="text-brass hover:underline">
+                        payment rules
+                      </a>
+                    </>
+                  )}
+                </p>
+              </section>
+            );
+          })}
         </section>
       );
     })}
+
+    {operators.length > 0 && (
+      <section class="mt-16">
+        <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Who runs these markets</h2>
+        <p class="mt-5 text-base leading-relaxed text-muted-foreground">
+          Payment rules are set by each operator rather than by each market, so
+          they are written out once here.
+        </p>
+        {operators.map(({ op, names }) => (
+          <div id={`op-${opSlug(op.name)}`} class="mt-8">
+            <h3 class="text-2xl text-foreground">{op.name}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">Runs {names.join(", ")}.</p>
+            {op.notes.map((n) => (
+              <p class="mt-3 text-base leading-relaxed text-muted-foreground">{n}</p>
+            ))}
+          </div>
+        ))}
+      </section>
+    )}
 
     <slot name="after-markets" />
 

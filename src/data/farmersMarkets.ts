@@ -39,11 +39,12 @@ export interface Source {
   url: string;
 }
 
-export type Production = "Organic" | "Conventional" | "Conventional / Organic" | "N/A";
+export type Production = "Organic" | "Conventional" | "Conventional / Organic" | "N/A" | "Farmer" | "Artisan";
 
 /** One stall, exactly as the operator's vendor list prints it. */
 export interface Vendor {
   name: string;
+  /** Empty when the operator's list gives none. */
   town: string;
   /** "N/A" is the operator's own label — bakers, makers and prepared food. */
   production: Production;
@@ -86,6 +87,8 @@ export interface FarmersMarket {
   postalCode?: string;
   /** Pin for the map link when the address is a stretch of street rather than a point. */
   mapQuery?: string;
+  /** Bus route and stop, exactly as the operator publishes them. */
+  transit?: string;
   /** Where the stalls actually are, when the operator says. */
   locationNote?: string;
   organizer: { name: string; url: string };
@@ -95,6 +98,8 @@ export interface FarmersMarket {
   /** Published vendor list, when the operator has one. */
   vendors?: Vendor[];
   vendorsUrl?: string;
+  /** Replaces the standard caveat under the vendor list when the source needs its own. */
+  vendorsNote?: string;
   parking: string[];
   payment: string[];
   seasonal: string[];
@@ -314,9 +319,23 @@ const EH_ORG = { name: "Everyone's Harvest", url: "https://www.everyonesharvest.
 const EH_BENEFITS = "Accepts EBT / CalFresh, WIC and Senior Farmers' Market Nutrition Program benefits.";
 const EH_MATCH =
   "Market Match: every $1 of EBT is matched with $1 for fresh produce, up to $30 a day. Ask at the Information Booth.";
-const EH_HOLIDAY = "Closed for about two weeks around Christmas and New Year's Day.";
-const NO_PARKING = (who: string) => `${who} publishes no parking guidance.`;
 const MBCFM_CARMEL = `${MBCFM}/carmel-farmers-market`;
+
+// Transcribed 2026-10-04 from MBCFM's Carmel vendor list, in its order.
+const BARNYARD_VENDORS: Vendor[] = [
+  v("Blue Heron", "Watsonville", "Organic"),
+  v("Coastal Paradise Nursery", "Salinas", "Conventional"),
+  v("Cortez Farms", "Santa Maria", "Conventional"),
+  v("Gatanaga Nursery", "Salinas", "Conventional"),
+  v("Kashiwase Farms", "Sanger", "Organic"),
+  v("Kirk Williams", "Soledad", "Conventional"),
+  v("Minazzoli Farms", "Stockton", "Conventional"),
+  v("Munak Ranch", "Paso Robles", "Conventional"),
+  v("P & K Farms", "Watsonville", "Organic"),
+  v("Phil Foster Ranch (Pinnacle)", "San Juan Bautista", "Organic"),
+  v("Sweet Elena’s Bakery", "Sand City", "N/A"),
+  v("Triple Delight Blueberries", "Caruthers", "Conventional"),
+];
 
 export const montereyCountyOtherMarkets: FarmersMarket[] = [
   {
@@ -335,12 +354,15 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     mapQuery: "Central Ave & Grand Ave, Pacific Grove, CA",
     organizer: EH_ORG,
     officialUrl: `${EH}/pacific-grove-certified-farmers-market/`,
-    parking: [NO_PARKING("The operator")],
-    payment: [EH_BENEFITS, EH_MATCH],
+    parking: [],
+    payment: [],
     seasonal: [
       "Every Monday, year round, rain or shine, including holiday weekends.",
-      EH_HOLIDAY,
       "Winter hours are 3–6pm, but the operator does not say which months count as winter. Plan on a 6pm close from late autumn until spring and check the operator's page.",
+    ],
+    transit: "MST routes 1 and 2 via Asilomar from Monterey Transit Plaza; get off at Fountain and Lighthouse.",
+    about: [
+      "Everyone's Harvest has run Pacific Grove's market since 2008. Monday sellers in its directory include certified-organic Inzana Ranch and La Milpa, Lake Family Forest with mushrooms, microgreens and seedlings from Carmel Valley, Clara's Egg Farm, and food from Ad Astra Bread Co., Ely's Pupusas and Zum Zum Tea.",
     ],
     sources: [{ label: "Everyone's Harvest — Pacific Grove market", url: `${EH}/pacific-grove-certified-farmers-market/` }],
   },
@@ -362,11 +384,14 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     officialUrl: `${EH}/seaside-certified-farmers-market/`,
     parking: ["Free parking next to the market, or across the street in the City Hall lot."],
     payment: [
-      EH_BENEFITS,
-      "Market Match is offered, but the operator's page states two different daily amounts. Ask at the Information Booth what the match is on the day.",
+      "Market Match is bigger here than at the operator's other markets: a City of Seaside grant raises it to $1.50 for every $1 of EBT, up to a $45 match a day. One older notice on the same page gives a different figure, so confirm at the Information Booth.",
     ],
     seasonal: [
       "Every Thursday. The operator's page gives no season; it was running, with live music, on 1 October 2026.",
+    ],
+    transit: "MST routes 20, A and B; get off at Del Monte or at Fremont.",
+    about: [
+      "The operator's newest market, opened in 2023 at Laguna Grande Regional Park and sponsored by the City of Seaside, which also pays for its bigger Market Match. Thursday sellers in the operator's directory include Gallardo Organic Farm, Jose's Flowers, Luna Dorada Organic Farm, Rodriguez Bros. Ranch and Stackhouse Brothers Orchards, with food from Ely's Pupusas and Mr. Falafel. Live music on some Thursdays.",
     ],
     sources: [{ label: "Everyone's Harvest — Seaside market", url: `${EH}/seaside-certified-farmers-market/` }],
   },
@@ -385,9 +410,13 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     locationNote: "At the corner of Vista Del Camino and Reservation Road.",
     organizer: EH_ORG,
     officialUrl: `${EH}/marina-certified-farmers-market/`,
-    parking: [NO_PARKING("The operator")],
-    payment: [EH_BENEFITS, EH_MATCH],
-    seasonal: ["Every Sunday, year round, rain or shine.", EH_HOLIDAY],
+    parking: [],
+    payment: [],
+    seasonal: ["Every Sunday, year round, rain or shine."],
+    transit: "MST routes 18 and 20 via Marina Transit Exchange; get off at Marina Village Shopping Center.",
+    about: [
+      "The operator's first market, opened in 2003, and the largest roster in its directory. It is the one to visit for Asian vegetables: F.T. Fresh Produce grows more than 100 varieties, from squash, beans and tomatoes to Asian vegetables, guava and dates, and Moua's Produce is there every Sunday.",
+    ],
     sources: [{ label: "Everyone's Harvest — Marina market", url: `${EH}/marina-certified-farmers-market/` }],
   },
   {
@@ -406,10 +435,14 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     mapQuery: "Sixth Ave & Mission St, Carmel-by-the-Sea, CA",
     organizer: { name: "Good Roots, Inc., listed by the City of Carmel-by-the-Sea", url: "https://ci.carmel.ca.us/farmers-market" },
     officialUrl: "https://ci.carmel.ca.us/farmers-market",
-    parking: [NO_PARKING("The City's market page")],
+    parking: [],
     payment: ["Neither the City nor Good Roots publishes EBT or card arrangements for this market."],
     seasonal: [
       "Every Thursday. The City's page gives no season, but its 2026 events calendar lists the market's Third Thursday events on 17 September and 15 October.",
+    ],
+    about: [
+      "The City lists certified organic produce, eggs, plants, cut flowers and specialty foods such as olive oil, hummus, pizza and bread. Sustainable Carmel is often on site to answer composting and recycling questions.",
+      "Dogs are not allowed inside the market area — the City cites a Health Department requirement.",
     ],
     sources: [
       { label: "City of Carmel-by-the-Sea — Farmers' Market", url: "https://ci.carmel.ca.us/farmers-market" },
@@ -438,6 +471,11 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
       "Seasonal: Tuesdays from May through September, rain or shine.",
       "The 2026 season's final market was Tuesday 29 September. The operator says it will be back next spring and has not published a 2027 opening date.",
     ],
+    about: [
+      "Intimate in scale, in the operator's words: a curated selection of California-grown produce, fresh-baked goods, cut flowers and potted plants, set among The Barnyard's brick-lined courtyards, garden paths and patios.",
+    ],
+    vendors: BARNYARD_VENDORS,
+    vendorsUrl: `${MBCFM}/carmel-farmers-market/carmel-vendors`,
     sources: [
       { label: "MBCFM — Carmel Farmers Market", url: MBCFM_CARMEL },
       { label: "MBCFM — last market days of the season", url: MBCFM_SEASON_END },
@@ -459,11 +497,15 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     mapQuery: "300 Main St, Salinas, CA",
     organizer: { name: "Salinas Valley Chamber of Commerce Foundation", url: "https://www.salinasfarmersmarket.com/" },
     officialUrl: "https://www.salinasfarmersmarket.com/oldtown-salinas-market",
-    parking: [NO_PARKING("The operator")],
+    parking: [],
     payment: ["The operator publishes no EBT or Market Match arrangement for this market."],
     seasonal: [
       "Every Saturday, rain or shine. The operator does not use the words \"year round\", so this page does not either.",
       "New operator since July 2026: the Salinas Valley Chamber of Commerce Foundation took over the market from the Oldtown Salinas Foundation.",
+    ],
+    about: [
+      "Running since January 2000; it outgrew its first site on West Gabilan Street. Salinas Valley farmers with certified organic produce, plus handmade soaps, cut flowers, crafts and hot and cold food, with tables and chairs and a local musician.",
+      "The operator says it draws thousands every Saturday, and lists 29 of what it calls 80-plus artisans on its VIP Vendors page. It has a Spanish-language page, and the market manager takes calls and texts on (831) 287-9852.",
     ],
     sources: [
       { label: "Salinas Farmers Market — Oldtown market", url: "https://www.salinasfarmersmarket.com/oldtown-salinas-market" },
@@ -487,11 +529,14 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     organizer: EH_ORG,
     officialUrl: `${EH}/alisal-certified-farmers-market/`,
     parking: ["Free parking next to the market."],
-    payment: [EH_BENEFITS, EH_MATCH],
+    payment: [],
     seasonal: [
       "Summer season: Tuesdays, 2 June to 20 October 2026, 11am–4pm.",
       "A winter season runs from 28 October 2026 into June 2027, but the operator has not published its day or hours yet — and 28 October is a Wednesday, so the day may change. This page lists only the summer schedule until it does.",
-      EH_HOLIDAY,
+    ],
+    transit: "MST routes 41 and 42 via Salinas Transit Center; get off at East Alisal and Wood.",
+    about: [
+      "Opened in 2010 beside the WIC nutrition center in East Salinas. It is small — the operator's directory lists five Tuesday sellers: Avalos Farm, J & J Ramos Farm, Ledesma Farm, Antojitos Mexicanos and Chava's Corn — and it runs cooking demonstrations.",
     ],
     sources: [{ label: "Everyone's Harvest — Alisal market", url: `${EH}/alisal-certified-farmers-market/` }],
   },
@@ -511,8 +556,12 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     organizer: EH_ORG,
     officialUrl: `${EH}/natividad-certified-farmers-market/`,
     parking: ["Free parking in the Natividad Medical Center lot."],
-    payment: [EH_BENEFITS, EH_MATCH],
-    seasonal: ["Every Wednesday, year round — a new market, funded by Natividad Medical Center.", EH_HOLIDAY],
+    payment: [],
+    seasonal: ["Every Wednesday, year round."],
+    transit: "MST routes 41 and 46 via Salinas Transit Center; get off at Medical Center Drive and Hospital.",
+    about: [
+      "Hosted and funded by Natividad Medical Center since 2010. It is part of the operator's Fresh Rx program, in which doctors prescribe produce to young patients at risk of going without, redeemable for $35 of produce a week. Wednesday sellers include Gallardo Organic Farm, Golden Flowers, Rodriguez Bros. Ranch and Stackhouse Brothers Orchards.",
+    ],
     sources: [{ label: "Everyone's Harvest — Natividad market", url: `${EH}/natividad-certified-farmers-market/` }],
   },
   {
@@ -532,9 +581,13 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     organizer: EH_ORG,
     officialUrl: `${EH}/salinas-valley-health-certified-farmers-market/`,
     parking: ["Free parking next to the market."],
-    payment: [EH_BENEFITS, EH_MATCH],
+    payment: [],
     seasonal: [
       "Seasonal: Fridays from 8 May to 6 November 2026. The last market of the season is Friday 6 November.",
+    ],
+    transit: "MST route 43 via Salinas Transit Center; get off at East Romie Lane and Los Palos.",
+    about: [
+      "Opened in 2013 at Salinas Valley Memorial Hospital and funded by Salinas Valley Health, whose doctors prescribe produce through the same Fresh Rx program. Friday sellers include Golden Flowers, Ledesma Farm, Rodriguez Bros. Ranch, Stackhouse Brothers Orchards, Blazin' Bayou Barbecue, Coastal Kettlecorn and Tacos Don Beto.",
     ],
     sources: [{ label: "Everyone's Harvest — Salinas Valley Health market", url: `${EH}/salinas-valley-health-certified-farmers-market/` }],
   },
@@ -554,9 +607,12 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     postalCode: "95012",
     organizer: { name: "North County Recreation and Park District", url: "https://www.ncrpd.org/" },
     officialUrl: "https://www.ncrpd.org/2026-10-01-north-county-farmers-market",
-    parking: [NO_PARKING("The district")],
+    parking: [],
     payment: ["Accepts EBT, with a $15 Market Match program."],
     seasonal: ["Every Thursday. The district gives no season; its listing shows the market running on 1 October 2026."],
+    about: [
+      "Pitched by the district as a family outing: fresh organic fruit and vegetables and food from local vendors, with cooking demonstrations, a bounce house and a kids' arts and crafts table.",
+    ],
     sources: [
       { label: "North County Recreation and Park District — farmers market", url: "https://www.ncrpd.org/2026-10-01-north-county-farmers-market" },
     ],
@@ -576,11 +632,14 @@ export const montereyCountyOtherMarkets: FarmersMarket[] = [
     postalCode: "93960",
     organizer: { name: "Soledad Historical Society", url: "https://www.soledadhistory.org/" },
     officialUrl: "https://www.soledadhistory.org/",
-    parking: [NO_PARKING("The Historical Society")],
+    parking: [],
     payment: ["The Historical Society publishes no EBT or card arrangement."],
     seasonal: [
       "Seasonal: Thursdays, April through September, 4–8pm. The 2026 season is over.",
       "The Historical Society has announced the 2027 season for April through September, Thursdays 4–8pm, without a first date.",
+    ],
+    about: [
+      "Sponsored by the Soledad Historical Society, which calls it its major fundraiser — booth fees support the Society. It is held in front of the Society's museum in the old International Harvester building, which opens during market hours.",
     ],
     sources: [
       { label: "Soledad Historical Society", url: "https://www.soledadhistory.org/" },
@@ -634,6 +693,229 @@ const SCCFM_EBT = "EBT / CalFresh: redeemed at the information booth with the ma
 const MBCFM_APTOS = `${MBCFM}/aptos-farmers-market`;
 const MBCFM_APTOS_LOCATION = `${MBCFM}/aptos-farmers-market/aptos-location`;
 
+// Transcribed 2026-10-04. Aptos: from MBCFM's Aptos vendor list, in its order.
+// SCCFM markets: from SCCFM's vendor directory, which labels each vendor only
+// Farmer or Artisan and tags the markets it attends.
+const APTOS_VENDORS: Vendor[] = [
+  v("Amen Bee Products", "San Martin", "N/A"),
+  v("Astone’s Protea", "Aptos", "Conventional"),
+  v("Bay Living Culinary", "Watsonville", "N/A"),
+  v("Bay Area Orchids", "Half Moon Bay", "Conventional"),
+  v("Beckmann’s Bakery", "Santa Cruz", "N/A"),
+  v("Belle Farms", "Watsonville", "Conventional"),
+  v("Bigoli Fresh Artisan Pasta", "Sand City", "N/A"),
+  v("Blossom’s Farm", "Aromas", "Organic"),
+  v("Blue Heron Farms", "Watsonville", "Organic"),
+  v("Borba Family Farms", "Aromas", "Organic"),
+  v("Brokaw Ranch Company", "Santa Paula", "Conventional"),
+  v("Cabrillo College Horticulture", "Aptos", "Organic"),
+  v("Cavanaugh Color", "Watsonville", "Conventional"),
+  v("C E Farm", "Paicines", "Organic"),
+  v("Clara’s Eggs Farm", "Watsonville", "Conventional"),
+  v("Coastal Paradise Nursery", "Castroville", "Conventional"),
+  v("Companion Bakeshop", "Aptos", "N/A"),
+  v("Cortez Farms", "Santa Maria", "Conventional/Organic"),
+  v("Donna Dirt Farms", "Santa Cruz", "Organic"),
+  v("Fernandez Farms", "Hollister", "Conventional"),
+  v("Fiji Wild Coffee", "Santa Cruz", "N/A"),
+  v("Fogline Farm", "Soquel", "Organic"),
+  v("Foustman’s Salami", "San Juan Bautista", "N/A"),
+  v("Gatanaga Nursery, Inc.", "Salinas", "Conventional"),
+  v("H & H Fresh Fish Company", "Santa Cruz", "N/A"),
+  v("Hidden Fortress Coffee", "Watsonville", "N/A"),
+  v("Hakouya Miso", "Aptos", "N/A"),
+  v("Ichigo Farms", "Salinas", "Conventional"),
+  v("Kashiwase Farms", "Sanger", "Organic"),
+  v("Kirk Williams", "Soledad", "Conventional / Organic"),
+  v("Kitchen Table Cultures", "Monterey", "N/A"),
+  v("K T Farms", "Fresno", "Conventional"),
+  v("La Marea of the Sea", "Corralitos", "N/A"),
+  v("Lily’s Roasted Corn", "Watsonville", "N/A"),
+  v("Living Swell Kombucha", "Santa Cruz", "N/A"),
+  v("Market Farms", "Salinas", "Conventional"),
+  v("MIF Seafood", "Seaside", "N/A"),
+  v("Minazzoli Farms", "Stockton", "Conventional"),
+  v("Molino Creek", "Davenport", "Organic"),
+  v("Munak Ranch", "Paso Robles", "Conventional"),
+  v("Murakami Farms", "Watsonville", "Conventional"),
+  v("New Natives | Greensward", "Aptos", "Organic"),
+  v("Northridge Farms", "Hollister", "Conventional"),
+  v("P & K Farms", "Watsonville", "Organic"),
+  v("Pacific Rare Plant Nursery", "Aptos", "Conventional"),
+  v("Phil Foster Ranch (Pinnacle)", "Hollister", "Organic"),
+  v("Prevedelli Farms", "Watsonville", "Organic"),
+  v("Pulido Farms", "Hollister", "Conventional"),
+  v("Rancho Padre Farms", "Exeter", "Conventional"),
+  v("Rocky Oaks Goat Creamery", "Clovis", "N/A"),
+  v("Rodoni Farms", "Santa Cruz", "Conventional"),
+  v("Santa Rosa Flowers", "Watsonville", "Conventional"),
+  v("Schletewitz Family Farms", "Sanger", "Conventional"),
+  v("Schoch Family Farmstead", "Salinas", "N/A"),
+  v("Spade & Plow Organics", "San Martin", "Organic"),
+  v("Stackhouse Orchards", "Hickman", "Conventional"),
+  v("Sumano Mushrooms", "San Juan Bautista", "Organic"),
+  v("Sweet Elena’s Bakery", "Sand City", "N/A"),
+  v("Triple Delight Blueberries", "Caruthers", "Conventional/Organic"),
+  v("Trellis and Vine", "Santa Cruz", "N/A"),
+  v("Wise Goat Organics", "Hollister", "N/A"),
+  v("Zen Natural Foods", "Fresno", "N/A"),
+  v("Zena Foods", "Sacramento", "N/A"),
+];
+const SCCFM_DIRECTORY = `${SCCFM}/vendors/`;
+const SCCFM_DIRECTORY_NOTE =
+  "From the operator's vendor directory, which is undated and does not include every stall its own market pages name.";
+const DOWNTOWN_VENDORS: Vendor[] = [
+  v("Apricot King Orchards", "Hollister", "Farmer"),
+  v("Blossoms Farm", "Aromas and Moss Landing", "Farmer"),
+  v("Blue Heron Farms", "Watsonville", "Farmer"),
+  v("Brokaw Nursery", "Watsonville", "Farmer"),
+  v("Casalegno Family Farm", "Soquel", "Farmer"),
+  v("Cavanaugh Color", "Watsonville", "Farmer"),
+  v("Companion Bakers", "Santa Cruz", "Artisan"),
+  v("Delicious Crepes", "San Jose", "Artisan"),
+  v("Dirty Girl Produce", "Santa Cruz", "Farmer"),
+  v("Dos Hermanos Pupuseria", "Santa Cruz", "Artisan"),
+  v("Flowers at the Sea", "Moss Landing", "Farmer"),
+  v("Flying Disc Ranch", "Thermal", "Farmer"),
+  v("Fogline Farm", "Santa Cruz", "Farmer"),
+  v("Four Sisters Farm", "Aromas", "Farmer"),
+  v("Garden Variety Cheese", "Royal Oaks", "Farmer"),
+  v("Groundswell Farm", "Santa Cruz", "Farmer"),
+  v("H & H Fresh Fish Co., Inc.", "", "Artisan"),
+  v("Hakouya", "Santa Cruz", "Artisan"),
+  v("Hidden Fortress Coffee Roasting", "Royal Oaks", "Artisan"),
+  v("Il Biscotto", "Monterey", "Artisan"),
+  v("India Gourmet", "", "Artisan"),
+  v("JCG Farm", "Watsonville", "Farmer"),
+  v("Kashiwase Farms", "Winton", "Farmer"),
+  v("Ken’s Top Notch", "Reedly", "Farmer"),
+  v("La Vie Pure Food Collective", "", "Artisan"),
+  v("Live Earth Farm", "Watsonville", "Farmer"),
+  v("Molino Creek Farm", "Davenport", "Farmer"),
+  v("NahNa", "Boulder Creek", "Artisan"),
+  v("New Natives", "Freedom", "Farmer"),
+  v("Pacific Rare Plants", "Watsonville", "Farmer"),
+  v("Penny Ice Creamery", "Sant Cruz", "Artisan"),
+  v("Pinnacle Farm", "San Juan Bautista", "Farmer"),
+  v("Rodoni Farms", "Santa Cruz", "Farmer"),
+  v("RoliRoti Gourmet Rotisserie", "", "Artisan"),
+  v("Santa Cruz Permaculture", "Santa Cruz", "Farmer"),
+  v("Stackhouse Brothers Orchards", "Hickman", "Farmer"),
+  v("Sumano’s Organic Mushrooms", "San Juan Bautista", "Farmer"),
+  v("Switch Bakery", "Monterey", "Artisan"),
+  v("Tía Beré", "Watsonville", "Artisan"),
+  v("Triple Delight Blueberries", "Caruthers", "Farmer"),
+  v("Twin Girls Farm", "", "Farmer"),
+  v("Wild Stone Bakery", "Boulder Creek", "Artisan"),
+];
+const WESTSIDE_VENDORS: Vendor[] = [
+  v("Apricot King Orchards", "Hollister", "Farmer"),
+  v("Billy Bob Orchard", "Watsonville", "Farmer"),
+  v("Blossoms Farm", "Aromas and Moss Landing", "Farmer"),
+  v("Blue House Farm", "Pescadero", "Farmer"),
+  v("Companion Bakers", "Santa Cruz", "Artisan"),
+  v("Dos Hermanos Pupuseria", "Santa Cruz", "Artisan"),
+  v("Epicenter", "La Selva", "Farmer"),
+  v("Flowers at the Sea", "Moss Landing", "Farmer"),
+  v("Flying Disc Ranch", "Thermal", "Farmer"),
+  v("Fogline Farm", "Santa Cruz", "Farmer"),
+  v("H & H Fresh Fish Co., Inc.", "", "Artisan"),
+  v("Hakouya", "Santa Cruz", "Artisan"),
+  v("Herman Ranches", "Madera", "Farmer"),
+  v("Il Biscotto", "Monterey", "Artisan"),
+  v("JCG Farm", "Watsonville", "Farmer"),
+  v("Kashiwase Farms", "Winton", "Farmer"),
+  v("Ken’s Top Notch", "Reedly", "Farmer"),
+  v("La Vie Pure Food Collective", "", "Artisan"),
+  v("Live Earth Farm", "Watsonville", "Farmer"),
+  v("New Natives", "Freedom", "Farmer"),
+  v("Pleasure Point Bakery", "Santa Cruz", "Artisan"),
+  v("Rodoni Farms", "Santa Cruz", "Farmer"),
+  v("Santa Cruz Balsalmics", "Capitola", "Artisan"),
+  v("Santa Cruz Permaculture", "Santa Cruz", "Farmer"),
+  v("Sumano’s Organic Mushrooms", "San Juan Bautista", "Farmer"),
+  v("Switch Bakery", "Monterey", "Artisan"),
+  v("Tía Beré", "Watsonville", "Artisan"),
+  v("Triple Delight Blueberries", "Caruthers", "Farmer"),
+  v("Twin Girls Farm", "", "Farmer"),
+];
+const LIVE_OAK_VENDORS: Vendor[] = [
+  v("Beckmann’s Old World Bakery", "Santa Cruz", "Artisan"),
+  v("Billy Bob Orchard", "Watsonville", "Farmer"),
+  v("Blossoms Farm", "Aromas and Moss Landing", "Farmer"),
+  v("Brokaw Nursery", "Watsonville", "Farmer"),
+  v("Cavanaugh Color", "Watsonville", "Farmer"),
+  v("Companion Bakers", "Santa Cruz", "Artisan"),
+  v("Delicious Crepes", "San Jose", "Artisan"),
+  v("Dirty Girl Produce", "Santa Cruz", "Farmer"),
+  v("Dos Hermanos Pupuseria", "Santa Cruz", "Artisan"),
+  v("Flowers at the Sea", "Moss Landing", "Farmer"),
+  v("Fogline Farm", "Santa Cruz", "Farmer"),
+  v("H & H Fresh Fish Co., Inc.", "", "Artisan"),
+  v("Hakouya", "Santa Cruz", "Artisan"),
+  v("Herman Ranches", "Madera", "Farmer"),
+  v("Hidden Fortress Coffee Roasting", "Royal Oaks", "Artisan"),
+  v("Il Biscotto", "Monterey", "Artisan"),
+  v("JCG Farm", "Watsonville", "Farmer"),
+  v("Kashiwase Farms", "Winton", "Farmer"),
+  v("Ken’s Top Notch", "Reedly", "Farmer"),
+  v("La Vie Pure Food Collective", "", "Artisan"),
+  v("New Natives", "Freedom", "Farmer"),
+  v("Pleasure Point Bakery", "Santa Cruz", "Artisan"),
+  v("Rodoni Farms", "Santa Cruz", "Farmer"),
+  v("Rooster Ridge Farm", "Aptos", "Farmer"),
+  v("Santa Cruz Balsalmics", "Capitola", "Artisan"),
+  v("Sea to Sky Farm", "Santa Cruz", "Farmer"),
+  v("Serendipity Farms", "Aromas", "Farmer"),
+  v("Stackhouse Brothers Orchards", "Hickman", "Farmer"),
+  v("Sumano’s Organic Mushrooms", "San Juan Bautista", "Farmer"),
+  v("Tía Beré", "Watsonville", "Artisan"),
+  v("Tory Farm", "Dinuba", "Farmer"),
+];
+const SCOTTS_VALLEY_VENDORS: Vendor[] = [
+  v("Beckmann’s Old World Bakery", "Santa Cruz", "Artisan"),
+  v("Billy Bob Orchard", "Watsonville", "Farmer"),
+  v("Casalegno Family Farm", "Soquel", "Farmer"),
+  v("Companion Bakers", "Santa Cruz", "Artisan"),
+  v("Dos Hermanos Pupuseria", "Santa Cruz", "Artisan"),
+  v("Groundswell Farm", "Santa Cruz", "Farmer"),
+  v("H & H Fresh Fish Co., Inc.", "", "Artisan"),
+  v("Herman Ranches", "Madera", "Farmer"),
+  v("Hidden Fortress Coffee Roasting", "Royal Oaks", "Artisan"),
+  v("Il Biscotto", "Monterey", "Artisan"),
+  v("JCG Farm", "Watsonville", "Farmer"),
+  v("Ken’s Top Notch", "Reedly", "Farmer"),
+  v("La Vie Pure Food Collective", "", "Artisan"),
+  v("Laurel Canyon Farm", "Soquel", "Farmer"),
+  v("Live Earth Farm", "Watsonville", "Farmer"),
+  v("Rodoni Farms", "Santa Cruz", "Farmer"),
+  v("Stackhouse Brothers Orchards", "Hickman", "Farmer"),
+  v("Triple Delight Blueberries", "Caruthers", "Farmer"),
+  v("Twins Kitchen", "Santa Cruz", "Artisan"),
+];
+const FELTON_VENDORS: Vendor[] = [
+  v("Apricot King Orchards", "Hollister", "Farmer"),
+  v("Beckmann’s Old World Bakery", "Santa Cruz", "Artisan"),
+  v("Casalegno Family Farm", "Soquel", "Farmer"),
+  v("Companion Bakers", "Santa Cruz", "Artisan"),
+  v("Delicious Crepes", "San Jose", "Artisan"),
+  v("Dos Hermanos Pupuseria", "Santa Cruz", "Artisan"),
+  v("H & H Fresh Fish Co., Inc.", "", "Artisan"),
+  v("Il Biscotto", "Monterey", "Artisan"),
+  v("India Gourmet", "", "Artisan"),
+  v("Kashiwase Farms", "Winton", "Farmer"),
+  v("La Vie Pure Food Collective", "", "Artisan"),
+  v("Live Earth Farm", "Watsonville", "Farmer"),
+  v("Pacific Rare Plants", "Watsonville", "Farmer"),
+  v("Penny Ice Creamery", "Sant Cruz", "Artisan"),
+  v("Rodoni Farms", "Santa Cruz", "Farmer"),
+  v("RoliRoti Gourmet Rotisserie", "", "Artisan"),
+  v("Schletewitz Family Farm", "Sanger", "Farmer"),
+  v("Stackhouse Brothers Orchards", "Hickman", "Farmer"),
+  v("Triple Delight Blueberries", "Caruthers", "Farmer"),
+  v("Twins Kitchen", "Santa Cruz", "Artisan"),
+];
+
 export const santaCruzCountyMarkets: FarmersMarket[] = [
   {
     id: "downtown-santa-cruz",
@@ -652,11 +934,16 @@ export const santaCruzCountyMarkets: FarmersMarket[] = [
       "On Cedar Street from Walnut Avenue to Church Street, around the corner onto Church toward the library, plus the small parking lot there.",
     organizer: SCCFM_ORG,
     officialUrl: `${SCCFM}/markets/downtown-santa-cruz/`,
-    parking: ["The operator's Downtown page publishes no parking guidance."],
-    payment: [
-      SCCFM_EBT,
-      `${SCCFM_MARKET_MATCH} A Downtown-only boost to $20 ran through March 2026; the operator says the cap returned to $15 in April.`,
+    parking: [],
+    payment: ["You can enrol in CalFresh at the Downtown market on any Wednesday."],
+    about: [
+      "The operator's largest and oldest market, running since 1990 one block off Pacific Avenue. Many of its farms, the operator says, were and remain pillars of the organic and ecological farming movement.",
+      "By the operator's account it also has the county's widest spread of cultural food: naan and curry, Argentinian empanadas, Eritrean dishes, Salvadoran pupusas, traditional Italian cookies, Oaxacan dishes and long-ferment breads and pastries.",
+      "Two things only this market has: a free bike valet, and a Veggie Valet at the information booth that holds your bags while you fetch the car or keep shopping. There is no scheduled music downtown — buskers only.",
     ],
+    vendors: DOWNTOWN_VENDORS,
+    vendorsUrl: SCCFM_DIRECTORY,
+    vendorsNote: SCCFM_DIRECTORY_NOTE,
     seasonal: [
       "Every Wednesday, year round, rain or shine.",
       "The market moved to Cedar and Church on 4 June 2025. The operator calls it home until a permanent market is built, which it expects to break ground in 2027 or 2028.",
@@ -679,11 +966,15 @@ export const santaCruzCountyMarkets: FarmersMarket[] = [
     organizer: SCCFM_ORG,
     officialUrl: `${SCCFM}/markets/westside/`,
     parking: ["The operator describes \"an abundance of free parking\"."],
-    payment: [SCCFM_EBT, SCCFM_MARKET_MATCH],
-    seasonal: [
-      "Every Saturday, year round, rain or shine. Live music from 10am.",
-      "The operator's 2026 gift fair at this market is on Saturday 12 December.",
+    payment: [],
+    seasonal: ["Every Saturday, year round, rain or shine. Live music from 10am."],
+    about: [
+      "A community hub for nearly 20 years, serving the west end of Santa Cruz, Bonny Doon, the North Coast and UC Santa Cruz. Produce, artisan food, body products, garden starts, sustainable seafood, pasture-raised meat, flowers and eggs, plus cook-to-order meals and a full espresso bar run by Foolhardy Coffee.",
+      "The operator pitches it as the start of a day out at Natural Bridges, Wilder Ranch or further up the coast. Four times a year a Gift Fair adds 10 to 12 local makers; the next date it lists is 12 December.",
     ],
+    vendors: WESTSIDE_VENDORS,
+    vendorsUrl: SCCFM_DIRECTORY,
+    vendorsNote: SCCFM_DIRECTORY_NOTE,
     sources: [{ label: "SCCFM — Westside market", url: `${SCCFM}/markets/westside/` }],
   },
   {
@@ -701,12 +992,19 @@ export const santaCruzCountyMarkets: FarmersMarket[] = [
     mapQuery: "15th Ave & East Cliff Dr, Santa Cruz, CA",
     organizer: SCCFM_ORG,
     officialUrl: `${SCCFM}/markets/live-oakeastside/`,
-    parking: ["The operator's Live Oak page publishes no parking guidance."],
-    payment: [SCCFM_EBT, SCCFM_MARKET_MATCH],
+    parking: [],
+    payment: [],
     seasonal: [
       "Every Sunday, year round, rain or shine. Live music from 10am.",
-      "Día de la Familia on the third Sunday of each month: Live Oak School District families and staff get a $10 produce-token gift.",
+      "Día de la Familia on the third Sunday of each month: Live Oak School District families and staff get a $10 produce-token gift, with a market hunt and face painting.",
     ],
+    about: [
+      "Started in 2000 and, in the operator's words, loved and depended on by Live Oak, Pleasure Point and Capitola — busy with families, cyclists and beachgoers. Tree-ripened fruit, greens, bread, nuts and legumes, sustainable seafood, pasture-raised organic meat and flowers.",
+      "It is the county's Sunday brunch market: Michoacán dishes, focaccia breakfast sandwiches from Melrose, crepes and pupusas, with coffee from Watsonville's Hidden Fortress.",
+    ],
+    vendors: LIVE_OAK_VENDORS,
+    vendorsUrl: SCCFM_DIRECTORY,
+    vendorsNote: SCCFM_DIRECTORY_NOTE,
     sources: [{ label: "SCCFM — Live Oak/Eastside market", url: `${SCCFM}/markets/live-oakeastside/` }],
   },
   {
@@ -733,8 +1031,15 @@ export const santaCruzCountyMarkets: FarmersMarket[] = [
       "Every Saturday, year round, rain or shine.",
       "Knife and garden-tool sharpening runs 8–11:30am every Saturday.",
     ],
+    about: [
+      "The operator says it has nearly 90 vendors: produce, flowers and specialty foods from small regional farms and makers, many certified organic or sustainable — eggs, cheese, seafood, olive oil, baked goods, fermented foods, mushrooms, plants and cut flowers.",
+      "By the operator's account it was voted America's Favorite Farmers Market in California three years running, 2011 to 2013, and was named Best Farmers Market in Good Times' 2025 Best of Santa Cruz County.",
+    ],
+    vendors: APTOS_VENDORS,
+    vendorsUrl: `${MBCFM}/aptos-farmers-market/aptos-vendors`,
     sources: [
       { label: "MBCFM — Aptos Farmers Market", url: MBCFM_APTOS },
+      { label: "MBCFM — Aptos vendor list", url: `${MBCFM}/aptos-farmers-market/aptos-vendors` },
       { label: "MBCFM — Aptos location", url: MBCFM_APTOS_LOCATION },
       { label: "MBCFM — Services (EBT, Big Bucks)", url: MBCFM_SERVICES },
       { label: "MBCFM — homepage (EBT hours)", url: `${MBCFM}/` },
@@ -755,12 +1060,18 @@ export const santaCruzCountyMarkets: FarmersMarket[] = [
     streetAddress: "219 Mount Hermon Road",
     organizer: SCCFM_ORG,
     officialUrl: `${SCCFM}/markets/scotts-valley/`,
-    parking: ["The operator's Scotts Valley page publishes no parking guidance."],
-    payment: [SCCFM_EBT, SCCFM_MARKET_MATCH],
+    parking: [],
+    payment: [],
     seasonal: [
       "Seasonal: Saturdays from 2 May to 21 November 2026. The last market of the season is Saturday 21 November.",
       "New location since 27 June 2026: the market moved to Graham Plaza ahead of renovation work at its old site, the Boys and Girls Club.",
     ],
+    about: [
+      "Started in 2009 with the City of Scotts Valley. Organic vegetables, fruit, herbs, pasture-raised eggs, flowers, meat, bread, seafood, pastries, an espresso bar and ready-to-eat food, with a local band every week.",
+    ],
+    vendors: SCOTTS_VALLEY_VENDORS,
+    vendorsUrl: SCCFM_DIRECTORY,
+    vendorsNote: SCCFM_DIRECTORY_NOTE,
     sources: [{ label: "SCCFM — Scotts Valley market", url: `${SCCFM}/markets/scotts-valley/` }],
   },
   {
@@ -778,12 +1089,19 @@ export const santaCruzCountyMarkets: FarmersMarket[] = [
     streetAddress: "120 Russell Avenue",
     organizer: SCCFM_ORG,
     officialUrl: `${SCCFM}/markets/felton/`,
-    parking: ["The operator's Felton page publishes no parking guidance."],
-    payment: [SCCFM_EBT, SCCFM_MARKET_MATCH],
+    parking: [],
+    payment: [],
     seasonal: [
       "Seasonal: Tuesdays from 5 May to 27 October 2026. The last market of the season is Tuesday 27 October.",
       "The operator cancels the Felton market when it reaches 95°F or the National Weather Service issues a Heat Advisory or Excessive Heat Warning. Check before you go on a hot day.",
     ],
+    about: [
+      "Running since 1987, the second-longest-running market in the county; SCCFM took it over in 2009. A family market for the San Lorenzo Valley, with a local band each week.",
+      "Farms the operator names include Casalegno, a centennial family farm (heritage garlic, beans, summer squash, heirloom tomatoes, early pears), Triple Delight for blueberries in late spring, Rodoni, Live Earth, Kashiwase and Stackhouse. Food includes H&H Fresh Fish, RoliRoti rotisserie chicken, Penny Ice Creamery, Beckmann's and Companion bakeries, Pakistani food from Roti and blue and yellow corn tortillas from Mexy.",
+    ],
+    vendors: FELTON_VENDORS,
+    vendorsUrl: SCCFM_DIRECTORY,
+    vendorsNote: SCCFM_DIRECTORY_NOTE,
     sources: [{ label: "SCCFM — Felton market", url: `${SCCFM}/markets/felton/` }],
   },
 ];
@@ -804,6 +1122,63 @@ export const santaCruzSkipped: { name: string; reason: string }[] = [
     reason: "No operator or City of Capitola page shows a farmers market running in 2026.",
   },
 ];
+
+// ---------------------------------------------------------------------------
+// Operators. Rules that hold across all of one operator's markets — EBT,
+// Market Match, holiday closures — are written once here and rendered once per
+// page, instead of being repeated under every market. A market's own `payment`
+// carries only what differs from its operator's rule.
+
+export interface OperatorNote {
+  name: string;
+  url: string;
+  notes: string[];
+  sources: Source[];
+}
+
+/** Keyed by `organizer.url`. Operators with a single market need no entry. */
+export const OPERATOR_NOTES: Record<string, OperatorNote> = {
+  [EH_ORG.url]: {
+    name: EH_ORG.name,
+    url: EH_ORG.url,
+    notes: [
+      "A nonprofit founded in 2002 that runs six markets in Monterey County. It says more than half its farmers are certified organic and come from within 100 miles.",
+      `${EH_BENEFITS} SunBucks are accepted too.`,
+      `${EH_MATCH} Seaside's match is larger — see that market.`,
+      "Fresh Rx: at the Natividad and Salinas Valley Health markets, patients whose doctors prescribe produce redeem it for $35 of fruit and vegetables a week.",
+      "Only service animals are allowed. The operator asks that pets be walked around the outside of the market, on the sidewalk.",
+      "Its Pacific Grove, Marina, Alisal and Natividad pages say they close for about two weeks around Christmas and New Year's Day; the open-today line at the top of this page does not know those dates.",
+    ],
+    sources: [{ label: "Everyone's Harvest", url: EH_ORG.url }],
+  },
+  [SCCFM_ORG.url]: {
+    name: SCCFM_ORG.name,
+    url: SCCFM_ORG.url,
+    notes: [
+      "A nonprofit that came together in autumn 1990, after the Loma Prieta earthquake, and now runs five certified markets representing more than 100 family farms, food makers and artisans.",
+      SCCFM_EBT,
+      SCCFM_MARKET_MATCH,
+      "WIC and Senior Nutrition coupons are taken by eligible farms at all its markets from May to December. EBT tokens are worth $1 each and no change is given.",
+      "Certified means certified by the state to sell at a certified farmers market — the operator stresses that it does not mean certified organic.",
+      "The operator publishes no pet policy.",
+    ],
+    sources: [{ label: "Santa Cruz Community Farmers' Markets", url: SCCFM_ORG.url }],
+  },
+  [MBCFM]: {
+    name: "Monterey Bay Certified Farmers Markets",
+    url: MBCFM,
+    notes: [
+      "EBT / CalFresh and card-bought Big Bucks are offered only at its Friday Monterey market and its Saturday Aptos market, and only until 11am. Its homepage and its services page disagree on the start, 9am against 8am, so come between 9 and 11.",
+      "Big Bucks are bought with a credit card at the Information Booth and every vendor takes them like cash.",
+      "Founded in 1976, it requires its farmers to sell only what they grow themselves.",
+      "Animals are not allowed except service animals, which the operator attributes to the California Health and Safety Code.",
+    ],
+    sources: [
+      { label: "MBCFM — Services (EBT, Big Bucks)", url: MBCFM_SERVICES },
+      { label: "MBCFM — homepage (EBT hours)", url: `${MBCFM}/` },
+    ],
+  },
+};
 
 /**
  * What MBCFM said was arriving on market tables in its end-of-season post
