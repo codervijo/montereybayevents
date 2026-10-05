@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { regionalEvents } from './src/data/events-2026';
+import { pageImageUrls } from './src/data/visuals';
 
 // Hand-set lastmod for non-event pages. Same rule as `updated` on an event
 // row: only pages whose content we know changed, dated by hand in the commit
@@ -10,7 +11,15 @@ const GUIDE_LASTMOD = {
   '/laguna-seca/camping/': '2026-08-21',
   '/monterey-farmers-market/': '2026-10-03',
   '/santa-cruz-farmers-market/': '2026-10-03',
+  '/laguna-seca-map/': '2026-10-05',
+  '/monterey-car-week-map/': '2026-10-05',
+  '/monterey-events-calendar/': '2026-10-05',
 };
+
+// <image:image> entries for the pages whose point is an image — the maps and
+// the printable calendars. Same registry the pages and their ImageObject
+// JSON-LD read (src/data/visuals.ts), so the three cannot list different files.
+const PAGE_IMAGES = pageImageUrls();
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -40,9 +49,12 @@ export default defineConfig({
       // a usable signal. Deriving from git would be worse than either, because
       // all 54 regional pages come from one data file and would share a date.
       serialize(item) {
+        const path = new URL(item.url).pathname;
+        const images = PAGE_IMAGES[path];
+        if (images) item = { ...item, img: images.map((url) => ({ url })) };
         // Guide pages carry their own hand-set date, on the same terms as an
         // event row's `updated`: set it in the commit that changes the page.
-        const guide = GUIDE_LASTMOD[new URL(item.url).pathname];
+        const guide = GUIDE_LASTMOD[path];
         if (guide) return { ...item, lastmod: `${guide}T00:00:00-07:00` };
 
         const m = item.url.match(/\/event\/([^/]+)\/$/);

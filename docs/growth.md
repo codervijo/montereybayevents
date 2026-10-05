@@ -174,3 +174,12 @@ https://search.google.com/search-console directly.
 - **Action:** Monterey page widened to 14 county markets, Peninsula first; Santa Cruz page built with 6; shared template; linked from `/events/` and from each other.
 - **Result:** TBD — review 2026-10-31
 - **Learning:** TBD — watch whether the Monterey page's city queries suffer from the county title. If they do, a city-only H1/title split is the remedy, not a new URL.
+
+## 2026-10-05 — v2.L + v2.M + v2.N: original maps and a printable calendar as image-search entry points
+- **Status:** active
+- **Hypothesis:** Three queries are visual by intent — "laguna seca map" (KD 0, SV 150, seasonal >500), "monterey car week map" (low baseline, seasonal), "monterey events calendar" (KD 5, SV 150). The ranking assets are images: the raceway's own map is a JPG with no surrounding HTML, and there is no current Car Week venue map at all (the County's ArcGIS layer is a 2022 app). Original, accurate, crawlable images with real page text around them should win Google Images placements and the web results, and the internal links from ~120 existing pages should get them crawled quickly.
+- **KPI:** GSC impressions/clicks/position for the three URLs on their target queries; GSC search-type=Image impressions for `/maps/*.png`; whether `/events/` loses impressions on "monterey events calendar" variants after the calendar page is indexed (cannibalisation check)
+- **Baseline:** 0 for all three URLs (new). `/events/` current calendar-query impressions: pull from GSC on deploy day.
+- **Action:** Three pages + 8 primary images (WebP srcset, PNG download, ImageObject, image sitemap); links from footer, homepage, hubs, all event pages, traffic, free, camping, farmers markets.
+- **Result:** TBD — review 2026-11-02
+- **Learning:** TBD — if Laguna Seca image impressions arrive before web impressions, image-first is a repeatable pattern for venue queries (Concours lawn, county fairgrounds). If `/events/` drops on calendar queries, merge signals rather than keeping two pages.

@@ -1,0 +1,89 @@
+{
+  "laguna-seca-map-turns-parking-camping": {
+    "width": 2000,
+    "height": 2564,
+    "widths": [
+      800,
+      1400,
+      2000
+    ]
+  },
+  "laguna-seca-map-circuit-mobile": {
+    "width": 1200,
+    "height": 1378,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "laguna-seca-track-map-turn-numbers": {
+    "width": 1600,
+    "height": 1734,
+    "widths": [
+      800,
+      1600
+    ]
+  },
+  "monterey-car-week-map-venues": {
+    "width": 2640,
+    "height": 1894,
+    "widths": [
+      800,
+      1400,
+      2000
+    ]
+  },
+  "monterey-car-week-map-venues-mobile": {
+    "width": 1400,
+    "height": 1152,
+    "widths": [
+      800,
+      1400
+    ]
+  },
+  "monterey-events-calendar-august-2026": {
+    "width": 1600,
+    "height": 1470,
+    "widths": [
+      800,
+      1600
+    ]
+  },
+  "monterey-events-calendar-september-2026": {
+    "width": 1600,
+    "height": 1350,
+    "widths": [
+      800,
+      1600
+    ]
+  },
+  "monterey-events-calendar-october-2026": {
+    "width": 1600,
+    "height": 1350,
+    "widths": [
+      800,
+      1600
+    ]
+  },
+  "monterey-events-calendar-november-2026": {
+    "width": 1600,
+    "height": 1270,
+    "widths": [
+      800,
+      1600
+    ]
+  },
+  "monterey-events-calendar-december-2026": {
+    "width": 1600,
+    "height": 1350,
+    "widths": [
+      800,
+      1600
+    ]
+  },
+  "og-monterey-events-calendar": {
+    "width": 1200,
+    "height": 630,
+    "widths": []
+  }
+}

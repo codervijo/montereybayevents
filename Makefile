@@ -18,7 +18,13 @@ og:                ## Re-render the Open Graph cards into public/og/ (commit the
 og-check:          ## Fail if any committed OG card is stale or missing
 	pnpm og:check
 
-.PHONY: og og-check
+maps:              ## Re-render the map + calendar images into public/maps/ (commit the result)
+	pnpm maps
+
+maps-check:        ## Fail if any committed map/calendar image is stale or missing
+	pnpm maps:check
+
+.PHONY: og og-check maps maps-check
 
 # Forward every target to the parent Makefile with proj set to this project.
 # `make buildsh` (parent) drops you into the dev container; `make run` etc.

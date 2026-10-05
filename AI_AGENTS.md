@@ -292,6 +292,20 @@ from `v2` forward, where `v2.A` is a decisions-lock phase with no build work.
   restructure. Astro's own `redirects` config can't replace it — under
   `output: 'static'` that emits a meta-refresh HTML page, which is a 200.
 - **Versioning**: two-level `vN` / `vN.X` — see Versioning section above and `sites/portfolio/AI_AGENTS.md` for the canonical statement.
+- **Event-data edits must regenerate the committed images.** The map and
+  calendar images in `public/maps/` (and `src/data/mapImages.json`) are
+  rendered by `scripts/gen-maps.mjs` and committed — `astro build` never
+  touches them. Any commit that changes an event's name or dates in
+  `src/data/events-2026.ts`, or a Car Week venue in `src/data/venues.ts` /
+  `src/data/carWeekVenues.ts`, must also run `make maps` inside the sites1
+  container and commit the regenerated files in the same commit, then confirm
+  with `make maps-check`. **`maps-check` is not part of `make test`**, so
+  nothing fails on its own — a stale calendar poster ships silently. Same
+  rule for OG cards: `make og` / `make og-check` after name or date changes.
+  ```bash
+  docker exec -w /usr/src/app/montereybayevents.com sites1 make maps
+  docker exec -w /usr/src/app/montereybayevents.com sites1 make maps-check
+  ```
 
 ## Out of scope / don't touch
 

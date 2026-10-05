@@ -1,0 +1,71 @@
+---
+// A primary visual as a crawlable <img> inside a <figure>: WebP srcset for the
+// page, the full-resolution PNG one tap away (and as a download), width/height
+// from the generator's manifest so nothing shifts while it loads, and a
+// visible caption. Optional `mobile` swaps in a tighter crop on phones via
+// <picture> art direction; the canonical <img> stays the full image.
+//
+// `eager` is for the one above-the-fold visual per page: it is the LCP element,
+// so it must not be lazy-loaded and gets fetchpriority="high".
+import { dimsOf, pngPath, srcset, defaultSrc, webpPath, type Visual } from "../data/visuals";
+
+interface Props {
+  visual: Visual;
+  mobile?: Visual | undefined;
+  eager?: boolean;
+  sizes?: string;
+  id?: string;
+}
+
+const { visual, mobile, eager = false, sizes = "(min-width: 1024px) 960px, 100vw", id } = Astro.props;
+const d = dimsOf(visual.key);
+const png = pngPath(visual.key);
+const md = mobile ? dimsOf(mobile.key) : undefined;
+---
+
+<figure id={id} class="mt-8">
+  <a href={png} class="block border border-border/70 bg-surface" aria-label={`Open the full-size image: ${visual.title}`}>
+    <picture>
+      {
+        mobile && md && (
+          <source
+            media="(max-width: 640px)"
+            type="image/webp"
+            srcset={md.widths.map((w) => `${webpPath(mobile.key, w)} ${w}w`).join(", ")}
+            sizes="100vw"
+            width={md.width}
+            height={md.height}
+          />
+        )
+      }
+      <img
+        src={defaultSrc(visual.key)}
+        srcset={srcset(visual.key)}
+        sizes={sizes}
+        width={d.width}
+        height={d.height}
+        alt={visual.alt}
+        loading={eager ? "eager" : "lazy"}
+        fetchpriority={eager ? "high" : "auto"}
+        decoding={eager ? "sync" : "async"}
+        class="block h-auto w-full"
+      />
+    </picture>
+  </a>
+  <figcaption class="mt-3 text-sm leading-relaxed text-muted-foreground">
+    {visual.caption}{" "}
+    <a href={png} download class="whitespace-nowrap text-brass hover:underline">
+      Download PNG ({d.width}×{d.height})
+    </a>
+    {
+      mobile && (
+        <>
+          {" · "}
+          <a href={pngPath(mobile.key)} download class="whitespace-nowrap text-brass hover:underline">
+            phone version
+          </a>
+        </>
+      )
+    }
+  </figcaption>
+</figure>

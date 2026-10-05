@@ -1,0 +1,405 @@
+---
+// /monterey-car-week-map/ — every Monterey Car Week venue the site covers, on
+// one map, with each pin linked to the event pages that already exist.
+// Targets "monterey car week map".
+//
+// Built entirely from data the site already holds: pins from
+// src/data/carWeekVenues.ts (OSM coordinates), which events sit at each pin
+// from src/data/venues.ts via src/lib/carWeekMap.ts, days and admission from
+// src/data/events.ts. Change an event's venue there and both this page and
+// the map image (after `make maps`) follow.
+//
+// Distances are straight-line, computed from the pin coordinates, and labelled
+// as such. No drive times anywhere: Car Week traffic makes any typical figure
+// wrong in exactly the week someone would use it.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import MapFigure from "../components/MapFigure.astro";
+import { VISUALS } from "../data/visuals";
+import { buildImageObject, buildBreadcrumbs, buildFaq, graph } from "../lib/imageSchema";
+import { AREAS, mapVenues, type MapVenue } from "../data/carWeekVenues";
+import { eventsAt, unpinnedEvents } from "../lib/carWeekMap";
+import { allEventDetails, mapUrl, eventSlug } from "../data/eventIndex";
+import { schedule } from "../data/events";
+
+const site = "https://montereybayevents.com";
+const title = "Monterey Car Week Map — Every Venue, Town by Town";
+const description =
+  "Every Monterey Car Week venue on one map: Pebble Beach, Carmel, Monterey, Seaside, Pacific Grove, Laguna Seca and Carmel Valley, with each event linked.";
+const canonical = `${site}/monterey-car-week-map/`;
+const ogImage = `${site}/maps/og-monterey-car-week-map.png`;
+
+const miles = (a: MapVenue, b: MapVenue) => {
+  const R = 3958.8, rad = Math.PI / 180;
+  const dLat = (b.lat - a.lat) * rad, dLon = (b.lon - a.lon) * rad;
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+};
+const pin = (id: string) => mapVenues.find((v) => v.id === id)!;
+const lodge = pin("lodge-at-pebble-beach");
+const laguna = pin("laguna-seca");
+const quail = pin("quail-lodge");
+const downtown = pin("custom-house-plaza");
+const bayonet = pin("bayonet-black-horse");
+const ocean = pin("ocean-avenue-carmel");
+const fmt = (n: number) => n.toFixed(1);
+
+const pinsWithEvents = mapVenues.map((v) => ({ v, events: eventsAt(v) }));
+const pinnedCount = pinsWithEvents.reduce((n, x) => n + x.events.length, 0);
+const totalEvents = allEventDetails.length;
+
+const distances = [
+  [lodge, laguna], [lodge, quail], [quail, laguna], [downtown, lodge], [downtown, laguna], [bayonet, lodge], [lodge, ocean],
+].map(([a, b]) => ({ a: a!, b: b!, d: miles(a!, b!) }));
+
+/** Which areas had something on, per day of Car Week 2026. */
+const areaOf = (title: string) =>
+  mapVenues.find((v) => eventsAt(v).some((e) => e.title === title))?.area;
+const days = schedule.map((d) => {
+  const counts = new Map<string, number>();
+  let unpinned = 0;
+  for (const e of d.events) {
+    const a = areaOf(e.title);
+    if (a) counts.set(a, (counts.get(a) ?? 0) + 1);
+    else unpinned++;
+  }
+  return { ...d, areas: AREAS.filter((a) => counts.has(a)).map((a) => ({ a, n: counts.get(a)! })), unpinned, total: d.events.length };
+});
+const busiest = [...days].sort((x, y) => y.areas.length - x.areas.length || y.total - x.total)[0]!;
+
+const anchor = (area: string) => area.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+
+const faq = [
+  {
+    q: "Where is Monterey Car Week?",
+    a: `Across the whole Monterey Peninsula and beyond, not in one place. The ${totalEvents} Car Week 2026 events on this site ran at ${mapVenues.length} fixed venues in ${AREAS.length} areas, from Pacific Grove and Pebble Beach on the coast to WeatherTech Raceway Laguna Seca on Highway 68 and Quail Lodge in Carmel Valley.`,
+  },
+  {
+    q: "How far is Laguna Seca from Pebble Beach?",
+    a: `About ${fmt(miles(lodge, laguna))} miles in a straight line from the Lodge at Pebble Beach to the raceway, measured between the two pins on our map. The road distance is longer and Car Week traffic makes any drive time unreliable; check the traffic page before you set off.`,
+  },
+  {
+    q: "Which Car Week events are at Pebble Beach?",
+    a: `${pinsWithEvents.filter((x) => x.v.area === "Pebble Beach").flatMap((x) => x.events.map((e) => e.title)).join("; ")}.`,
+  },
+  {
+    q: "When is Monterey Car Week 2027?",
+    a: "The only 2027 date its organiser has published so far is the Pebble Beach Concours d'Elegance on Sunday 15 August 2027. No one publishes the overall window yet, so we do not give one; the Car Week page tracks each 2027 date as it is announced.",
+  },
+  {
+    q: "Is there an official Monterey Car Week map?",
+    a: "There is no single organiser for Car Week, so there is no single official map. Monterey County has published an interactive Car Week map in past years; the copy of its event layer we found still described 2022. Each venue on ours is the one the event's own organiser publishes.",
+  },
+  {
+    q: "Why are some Car Week events missing from the map?",
+    a: `${unpinnedEvents.length} events on this site have no fixed public venue — rallies that start from an undisclosed location, tours on public roads, and brand houses whose organisers name only a town. Pinning them would invent a location, so they are listed under the map instead.`,
+  },
+];
+
+const crumbs = [
+  { name: "Home", url: `${site}/` },
+  { name: "Monterey Car Week", url: `${site}/monterey-car-week/` },
+  { name: "Car Week map", url: canonical },
+];
+
+const jsonLd = graph(
+  {
+    "@type": "WebPage",
+    "@id": canonical,
+    url: canonical,
+    name: title,
+    description,
+    primaryImageOfPage: { "@id": `${site}/maps/${VISUALS.carWeek!.key}.png#image` },
+    breadcrumb: buildBreadcrumbs(crumbs),
+  },
+  buildImageObject(VISUALS.carWeek!, {
+    pageUrl: canonical,
+    representative: true,
+    credit: "Monterey Bay Events; map data © OpenStreetMap contributors",
+  }),
+  {
+    "@type": "ItemList",
+    name: "Monterey Car Week venues",
+    numberOfItems: mapVenues.length,
+    itemListElement: pinsWithEvents.map(({ v, events }) => ({
+      "@type": "ListItem",
+      position: v.n,
+      item: {
+        "@type": "Place",
+        name: v.label,
+        ...(events[0]?.venue ? { address: events[0].venue.address } : {}),
+        geo: { "@type": "GeoCoordinates", latitude: v.lat, longitude: v.lon },
+        url: `${canonical}#${v.id}`,
+      },
+    })),
+  },
+  buildFaq(faq),
+);
+
+const h2 = "border-b border-border/70 pb-2 text-3xl text-brass";
+const p = "mt-5 text-base leading-relaxed text-muted-foreground";
+const a = "text-brass hover:underline";
+const dayRange = (e: (typeof allEventDetails)[number]) =>
+  e.days.length > 1 ? `${e.days[0]!.short}–${e.days[e.days.length - 1]!.short}` : e.days[0]!.short;
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Detail of a Monterey Car Week venue map: numbered pins across Monterey, Seaside and the airport area." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Detail of a Monterey Car Week venue map: numbered pins across Monterey, Seaside and the airport area." />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+  </Fragment>
+
+  <main class="mx-auto max-w-5xl px-5 py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <ol class="flex flex-wrap gap-2">
+        <li><a href="/" class="hover:text-brass">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/monterey-car-week/" class="hover:text-brass">Monterey Car Week</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-foreground">Map</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-7xl">
+      Monterey Car Week <span class="text-brass">map</span>
+    </h1>
+
+    <div class="max-w-3xl">
+      <p class="mt-7 text-lg leading-relaxed text-muted-foreground">
+        Car Week is not one event in one place. The {totalEvents} Car Week 2026
+        events on this site ran at {mapVenues.length} fixed venues in{" "}
+        {AREAS.length} areas: the Concours and its satellite events at Pebble
+        Beach, auctions in downtown Monterey and by the airport, Concorso
+        Italiano on Seaside's Bayonet course, the Quail in Carmel Valley, and
+        historic racing at Laguna Seca — {fmt(miles(lodge, laguna))} miles
+        east of the Lodge at Pebble Beach in a straight line. The map numbers
+        every venue; the list below it says which events are at each one.
+      </p>
+    </div>
+
+    <MapFigure visual={VISUALS.carWeek!} mobile={VISUALS.carWeekMobile} eager sizes="(min-width: 1024px) 1024px, 100vw" />
+
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Jump to an area">
+      {AREAS.map((ar) => (
+        <a href={`#${anchor(ar)}`} class="border border-border px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted-foreground transition-colors hover:border-brass hover:text-brass">{ar}</a>
+      ))}
+    </nav>
+
+    <div class="max-w-3xl">
+      <section class="mt-14" id="distances">
+        <h2 class={h2}>How far apart it all is</h2>
+        <p class={p}>
+          Straight-line distances between the pins, so you can see the shape of
+          the week before you plan a day of it. Roads are longer than any of
+          these, and Car Week closures change them by the day — see
+          the <a href="/traffic/" class={a}>traffic, closures and parking guide</a>{" "}
+          for the roads themselves.
+        </p>
+        <div class="mt-6 overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead>
+              <tr class="border-b border-border text-[0.65rem] uppercase tracking-[0.16em] text-muted-foreground">
+                <th class="py-2 pr-4 font-semibold">From</th>
+                <th class="py-2 pr-4 font-semibold">To</th>
+                <th class="py-2 font-semibold">Straight line</th>
+              </tr>
+            </thead>
+            <tbody>
+              {distances.map(({ a: x, b: y, d }) => (
+                <tr class="border-b border-border/50">
+                  <td class="py-2 pr-4 text-foreground"><span class="text-brass">{x.n}</span> {x.label}</td>
+                  <td class="py-2 pr-4 text-foreground"><span class="text-brass">{y.n}</span> {y.label}</td>
+                  <td class="py-2 text-foreground">{fmt(d)} mi</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="mt-14" id="venues">
+        <h2 class={h2}>Every venue, by area</h2>
+        <p class={p}>
+          Numbers match the pins. Each event links to its own page, with the
+          date, the admission status checked against the organiser, and the
+          official link. Dates are Car Week 2026; the{" "}
+          <a href="/monterey-car-week/" class={a}>Car Week 2027 page</a> adds
+          next year's as organisers publish them.
+        </p>
+        {AREAS.map((ar) => (
+          <div id={anchor(ar)} class="mt-10 scroll-mt-24">
+            <h3 class="text-2xl text-foreground">{ar}</h3>
+            <ul class="mt-4 space-y-4">
+              {pinsWithEvents.filter((x) => x.v.area === ar).map(({ v, events }) => (
+                <li id={v.id} class="scroll-mt-24 border-l-2 border-border/80 bg-surface/60 px-4 py-4">
+                  <div class="flex items-baseline gap-3">
+                    <span class="font-display text-3xl leading-none text-brass">{v.n}</span>
+                    <div>
+                      <p class="text-base text-foreground">{v.label}</p>
+                      {events[0]?.venue && (
+                        <p class="mt-1 text-sm text-muted-foreground">
+                          {events[0].venue.address} ·{" "}
+                          <a href={mapUrl(events[0].venue)} target="_blank" rel="noreferrer" class={a}>open in maps ↗</a>
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <ul class="mt-3 space-y-2">
+                    {events.map((e) => (
+                      <li class="text-sm leading-relaxed">
+                        <a href={`/event/${e.slug}/`} class="text-foreground hover:text-brass">{e.title}</a>
+                        <span class="text-muted-foreground"> · {dayRange(e)} · {e.accessLabel}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  {v.id === "laguna-seca" && (
+                    <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+                      Inside the raceway — turns, gates, parking and campgrounds — on the{" "}
+                      <a href="/laguna-seca-map/" class={a}>Laguna Seca map</a>.
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </section>
+
+      <section class="mt-14" id="by-day">
+        <h2 class={h2}>Where the week was, day by day</h2>
+        <p class={p}>
+          Car Week 2026, day by day, by area. It opened in{" "}
+          {days[0]!.areas.map((x) => x.a).join(" and ")} on {days[0]!.weekday} {days[0]!.date}{" "}
+          and closed in {days[days.length - 1]!.areas.map((x) => x.a).join(" and ")} on{" "}
+          {days[days.length - 1]!.weekday} {days[days.length - 1]!.date}. The busiest spread was{" "}
+          {busiest.weekday} {busiest.date}, with events in {busiest.areas.length}{" "}
+          different areas at once. Each date links to that day on the{" "}
+          <a href="/monterey-car-week/schedule/" class={a}>full schedule</a>.
+        </p>
+        <ul class="mt-6 space-y-3">
+          {days.map((d) => (
+            <li class="grid gap-1 border-b border-border/50 pb-3 sm:grid-cols-[9rem_1fr]">
+              <a href={`/monterey-car-week/schedule/#${d.id}`} class="text-sm text-foreground hover:text-brass">{d.weekday}, {d.short}</a>
+              <span class="text-sm leading-relaxed text-muted-foreground">
+                {d.areas.map((x, i) => (
+                  <>{i > 0 && " · "}<a href={`#${anchor(x.a)}`} class="hover:text-brass">{x.a}</a> ({x.n})</>
+                ))}
+                {d.unpinned > 0 && <>{d.areas.length > 0 && " · "}{d.unpinned} with no fixed venue</>}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="mt-14" id="examples">
+        <h2 class={h2}>Planning with the map</h2>
+        <div class="mt-6 space-y-6">
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">Racing in the morning, the Quail in the afternoon</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              Laguna Seca (pin {laguna.n}) and Quail Lodge (pin {quail.n}) are{" "}
+              {fmt(miles(quail, laguna))} miles apart in a straight line, on
+              opposite sides of the hills between Highway 68 and Carmel Valley.
+              The direct road between them is Laureles Grade Road (County Road
+              G20), from Highway 68 down to Carmel Valley Road; the long way
+              round is back through Monterey and down Highway 1. Neither has a
+              drive time worth quoting in Car Week — check the{" "}
+              <a href="/traffic/" class={a}>closures for that day</a> before
+              putting both in one afternoon.
+            </p>
+          </div>
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">A free day without a car park</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              The street events cluster: Ocean Avenue in Carmel (pin {ocean.n})
+              is {fmt(miles(lodge, ocean))} miles from the Lodge at Pebble Beach
+              in a straight line, and Lighthouse Avenue in Pacific Grove carries
+              its own street events. The{" "}
+              <a href="/free/" class={a}>free Car Week events list</a> says which
+              of them are confirmed free by their organiser, which charge to park,
+              and which simply do not say.
+            </p>
+          </div>
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">Following the Tour d'Elegance</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              It is not pinned, on purpose. The tour runs on public roads and its
+              route is the organiser's to publish — in 2026 the Timber Fire
+              forced a change to the Highway 1 leg the week of the event. Start
+              from the{" "}
+              <a href={`/event/${eventSlug("Pebble Beach Tour d'Elegance")}/`} class={a}>Tour d'Elegance page</a>{" "}
+              and the organiser's own route, not from a pin.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-14 border-l-2 border-brass bg-surface/60 px-6 py-8" id="not-on-the-map">
+        <h2 class="text-3xl text-brass">Not on the map: {unpinnedEvents.length} events with no fixed venue</h2>
+        <p class={p}>
+          These are real events with pages of their own; what they do not have
+          is a public street address. The venue line is what the organiser
+          publishes.
+        </p>
+        <ul class="mt-5 space-y-2">
+          {unpinnedEvents.map((e) => (
+            <li class="text-sm leading-relaxed">
+              <a href={`/event/${e.slug}/`} class="text-foreground hover:text-brass">{e.title}</a>
+              <span class="text-muted-foreground"> · {dayRange(e)} · {e.venue ? e.venue.venue : "location released to attendees"}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-5 text-sm text-muted-foreground">
+          {pinnedCount} of {totalEvents} events are pinned. Map data ©{" "}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer" class={a}>OpenStreetMap contributors</a>, ODbL.
+        </p>
+      </section>
+
+      <section class="mt-14" id="faq">
+        <h2 class={h2}>Questions</h2>
+        <div class="mt-6 space-y-6">
+          {faq.map((f) => (
+            <div>
+              <h3 class="text-2xl text-foreground">{f.q}</h3>
+              <p class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mt-14 border-t border-border/70 pt-8" id="related">
+        <h2 class="text-2xl text-brass">The rest of Car Week on this site</h2>
+        <div class="mt-4 grid gap-2 sm:grid-cols-2">
+          <a href="/monterey-car-week/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Monterey Car Week 2027 — confirmed dates and the 2026 record</a>
+          <a href="/monterey-car-week/schedule/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">The ten-day schedule, day by day</a>
+          <a href="/free/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Free Car Week events, checked against organisers</a>
+          <a href="/traffic/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Traffic, closures and parking by venue</a>
+          <a href="/laguna-seca-map/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Laguna Seca map — turns, gates and parking</a>
+          <a href="/monterey-events-calendar/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Monterey events calendar — the rest of the year</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</BaseLayout>

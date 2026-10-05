@@ -192,6 +192,12 @@ const others = eventsInMonth(month.key)
         >
           Everything else in {month.label} →
         </a>
+        <a
+          href={`/monterey-events-calendar/#${month.key}`}
+          class="mt-2 block text-sm text-muted-foreground hover:text-brass"
+        >
+          See {month.label} on the calendar
+        </a>
       </section>
 
       <section>
@@ -214,6 +220,12 @@ const others = eventsInMonth(month.key)
           >
             Open in maps ↗
           </a>
+          {(event.venue ?? "").includes("Laguna Seca") && (
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Entrances, parking, grandstands and where each turn is: the{" "}
+              <a href="/laguna-seca-map/" class="text-brass hover:underline">Laguna Seca map</a>.
+            </p>
+          )}
         </div>
       </section>
     </div>

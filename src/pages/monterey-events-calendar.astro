@@ -1,0 +1,451 @@
+---
+// /monterey-events-calendar/ — the regional event data as a month-grid
+// calendar. Targets "monterey events calendar".
+//
+// MAINTAINABLE BY CONSTRUCTION: every grid, list and count on this page is
+// generated at build from src/data/events-2026.ts through src/lib/calendar.ts —
+// the same module scripts/gen-maps.mjs uses for the printable posters — so a
+// row edited there moves here on the next build. "Today" is the build date in
+// Pacific time; the daily rebuild Worker (AI_AGENTS.md § Scheduled rebuild)
+// keeps it current, which is what makes marking days as past safe here (the
+// condition v1.Q set for date-aware listings).
+//
+// Distinct from /events/: that page is the filterable list; this one is the
+// calendar view plus what is on now. They link to each other.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import MapFigure from "../components/MapFigure.astro";
+import { monthPoster, VISUALS, SITE, pngPath, webpPath, dimsOf } from "../data/visuals";
+import { buildImageObject, buildBreadcrumbs, buildFaq, graph } from "../lib/imageSchema";
+import { monthGrids, onDay, isLongRun, shortName } from "../lib/calendar";
+import {
+  MONTHS,
+  regionalEvents,
+  eventHref,
+  monthHref,
+  currentAndNextMonth,
+  DATE_TBA,
+  type RegionalEvent,
+} from "../data/events-2026";
+import { buildItemListJsonLd } from "../lib/regionalEventSchema";
+import { pacificToday, isPastDate } from "../lib/isPast";
+import { montereyCountyMarkets, santaCruzCountyMarkets, sessionsOn, addDays, weekdayOf } from "../data/farmersMarkets";
+
+const site = "https://montereybayevents.com";
+const canonical = `${site}/monterey-events-calendar/`;
+const today = pacificToday();
+const { current } = currentAndNextMonth(new Date());
+
+const title = "Monterey Events Calendar 2026 — Month by Month";
+const description =
+  "Monterey events calendar for August–December 2026: festivals, fairs, races and holiday markets across Monterey and Santa Cruz counties, by day.";
+const ogImage = `${site}/maps/og-monterey-events-calendar.png`;
+
+// ---- what is on now ---------------------------------------------------------
+const dated = regionalEvents.filter((e) => e.start);
+const within = (e: RegionalEvent, from: string, to: string) => e.start! <= to && (e.end ?? e.start!) >= from;
+const horizon = addDays(today, 13);
+const nextTwoWeeks = dated
+  .filter((e) => within(e, today, horizon))
+  .sort((a, b) => a.start!.localeCompare(b.start!) || a.name.localeCompare(b.name));
+const upcoming = dated.filter((e) => (e.end ?? e.start!) >= today).sort((a, b) => a.start!.localeCompare(b.start!));
+const onNow = nextTwoWeeks.length ? nextTwoWeeks : upcoming.slice(0, 6);
+
+// The coming weekend: the next Saturday on or after today, and the Sunday after.
+const daysToSat = (6 - new Date(`${today}T12:00:00Z`).getUTCDay() + 7) % 7;
+const sat = addDays(today, daysToSat), sun = addDays(sat, 1);
+const weekend = dated.filter((e) => onDay(e, sat) || onDay(e, sun));
+const fmtDay = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" });
+
+// Weekly farmers markets for the next seven days, from the operators' rules.
+const week = Array.from({ length: 7 }, (_, i) => addDays(today, i)).map((iso) => ({
+  iso,
+  wd: weekdayOf(iso),
+  mo: sessionsOn(iso, montereyCountyMarkets).length,
+  sc: sessionsOn(iso, santaCruzCountyMarkets).length,
+}));
+
+const totalDated = dated.length;
+const undated = regionalEvents.filter((e) => !e.start);
+const montereyCount = regionalEvents.filter((e) => e.county === "Monterey").length;
+const decemberLong = monthGrids.find((g) => g.key === "december")?.longRuns ?? [];
+const currentGrid = monthGrids.find((g) => g.key === current.key)!;
+const heroPoster = monthPoster(current.key, current.label);
+// Current month first, then the months ahead, then the finished ones — a
+// reader scrolling down should meet what is coming before what has happened.
+const ci = monthGrids.findIndex((g) => g.key === current.key);
+const orderedGrids = [...monthGrids.slice(ci), ...monthGrids.slice(0, ci)];
+
+const faq = [
+  {
+    q: "What's on in Monterey this weekend?",
+    a: weekend.length
+      ? `For ${fmtDay(sat)} and ${fmtDay(sun)}: ${weekend.map((e) => `${e.name} (${e.city ?? e.cityText})`).join("; ")}. Each is linked on the calendar with its official page.`
+      : `Nothing in our listings falls on ${fmtDay(sat)} or ${fmtDay(sun)}. The weekly farmers markets still run — see the market pages — and the next listed event is ${upcoming[0] ? `${upcoming[0].name}, ${upcoming[0].dateText}` : "not yet announced"}.`,
+  },
+  {
+    q: "Does the Monterey events calendar include Santa Cruz?",
+    a: `Yes. It covers both sides of Monterey Bay: ${montereyCount} of the ${regionalEvents.length} listings are in Monterey County and the rest in Santa Cruz County. On the grids, Monterey County events are white and Santa Cruz County events blue.`,
+  },
+  {
+    q: "How up to date is it?",
+    a: "The site rebuilds every morning, so 'today', the past-day shading and the 'on now' list move on their own. Event dates change only when an organiser changes them — every date is the organiser's own, and several have been corrected against the organiser after a tourism listing had them wrong.",
+  },
+  {
+    q: "Why do some events have no date?",
+    a: `Because the organiser has not announced the 2026 date. ${undated.length} listings are in that state; we list them under their month as "${DATE_TBA}" rather than guess from last year.`,
+  },
+  {
+    q: "Where are Monterey Car Week dates?",
+    a: "Car Week has its own section, with a ten-day schedule and a venue map. In the calendar it appears in August; the Car Week page tracks 2027 dates as organisers publish them, starting with the Pebble Beach Concours on Sunday 15 August 2027.",
+  },
+  {
+    q: "Can I add my event?",
+    a: "Not through a form yet. Listings come from organisers' own published pages, and a submissions inbox for organisers is planned. Until then the calendar is built from events we can source and check.",
+  },
+];
+
+const crumbs = [
+  { name: "Home", url: `${site}/` },
+  { name: "Events", url: `${site}/events/` },
+  { name: "Monterey events calendar", url: canonical },
+];
+
+const posters = MONTHS.map((m) => monthPoster(m.key, m.label));
+const jsonLd = graph(
+  {
+    "@type": "CollectionPage",
+    "@id": canonical,
+    url: canonical,
+    name: title,
+    description,
+    primaryImageOfPage: { "@id": `${SITE}${pngPath(heroPoster.key)}#image` },
+    breadcrumb: buildBreadcrumbs(crumbs),
+    mainEntity: (({ "@context": _c, ...rest }) => rest)(
+      buildItemListJsonLd(dated, site, eventHref, "Monterey and Santa Cruz county events, August–December 2026") as Record<string, unknown>,
+    ),
+  },
+  ...posters.map((v) => buildImageObject(v, { pageUrl: canonical, representative: v.key === heroPoster.key })),
+  buildFaq(faq),
+);
+
+const h2 = "border-b border-border/70 pb-2 text-3xl text-brass";
+const p = "mt-5 text-base leading-relaxed text-muted-foreground";
+const a = "text-brass hover:underline";
+const DOW = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const place = (e: RegionalEvent) => e.city ?? e.cityText;
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Monterey events calendar card showing the number of events in each month from August to December 2026." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+  </Fragment>
+
+  <main class="mx-auto max-w-6xl px-5 py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <ol class="flex flex-wrap gap-2">
+        <li><a href="/" class="hover:text-brass">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/events/" class="hover:text-brass">Events</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-foreground">Calendar</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-7xl">
+      Monterey events <span class="text-brass">calendar</span>
+    </h1>
+
+    <div class="max-w-3xl">
+      <p class="mt-7 text-lg leading-relaxed text-muted-foreground">
+        {totalDated} dated public events across Monterey and Santa Cruz counties
+        from August to December 2026, laid out by day — county fairs, festivals,
+        races at Laguna Seca, parades and holiday markets, each with the date
+        its organiser published and a link to them.{" "}
+        {nextTwoWeeks.length > 0
+          ? <>In the next two weeks: <strong class="text-foreground">{nextTwoWeeks.length} event{nextTwoWeeks.length === 1 ? "" : "s"}</strong>, listed first below.</>
+          : upcoming.length > 0
+            ? <>Nothing is listed for the next two weeks; the next event is <strong class="text-foreground">{upcoming[0]!.name}</strong>, {upcoming[0]!.dateText}.</>
+            : <>Every dated event in this set has now happened; the grids below are the record.</>}
+      </p>
+    </div>
+
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Jump to a month">
+      {MONTHS.map((m) => (
+        <a href={`#${m.key}`} class={`border px-4 py-2 text-[0.65rem] font-bold uppercase tracking-[0.16em] transition-colors hover:border-brass hover:text-brass ${m.key === current.key ? "border-brass text-brass" : "border-border text-muted-foreground"}`}>
+          {m.label}
+        </a>
+      ))}
+    </nav>
+
+    <section class="mt-12" id="on-now">
+      <h2 class={h2}>{nextTwoWeeks.length ? "On now and in the next two weeks" : "Next up"}</h2>
+      <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {onNow.map((e) => (
+          <li>
+            <a href={eventHref(e)} class="block h-full border-l-2 border-brass bg-surface/60 px-4 py-4 transition-colors hover:bg-surface">
+              <span class="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-brass">{e.dateText}</span>
+              <span class="mt-1 block text-base leading-snug text-foreground">{e.name}</span>
+              <span class="mt-1 block text-sm text-muted-foreground">{place(e)} · {e.county} County · {e.category}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+        As of {fmtDay(today)}. {weekend.length > 0 ? <>This weekend ({fmtDay(sat)}–{new Date(`${sun}T12:00:00Z`).getUTCDate()}): {weekend.map((e, i) => <>{i > 0 && " · "}<a href={eventHref(e)} class={a}>{shortName(e)}</a></>)}.</> : <>Nothing in our listings this coming weekend.</>}
+      </p>
+    </section>
+
+    <section class="mt-12" id="weekly">
+      <h2 class={h2}>Every week: farmers markets</h2>
+      <p class={`${p} max-w-3xl`}>
+        Not on the grids, because they happen every week rather than once:
+        certified farmers markets, by operator schedule, for the next seven days.
+        Day, hours and location for each are on the{" "}
+        <a href="/monterey-farmers-market/" class={a}>Monterey County farmers market</a>{" "}
+        and{" "}
+        <a href="/santa-cruz-farmers-market/" class={a}>Santa Cruz County farmers market</a>{" "}
+        pages.
+      </p>
+      <ul class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
+        {week.map((d) => (
+          <li class="border border-border/70 bg-surface/60 px-3 py-3 text-sm">
+            <span class="block text-[0.65rem] font-bold uppercase tracking-[0.16em] text-brass">{d.wd.slice(0, 3)} {+d.iso.slice(8, 10)}</span>
+            <span class="mt-1 block text-foreground">{d.mo} Monterey Co.</span>
+            <span class="block text-[#9cc3d6]">{d.sc} Santa Cruz Co.</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <section class="mt-12" id="printable">
+      <h2 class={h2}>{current.label}, printable</h2>
+      <p class={`${p} max-w-3xl`}>
+        The current month as one image — for the fridge, a group chat, or a
+        phone with no signal at the beach. Every month has one; they are
+        collected at the <a href="#posters" class={a}>bottom of the page</a>.
+      </p>
+      <MapFigure visual={heroPoster} eager sizes="(min-width: 1152px) 1100px, 100vw" />
+    </section>
+
+    {orderedGrids.map((g) => {
+      const m = MONTHS.find((x) => x.key === g.key)!;
+      const monthPast = g.dated.length > 0 && g.dated.every((e) => isPastDate(e.start, e.end, today));
+      return (
+        <section class="mt-16 scroll-mt-20" id={g.key}>
+          <div class="flex flex-wrap items-end justify-between gap-3 border-b border-border/70 pb-2">
+            <h2 class="text-4xl text-brass">{g.label}</h2>
+            <p class="text-sm text-muted-foreground">
+              {g.dated.length} dated{g.undated.length ? ` · ${g.undated.length} undated` : ""}{monthPast ? " · finished" : ""} ·{" "}
+              <a href={monthHref(g.key)} class={a}>{m.label} listings</a>
+            </p>
+          </div>
+
+          <table class="mt-5 w-full table-fixed border-collapse text-left">
+            <caption class="sr-only">Calendar of events in {g.label}, Monterey and Santa Cruz counties</caption>
+            <thead>
+              <tr>{DOW.map((d) => <th scope="col" class="pb-2 text-center text-[0.6rem] font-bold uppercase tracking-[0.16em] text-brass sm:text-left">{d}</th>)}</tr>
+            </thead>
+            <tbody>
+              {g.weeks.map((wk) => (
+                <tr>
+                  {wk.map((c) => {
+                    const past = c.inMonth && c.iso < today;
+                    const isToday = c.iso === today;
+                    return (
+                      <td class={`h-14 border border-border/60 p-1 align-top sm:h-28 sm:p-2 ${!c.inMonth ? "bg-background" : past ? "bg-surface/30" : "bg-surface/70"} ${isToday ? "outline outline-2 -outline-offset-2 outline-brass" : ""}`}>
+                        {c.inMonth && (
+                          <>
+                            <span class={`font-display text-lg leading-none sm:text-2xl ${c.events.length ? (past ? "text-brass/50" : "text-brass") : "text-muted-foreground/60"}`}>{c.day}</span>
+                            {isToday && <span class="ml-1 text-[0.55rem] font-bold uppercase tracking-[0.12em] text-brass">today</span>}
+                            <span class="mt-1 flex gap-0.5 sm:hidden" aria-hidden="true">
+                              {c.events.slice(0, 4).map((e) => <span class={`h-1.5 w-1.5 rounded-full ${e.county === "Santa Cruz" ? "bg-[#9cc3d6]" : "bg-foreground"}`}></span>)}
+                            </span>
+                            <ul class="mt-1 hidden space-y-0.5 sm:block">
+                              {c.events.slice(0, 3).map((e) => (
+                                <li class="truncate text-[0.7rem] leading-tight">
+                                  <a href={eventHref(e)} title={e.name} class={`hover:text-brass ${e.county === "Santa Cruz" ? "text-[#9cc3d6]" : "text-foreground"} ${past ? "opacity-60" : ""}`}>{shortName(e, 30)}</a>
+                                </li>
+                              ))}
+                              {c.events.length > 3 && <li class="text-[0.65rem] text-muted-foreground">+{c.events.length - 3} more</li>}
+                            </ul>
+                          </>
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <h3 class="mt-8 text-2xl text-foreground">{g.label}, in date order</h3>
+          <ol class="mt-3 divide-y divide-border/50">
+            {g.dated.map((e) => {
+              const past = isPastDate(e.start, e.end, today);
+              return (
+                <li class={`grid gap-1 py-3 sm:grid-cols-[11rem_1fr] ${past ? "opacity-60" : ""}`}>
+                  <span class="text-sm text-brass">{e.dateText}{past && <span class="ml-2 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-muted-foreground">past</span>}</span>
+                  <span>
+                    <a href={eventHref(e)} class="text-base text-foreground hover:text-brass">{e.name}</a>
+                    <span class="block text-sm text-muted-foreground">
+                      {place(e)} · <span class={e.county === "Santa Cruz" ? "text-[#9cc3d6]" : ""}>{e.county} County</span> · {e.category}
+                      {isLongRun(e) && " · multi-week run"}
+                      {e.admission === "free" && <span class="text-brass"> · free (organiser)</span>}
+                    </span>
+                  </span>
+                </li>
+              );
+            })}
+            {g.undated.map((e) => (
+              <li class="grid gap-1 py-3 sm:grid-cols-[11rem_1fr]">
+                <span class="text-sm text-muted-foreground">{DATE_TBA}</span>
+                <span>
+                  <a href={eventHref(e)} class="text-base text-foreground hover:text-brass">{e.name}</a>
+                  <span class="block text-sm text-muted-foreground">{place(e)} · {e.county} County · {e.category}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+          {g.key === "august" && (
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+              August is Car Week: the{" "}
+              <a href="/monterey-car-week/schedule/" class={a}>ten-day schedule</a>{" "}
+              has all of it, and the{" "}
+              <a href="/monterey-car-week-map/" class={a}>Car Week map</a>{" "}
+              shows where each event happens.
+            </p>
+          )}
+          {g.dated.some((e) => (e.venue ?? "").includes("Laguna Seca")) && (
+            <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+              Racing at Laguna Seca this month — entrances, parking and where to
+              watch are on the{" "}
+              <a href="/laguna-seca-map/" class={a}>Laguna Seca map</a>.
+            </p>
+          )}
+        </section>
+      );
+    })}
+
+    <div class="max-w-3xl">
+      <section class="mt-16" id="how-to-use">
+        <h2 class={h2}>Reading the calendar</h2>
+        <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+          <li><strong class="text-foreground">Dates are the organiser's.</strong> Every listing carries the date its organiser published. Several came to us wrong from compiled tourism lists — Festa Italia a full week early, Christmas in the Adobes one evening short — and were corrected against the organiser.</li>
+          <li><strong class="text-foreground">Events of a week or less fill every day they run.</strong> Longer runs — the Boardwalk's Halloween and Winter Wonderland seasons, multi-week exhibitions — are listed once under the month instead, so they do not bury the one-day events.</li>
+          <li><strong class="text-foreground">White is Monterey County, blue is Santa Cruz County.</strong> “Monterey” in a search usually means the Peninsula, but Salinas, Watsonville and Santa Cruz are all a short drive, so both counties are here.</li>
+          <li><strong class="text-foreground">Times are mostly not shown.</strong> Most organisers publish a date before they publish hours; where hours are published, they are on the event's own page with who published them.</li>
+        </ul>
+      </section>
+
+      <section class="mt-14" id="examples">
+        <h2 class={h2}>Three ways to use it</h2>
+        <div class="mt-6 space-y-6">
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">Planning a weekend</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              Find the weekend on the grid, then read the list under the month:
+              it adds the city and county, which matters because the bay is wide
+              — a Saturday with one event in Carmel and one in Felton is two
+              different days out. This weekend's listings
+              ({fmtDay(sat)}–{new Date(`${sun}T12:00:00Z`).getUTCDate()}):{" "}
+              {weekend.length ? weekend.map((e) => `${shortName(e)} in ${place(e)}`).join("; ") : "none — the farmers markets are the fallback"}.
+            </p>
+          </div>
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">The holiday season</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              December is where long runs matter: {decemberLong.length ? decemberLong.map((e) => `${e.name} (${e.dateText})`).join(", ") : "none of December's events"}{" "}
+              {decemberLong.length === 1 ? "runs" : "run"} across weeks, so {decemberLong.length === 1 ? "it is" : "they are"} listed under the grid
+              rather than on every day. The parades and the lighted boat parade
+              are single evenings — those are the dates to plan around.
+            </p>
+          </div>
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">An event with no date yet</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              {undated.length} listings say “{DATE_TBA}”:{" "}
+              {undated.map((e) => e.name).join("; ")}. That is the organiser's
+              silence, not ours. Hold the month, follow the organiser link on the
+              event page, and do not trust a date for it you find on an
+              aggregator — that is usually last year's.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-14" id="faq">
+        <h2 class={h2}>Questions</h2>
+        <div class="mt-6 space-y-6">
+          {faq.map((f) => (
+            <div>
+              <h3 class="text-2xl text-foreground">{f.q}</h3>
+              <p class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+
+    <section class="mt-16" id="posters">
+      <h2 class={h2}>Printable month calendars</h2>
+      <p class={`${p} max-w-3xl`}>
+        One image per month, regenerated whenever the listings change. Tap to
+        open the full-size PNG.
+      </p>
+      <ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {posters.map((v) => {
+          const d = dimsOf(v.key);
+          return (
+            <li>
+              <figure>
+                <a href={pngPath(v.key)} class="block border border-border/70">
+                  <img src={webpPath(v.key, 800)} width={800} height={Math.round((d.height * 800) / d.width)} alt={v.alt} loading="lazy" decoding="async" class="block h-auto w-full" />
+                </a>
+                <figcaption class="mt-2 text-sm text-muted-foreground">
+                  {v.title.replace("Monterey events calendar — ", "")} ·{" "}
+                  <a href={pngPath(v.key)} download class={a}>PNG {d.width}×{d.height}</a>
+                </figcaption>
+              </figure>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+
+    <section class="mt-16 border-t border-border/70 pt-8" id="related">
+      <h2 class="text-2xl text-brass">More ways in</h2>
+      <div class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        <a href="/events/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">All events as a list, filter by county</a>
+        <a href={monthHref(current.key)} class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">{current.label} — every listing in detail</a>
+        <a href="/monterey-car-week/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Monterey Car Week 2027 and the 2026 record</a>
+        <a href="/monterey-car-week-map/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Monterey Car Week map — every venue</a>
+        <a href="/laguna-seca-map/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Laguna Seca map — turns, gates, parking</a>
+        <a href="/monterey-farmers-market/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Monterey County farmers markets by day</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -1122,3 +1122,19 @@ this line is a verbatim prompt.*
 > Downtown $20 Market Match line was removed because the operator's own pages
 > disagree on when it ended. Monterey ~4,100 → ~4,900 words, Santa Cruz ~1,800 →
 > ~3,700. No other build output changed.
+
+## 2026-10-05 — v2.L–N: Laguna Seca map, Car Week map, Monterey events calendar
+
+> Operator brief: an image-SEO sprint for three queries, with original
+> visuals, not thin landing pages. Not in the PRD, so placed first: operator
+> chose v2.L/M/N, flat URLs as briefed, and a separate calendar page over
+> upgrading /events/. Mid-build: "make those pages more thick, useful and
+> internally linked."
+>
+> No geography invented: OSM extracts committed under data/geo/ (ODbL); the
+> raceway's own facility map used only to check turn numbers and bridge names,
+> never traced. OSM lap 2.237 mi vs published 2.238. Own copy fact-checked
+> before build — dropped an unsourced "heaviest braking zone", a wrong "Turn 2
+> is closest to parking" (map distances say Turn 11), a wrong "German shows in
+> Seaside", and a Laguna→Quail route that ignored Laureles Grade.
+

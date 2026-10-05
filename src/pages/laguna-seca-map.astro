@@ -1,0 +1,449 @@
+---
+// /laguna-seca-map/ — an original map of WeatherTech Raceway Laguna Seca for
+// someone attending an event there: turns, bridges, entrances, parking,
+// grandstands and campgrounds. Targets "laguna seca map".
+//
+// THE MAP IS OURS, NOT THE RACEWAY'S. Geometry is OpenStreetMap
+// (data/geo/laguna-seca.osm.json, ODbL), rendered by scripts/gen-maps.mjs.
+// Turn positions and bridge names were checked against the raceway's own
+// facility map and Racing Lines flyer, which we link to and do not copy.
+//
+// SOURCING for the prose: weathertechraceway.com pages (ticket information,
+// track information, camping, how to get here) and the raceway's Racing Lines
+// flyer and Event Camping Rules PDF, all read 2026-10-05 and linked at the
+// point of use. Distances marked "straight line" are computed from the map
+// data and say so; no walking or driving time is given anywhere, because
+// nobody publishes one.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import MapFigure from "../components/MapFigure.astro";
+import { VISUALS } from "../data/visuals";
+import { buildImageObject, buildBreadcrumbs, buildFaq, graph } from "../lib/imageSchema";
+import { mapVenues } from "../data/carWeekVenues";
+import { eventsAt } from "../lib/carWeekMap";
+import { regionalEvents, eventHref, hasOwnPage } from "../data/events-2026";
+import { isPastDate, pacificToday } from "../lib/isPast";
+
+const site = "https://montereybayevents.com";
+const title = "Laguna Seca Map: Turns, Gates, Parking & Camping";
+const description =
+  "An original map of WeatherTech Raceway Laguna Seca: all 11 turns, the five bridges, both entrances, General and Lakebed parking, grandstands and campgrounds.";
+const canonical = `${site}/laguna-seca-map/`;
+const ogImage = `${site}/maps/og-laguna-seca-map.png`;
+
+const WT = "https://weathertechraceway.com/pages";
+const TICKETS = `${WT}/ticket-information`;
+const TRACK = `${WT}/track-information`;
+const CAMPING = `${WT}/camping`;
+const DIRECTIONS = `${WT}/how-to-get-here`;
+const CDN = "https://cdn.shopify.com/s/files/1/0678/1914/3354/files";
+const OFFICIAL_MAP = `${CDN}/WeatherTech-Raceway-Laguna-Seca-Facility-Map.jpg?v=1775701570`;
+const RACING_LINES = `${CDN}/WeatherTech_Raceway_Laguna_Seca_Racing_Lines_Flyer.pdf?v=1733112124`;
+const CAMPING_RULES = `${CDN}/2024_Camping_Rules_and_Regulations_FINAL.pdf?v=1733030204`;
+const CAMPING_GUIDE = `${CDN}/Event_Camping_Guide_3.4.2025.pdf?v=1741711075`;
+const OSM = "https://www.openstreetmap.org/copyright";
+const PHONE = "(831) 242-8200";
+
+/**
+ * Turn notes. Names and handling from the raceway's Racing Lines flyer; the
+ * Corkscrew figures from its track-information page; where-to-watch from its
+ * ticket page. `near` is what sits beside the turn on our map.
+ */
+const turns: { n: string; name?: string; note: string; near?: string }[] = [
+  { n: "1", note: "A blind corner taken at full speed, just past the start/finish bridge at the end of the front straight.", near: "The start/finish (Mission Foods) bridge, just before it; the raceway's own map puts its Hospitality Pavilion on the outside." },
+  { n: "2", name: "Andretti Hairpin", note: "The long hairpin at the bottom of the front straight. The raceway's flyer calls it mostly a single-apex corner, entered from the right after braking.", near: "Hillside viewing, one of the four places the raceway names for general admission." },
+  { n: "3", note: "The first of the infield corners added in 1988, which took the lap from 1.9 to 2.238 miles. The apex comes late.", near: "Tire Rack foot bridge, just after the turn." },
+  { n: "4", note: "A fast, unbanked corner — the flyer warns cars often slide at the exit.", near: "Uncovered grandstand on the outside, first come, first served." },
+  { n: "5", note: "The track starts to climb at the apex; the slight banking begins mid-corner.", near: "Montage foot bridge on the approach; B Camp (Chaparral) to the south." },
+  { n: "6", note: "A dip into the apex that can unsettle a car; the flyer has drivers start braking at the bridge.", near: "Vehicle bridge on the approach; A Camp (Grand Prix) beside it." },
+  { n: "Rahal Straight", note: "The straight from Turn 6 to Turn 7, up the east side of the circuit.", near: "Fox Hill (motorcycle-event camping) on the inside." },
+  { n: "7", note: "Turn-in comes just before a blind crest; the car has to be lined up on the right for the Corkscrew.", near: "" },
+  { n: "8 / 8A", name: "The Corkscrew", note: "Hard left, hard right, downhill and blind. A 12% drop at the apex of 8 and 18% at 8A — 59 feet of fall in 450 feet of track, and 109 feet from Turn 8 to Turn 9.", near: "Corkscrew hillside viewing; Corkscrew and Terrace campgrounds above; the Corkscrew foot bridge just after 8A." },
+  { n: "9", name: "Rainey Curve", note: "A fast downhill sweeper, blind on entry.", near: "General Camping and the Terrace campgrounds to the north." },
+  { n: "10", note: "Drops into a bowl and picks up speed quickly; braking is harder than it looks.", near: "Paddock on the inside." },
+  { n: "11", note: "The slowest corner on the track — slow in, fast out onto the front straight.", near: "Uncovered grandstands along the front straight, with the pit lane running beside it." },
+];
+
+const faq = [
+  {
+    q: "Where do I park at Laguna Seca?",
+    a: "General Parking is the Purple 10 area, reached from the South Boundary Road entrance — the large lot west of the circuit on our map. Preferred Parking, which you buy separately, is in the Green Lakebed area inside the infield. Neither allows overnight parking; leaving a vehicle overnight needs a camping pass. The raceway publishes no price for General Parking.",
+  },
+  {
+    q: "Which entrance should I use?",
+    a: "For the raceway's major 2026 events it said you must enter through the South Boundary Road entrance, with Will Call on the right from 7 a.m. On non-event days the address is 1021 Monterey-Salinas Highway, and campers check in at the bottom of A Road off Highway 68.",
+  },
+  {
+    q: "How long is Laguna Seca, and how many turns does it have?",
+    a: "2.238 miles, with eleven numbered turns plus 8A — the Corkscrew is officially Turns 8 and 8A. The lap measured from the OpenStreetMap geometry behind our map comes to 2.237 miles, which is how close the drawing is to the real track.",
+  },
+  {
+    q: "Where is the Corkscrew on the map?",
+    a: "On the east side of the circuit, at the top of the climb from Turn 6. It is the far side of the track from General Parking — about 0.6 miles in a straight line from the middle of the Purple 10 lot, measured on the map, and more on foot. Spectators can sit on the hillside by Turn 8.",
+  },
+  {
+    q: "Can I bring chairs or a cooler?",
+    a: "The raceway's ticket page allows blankets, umbrellas and folding chairs on the hillsides, and small ice chests. It asks you not to bring glass. It publishes no bag-size rule.",
+  },
+  {
+    q: "Is there an official Laguna Seca map?",
+    a: "Yes. The raceway publishes a facility map on its track-information page, drawn with north to the left. Ours is drawn with north at the top from OpenStreetMap data, so if you compare the two, rotate one of them a quarter-turn.",
+  },
+];
+
+// Events on this site that happen at the raceway, for the related links.
+const lagunaPin = mapVenues.find((v) => v.id === "laguna-seca")!;
+const carWeekAtLaguna = eventsAt(lagunaPin);
+const regionalAtLaguna = regionalEvents.filter(
+  (e) => (e.venue ?? "").includes("Laguna Seca") && hasOwnPage(e),
+);
+const today = pacificToday();
+
+const crumbs = [
+  { name: "Home", url: `${site}/` },
+  { name: "Laguna Seca map", url: canonical },
+];
+
+const jsonLd = graph(
+  {
+    "@type": "WebPage",
+    "@id": canonical,
+    url: canonical,
+    name: title,
+    description,
+    primaryImageOfPage: { "@id": `${site}/maps/${VISUALS.lagunaFacility!.key}.png#image` },
+    breadcrumb: buildBreadcrumbs(crumbs),
+    about: { "@id": `${canonical}#raceway` },
+  },
+  {
+    "@type": "SportsActivityLocation",
+    "@id": `${canonical}#raceway`,
+    name: "WeatherTech Raceway Laguna Seca",
+    url: "https://weathertechraceway.com/",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "1021 Monterey-Salinas Hwy",
+      addressLocality: "Salinas",
+      addressRegion: "CA",
+      postalCode: "93908",
+      addressCountry: "US",
+    },
+    geo: { "@type": "GeoCoordinates", latitude: 36.5844, longitude: -121.7534 },
+    hasMap: { "@id": `${site}/maps/${VISUALS.lagunaFacility!.key}.png#image` },
+  },
+  buildImageObject(VISUALS.lagunaFacility!, {
+    pageUrl: canonical,
+    representative: true,
+    credit: "Monterey Bay Events; map data © OpenStreetMap contributors",
+  }),
+  buildImageObject(VISUALS.lagunaTrack!, {
+    pageUrl: canonical,
+    credit: "Monterey Bay Events; map data © OpenStreetMap contributors",
+  }),
+  buildFaq(faq),
+);
+
+const h2 = "border-b border-border/70 pb-2 text-3xl text-brass";
+const p = "mt-5 text-base leading-relaxed text-muted-foreground";
+const a = "text-brass hover:underline";
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="preload" as="image" type="image/webp"
+      imagesrcset={`/maps/${VISUALS.lagunaMobile!.key}-800.webp 800w, /maps/${VISUALS.lagunaMobile!.key}-1200.webp 1200w`}
+      imagesizes="100vw" media="(max-width: 640px)" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Detail of an original Laguna Seca map: the circuit with numbered turns, bridges, the paddock and lakebed." />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content="Detail of an original Laguna Seca map: the circuit with numbered turns, bridges, the paddock and lakebed." />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+  </Fragment>
+
+  <main class="mx-auto max-w-5xl px-5 py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <ol class="flex flex-wrap gap-2">
+        <li><a href="/" class="hover:text-brass">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-foreground">Laguna Seca map</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-7xl">
+      Laguna Seca <span class="text-brass">map</span>
+    </h1>
+
+    <div class="max-w-3xl">
+      <p class="mt-7 text-lg leading-relaxed text-muted-foreground">
+        WeatherTech Raceway Laguna Seca is a 2.238-mile, eleven-turn circuit in
+        the hills off Highway 68 between Monterey and Salinas. On major event
+        days you come in from <strong class="text-foreground">South Boundary Road</strong>,
+        on the west side, where Will Call is; General Parking (the Purple 10 lot)
+        is right there, and the circuit, paddock and grandstands are a short walk
+        east. The grandstands are at Turns 4 and 11, and general admission can
+        also sit on the hillsides at the Andretti Hairpin and the Corkscrew.
+        Campers come in the other way, from Highway 68 up A Road.
+      </p>
+    </div>
+
+    <MapFigure visual={VISUALS.lagunaFacility!} mobile={VISUALS.lagunaMobile} eager sizes="(min-width: 1024px) 1024px, 100vw" />
+
+    <div class="max-w-3xl">
+      <section class="mt-14">
+        <h2 class={h2}>How to read this map</h2>
+        <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+          <li><strong class="text-foreground">North is at the top.</strong> The raceway's own facility map puts north on the left, so everything on it is turned a quarter-turn from ours. Its “Main Entrance” at the bottom of the page is the South Boundary Road gate on the left of this one.</li>
+          <li><strong class="text-foreground">Turns are numbered in race order.</strong> Follow 1 to 11 and you have done a lap. The direction of racing is marked on the <a href="#track-map" class={a}>track-only diagram</a> below.</li>
+          <li><strong class="text-foreground">White bars are bridges over the track</strong> — the only way across the circuit while cars are running. There are five: start/finish (Mission Foods), Tire Rack, Montage, a vehicle bridge before Turn 6, and the Corkscrew bridge.</li>
+          <li><strong class="text-foreground">Green areas are campgrounds, dark grey is parking,</strong> pale gold bars are grandstands. The large outlined lot on the left is General Parking.</li>
+          <li><strong class="text-foreground">Everything is drawn from OpenStreetMap,</strong> not traced from the raceway's map. The lap on our drawing measures 2.237 miles against the published 2.238, so positions are true to the ground — but the raceway notes that facility locations and access routes vary by event, and its map for your event wins.</li>
+        </ul>
+      </section>
+
+      <section class="mt-14" id="turns">
+        <h2 class={h2}>Turn by turn</h2>
+        <p class={p}>
+          What each corner is and what sits next to it on the map. Corner
+          descriptions are from the raceway's
+          <a href={RACING_LINES} target="_blank" rel="noreferrer" class={a}>Racing Lines flyer</a>,
+          the Corkscrew figures from its
+          <a href={TRACK} target="_blank" rel="noreferrer" class={a}>track information</a> page.
+        </p>
+        <ol class="mt-6 space-y-4">
+          {turns.map((t) => (
+            <li class="grid grid-cols-[4.5rem_1fr] gap-4 border-l-2 border-border/80 bg-surface/60 px-4 py-4">
+              <span class="font-display text-3xl leading-none text-brass">{t.n.length > 6 ? "—" : t.n}</span>
+              <div>
+                <p class="text-base text-foreground">
+                  {t.n.length > 6 ? t.n : t.name ? `Turn ${t.n} · ${t.name}` : `Turn ${t.n}`}
+                </p>
+                <p class="mt-1 text-sm leading-relaxed text-muted-foreground">{t.note}</p>
+                {t.near && <p class="mt-2 text-sm leading-relaxed text-muted-foreground"><span class="text-brass-soft">On the map:</span> {t.near}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    </div>
+
+    <section class="mt-14" id="track-map">
+      <h2 class={h2}>Laguna Seca track map with turn numbers</h2>
+      <p class={`${p} max-w-3xl`}>
+        The circuit on its own, bigger, with arrows for the direction of racing.
+        This is the one to keep on a phone if you are following a race from the
+        hillside and want to know which corner the commentators mean.
+      </p>
+      <MapFigure visual={VISUALS.lagunaTrack!} sizes="(min-width: 1024px) 860px, 100vw" />
+    </section>
+
+    <div class="max-w-3xl">
+      <section class="mt-14" id="getting-in">
+        <h2 class={h2}>Getting in: two entrances, used for different things</h2>
+        <p class={p}>
+          <strong class="text-foreground">South Boundary Road (west) — spectators on event days.</strong>{" "}
+          The raceway's
+          <a href={TICKETS} target="_blank" rel="noreferrer" class={a}>ticket page</a>
+          says that for its major 2026 events <em>“you must come in through the
+          South Boundary Rd. entrance to the park.”</em> Will Call is on the
+          right as you enter, open from 7 a.m. until halfway through the last
+          race of the day. The raceway's
+          <a href={DIRECTIONS} target="_blank" rel="noreferrer" class={a}>directions page</a>
+          gives the event-day address as S Boundary Rd, Monterey, CA 93940 — use
+          that, not the street address, in a map app on race day.
+        </p>
+        <p class={p}>
+          <strong class="text-foreground">Highway 68 (south) — campers, and non-event days.</strong>{" "}
+          The non-event address is 1021 Monterey-Salinas Highway, Salinas, CA
+          93908. The raceway's
+          <a href={CAMPING_RULES} target="_blank" rel="noreferrer" class={a}>event camping rules</a>
+          put camping check-in <em>“at the bottom of A-Road off of HWY 68 (main
+          entrance)”</em> — the marked point at the bottom of our map. Check-in
+          runs 2:00 to 5:00 p.m.
+        </p>
+        <p class={p}>
+          The two documents call different gates “main entrance”: the camping
+          rules mean Highway 68, the facility map means South Boundary Road. They
+          are not contradicting each other so much as writing for different
+          visitors. If you are camping, Highway 68; if you are not, South Boundary.
+        </p>
+        <p class={p}>
+          Gates generally open at 7 a.m. on race days and close at 10 p.m. or
+          midnight depending on the event. Monterey Regional Airport is 7 miles
+          away by the raceway's count; San Jose International is 75. For road
+          conditions on the Peninsula, see our{" "}
+          <a href="/traffic/" class={a}>traffic and closures guide</a>.
+        </p>
+      </section>
+
+      <section class="mt-14" id="parking">
+        <h2 class={h2}>Parking: Purple 10 or the Lakebed</h2>
+        <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+          <li><strong class="text-foreground">General Parking — Purple 10.</strong> The big lot west of the circuit, off South Boundary Road. On our map its middle is about 0.3 miles in a straight line from the paddock and 0.6 miles from the Corkscrew.</li>
+          <li><strong class="text-foreground">Preferred Parking — Green Lakebed.</strong> Inside the circuit, around the lakebed between Turns 2, 3 and 4. Sold separately; you are parking inside the infield.</li>
+          <li><strong class="text-foreground">No overnight parking</strong> in either. A vehicle left overnight needs a camping pass for a designated campground.</li>
+          <li><strong class="text-foreground">What is not published:</strong> a price for General Parking, ADA parking locations, and any shuttle or tram between lots. Ask the ticket office on <a href="tel:+18312428200" class={a}>{PHONE}</a> before you plan around any of them.</li>
+        </ul>
+        <p class="mt-5 text-sm text-muted-foreground">
+          Source: <a href={TICKETS} target="_blank" rel="noreferrer" class={a}>Ticket Information, WeatherTech Raceway Laguna Seca</a>
+        </p>
+      </section>
+
+      <section class="mt-14" id="where-to-watch">
+        <h2 class={h2}>Where to watch with a general admission ticket</h2>
+        <p class={p}>
+          General admission gets you into the track and the paddock — the
+          “cold garage” area where teams set up, not the hot pits. From there
+          the raceway names four places to watch:
+        </p>
+        <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+          <li><strong class="text-foreground">Turn 11 grandstands</strong> — uncovered, first come, first served, along the front straight. The closest of the four to General Parking: about 0.3 miles in a straight line on the map.</li>
+          <li><strong class="text-foreground">Turn 4 grandstand</strong> — beside the paddock, inside the circuit, so you cross the track on a bridge to reach it; about 0.4 miles.</li>
+          <li><strong class="text-foreground">Turn 2 hillside</strong> — the Andretti Hairpin at the bottom of the front straight; about 0.4 miles.</li>
+          <li><strong class="text-foreground">Turn 8 hillside</strong> — the Corkscrew, on the far side of the circuit and also across the track; about 0.6 miles, the farthest of the four.</li>
+        </ul>
+        <p class={p}>
+          You can bring blankets, umbrellas and folding chairs for the hillsides,
+          and small ice chests; leave glass at home. Children 15 and under get in
+          free with a paid adult. Hospitality clubs vary by event — at the 2026
+          INDYCAR finale the Turn 3 VIP Club overlooked the Andretti Hairpin and
+          Turns 3 and 4.
+        </p>
+      </section>
+
+      <section class="mt-14" id="camping">
+        <h2 class={h2}>The campgrounds on the map</h2>
+        <p class={p}>
+          The raceway says it runs event camping in six locations around the
+          track, in three tiers. Where they sit on the map:
+        </p>
+        <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+          <li><strong class="text-foreground">North of the circuit, by Turns 9–11:</strong> General Camping (dry, first come, first served), and the Corkscrew and Terrace campgrounds above the Corkscrew and Rainey Curve.</li>
+          <li><strong class="text-foreground">South, by Turns 5–6:</strong> A Camp (Grand Prix campground) and B Camp (Chaparral), closest to the Highway 68 entrance.</li>
+          <li><strong class="text-foreground">Inside the circuit, east:</strong> Fox Hill, which the raceway's <a href={CAMPING_GUIDE} target="_blank" rel="noreferrer" class={a}>event camping guide</a> marks as motorcycle events only.</li>
+        </ul>
+        <p class={p}>
+          Two smaller camping areas south of the track are mapped in
+          OpenStreetMap but not labelled on ours, because we could not match
+          their OpenStreetMap names to the raceway's. For tiers, the 40-foot RV
+          limit, the six-adult cap, booking and what nobody publishes about
+          prices, see our full{" "}
+          <a href="/laguna-seca/camping/" class={a}>Laguna Seca camping guide</a>.
+        </p>
+      </section>
+
+      <section class="mt-14" id="examples">
+        <h2 class={h2}>Three ways people get this wrong</h2>
+        <div class="mt-6 space-y-6">
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">Routing to the street address on race day</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              Typing “1021 Monterey-Salinas Highway” sends you to the Highway 68
+              gate at the bottom of the map. On a major event day that is the
+              camper entrance; spectators were told to use South Boundary Road,
+              on the opposite side of the property — about 1.1 miles apart in a
+              straight line on the map, and further by road. Navigate to
+              “Will-Call Laguna Seca Raceway, S Boundary Rd” instead.
+            </p>
+          </div>
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">Arriving at the campground after 5 p.m.</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              Camping check-in is 2:00 to 5:00 p.m., at the bottom of A Road.
+              A pass bought for the Grand Prix campground does not change that
+              window, and General or Preferred parking will not take the car
+              overnight. If you will be late, call {PHONE} before you leave
+              rather than after you arrive.
+            </p>
+          </div>
+          <div class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+            <h3 class="text-2xl text-foreground">Planning on “a quick walk to the Corkscrew”</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+              From the middle of General Parking the Corkscrew is about 0.6
+              miles in a straight line, across the circuit, and you can only
+              cross at a bridge. Nobody publishes a walking route or time for it,
+              and the hill is steep — the track drops 109 feet between Turns 8
+              and 9 alone. If the Corkscrew is the reason you are going, go there
+              first and stay.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-14 border-l-2 border-brass bg-surface/60 px-6 py-8" id="not-on-the-map">
+        <h2 class="text-3xl text-brass">What this map does not show, and why</h2>
+        <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+          <li><strong class="text-foreground">Restrooms, food and first aid.</strong> They move by event and the raceway's own map is the place for them; we would rather not pin a restroom that was somewhere else last weekend.</li>
+          <li><strong class="text-foreground">Walking routes and times.</strong> Not published by anyone.</li>
+          <li><strong class="text-foreground">ADA parking and accessible routes.</strong> The raceway publishes ADA access for its Pavilion rooftop and marks accessible campsites, but no ADA parking area. Ask on {PHONE}.</li>
+          <li><strong class="text-foreground">Shuttles and trams.</strong> None published.</li>
+          <li><strong class="text-foreground">Event-specific hospitality.</strong> Clubs, suites and pavilions change from event to event.</li>
+        </ul>
+        <p class={p}>
+          For all of those, the raceway's{" "}
+          <a href={OFFICIAL_MAP} target="_blank" rel="noreferrer" class={a}>official facility map</a>{" "}
+          (linked from its <a href={TRACK} target="_blank" rel="noreferrer" class={a}>track information</a>{" "}
+          page) is the authority. Map data on ours ©{" "}
+          <a href={OSM} target="_blank" rel="noreferrer" class={a}>OpenStreetMap contributors</a>, ODbL.
+        </p>
+      </section>
+
+      <section class="mt-14" id="faq">
+        <h2 class={h2}>Questions</h2>
+        <div class="mt-6 space-y-6">
+          {faq.map((f) => (
+            <div>
+              <h3 class="text-2xl text-foreground">{f.q}</h3>
+              <p class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mt-14 border-t border-border/70 pt-8" id="related">
+        <h2 class="text-2xl text-brass">Events at Laguna Seca on this site</h2>
+        <ul class="mt-4 grid gap-2 sm:grid-cols-2">
+          {[...regionalAtLaguna.map((e) => ({ href: eventHref(e), label: e.name, past: isPastDate(e.start, e.end, today), when: e.dateText })),
+            ...carWeekAtLaguna.map((e) => ({ href: `/event/${e.slug}/`, label: e.title, past: isPastDate(e.days[0]!.iso, e.days[e.days.length - 1]!.iso, today), when: e.days.length > 1 ? `${e.days[0]!.short}–${e.days[e.days.length - 1]!.short}, 2026` : `${e.days[0]!.short}, 2026` }))]
+            .map((l) => (
+              <li>
+                <a href={l.href} class="block border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">
+                  {l.label}
+                  <span class="block text-xs text-muted-foreground">{l.when}{l.past ? " · finished" : ""}</span>
+                </a>
+              </li>
+            ))}
+        </ul>
+        <p class="mt-6 text-base leading-relaxed text-muted-foreground">
+          Sleeping at the track? The{" "}
+          <a href="/laguna-seca/camping/" class={a}>Laguna Seca camping guide</a>{" "}
+          has every area by tier and the rules that decide whether you can come.
+          Here for the Motorsports Reunion? The{" "}
+          <a href="/monterey-car-week-map/" class={a}>Monterey Car Week map</a>{" "}
+          shows the raceway alongside every other Car Week venue, from Pebble
+          Beach to Carmel Valley. Everything else happening in the region is on
+          the{" "}
+          <a href="/monterey-events-calendar/" class={a}>Monterey events calendar</a>.
+        </p>
+      </section>
+    </div>
+  </main>
+</BaseLayout>
