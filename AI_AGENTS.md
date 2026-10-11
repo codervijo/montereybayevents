@@ -277,7 +277,9 @@ Car Week as a section) both carry build work, predating the
 `.A`-is-planning rule above. They are *not* renumbered — shipped commit
 subjects reference those identifiers and rewriting them would break the trail
 between `docs/Prompts.md`, `docs/growth.md` and git history. The rule applies
-from `v2` forward, where `v2.A` is a decisions-lock phase with no build work.
+from `v3` forward. `v2` has no `.A`–`.E` rows: its assisted-ingestion block
+moved to `v6.A`–`v6.E` on 2026-10-11, and `v2.F`–`v2.N` keep their shipped
+letters for the same reason as above.
 
 ## Conventions
 

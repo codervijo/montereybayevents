@@ -1153,3 +1153,11 @@ this line is a verbatim prompt.*
 > no Event node. Three unsourced phrases were cut before build (a distance, "no
 > lot of its own", "nothing on the events page").
 
+## 2026-10-11 — v4.A locked; ingestion block moved v2.A–E → v6.A–E
+
+> "start v4.A". Twelve decisions put to the operator with a recommendation
+> each. Before locking, the operator moved the unshipped assisted-ingestion
+> rows out of v2 to a new tier v6 (v2.F–N keep their shipped letters; v2's
+> tier theme reworded to what shipped). Operator asked why Instagram access
+> was needed — it is not; the plan uses none. Then "lock as recommended".
+> No code.

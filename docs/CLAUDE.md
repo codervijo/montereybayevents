@@ -205,6 +205,12 @@ re-proposed. Append; don't rewrite.
   URLs are not being revisited spreads the same crawl budget thinner.
   Wrong direction while crawl is the constraint.
 
+  **One named exception, 2026-10-11 (v4.A).** `/pop-ups/` is a single
+  landing page for the pop-ups tier, decided by the operator. It is not a
+  precedent: "this weekend", "free" and "family" are sections on that page,
+  not URLs, and city hubs and other category hubs stay deferred on the
+  terms above.
+
 - **See Monterey's compiled annual-events PDF has produced two wrong
   dates.** `2026-Annual-Events-Monterey-County-CA.pdf` is a
   `referenceUrl` on 15 rows and is where several original dates came
