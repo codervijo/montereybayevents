@@ -183,3 +183,12 @@ https://search.google.com/search-console directly.
 - **Action:** Three pages + 8 primary images (WebP srcset, PNG download, ImageObject, image sitemap); links from footer, homepage, hubs, all event pages, traffic, free, camping, farmers markets.
 - **Result:** TBD — review 2026-11-02
 - **Learning:** TBD — if Laguna Seca image impressions arrive before web impressions, image-first is a repeatable pattern for venue queries (Concours lawn, county fairgrounds). If `/events/` drops on calendar queries, merge signals rather than keeping two pages.
+
+## 2026-10-11 — v5.B: a page for a branded local query nobody answers, "monterey bay card show"
+- **Status:** active
+- **Hypothesis:** "monterey bay card show" (Ahrefs SV 70, KD N/A, Branded + Local) is searched by people who want one thing: the next date. No organiser publishes one, and the results are listing sites that either carry the finished 29 Nov 2025 show or a single unsourced 23–24 Jan 2027 entry. A page that says plainly what is and is not announced, and separates this show from the two other Monterey card shows with near-identical names, should rank on the branded term and its date/venue/admission variants.
+- **KPI:** indexed state, impressions, clicks and position for `/monterey-bay-card-show/` on "monterey bay card show" and variants
+- **Baseline:** 0 — new URL, not yet deployed or crawled
+- **Action:** Built `/monterey-bay-card-show/` (1,384 words, WebPage + BreadcrumbList + FAQPage, no Event node while the date is unannounced); linked from `/events/`.
+- **Result:** TBD — review 28 days after deploy
+- **Learning:** TBD — if it ranks, hand-built pages for branded pop-up queries are worth doing ahead of the v4 pipeline, and this is its first data point.

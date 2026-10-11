@@ -1,0 +1,423 @@
+---
+// /monterey-bay-card-show/ — targets "monterey bay card show" (v5.B).
+//
+// WHY THIS IS A STANDALONE PAGE AND NOT A ROW IN events-2026.ts: same reason as
+// /jazz-bash-monterey/. That dataset is transcribed from the CSV and
+// src/__tests__/events2026.test.js asserts exactly 61 rows; the card show is
+// not in the CSV and has no announced date inside the Aug-Dec 2026 window.
+//
+// NO ORGANISER PUBLISHES A NEXT DATE. Checked 2026-10-11: the Eventbrite
+// account that listed the 29 November 2025 show has no upcoming events, and
+// Sharp Corners' site (the 2025 sponsor) lists none. One listing site, The Card
+// Shop Finder, shows 23-24 January 2027; it names no organiser and its "event
+// website" link goes to a Trading Card Database entry that returns 403 to us.
+// That is a listing, not an announcement, so NEXT_EDITION stays null, the page
+// reports the listing as a listing, and no Event JSON-LD is emitted.
+//
+// SOURCING, all read 2026-10-11 and linked at the point of use: Eventbrite
+// (2025 date, hours, venue), Pacific Grove Chamber (sponsor), Monterey County
+// Weekly 27 Nov 2025 (admission, table count), monterey.gov (garage rates),
+// worldofsportsmemorabilia.com (the December Seaside show), KAZU community
+// calendar (Crispy Cardboard). Weekdays checked with `date -d`.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { buildBreadcrumbs, buildFaq, graph } from "../lib/imageSchema";
+import { isPastDate, pacificToday } from "../lib/isPast";
+
+const site = "https://montereybayevents.com";
+const title = "Monterey Bay Card Show: Next Date, Venue, Price & Parking";
+const description =
+  "The last confirmed Monterey Bay Card Show was 29 November 2025 at the Monterey Conference Center. What is and is not published for 2027, plus parking.";
+// trailingSlash: 'always' — the canonical MUST end in a slash. CHECK_161.
+const canonical = `${site}/monterey-bay-card-show/`;
+
+const EVENTBRITE = "https://www.eventbrite.com/e/monterey-bay-card-show-tickets-1504642629609";
+const CHAMBER =
+  "https://business.pacificgrove.org/events/details/monterey-bay-card-show-sponsored-by-sharp-corners-and-collectables-1500693";
+const WEEKLY = "https://flipbook.montereycountyweekly.com/archive/2025/11-27-25/34/";
+const SHARP_CORNERS = "https://www.sharpcornerscardsandcollectibles.com/";
+const CARD_SHOP_FINDER = "https://thecardshopfinder.com/event/monterey-bay-card-show-monterey-2027-01/";
+const WOSM =
+  "https://www.worldofsportsmemorabilia.com/products/monterey-card-and-collectible-show-table-reservation";
+const TRIFECTA = "https://www.trifectacollectibles.com/event/the-monterey-card-show-june-20th-to-21st/";
+const KAZU =
+  "https://www.kazu.org/community-calendar/event/crispy-cardboard-cards-and-collectibles-show-27-06-2026-16-07-35";
+const GARAGES =
+  "https://monterey.gov/your_city_hall/departments/public_works/parking/public_garages_and_lots.php";
+
+/**
+ * Set this ONLY from a date the organiser publishes themselves — never from a
+ * listing site and never from arithmetic on the 2025 date. While it is null
+ * the page says no date is announced and emits no Event node.
+ *
+ *   { start: "2027-01-23", end: "2027-01-24", text: "January 23-24, 2027" }
+ *
+ * Cross-check the weekday with `date -d <ISO> +%A` first; see docs/CLAUDE.md.
+ */
+const NEXT_EDITION: { start: string; end: string; text: string } | null = null;
+
+const today = pacificToday();
+// The Seaside show is a different event; its dates only switch the tense below.
+const seasideIsPast = isPastDate("2026-12-19", "2026-12-20", today);
+
+const faq: { q: string; a: string }[] = [
+  {
+    q: "When is the next Monterey Bay Card Show?",
+    a: "No date has been announced by the people who run it, as of 11 October 2026. The last confirmed show was Saturday 29 November 2025. One listing site shows 23–24 January 2027 at the Monterey Conference Center, but it names no organiser and no organiser channel repeats it, so treat that date as unconfirmed.",
+  },
+  {
+    q: "How much does it cost to get in?",
+    a: "Admission to the 29 November 2025 show was $5, according to Monterey County Weekly's listing that week. No price has been published for a later show, and no child or family price was published for 2025.",
+  },
+  {
+    q: "Where is the Monterey Bay Card Show held?",
+    a: "The 2025 show was at the Monterey Conference Center, 1 Portola Plaza, in downtown Monterey. The unconfirmed 2027 listing names the same building.",
+  },
+  {
+    q: "Is it the same as the Monterey Card & Collectible Show?",
+    a: "No. The Monterey Card & Collectible Show is run by World of Sports Memorabilia at the Embassy Suites in Seaside and is listed for 19–20 December 2026. The Monterey Bay Card Show is the one at the Conference Center downtown.",
+  },
+  {
+    q: "Is it only sports cards, or is there Pokémon too?",
+    a: "Both. Monterey County Weekly described the 2025 show as vintage and modern cards \"from sports to Pokemon and more\" across more than 200 tables.",
+  },
+  {
+    q: "How do I book a vendor table?",
+    a: "Nobody publishes a table price or a booking page for the Monterey Bay Card Show. The only public contact tied to it is the 2025 sponsor, Sharp Corners Sports Cards & Collectibles at 205 Cypress Avenue in Pacific Grove, which lists a phone number and email on its own site.",
+  },
+];
+
+const crumbs = [
+  { name: "Home", url: `${site}/` },
+  { name: "Events", url: `${site}/events/` },
+  { name: "Monterey Bay Card Show", url: canonical },
+];
+
+const jsonLd = graph(
+  {
+    "@type": "WebPage",
+    "@id": canonical,
+    url: canonical,
+    name: title,
+    description,
+    breadcrumb: buildBreadcrumbs(crumbs),
+  },
+  buildFaq(faq),
+);
+
+// Renders only once NEXT_EDITION is filled from the organiser. An Event node
+// with a listing-site date is worse than no node.
+const eventJsonLd = NEXT_EDITION
+  ? {
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: "Monterey Bay Card Show",
+      startDate: NEXT_EDITION.start,
+      endDate: NEXT_EDITION.end,
+      eventStatus: "https://schema.org/EventScheduled",
+      eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+      location: {
+        "@type": "Place",
+        name: "Monterey Conference Center",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "1 Portola Plaza",
+          addressLocality: "Monterey",
+          addressRegion: "CA",
+          postalCode: "93940",
+          addressCountry: "US",
+        },
+      },
+      url: canonical,
+    }
+  : null;
+
+const h2 = "border-b border-border/70 pb-2 text-3xl text-brass";
+const p = "mt-5 text-base leading-relaxed text-muted-foreground";
+const p2 = "mt-4 text-base leading-relaxed text-muted-foreground";
+const a = "text-brass hover:underline";
+const strong = "text-foreground";
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description.slice(0, 155)} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description.slice(0, 200)} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={`${site}/og-default.jpg`} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description.slice(0, 200)} />
+    <meta name="twitter:image" content={`${site}/og-default.jpg`} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
+    {eventJsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(eventJsonLd)} />
+    )}
+  </Fragment>
+
+  <main class="mx-auto max-w-3xl px-5 py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <ol class="flex flex-wrap gap-2">
+        <li><a href="/" class="hover:text-brass">Home</a></li>
+        <li aria-hidden="true">/</li>
+        <li><a href="/events/" class="hover:text-brass">Events</a></li>
+        <li aria-hidden="true">/</li>
+        <li aria-current="page" class="text-foreground">Monterey Bay Card Show</li>
+      </ol>
+    </nav>
+
+    <h1 class="mt-6 text-5xl leading-[0.9] sm:text-6xl">
+      Monterey Bay <span class="text-brass">Card Show</span>
+    </h1>
+
+    <p class="mt-4 text-sm uppercase tracking-[0.18em] text-muted-foreground">
+      {NEXT_EDITION ? NEXT_EDITION.text : "Next date not announced"}
+      {" · "}Monterey Conference Center
+    </p>
+
+    <p class="mt-7 text-lg leading-relaxed text-muted-foreground">
+      The Monterey Bay Card Show is a sports and trading card show held at the
+      Monterey Conference Center in downtown Monterey. The last confirmed one
+      was <strong class={strong}>Saturday 29 November 2025</strong>, 10am to
+      6pm, with $5 admission and more than 200 tables. No next date has been
+      announced by the people who run it. One listing site shows 23–24 January
+      2027, and nothing from the organiser backs that up yet.
+    </p>
+
+    <section class="mt-14">
+      <h2 class={h2}>When is the next one?</h2>
+      <p class={p}>
+        Nobody who runs the show has published a date. We checked on 11 October
+        2026: the{" "}
+        <a href={EVENTBRITE} target="_blank" rel="noreferrer" class={a}>Eventbrite account that listed the 2025 show</a>{" "}
+        has no upcoming events, and the 2025 sponsor's website showed no events
+        when we read it.
+      </p>
+      <p class={p2}>
+        What does exist is a single entry on a listing site.{" "}
+        <a href={CARD_SHOP_FINDER} target="_blank" rel="noreferrer" class={a}>The Card Shop Finder</a>{" "}
+        shows a Monterey Bay Card Show at the Conference Center on Saturday 23
+        and Sunday 24 January 2027, opening at 10am both days. The same entry
+        says admission "has not been published", names no organiser, and links
+        to a card-database listing instead of to anyone running the show. The
+        weekdays match the dates, so it is not a recycled entry from an earlier
+        year. It is still one unsourced listing.
+      </p>
+      <p class={p2}>
+        If you are driving in from out of the area, do not book around January
+        until an organiser repeats those dates. This page will carry the date
+        the day one is published.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class={h2}>What the last show was</h2>
+      <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+        <li>
+          <span class={strong}>Date and hours:</span> Saturday 29 November 2025,
+          10am to 6pm, the Saturday after Thanksgiving (
+          <a href={EVENTBRITE} target="_blank" rel="noreferrer" class={a}>Eventbrite</a>).
+        </li>
+        <li>
+          <span class={strong}>Venue:</span> Monterey Conference Center, 1
+          Portola Plaza, Monterey.
+        </li>
+        <li>
+          <span class={strong}>Admission:</span> $5, per{" "}
+          <a href={WEEKLY} target="_blank" rel="noreferrer" class={a}>Monterey County Weekly's listing</a>{" "}
+          that week. The Eventbrite page itself shows no ticket price.
+        </li>
+        <li>
+          <span class={strong}>Size:</span> "200-plus tables", in the Weekly's
+          words, with vintage and modern cards "from sports to Pokemon and
+          more".
+        </li>
+        <li>
+          <span class={strong}>Who was behind it:</span> the Eventbrite listing
+          was posted by an organiser account named Jody, and the{" "}
+          <a href={CHAMBER} target="_blank" rel="noreferrer" class={a}>Pacific Grove Chamber of Commerce</a>{" "}
+          listed it as "sponsored by Sharp Corners and Collectables", a card
+          shop at 205 Cypress Avenue in Pacific Grove.
+        </li>
+      </ul>
+      <p class={p2}>
+        That is one show, so it does not establish a pattern. A November date in
+        2025 and a January listing for 2027 would mean no show at all in 2026,
+        and nothing we found says whether that is the plan or a gap in the
+        listings.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class={h2}>Three Monterey card shows with nearly the same name</h2>
+      <p class={p}>
+        Most of the confusion around this search comes from three separate
+        shows, run by different people in different buildings.
+      </p>
+      <div class="mt-6 overflow-x-auto">
+        <table class="w-full text-left text-sm text-muted-foreground">
+          <thead class="text-[0.65rem] uppercase tracking-[0.18em] text-foreground">
+            <tr class="border-b border-border/70">
+              <th class="py-2 pr-4 font-bold">Show</th>
+              <th class="py-2 pr-4 font-bold">Where</th>
+              <th class="py-2 font-bold">What is published</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-border/40 align-top">
+              <td class="py-3 pr-4 text-foreground">Monterey Bay Card Show</td>
+              <td class="py-3 pr-4">Monterey Conference Center, downtown Monterey</td>
+              <td class="py-3">Last held 29 November 2025. No next date from the organiser.</td>
+            </tr>
+            <tr class="border-b border-border/40 align-top">
+              <td class="py-3 pr-4 text-foreground">Monterey Card &amp; Collectible Show</td>
+              <td class="py-3 pr-4">Embassy Suites, 1441 Canyon Del Rey Blvd, Seaside</td>
+              <td class="py-3">
+                {seasideIsPast
+                  ? "Ran Saturday 19 and Sunday 20 December 2026."
+                  : "Saturday 19 and Sunday 20 December 2026. Hours and admission not published."}
+              </td>
+            </tr>
+            <tr class="align-top">
+              <td class="py-3 pr-4 text-foreground">Crispy Cardboard Cards and Collectibles Show</td>
+              <td class="py-3 pr-4">Monterey Beach Hotel, 2600 Sand Dunes Drive, Monterey</td>
+              <td class="py-3">Ran Saturday 25 July 2026, 10am to 6pm, free admission. No upcoming date found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class={p}>
+        The <span class={strong}>Monterey Card &amp; Collectible Show</span> is
+        run by World of Sports Memorabilia, whose{" "}
+        <a href={WOSM} target="_blank" rel="noreferrer" class={a}>own table-reservation page</a>{" "}
+        gives the December dates and describes sports cards, Pokémon, One Piece,
+        other trading card games, memorabilia, coins and toys. It sells vendor
+        tables only, at $200 for a six-foot table, and showed them as sold out
+        when we read it. It gives no opening hours and no price for visitors.
+        Its June 2026 edition was also promoted as{" "}
+        <a href={TRIFECTA} target="_blank" rel="noreferrer" class={a}>"The Monterey Card Show"</a>,
+        which is where a lot of the name overlap starts.
+      </p>
+      <p class={p2}>
+        The <span class={strong}>Crispy Cardboard</span> show is the free one.
+        Its{" "}
+        <a href={KAZU} target="_blank" rel="noreferrer" class={a}>community-calendar listing for 25 July 2026</a>{" "}
+        puts it in the Del Monte Ballroom at the Monterey Beach Hotel with
+        Pokémon, One Piece, sports cards, toys, comics and figures. Listing
+        sites show other 2026 dates for it that disagree with each other, so
+        we give only the one its own listing states.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class={h2}>Which one are you actually looking for?</h2>
+      <p class={p}>
+        <span class={strong}>You want a card show before Christmas.</span>{" "}
+        {seasideIsPast
+          ? "That was the Seaside show on 19–20 December 2026, which has now finished."
+          : "That is the Seaside show on 19–20 December 2026, at the Embassy Suites, not the Conference Center. The organiser has not published hours or a door price, so check with them before you go."}
+      </p>
+      <p class={p2}>
+        <span class={strong}>You saw "January 23–24, 2027" somewhere.</span>{" "}
+        That is the unconfirmed Conference Center listing described above. It
+        may well turn out to be right. Hold the weekend if you like, and wait
+        for an organiser to say so before paying for anything.
+      </p>
+      <p class={p2}>
+        <span class={strong}>You went last Thanksgiving weekend and assume it is annual.</span>{" "}
+        This is the one that can waste a trip. No 2026 show at the Conference
+        Center is listed by the organiser's Eventbrite account, by the sponsor,
+        or by the listing site that carries the 2027 date. Do not turn up at
+        Portola Plaza on the Saturday after Thanksgiving expecting it.
+      </p>
+    </section>
+
+    <section class="mt-14">
+      <h2 class={h2}>Parking at the Conference Center</h2>
+      <p class={p}>
+        The public garages nearest the Conference Center are the City's
+        Downtown East and Downtown West Garages, both listed at 340 Tyler
+        Street.
+      </p>
+      <ul class="mt-5 space-y-3 text-base leading-relaxed text-muted-foreground">
+        <li>
+          <span class={strong}>Rate, both garages:</span> first hour free, then
+          $1 per 30 minutes or part of it, to a $12 maximum. Rates reset at
+          midnight.
+        </li>
+        <li>
+          <span class={strong}>Size:</span> 590 spaces in the East Garage, 229
+          in the West.
+        </li>
+        <li>
+          <span class={strong}>Paying:</span> take a ticket at the gate and pay
+          at a pay station before you return to the car. The City lists coins,
+          bills, Visa and MasterCard.
+        </li>
+        <li>
+          <span class={strong}>One catch:</span> the City says the West Garage
+          charges a flat rate at entry "for some special events and night
+          entry", and does not say which events.
+        </li>
+      </ul>
+      <p class={p2}>
+        All of that is from the{" "}
+        <a href={GARAGES} target="_blank" rel="noreferrer" class={a}>City of Monterey's garages page</a>,
+        read 11 October 2026. A full day at a show costs at most $12 to park
+        at those rates, and a visit of under an hour costs nothing.
+      </p>
+    </section>
+
+    <section class="mt-14 border border-border/70 bg-surface/60 p-6">
+      <h2 class="text-3xl text-brass">What nobody publishes</h2>
+      <ul class="mt-5 list-disc space-y-2 pl-5 text-base leading-relaxed text-muted-foreground">
+        <li>A next date, from anyone who runs the show.</li>
+        <li>Admission for any show after 2025, or a child price for any year.</li>
+        <li>A website or social account for the show itself. The 2025 sponsor's shop has both; the show does not.</li>
+        <li>Vendor table prices, table counts for a future show, or a booking page.</li>
+        <li>Whether dealers take cards or cash only, and whether there is an ATM in the building.</li>
+        <li>A dealer list, guest signers or grading-company presence.</li>
+      </ul>
+      <p class={p2}>
+        The closest thing to a contact is{" "}
+        <a href={SHARP_CORNERS} target="_blank" rel="noreferrer" class={a}>Sharp Corners Sports Cards &amp; Collectibles</a>{" "}
+        in Pacific Grove, the 2025 sponsor.
+      </p>
+    </section>
+
+    <section class="mt-14" id="faq">
+      <h2 class={h2}>Questions</h2>
+      <div class="mt-6 space-y-6">
+        {faq.map((f) => (
+          <div>
+            <h3 class="text-2xl text-foreground">{f.q}</h3>
+            <p class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14 border-t border-border/70 pt-8" id="related">
+      <h2 class="text-2xl text-brass">Also on this site</h2>
+      <p class={p2}>
+        <a href="/jazz-bash-monterey/" class={a}>Jazz Bash Monterey</a> uses the
+        same Conference Center and the same two garages in March. Everything
+        else with a confirmed date is on the{" "}
+        <a href="/monterey-events-calendar/" class={a}>Monterey events calendar</a>{" "}
+        and in the{" "}
+        <a href="/events/" class={a}>full list of Central Coast events</a>.
+      </p>
+    </section>
+  </main>
+</BaseLayout>

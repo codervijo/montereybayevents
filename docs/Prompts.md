@@ -1138,3 +1138,18 @@ this line is a verbatim prompt.*
 > is closest to parking" (map distances say Turn 11), a wrong "German shows in
 > Seaside", and a Laguna→Quail route that ignored Laureles Grade.
 
+## 2026-10-11 — v5.B: /monterey-bay-card-show/, and v4 placed in the PRD
+
+> Operator showed an Ahrefs screenshot for "monterey bay card show" (SV 70) and
+> asked whether a page existed. It did not; placed as v2.O, then renumbered v5.B by the operator (v5.A is its decisions lock). Mid-turn the
+> operator pasted a "Pop-Ups & Trending Events" brief (source monitoring,
+> extraction, review queue, /pop-ups/, daily job, measurement). Not in the PRD
+> and largely a duplicate of v2.A–E, so placed first: operator chose a new tier,
+> v4, with the card show page staying the standalone card show page. v4.A–E rows written; no
+> v4 code.
+>
+> v5.B research found no organiser-published next date. The page says so,
+> reports the one listing-site date (23–24 Jan 2027) as unconfirmed, and emits
+> no Event node. Three unsourced phrases were cut before build (a distance, "no
+> lot of its own", "nothing on the events page").
+
