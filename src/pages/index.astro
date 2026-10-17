@@ -233,7 +233,10 @@ const faq = [
   },
   {
     q: "How do I submit an event?",
-    a: `Email ${SUBMIT_EMAIL} with the event name, date, town and a link to the organiser's page.`,
+    // No address in visible text: Cloudflare Email Obfuscation rewrites it to
+    // "[email protected]" in the raw HTML, which would no longer match this
+    // answer in the FAQPage JSON-LD. The button below carries it as a mailto.
+    a: "Use the Send an event button at the bottom of this page, with the event name, date, town and a link to the organiser's page.",
   },
   {
     q: "How are dates checked?",
@@ -557,7 +560,7 @@ const admissionLabel = (e: RegionalEvent) =>
           href={`mailto:${SUBMIT_EMAIL}?subject=Event%20submission`}
           class="mt-5 inline-block bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
         >
-          Email {SUBMIT_EMAIL}
+          Send an event
         </a>
       </div>
     </section>
