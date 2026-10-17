@@ -52,10 +52,13 @@ describe('SEO baseline (src/pages/index.astro)', () => {
     expect(indexHtml).toMatch(/<link\s+rel="icon"[^>]*href="\/favicon\.svg"/);
   });
 
+  // v2.O: the JSON-LD is built as an object in the frontmatter (it carries the
+  // computed ItemList and FAQPage), so the types are asserted on the full
+  // source and the script tag on the markup.
   it('has JSON-LD Organization + WebSite', () => {
     expect(indexHtml).toMatch(/application\/ld\+json/);
-    expect(indexHtml).toMatch(/"@type":\s*"Organization"/);
-    expect(indexHtml).toMatch(/"@type":\s*"WebSite"/);
+    expect(index).toMatch(/"@type":\s*"Organization"/);
+    expect(index).toMatch(/"@type":\s*"WebSite"/);
   });
 });
 
@@ -136,13 +139,14 @@ describe('/free/ page', () => {
   //
   // When v1.C gives the regional set admission data, /free/ gains year-round
   // content and this can go back to being unconditional.
-  it('offers /free/ in the homepage hero only while Car Week is ahead', () => {
-    const hero = indexHtml.slice(0, indexHtml.indexOf('Featured slot'));
-    // Still referenced from the hero — but behind the carWeekIsPast branch.
-    expect(hero).toContain('"/free/"');
-    expect(hero).toContain('carWeekIsPast');
-    // Never an unconditional primary CTA in the hero any more.
-    expect(hero).not.toContain('href="/free/"');
+  //
+  // v2.O: the hero no longer offers /free/ at all. It is linked from "Browse by
+  // type", labelled as the Car Week page it is.
+  it('keeps /free/ out of the homepage hero, labelled as Car Week where linked', () => {
+    const hero = indexHtml.slice(0, indexHtml.indexOf('id="this-weekend"'));
+    expect(hero.length).toBeGreaterThan(0);
+    expect(hero).not.toContain('/free/');
+    expect(index).toContain('{ href: "/free/", label: "Free Car Week 2026 events" }');
   });
 
   it('stays prominently linked from the Car Week hub and schedule', () => {

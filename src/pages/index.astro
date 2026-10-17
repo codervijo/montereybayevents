@@ -1,144 +1,292 @@
 ---
-// src/pages/index.astro — the Monterey Bay events index.
+// src/pages/index.astro — the Monterey Bay events calendar (v2.O).
 //
-// Site-level page: Organization + WebSite JSON-LD live here, and Car Week is the
-// featured section rather than the subject of the whole page. The Car Week hub
-// (with its own Event JSON-LD) is at /monterey-car-week/.
+// Site-level page: Organization + WebSite JSON-LD live here, plus an ItemList
+// of the events this page actually lists and a FAQPage built from the same
+// array the visible FAQ renders. The Car Week hub (with its own Event JSON-LD)
+// is at /monterey-car-week/.
 //
-// SCOPE NOTE: two datasets back this page. Monterey Car Week 2026 in full
-// (src/data/events.ts), and the regional Aug–Dec 2026 calendar sourced from
-// data/monterey_santacruz_events_aug_dec_2026.csv (src/data/events-2026.ts).
-// Nothing on this page is invented: an event with no announced date is listed
-// as "date not yet announced" rather than given a plausible one.
+// EVERY LIST ON THIS PAGE IS COMPUTED AT BUILD from src/data/events-2026.ts and
+// src/data/farmersMarkets.ts — no date is typed into this file except the one
+// sourced 2027 Car Week date below. The daily rebuild Worker is what keeps
+// "this weekend" and "next 30 days" current; without a rebuild `pacificToday()`
+// freezes at the last push. Nothing here is invented: an event with no
+// announced date says so, and Free/Paid appears only where `admission` is set
+// from the organiser's own words.
+//
+// The dataset ends 2026-12-31. From January the weekend and 30-day lists fall
+// through to their empty states rather than showing a stale set.
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FireAlert from "../components/FireAlert.astro";
-import { ROAD_CLOSURES_URL, schedule, totalEvents } from "../data/events";
 import { totalFreeListings } from "../data/eventIndex";
 import {
   DATE_TBA,
+  MONTHS,
   currentAndNextMonth,
   eventHref,
   eventsInMonth,
   monthHref,
   regionalEvents,
-  totalRegionalEvents,
+  type RegionalEvent,
 } from "../data/events-2026";
+import {
+  addDays,
+  formatDay,
+  formatHours,
+  montereyCountyMarkets,
+  santaCruzCountyMarkets,
+  sessionsOn,
+  weekdayOf,
+  WEEKDAYS,
+} from "../data/farmersMarkets";
 import { isPastDate, pacificToday } from "../lib/isPast";
 
 const site = "https://montereybayevents.com";
-// Title is kept at or under 60 chars and description within 120-160 so neither
-// is truncated in a SERP (CHECK_070 / CHECK_071). `description` is written to
-// land in range as-is — do NOT reintroduce a `.slice()` here: the old
-// `description.slice(0, 155)` cut mid-word, shipping "…plus Monte" to search
-// results, and it also defeated the conformance checker's Astro head resolver,
-// which cannot parse a method call with arguments and read the literal string
-// "{description.slice(0," as a 21-character description.
-//
-// The literal is also kept short enough that it stays inside 120-160 BOTH as
-// rendered (`${totalRegionalEvents}` -> "61", 129 chars) and as raw source with
-// the placeholder unexpanded (149 chars) — that checker measures the source and
-// does not evaluate template interpolation. Adding ~20 chars here passes in the
-// browser but trips CHECK_071 at 161+.
-const title = "Monterey Bay Events — Monterey & Santa Cruz Event Calendar";
-const description = `Monterey and Santa Cruz county events: ${totalRegionalEvents} public events, August to December 2026, with verified dates, cities and official links.`;
+const canonical = `${site}/`;
+// Title at or under 60 chars (CHECK_070); the brief's 75-char version was cut
+// to this by operator decision. Description is a literal so the conformance
+// checker, which reads source and does not evaluate interpolation, measures
+// the same 120-160 chars the browser renders (CHECK_071).
+const title = "Monterey Bay Events Calendar — Monterey & Santa Cruz County";
+const description =
+  "What's on around Monterey Bay this weekend and this month: festivals, fairs, markets and holiday events in Monterey and Santa Cruz counties.";
 
-// The month hubs to feature, resolved from the build date and clamped to the
-// months the dataset covers — see currentAndNextMonth().
-// Car Week 2026 ran 7-16 August. Everything below that leans on it is written
-// in both tenses, so the homepage stops leading with a finished event the day
-// after it ends rather than whenever someone notices.
-const carWeekIsPast = isPastDate("2026-08-07", "2026-08-16");
+/** Where event submissions go. Operator-supplied 2026-10-16. */
+const SUBMIT_EMAIL = "hello@lamill.io";
 
-const { current, next } = currentAndNextMonth(new Date());
-const featuredMonths = [current, ...(next ? [next] : [])].map((m) => ({
-  ...m,
-  href: monthHref(m.key),
-  // Past events are dropped from the homepage. It is a decision surface —
-  // nobody arrives at "what's on" wanting to know what they missed. The month
-  // hubs still list everything, marked, because their job is the full record.
-  // NOTE: this is build-time (see src/lib/isPast.ts) — it is only correct while
-  // the site is rebuilt regularly. See v1.Q in docs/prd.md.
-  events: eventsInMonth(m.key).filter((e) => !isPastDate(e.start, e.end)).slice(0, 5),
-  count: eventsInMonth(m.key).filter((e) => !isPastDate(e.start, e.end)).length,
-}));
-// Canonical MUST match the served URL incl. trailing slash (trailingSlash:
-// 'always' in astro.config.mjs). For a sub-page, derive it the same way:
-//   const canonical = `${site}/<route>/`;   // e.g. `${site}/free/`
-// A no-slash canonical 308-redirects and breaks indexing (CHECK_161).
-// The next things actually happening, for the featured slot once Car Week has
-// been and gone. Undated rows are excluded — they cannot be "next".
-//
-// FEATURE PIN. One event can be hoisted to the front of this list for a fixed
-// window, for a near-term traffic play. It is a pin and not a re-sort: the rest
-// of the list stays chronological, and the pin SELF-RETIRES on two independent
-// conditions — the window expiring, and the event itself going past. After that
-// the module is purely chronological again with no code change needed, which is
-// the point. Do not let this grow into a general "featured events" system
-// without deciding to build one.
-//
-// The daily rebuild Worker is what makes the expiry real; without a rebuild
-// `pacificToday()` freezes at the last push. See v1.Q in docs/prd.md.
-const FEATURED_SLUG = "monterey-jazz-festival";
-/** Last day the pin applies, inclusive. Pin also drops when the event is past. */
-const FEATURED_UNTIL = "2026-09-27";
-/** The "one line" on the pinned card. Kept to one sentence of sourced fact. */
-const FEATURED_BLURB =
-  "Three days and six stages at the Fairgrounds, led by a first-ever Herbie Hancock and Ron Carter duo.";
+// Pebble Beach Concours 2027 — organiser-stated, the one sourced 2027 Car Week
+// date. Same constant and source as CONCOURS_2027 in
+// src/pages/monterey-car-week/index.astro; change both together. The overall
+// week window is NOT published, so none is shown.
+const CONCOURS_2027_TEXT = "Sunday 15 August 2027";
 
 const today = pacificToday();
+const year = (iso: string) => iso.slice(0, 4);
+const longDate = (iso: string) => `${formatDay(iso)} ${year(iso)}`;
+
+// ── Windows ───────────────────────────────────────────────────────────────
+// "This weekend" is Friday to Sunday. Mon–Thu it means the coming weekend;
+// Fri–Sun it means the one we are in, starting today.
+const dayIdx = WEEKDAYS.indexOf(weekdayOf(today)); // Monday = 0
+const friday = addDays(today, 4 - dayIdx);
+const sunday = addDays(friday, 2);
+const weekendFrom = friday > today ? friday : today;
+const horizon = addDays(today, 30);
+
+const overlaps = (e: RegionalEvent, from: string, to: string) =>
+  !!e.start && e.start <= to && (e.end ?? e.start) >= from;
+
 const upcoming = regionalEvents
-  .filter((e) => e.start && !isPastDate(e.start, e.end) && !e.existingSlug && !e.hubHref)
-  .sort((a, b) => (a.start! < b.start! ? -1 : 1));
+  .filter((e) => e.start && !isPastDate(e.start, e.end, today))
+  .sort((a, b) => (a.start! < b.start! ? -1 : a.start! > b.start! ? 1 : a.name.localeCompare(b.name)));
 
-const pinned =
-  today <= FEATURED_UNTIL
-    ? upcoming.find((e) => e.slug === FEATURED_SLUG)
-    : undefined;
+const weekendEvents = upcoming.filter((e) => overlaps(e, weekendFrom, sunday)).slice(0, 10);
+// Empty weekend → show what is next instead, and say so in the heading.
+const weekendIsEmpty = weekendEvents.length === 0;
+const weekendList = weekendIsEmpty ? upcoming.slice(0, 6) : weekendEvents;
+const weekendLabel =
+  weekendFrom === sunday
+    ? formatDay(sunday)
+    : `${formatDay(weekendFrom)} – ${formatDay(sunday)}`;
 
-const upcomingEvents = pinned
-  ? [pinned, ...upcoming.filter((e) => e.slug !== pinned.slug)].slice(0, 5)
-  : upcoming.slice(0, 4);
+const shown = new Set(weekendList.map((e) => e.slug));
+const nextThirty = upcoming
+  .filter((e) => !shown.has(e.slug) && overlaps(e, addDays(sunday, 1), horizon))
+  .slice(0, 15);
+// Fewer than 10 inside 30 days → continue with what comes after, marked as such.
+const furtherAhead =
+  nextThirty.length < 10
+    ? upcoming
+        .filter((e) => !shown.has(e.slug) && !nextThirty.includes(e) && e.start! > horizon)
+        .slice(0, 10 - nextThirty.length)
+    : [];
 
-const canonical = `${site}/`;
+// Farmers markets open over the weekend window — a weekly rule, not an event,
+// so they get one line rather than places in the list.
+const allMarkets = [...montereyCountyMarkets, ...santaCruzCountyMarkets];
+const weekendDays = [0, 1, 2].map((i) => addDays(friday, i)).filter((d) => d >= today);
+const weekendMarkets = weekendDays.flatMap((d) => sessionsOn(d, allMarkets));
 
-// Sections of the site that exist today, in the order a visitor needs them.
-const sections = [
+const listedUpcoming = [...weekendList, ...nextThirty, ...furtherAhead];
+const withOrganiser = upcoming.filter((e) => e.officialWebsite).length;
+
+// ── Months ────────────────────────────────────────────────────────────────
+// The current month and the next five that have a hub page. The dataset only
+// has hubs through December 2026, so this is often fewer than six.
+const { current } = currentAndNextMonth(new Date());
+const fromMonth = MONTHS.findIndex((m) => m.key === current.key);
+const monthLinks = MONTHS.slice(fromMonth, fromMonth + 6).map((m) => ({
+  ...m,
+  href: monthHref(m.key),
+  // Dated and not yet over. Undated rows are never past, so they would
+  // otherwise count as "upcoming" when nothing says they are.
+  count: eventsInMonth(m.key).filter((e) => e.start && !isPastDate(e.start, e.end, today)).length,
+}));
+
+// ── Towns ─────────────────────────────────────────────────────────────────
+// Every town in the data, with its 2026 listing count. No town pages exist
+// (city hubs are deferred — docs/CLAUDE.md), so these are plain text.
+const townCounts = new Map<string, number>();
+let countywide = 0;
+for (const e of regionalEvents) {
+  if (!e.city) {
+    countywide++;
+    continue;
+  }
+  townCounts.set(e.city, (townCounts.get(e.city) ?? 0) + 1);
+}
+const towns = [...townCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+// ── Types ─────────────────────────────────────────────────────────────────
+// Categories in the data are free-text ("Halloween / Family"), so a type is a
+// word match against them. Counts are 2026 listings.
+const byCategory = (re: RegExp) => regionalEvents.filter((e) => re.test(e.category)).length;
+const types: { label: string; count: string; links: { href: string; label: string }[]; note?: string }[] = [
   {
-    href: "/events/",
-    label: "The 2026 calendar",
-    body: `All ${totalRegionalEvents} Central Coast events, August to December, by county and month.`,
+    label: "Free",
+    count: `${totalFreeListings} Car Week listings`,
+    links: [{ href: "/free/", label: "Free Car Week 2026 events" }],
+    note: "Elsewhere an event is marked free only when its organiser says so.",
   },
-  ...(carWeekIsPast
-    ? [
-        {
-          href: monthHref(current.key),
-          label: `What's on in ${current.label.split(" ")[0]}`,
-          body: "Every listed event this month, by county, with dates and official links.",
-        },
-        {
-          href: "/monterey-car-week/",
-          label: "Monterey Car Week 2026",
-          body: `The full ${totalEvents}-listing record of August 7-16, kept for reference.`,
-        },
-      ]
-    : [
-        {
-          href: "/monterey-car-week/schedule/",
-          label: "Full Car Week schedule",
-          body: `All ${totalEvents} listings across ten days, filterable by admission.`,
-        },
-        {
-          href: "/free/",
-          label: "Free Car Week events",
-          body: `${totalFreeListings} listings that cost nothing to spectate, grouped by day.`,
-        },
-      ]),
+  { label: "Family & kids", count: `${byCategory(/family/i)} listings`, links: [] },
+  { label: "Festivals", count: `${byCategory(/festival/i)} listings`, links: [] },
   {
-    href: "/traffic/",
-    label: "Traffic, closures & safety",
-    body: "Live county closures, Caltrans cameras and public safety text alerts.",
+    label: "Car events",
+    count: `${byCategory(/automotive|motorsport/i)} listings`,
+    links: [
+      { href: "/monterey-car-week/", label: "Monterey Car Week" },
+      { href: "/monterey-car-week-map/", label: "venue map" },
+      { href: "/laguna-seca-map/", label: "Laguna Seca map" },
+    ],
+  },
+  {
+    label: "Farmers markets",
+    count: `${allMarkets.length} weekly markets`,
+    links: [
+      { href: "/monterey-farmers-market/", label: "Monterey County" },
+      { href: "/santa-cruz-farmers-market/", label: "Santa Cruz County" },
+    ],
+  },
+  { label: "Holidays", count: `${byCategory(/holiday|christmas|new year/i)} listings`, links: [] },
+];
+
+// ── Big annual events ─────────────────────────────────────────────────────
+// One line each, written from the row's own fields. No 2027 date exists in the
+// data for any of them except the Concours, so the rest read "2027 dates TBA".
+const annualRow = (slug: string) => {
+  const e = regionalEvents.find((x) => x.slug === slug);
+  if (!e) throw new Error(`annual event "${slug}" missing from events-2026.ts`);
+  return e;
+};
+const annual = [
+  {
+    e: annualRow("monterey-car-week"),
+    line: "Ten days of concours, racing and auctions across Monterey, Carmel, Pebble Beach, Seaside and Salinas.",
+    next: `Pebble Beach Concours ${CONCOURS_2027_TEXT}; full 2027 week TBA`,
+  },
+  {
+    e: annualRow("monterey-county-fair"),
+    line: "Five days over Labor Day weekend at the Monterey County Fair & Event Center.",
+  },
+  {
+    e: annualRow("castroville-artichoke-festival"),
+    line: "Back in Castroville in 2026, revived by the Castroville Coalition after the original festival closed in 2025.",
+  },
+  {
+    e: annualRow("pacific-grove-butterfly-parade-bazaar"),
+    line: "Pacific Grove's butterfly parade and community bazaar, one Saturday in early October.",
+  },
+  {
+    e: annualRow("festa-italia-monterey"),
+    line: "Monterey's Italian festival at Custom House Plaza — the 93rd in 2026.",
+  },
+  {
+    e: annualRow("monterey-bay-greek-festival"),
+    line: "Labor Day weekend, Saturday to Monday, at Custom House Plaza, by the organisers' recurring rule.",
+  },
+].map((a) => ({ ...a, href: eventHref(a.e), next: a.next ?? "2027 dates TBA" }));
+
+// ── FAQ ───────────────────────────────────────────────────────────────────
+// Rendered visibly AND emitted as FAQPage JSON-LD from this one array.
+const townOf = (e: RegionalEvent) => e.city ?? "countywide";
+const weekendAnswer = weekendIsEmpty
+  ? upcoming.length
+    ? `Nothing is listed for ${weekendLabel}. The next listed event is ${upcoming[0].name} in ${townOf(upcoming[0])}, ${upcoming[0].dateText}.`
+    : `Nothing is listed for ${weekendLabel}, and no later dates are in the calendar yet.`
+  : `${weekendEvents.length} listed for ${weekendLabel}: ${weekendEvents
+      .map((e) => `${e.name} (${townOf(e)})`)
+      .join("; ")}.${weekendMarkets.length ? ` ${weekendMarkets.length} farmers markets are also open.` : ""}`;
+const freeUpcoming = upcoming.filter((e) => e.admission === "free").length;
+const faq = [
+  { q: "What's on around Monterey Bay this weekend?", a: weekendAnswer },
+  {
+    q: "When is Monterey Car Week 2027?",
+    a: `The Pebble Beach Concours d'Elegance is on ${CONCOURS_2027_TEXT}. No organiser has published the dates of the full week yet, so we don't list any.`,
+  },
+  {
+    q: "Where can I find free events?",
+    a: `The free page lists the ${totalFreeListings} Car Week 2026 events that cost nothing to watch. On the rest of the calendar we mark an event free only when its organiser says so${
+      freeUpcoming
+        ? `; ${freeUpcoming} upcoming ${freeUpcoming === 1 ? "listing has" : "listings have"} that today.`
+        : ", and no upcoming listing has that yet, so check the organiser link on each event page."
+    }`,
+  },
+  {
+    q: "How do I submit an event?",
+    a: `Email ${SUBMIT_EMAIL} with the event name, date, town and a link to the organiser's page.`,
+  },
+  {
+    q: "How are dates checked?",
+    a: "Where an organiser publishes a date, theirs wins over every other listing, and we check that each weekday matches its date. An event with no announced date says \"Date not yet announced\" instead of a guess.",
   },
 ];
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${site}/#organization`,
+      name: "Monterey Bay Events",
+      url: canonical,
+      email: SUBMIT_EMAIL,
+      areaServed: [
+        { "@type": "AdministrativeArea", name: "Monterey County, California" },
+        { "@type": "AdministrativeArea", name: "Santa Cruz County, California" },
+      ],
+    },
+    {
+      // No SearchAction: the site has no search.
+      "@type": "WebSite",
+      "@id": `${site}/#website`,
+      url: canonical,
+      name: "Monterey Bay Events",
+      publisher: { "@id": `${site}/#organization` },
+    },
+    {
+      "@type": "ItemList",
+      name: "Upcoming events around Monterey Bay",
+      numberOfItems: listedUpcoming.length,
+      itemListElement: listedUpcoming.map((e, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        url: `${site}${eventHref(e)}`,
+        name: e.name,
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map((f) => ({
+        "@type": "Question",
+        name: f.q,
+        acceptedAnswer: { "@type": "Answer", text: f.a },
+      })),
+    },
+  ],
+};
+
+const admissionLabel = (e: RegionalEvent) =>
+  !e.admission ? null : e.admission === "free" ? "Free" : "Paid";
 ---
 
 <BaseLayout>
@@ -168,343 +316,249 @@ const sections = [
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${site}/og/home.png`} />
 
-    <!-- Site-level JSON-LD. The Monterey Car Week Event object lives on its own
-         hub page (/monterey-car-week/), not here. -->
-    <script type="application/ld+json" is:inline>
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Organization",
-      "@id": "https://montereybayevents.com/#organization",
-      "name": "Monterey Bay Events",
-      "url": "https://montereybayevents.com/",
-      "areaServed": [
-        { "@type": "AdministrativeArea", "name": "Monterey County, California" },
-        { "@type": "AdministrativeArea", "name": "Santa Cruz County, California" }
-      ]
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://montereybayevents.com/#website",
-      "url": "https://montereybayevents.com/",
-      "name": "Monterey Bay Events",
-      "publisher": { "@id": "https://montereybayevents.com/#organization" }
-    }
-  ]
-}
-    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
   </Fragment>
 
   <main>
     <FireAlert />
 
     <section class="border-b border-border/70">
-      <div class="mx-auto max-w-6xl px-5 py-14 sm:py-20">
+      <div class="mx-auto max-w-6xl px-5 py-12 sm:py-16">
         <p class="eyebrow">Monterey &amp; Santa Cruz counties</p>
-        <h1 class="mt-3 text-5xl leading-[0.88] sm:text-7xl md:text-8xl">
-          What's on around
-          <br />
-          <span class="text-brass">Monterey Bay</span>
+        <h1 class="mt-3 text-5xl leading-[0.9] sm:text-7xl">
+          Monterey Bay <span class="text-brass">Events Calendar</span>
         </h1>
         <p class="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Verified dates, locations and free-or-ticketed status for public events
-          across the Central Coast — the details that official calendars bury.
-          {totalRegionalEvents} events from August to December 2026, county fairs
-          to holiday markets{carWeekIsPast ? "." : ", plus Monterey Car Week covered day by day."}
+          Public events across Monterey County and Santa Cruz County — festivals,
+          fairs, parades, holiday markets, races and Monterey Car Week — each with
+          its date, its town and a link to whoever runs it. Where an organiser
+          publishes a date, theirs wins over every other listing; {withOrganiser} of
+          the {upcoming.length} upcoming events link to their organiser's own site.
+          Events with no announced date say so. Page regenerated {longDate(today)}.
         </p>
-        <div class="mt-8 flex flex-wrap gap-3">
+        <div class="mt-7 flex flex-wrap gap-3">
           <a
             href="/events/"
             class="bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
           >
-            All 2026 events
+            All events
           </a>
           <a
-            href="/monterey-car-week/"
+            href="/monterey-events-calendar/"
             class="border border-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brass transition-colors hover:bg-brass hover:text-primary-foreground"
           >
-            Monterey Car Week 2026
-          </a>
-          <a
-            href={carWeekIsPast ? monthHref(current.key) : "/free/"}
-            class="border border-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brass transition-colors hover:bg-brass hover:text-primary-foreground"
-          >
-            {carWeekIsPast ? current.label : "Free Car Week events"}
+            Month-grid calendar
           </a>
         </div>
       </div>
     </section>
 
-    {
-      /* Featured slot. While Car Week is ahead it is the story; once it is past
-         the slot goes to what is actually next, rather than leaving a finished
-         event with a photograph at the top of the page. */
-    }
-    {
-      carWeekIsPast ? (
-        <section class="mx-auto max-w-6xl px-5 py-14">
-          <p class="eyebrow">Coming up</p>
-          <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Next on the Central Coast</h2>
-          <div class="mt-8 grid gap-3 sm:grid-cols-2">
-            {upcomingEvents.map((e) => {
-              // The pinned event leads the grid: full width, brass rule, and
-              // one extra line. Everything else renders exactly as before.
-              const isPinned = pinned !== undefined && e.slug === pinned.slug;
-              return (
-              <a
-                href={eventHref(e)}
-                class={`group flex flex-col gap-1 border-l-2 bg-surface/60 px-5 py-4 transition-colors hover:border-brass ${
-                  isPinned
-                    ? "border-brass sm:col-span-2"
-                    : "border-border/80"
-                }`}
-              >
-                {isPinned && (
-                  <span class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                    Featured
-                  </span>
-                )}
-                <span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-brass">
-                  {e.dateText || DATE_TBA}
-                </span>
-                <span
-                  class={`leading-tight text-foreground transition-colors group-hover:text-brass ${
-                    isPinned ? "text-3xl" : "text-xl"
-                  }`}
-                >
-                  {e.name}
-                </span>
-                <span class="text-sm text-muted-foreground">
-                  {e.city ?? e.cityText}, {e.county} County
-                </span>
-                {isPinned && (
-                  <span class="mt-1 text-sm leading-relaxed text-muted-foreground">
-                    {FEATURED_BLURB}
-                  </span>
-                )}
-              </a>
-              );
-            })}
-          </div>
-          <a
-            href="/events/"
-            class="mt-7 inline-block bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            All 2026 events
-          </a>
-        </section>
-      ) : (
-    <section class="mx-auto max-w-6xl px-5 py-14">
-      <p class="eyebrow">Featured event</p>
-      <div class="mt-4 overflow-hidden border border-border/80 bg-surface">
-        <a href="/monterey-car-week/" class="group block">
-          <img
-            src="/hero-carweek.jpg"
-            alt="A silver 1950s Porsche racing car on a coastal Monterey road at golden hour"
-            width={1920}
-            height={1088}
-            class="h-64 w-full object-cover sm:h-80"
-          />
-        </a>
-        <div class="px-6 py-8 sm:px-8">
-          <p class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-            August 7 – 16, 2026 · Monterey Peninsula
-          </p>
-          <h2 class="mt-3 text-4xl leading-none sm:text-6xl">
-            <a href="/monterey-car-week/" class="transition-colors hover:text-brass">
-              Monterey <span class="text-brass">Car Week</span> 2026
-            </a>
-          </h2>
-          <p class="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            Ten days, {totalEvents} listed events across the peninsula — concours
-            lawns, historic racing at Laguna Seca, auctions and dawn drives on
-            Highway One. {totalFreeListings} of them are free for spectators.
-          </p>
-          <div class="mt-7 flex flex-wrap gap-3">
-            <a
-              href="/monterey-car-week/"
-              class="bg-brass px-5 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              Car Week overview
-            </a>
-            <a
-              href="/monterey-car-week/schedule/"
-              class="border border-border px-5 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-brass hover:text-brass"
-            >
-              Day-by-day schedule
-            </a>
-            <a
-              href="/free/"
-              class="border border-border px-5 py-2.5 text-xs font-bold uppercase tracking-[0.18em] text-foreground transition-colors hover:border-brass hover:text-brass"
-            >
-              Free events
-            </a>
-          </div>
-
-          <div class="mt-8 grid gap-2 border-t border-border/70 pt-6 sm:grid-cols-5">
-            {
-              schedule.map((day) => (
+    <!-- This weekend -->
+    <section id="this-weekend" class="mx-auto max-w-6xl px-5 py-12">
+      <p class="eyebrow">{weekendLabel}</p>
+      <h2 class="mt-2 text-4xl leading-none sm:text-5xl">
+        {weekendIsEmpty ? "Nothing listed this weekend — next up" : "This weekend"}
+      </h2>
+      {
+        weekendList.length ? (
+          <ul class="mt-6 grid gap-2 sm:grid-cols-2">
+            {weekendList.map((e) => (
+              <li>
                 <a
-                  href={`/monterey-car-week/schedule/#${day.id}`}
-                  class="group border border-border/70 bg-background px-3 py-3 transition-colors hover:border-brass"
+                  href={eventHref(e)}
+                  class="group flex h-full flex-col gap-0.5 border-l-2 border-border/80 bg-surface/60 px-4 py-3 transition-colors hover:border-brass"
                 >
-                  <p class="text-[0.6rem] uppercase tracking-[0.18em] text-muted-foreground">
-                    {day.weekday}
-                  </p>
-                  <p class="mt-0.5 font-display text-2xl leading-none text-foreground transition-colors group-hover:text-brass">
-                    {day.short}
-                  </p>
+                  <span class="text-lg leading-tight text-foreground transition-colors group-hover:text-brass">
+                    {e.name}
+                  </span>
+                  <span class="text-sm text-muted-foreground">
+                    <span class="text-brass">{e.dateText || DATE_TBA}</span> · {e.city ?? e.cityText}
+                    {admissionLabel(e) && <> · {admissionLabel(e)}</>}
+                  </span>
                 </a>
-              ))
-            }
-          </div>
-        </div>
-      </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mt-6 text-sm text-muted-foreground">
+            No upcoming dates are in the calendar yet. The month pages below keep
+            the full 2026 record.
+          </p>
+        )
+      }
+      {
+        weekendMarkets.length > 0 && (
+          <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
+            <span class="text-foreground">Farmers markets this weekend:</span>{" "}
+            {weekendMarkets
+              .map((s) => `${s.market.name} (${weekdayOf(s.date).slice(0, 3)} ${formatHours(s.hours)})`)
+              .join(" · ")}
+            .
+          </p>
+        )
+      }
     </section>
-      )
-    }
 
-    <!-- Site sections -->
+    <!-- Next 30 days -->
     <section class="border-y border-border/70 bg-surface">
-      <div class="mx-auto max-w-6xl px-5 py-14">
-        <p class="eyebrow">Start here</p>
-        <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Plan the week</h2>
-        <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="mx-auto max-w-6xl px-5 py-12">
+        <p class="eyebrow">Through {formatDay(horizon)}</p>
+        <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Coming up in the next 30 days</h2>
+        {
+          nextThirty.length === 0 && (
+            <p class="mt-6 text-sm text-muted-foreground">Nothing else is listed in the next 30 days.</p>
+          )
+        }
+        <ul class="mt-6 divide-y divide-border/70">
           {
-            sections.map((s) => (
-              <a
-                href={s.href}
-                class="group flex flex-col gap-2 border-l-2 border-border/80 bg-background px-5 py-5 transition-all hover:border-brass"
-              >
-                <h3 class="text-xl leading-tight text-foreground transition-colors group-hover:text-brass">
-                  {s.label}
-                </h3>
-                <p class="text-sm leading-relaxed text-muted-foreground">{s.body}</p>
-              </a>
+            [...nextThirty, ...furtherAhead].map((e, i) => (
+              <>
+                {i === nextThirty.length && furtherAhead.length > 0 && (
+                  <li class="pt-5 pb-2 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                    Further ahead
+                  </li>
+                )}
+                <li>
+                  <a href={eventHref(e)} class="group flex flex-wrap items-baseline gap-x-3 py-2.5">
+                    <span class="w-full text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-brass sm:w-44">
+                      {e.dateText || DATE_TBA}
+                    </span>
+                    <span class="text-base text-foreground transition-colors group-hover:text-brass">{e.name}</span>
+                    <span class="text-sm text-muted-foreground">
+                      {e.city ?? e.cityText}
+                      {admissionLabel(e) && <> · {admissionLabel(e)}</>}
+                    </span>
+                  </a>
+                </li>
+              </>
             ))
           }
+        </ul>
+      </div>
+    </section>
+
+    <!-- Browse -->
+    <section class="mx-auto max-w-6xl px-5 py-12">
+      <div class="grid gap-10 md:grid-cols-3">
+        <div>
+          <h2 class="text-3xl leading-none">Browse by month</h2>
+          <ul class="mt-4 space-y-2">
+            {
+              monthLinks.map((m) => (
+                <li>
+                  <a href={m.href} class="text-brass hover:underline">{m.label}</a>
+                  <span class="text-sm text-muted-foreground"> · {m.count} upcoming</span>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="mt-3 text-sm text-muted-foreground">
+            Or every month at once on the{" "}
+            <a href="/events/" class="text-brass hover:underline">full event list</a>.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-3xl leading-none">Browse by town</h2>
+          <p class="mt-2 text-xs uppercase tracking-[0.16em] text-muted-foreground">2026 listings</p>
+          <ul class="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+            {
+              towns.map(([town, n]) => (
+                <li class="text-foreground">
+                  {town} <span class="text-muted-foreground">{n}</span>
+                </li>
+              ))
+            }
+            {countywide > 0 && (
+              <li class="text-foreground">
+                Countywide <span class="text-muted-foreground">{countywide}</span>
+              </li>
+            )}
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-3xl leading-none">Browse by type</h2>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            {
+              types.map((t) => (
+                <li>
+                  <span class="text-foreground">{t.label}</span>
+                  <span class="text-muted-foreground"> · {t.count}</span>
+                  {t.links.length > 0 && (
+                    <span>
+                      {" — "}
+                      {t.links.map((l, i) => (
+                        <>
+                          {i > 0 && ", "}
+                          <a href={l.href} class="text-brass hover:underline">{l.label}</a>
+                        </>
+                      ))}
+                    </span>
+                  )}
+                  {t.note && <span class="block text-muted-foreground">{t.note}</span>}
+                </li>
+              ))
+            }
+          </ul>
+          <p class="mt-3 text-sm text-muted-foreground">
+            Driving in? <a href="/traffic/" class="text-brass hover:underline">Closures and traffic</a>.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- What's on now and next, straight from the 2026 dataset -->
-    <section class="mx-auto max-w-6xl px-5 py-14">
-      <p class="eyebrow">Also on the Central Coast calendar</p>
-      <h2 class="mt-2 text-4xl leading-none sm:text-5xl">On now and next</h2>
-      <p class="mt-5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        County fairs, festivals, parades and holiday markets across both counties.
-        Dates are the organizer's published dates — where a 2026 date has not been
-        announced, the listing says so instead of guessing.
-      </p>
+    <!-- Big annual events -->
+    <section class="border-y border-border/70 bg-surface">
+      <div class="mx-auto max-w-6xl px-5 py-12">
+        <h2 class="text-4xl leading-none sm:text-5xl">Big annual events</h2>
+        <ul class="mt-6 grid gap-3 sm:grid-cols-2">
+          {
+            annual.map((a) => (
+              <li class="border-l-2 border-border/80 bg-background px-4 py-3">
+                <a href={a.href} class="text-lg leading-tight text-foreground hover:text-brass">
+                  {a.e.name.replace(/ \(.*\)$/, "")}
+                </a>
+                <p class="mt-1 text-sm leading-relaxed text-muted-foreground">{a.line}</p>
+                <p class="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-brass">
+                  2026: {a.e.dateText || DATE_TBA} · {a.next}
+                </p>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </section>
 
-      <div class="mt-8 grid gap-8 sm:grid-cols-2">
+    <!-- FAQ -->
+    <section class="mx-auto max-w-3xl px-5 py-12">
+      <h2 class="text-4xl leading-none sm:text-5xl">Questions</h2>
+      <dl class="mt-6 space-y-5">
         {
-          featuredMonths.map((m) => (
+          faq.map((f) => (
             <div>
-              <div class="flex flex-wrap items-end gap-x-3 border-b border-border/70 pb-2">
-                <h3 class="text-3xl leading-none text-brass">
-                  <a href={m.href} class="hover:underline">
-                    {m.label}
-                  </a>
-                </h3>
-                <span class="pb-0.5 text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  {m.count} events
-                </span>
-              </div>
-              <ul class="mt-4 space-y-2">
-                {m.events.map((e) => (
-                  <li>
-                    <a
-                      href={eventHref(e)}
-                      class="group flex flex-wrap items-baseline gap-x-3 border-l-2 border-border/80 bg-surface/60 px-4 py-2.5 transition-colors hover:border-brass"
-                    >
-                      <span class="text-base text-foreground transition-colors group-hover:text-brass">
-                        {e.name}
-                      </span>
-                      <span
-                        class={`text-[0.6rem] font-semibold uppercase tracking-[0.16em] ${
-                          e.start ? "text-brass" : "text-muted-foreground"
-                        }`}
-                      >
-                        {e.dateText || DATE_TBA}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-              <a
-                href={m.href}
-                class="mt-4 inline-block text-[0.65rem] font-bold uppercase tracking-[0.18em] text-muted-foreground hover:text-brass"
-              >
-                All {m.label} events →
-              </a>
+              <dt class="text-lg text-foreground">{f.q}</dt>
+              <dd class="mt-1 text-sm leading-relaxed text-muted-foreground">{f.a}</dd>
             </div>
           ))
         }
-      </div>
-
-      <div class="mt-10 flex flex-wrap gap-3">
-        <a
-          href="/events/"
-          class="inline-block border border-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-brass transition-colors hover:bg-brass hover:text-primary-foreground"
-        >
-          The full 2026 calendar
-        </a>
-        <a
-          href="/monterey-events-calendar/"
-          class="inline-block border border-border px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-foreground transition-colors hover:border-brass hover:text-brass"
-        >
-          Month-by-month view
-        </a>
-      </div>
-      <p class="mt-5 text-sm leading-relaxed text-muted-foreground">
-        Maps:{" "}
-        <a href="/monterey-car-week-map/" class="text-brass hover:underline">every Car Week venue</a>{" "}
-        ·{" "}
-        <a href="/laguna-seca-map/" class="text-brass hover:underline">Laguna Seca — turns, gates, parking</a>
-      </p>
+      </dl>
     </section>
 
+    <!-- Submit -->
     <section class="mx-auto max-w-6xl px-5 pb-16">
-      <div class="border-l-2 border-brass bg-surface/60 px-6 py-8">
-        <p class="eyebrow">Before you drive</p>
-        <h2 class="mt-2 text-4xl leading-none">{carWeekIsPast ? "Check the road before you go" : "Peninsula traffic peaks in August"}</h2>
-        <p class="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          {
-            carWeekIsPast ? (
-              <Fragment>
-                Event traffic still reshapes Ocean Avenue and
-                the routes into Pebble Beach and Laguna Seca. Check live closures
-                before every trip.
-              </Fragment>
-            ) : (
-              <Fragment>
-                Highway One, Ocean Avenue and the routes into Pebble Beach and
-                Laguna Seca slow to a crawl during Car Week event hours. Check
-                live closures before every trip, and text{" "}
-                <span class="text-brass">CARWEEK</span> to{" "}
-                <span class="text-brass">65513</span> for public safety alerts.
-              </Fragment>
-            )
-          }
+      <div class="border-l-2 border-brass bg-surface/60 px-6 py-7">
+        <h2 class="text-3xl leading-none">Submit an event</h2>
+        <p class="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          Running a public event in Monterey or Santa Cruz County that isn't here?
+          Send the name, date, town and a link to your own page.
         </p>
-        <div class="mt-6 flex flex-wrap gap-3">
-          <a
-            href={ROAD_CLOSURES_URL}
-            target="_blank"
-            rel="noreferrer"
-            class="bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
-          >
-            Live road closures
-          </a>
-          <a
-            href="/traffic/"
-            class="border border-border px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-foreground transition-colors hover:border-brass hover:text-brass"
-          >
-            All traffic info
-          </a>
-        </div>
+        <a
+          href={`mailto:${SUBMIT_EMAIL}?subject=Event%20submission`}
+          class="mt-5 inline-block bg-brass px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] text-primary-foreground transition-opacity hover:opacity-90"
+        >
+          Email {SUBMIT_EMAIL}
+        </a>
       </div>
     </section>
   </main>

@@ -201,3 +201,12 @@ https://search.google.com/search-console directly.
 - **Action:** `scripts/popups/` registry + probe + discovery + extraction + file-based review queue in `data/popups/`; `make popups-probe` / `popups-discover` / `popups-queue`.
 - **Result:** TBD — review at v4.E's 30-day evaluation
 - **Learning:** TBD — if Monterey Peninsula sources stay silent once the text extractor runs, the supply problem is coverage, not tooling.
+
+## 2026-10-17 — v2.O: the homepage becomes the calendar, for "monterey bay events" and its variants
+- **Status:** active
+- **Hypothesis:** The homepage sits on page 2–4 for its own name ("monterey bay events") and the regional head terms with ~390 words of navigation and no listings a searcher can act on. A page that answers "what's on this weekend / this month" directly from the data — rebuilt daily, ~870 words, ItemList + FAQPage — should move those queries onto page 1, where the site already ranks its event pages.
+- **KPI:** homepage position, impressions and clicks on "monterey bay events", "monterey events calendar", "monterey county events", "monterey events this weekend", and homepage totals; cannibalisation check — whether `/monterey-events-calendar/` or `/events/` lose impressions on "calendar" queries
+- **Baseline:** GSC 2026-09-16 → 2026-10-14, homepage: 31 queries, 68 impressions, 1 click. "monterey bay events" pos 21.6 (8 impr); "monterey events calendar" 20.3 (3); "monterey county events" 19.0 (1); "monterey events this weekend" 34.0 (2 impr, 1 click). `/events/` ranks 42–60 on the same terms; `/monterey-events-calendar/` has no rows for any of them.
+- **Action:** New title and H1 ("Monterey Bay Events Calendar"), data-driven weekend / 30-day / month / town / type / annual sections, FAQ, submit CTA (hello@lamill.io); Organization, WebSite, ItemList, FAQPage JSON-LD.
+- **Result:** TBD — review 28 days after deploy
+- **Learning:** TBD — impressions are tiny, so position is the signal to watch. If the homepage climbs while `/monterey-events-calendar/` stays absent, merge rather than keep two pages chasing "calendar". Data runs out 2026-12-31: a January review will see empty lists unless the 2027 calendar exists.

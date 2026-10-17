@@ -1170,3 +1170,21 @@ this line is a verbatim prompt.*
 > No API key in the environment, so the Claude text extractor for the 42
 > HTML-only sources is written and unit-tested but has never run live.
 > Eventbrite left switched off pending a terms check. No site pages touched.
+
+## 2026-10-16 — v2.O: homepage rebuilt as the regional calendar entry point
+
+> Operator brief: rebuild the homepage to rank for "monterey bay events",
+> "monterey events calendar", "monterey county events" and "monterey events
+> this weekend" — new title and H1, weekend / 30-day / month / town / type /
+> annual-event sections built from the data at build time, FAQ, submit CTA,
+> Organization + WebSite + ItemList + FAQPage JSON-LD. Report findings before
+> changing anything. Not in the PRD, so placed first: operator chose v2.O,
+> title cut to 59 chars (CHECK_070), Free/Paid shown only where sourced,
+> submissions to hello@lamill.io.
+>
+> The data set the limits: 4 events this weekend, 7 in the next 30 days (padded
+> with 3 marked "Further ahead"), month hubs only through December, no town or
+> family/festival/holiday pages, and no 2027 date for any annual event except
+> the Pebble Beach Concours. The intro claims organiser checks only for the 7 of
+> 19 upcoming events that link an organiser. GSC baseline: positions 19–34 on
+> 1–8 impressions per target query. Then "commit v4.B first, then v2.O".
