@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "6273e97d2d",
+  "slug": "aptos-village-green-holiday-market-and-tree-lighting",
+  "status": "NEEDS_REVIEW",
+  "name": "Aptos Village Green: Holiday Market and Tree Lighting",
+  "categories": [
+    "pop-up-shop"
+  ],
+  "matchedTerms": [
+    "holiday market"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "Head to the Aptos Village Green to see local craft vendors, sip coffee or hot chocolate with your cookies and have a picture with Santa. Enjoy music, performances, and of course the tree lighting ceremony!",
+  "venue": "Aptos Village",
+  "city": "Aptos",
+  "start": {
+    "date": "2026-12-05",
+    "time": "13:00"
+  },
+  "end": {
+    "date": "2026-12-05",
+    "time": "16:00"
+  },
+  "whenNotes": [],
+  "admission": {
+    "raw": "0",
+    "currency": "USD"
+  },
+  "organizer": "Aptos Chamber of Commerce",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/aptos-village-green-holiday-craft-fair-and-tree-lighting/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2023/11/Aptos-Village-Green_Holiday-Market-and-Tree-Lighting_2026_1280x960.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality",
+    "admission": "jsonld:offers.price (verbatim)"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

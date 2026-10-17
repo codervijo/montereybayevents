@@ -1,0 +1,72 @@
+{
+  "schema": 1,
+  "id": "add898d021",
+  "slug": "lego-club",
+  "status": "NEEDS_REVIEW",
+  "name": "Lego® Club!",
+  "categories": [
+    "collectibles"
+  ],
+  "matchedTerms": [
+    "lego"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": null,
+  "venue": "Main Library - 275 Main Street, Suite #100 Watsonville CA 95076",
+  "city": "Watsonville",
+  "start": {
+    "date": "2026-11-03",
+    "time": "16:00"
+  },
+  "end": {
+    "date": "2026-11-03",
+    "time": "17:30"
+  },
+  "whenNotes": [],
+  "admission": null,
+  "organizer": null,
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "city-watsonville",
+      "url": "https://www.watsonville.gov/calendar.aspx?EID=7001"
+    }
+  ],
+  "image": null,
+  "recurrence": {
+    "kind": "recurring",
+    "occurrences": 2,
+    "dates": [
+      "2026-11-03",
+      "2026-12-01"
+    ],
+    "basis": "same title on 2 dates in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "ics:SUMMARY",
+    "start": "ics:DTSTART",
+    "end": "ics:DTEND",
+    "venue": "ics:LOCATION",
+    "city": "city name found in ics:LOCATION"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

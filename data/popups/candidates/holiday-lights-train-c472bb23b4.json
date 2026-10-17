@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "id": "c472bb23b4",
+  "slug": "holiday-lights-train",
+  "status": "DISCOVERED",
+  "name": "Holiday Lights Train",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "holiday lights"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "A seasonal tradition returns to Santa Cruz with the Santa Cruz Holiday Lights Train. Vintage excursion cars, adorned with thousands of colorful lights, roll through city streets past homes of Santa Cruz. The post Holiday Lights Train appeared first on Roaring Camp Railroads .",
+  "venue": null,
+  "city": null,
+  "start": null,
+  "end": null,
+  "whenNotes": [
+    "feed post: no event date in a structured field"
+  ],
+  "admission": null,
+  "organizer": null,
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "roaring-camp",
+      "url": "https://roaringcamp.com/events/holiday-lights-train-3"
+    }
+  ],
+  "image": null,
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "rss:title"
+  },
+  "confidence": {
+    "score": 0.4,
+    "basis": "2 of 5 core fields read from the source (name, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "DISCOVERED",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": "missing a date or a place"
+    }
+  ]
+}

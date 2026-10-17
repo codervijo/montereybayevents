@@ -1,0 +1,60 @@
+{
+  "schema": 1,
+  "id": "05b1e7cb61",
+  "slug": "new-year-s-train",
+  "status": "DISCOVERED",
+  "name": "New Year’s Train",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "holiday lights"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "Bring in the new year aboard the New Years Holiday Lights Train. Ride vintage train cars beautifully decorated with holiday lights through the streets of Santa Cruz. Light-up hula hoopers and a live DJ will keep spirits bright and help bring in 2026 right. The post New Year’s Train appeared first on Roaring Camp Railroads .",
+  "venue": null,
+  "city": null,
+  "start": null,
+  "end": null,
+  "whenNotes": [
+    "feed post: no event date in a structured field"
+  ],
+  "admission": null,
+  "organizer": null,
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "roaring-camp",
+      "url": "https://roaringcamp.com/events/new-years-holiday-lights-train"
+    }
+  ],
+  "image": null,
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "rss:title"
+  },
+  "confidence": {
+    "score": 0.4,
+    "basis": "2 of 5 core fields read from the source (name, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "DISCOVERED",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": "missing a date or a place"
+    }
+  ]
+}

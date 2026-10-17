@@ -1161,3 +1161,12 @@ this line is a verbatim prompt.*
 > tier theme reworded to what shipped). Operator asked why Instagram access
 > was needed — it is not; the plan uses none. Then "lock as recommended".
 > No code.
+
+## 2026-10-11 — v4.B: pop-ups pipeline (registry, discovery, extraction, queue)
+
+> "start v4.B". The brief turned out to name source categories, not sources, so
+> 65 were compiled and probed live; 55 reachable, 10 recorded as blocked or
+> robots-excluded. First real run: 12 sources, 349 items, 16 candidates.
+> No API key in the environment, so the Claude text extractor for the 42
+> HTML-only sources is written and unit-tested but has never run live.
+> Eventbrite left switched off pending a terms check. No site pages touched.

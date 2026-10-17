@@ -1,0 +1,1692 @@
+[
+  {
+    "id": "visit-santa-cruz",
+    "name": "Visit Santa Cruz County — events",
+    "url": "https://www.santacruz.org/events/",
+    "kind": "tourism",
+    "coverage": [
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "jsonld",
+    "feedUrl": "https://www.santacruz.org/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "jsonld": 120,
+      "tribe-rest": 12,
+      "rss": 10
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "see-monterey",
+    "name": "See Monterey — events",
+    "url": "https://www.seemonterey.com/events/",
+    "kind": "tourism",
+    "coverage": [
+      "Monterey",
+      "Pacific Grove",
+      "Carmel",
+      "Seaside",
+      "Marina",
+      "Salinas"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "blocked",
+    "accessNote": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-watsonville",
+    "name": "City of Watsonville — calendar",
+    "url": "https://www.watsonville.gov/calendar.aspx",
+    "kind": "city",
+    "coverage": [
+      "Watsonville"
+    ],
+    "method": "ics",
+    "feedUrl": "https://www.watsonville.gov/common/modules/iCalendar/iCalendar.aspx?catID=14&feed=calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "ics": 122,
+      "rss": 28
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-seaside",
+    "name": "City of Seaside — calendar",
+    "url": "https://www.ci.seaside.ca.us/calendar.aspx",
+    "kind": "city",
+    "coverage": [
+      "Seaside"
+    ],
+    "method": "ics",
+    "feedUrl": "https://www.ci.seaside.ca.us/common/modules/iCalendar/iCalendar.aspx?catID=14&feed=calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "ics": 5,
+      "rss": 26
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-marina",
+    "name": "City of Marina — calendar",
+    "url": "https://www.cityofmarina.org/calendar.aspx",
+    "kind": "city",
+    "coverage": [
+      "Marina"
+    ],
+    "method": "ics",
+    "feedUrl": "https://www.cityofmarina.org/common/modules/iCalendar/iCalendar.aspx?catID=14&feed=calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "ics": 1,
+      "rss": 3
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-capitola",
+    "name": "City of Capitola — calendar",
+    "url": "https://www.cityofcapitola.gov/calendar.aspx",
+    "kind": "city",
+    "coverage": [
+      "Capitola"
+    ],
+    "method": "ics",
+    "feedUrl": "https://www.cityofcapitola.gov/common/modules/iCalendar/iCalendar.aspx?catID=14&feed=calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "ics": 40
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-monterey",
+    "name": "City of Monterey — calendar",
+    "url": "https://monterey.gov/calendar.php",
+    "kind": "city",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://monterey.gov/calendar.php",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-pacific-grove",
+    "name": "City of Pacific Grove — calendar",
+    "url": "https://www.cityofpacificgrove.org/calendar.php",
+    "kind": "city",
+    "coverage": [
+      "Pacific Grove"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.cityofpacificgrove.org/calendar.php",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-salinas",
+    "name": "City of Salinas — events",
+    "url": "https://www.salinas.gov/Events",
+    "kind": "city",
+    "coverage": [
+      "Salinas"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.salinas.gov/Events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-santa-cruz",
+    "name": "City of Santa Cruz — events",
+    "url": "https://www.santacruzca.gov/Things-to-Do/Events",
+    "kind": "city",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.santacruzca.gov/Things-to-Do/Events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "city-carmel",
+    "name": "City of Carmel-by-the-Sea — calendar",
+    "url": "https://ci.carmel.ca.us/calendar/list",
+    "kind": "city",
+    "coverage": [
+      "Carmel"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "disallowed",
+    "accessNote": "excluded by the host's robots.txt; never requested",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "old-monterey",
+    "name": "Old Monterey Business Association — events",
+    "url": "https://www.oldmonterey.org/events",
+    "kind": "business-district",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.oldmonterey.org/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "downtown-santa-cruz",
+    "name": "Downtown Santa Cruz — events calendar",
+    "url": "https://downtownsantacruz.com/events/calendar",
+    "kind": "business-district",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://downtownsantacruz.com/events/calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "cannery-row",
+    "name": "Cannery Row — events",
+    "url": "https://canneryrow.com/events/",
+    "kind": "business-district",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "rss",
+    "feedUrl": "https://canneryrow.com/feed/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "rss": 1
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "fishermans-wharf-monterey",
+    "name": "Monterey Fisherman's Wharf — events",
+    "url": "https://www.montereywharf.com/events.html",
+    "kind": "business-district",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.montereywharf.com/events.html",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "pg-chamber",
+    "name": "Pacific Grove Chamber of Commerce — calendar",
+    "url": "https://business.pacificgrove.org/events",
+    "kind": "chamber",
+    "coverage": [
+      "Pacific Grove"
+    ],
+    "method": "html",
+    "feedUrl": "https://business.pacificgrove.org/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "monterey-chamber",
+    "name": "Monterey Peninsula Chamber of Commerce — events",
+    "url": "https://members.montereychamber.com/events",
+    "kind": "chamber",
+    "coverage": [
+      "Monterey",
+      "Seaside",
+      "Marina",
+      "Pacific Grove",
+      "Carmel"
+    ],
+    "method": "html",
+    "feedUrl": "https://members.montereychamber.com/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "salinas-chamber",
+    "name": "Salinas Valley Chamber of Commerce — community calendar",
+    "url": "https://business.salinaschamber.com/community-event-calendar",
+    "kind": "chamber",
+    "coverage": [
+      "Salinas"
+    ],
+    "method": "html",
+    "feedUrl": "https://business.salinaschamber.com/community-event-calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "aptos-chamber",
+    "name": "Aptos Chamber of Commerce — local events",
+    "url": "https://www.aptoschamber.com/local-events",
+    "kind": "chamber",
+    "coverage": [
+      "Aptos"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.aptoschamber.com/local-events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "capitola-chamber",
+    "name": "Capitola-Soquel Chamber of Commerce — event calendar",
+    "url": "https://business.capitolachamber.com/event-calendar-list",
+    "kind": "chamber",
+    "coverage": [
+      "Capitola"
+    ],
+    "method": "html",
+    "feedUrl": "https://business.capitolachamber.com/event-calendar-list",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "santa-cruz-chamber",
+    "name": "Santa Cruz Area Chamber of Commerce — events",
+    "url": "https://www.santacruzchamber.org/events.html",
+    "kind": "chamber",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.santacruzchamber.org/events.html",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "pajaro-valley-chamber",
+    "name": "Pajaro Valley Chamber of Commerce — events",
+    "url": "https://pajarovalleychamber.com/events/",
+    "kind": "chamber",
+    "coverage": [
+      "Watsonville"
+    ],
+    "method": "rss",
+    "feedUrl": "https://pajarovalleychamber.com/feed/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "rss": 10
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "del-monte-center",
+    "name": "Del Monte Center — events",
+    "url": "https://www.delmontecenter.com/events",
+    "kind": "retail",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.delmontecenter.com/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "northridge-mall",
+    "name": "Northridge Mall — events",
+    "url": "https://www.shop-northridge-mall.com/events",
+    "kind": "retail",
+    "coverage": [
+      "Salinas"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.shop-northridge-mall.com/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "capitola-mall",
+    "name": "Capitola Mall — events",
+    "url": "https://www.shopcapitolamall.com/events",
+    "kind": "retail",
+    "coverage": [
+      "Capitola"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.shopcapitolamall.com/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "the-barnyard",
+    "name": "The Barnyard Shopping Village — events",
+    "url": "https://www.thebarnyard.com/events",
+    "kind": "retail",
+    "coverage": [
+      "Carmel"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.thebarnyard.com/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "the-crossroads-carmel",
+    "name": "The Crossroads Carmel — events",
+    "url": "https://www.thecrossroadscarmel.com/events",
+    "kind": "retail",
+    "coverage": [
+      "Carmel"
+    ],
+    "method": "rss",
+    "feedUrl": "https://thecrossroadscarmel.com/feed/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "rss": 10
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "abbott-square",
+    "name": "Abbott Square Market — events",
+    "url": "https://www.abbottsquaremarket.com/events",
+    "kind": "retail",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.abbottsquaremarket.com/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "monterey-county-now",
+    "name": "Monterey County Now (Monterey County Weekly) — events",
+    "url": "https://www.montereycountynow.com/events/",
+    "kind": "media",
+    "coverage": [
+      "Monterey",
+      "Pacific Grove",
+      "Carmel",
+      "Seaside",
+      "Marina",
+      "Salinas"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.montereycountynow.com/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "good-times-sc",
+    "name": "Good Times Santa Cruz — event calendar",
+    "url": "https://www.goodtimes.sc/events-calendar/",
+    "kind": "media",
+    "coverage": [
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.goodtimes.sc/events-calendar/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "kazu-calendar",
+    "name": "90.3 KAZU — community calendar",
+    "url": "https://www.kazu.org/community-calendar",
+    "kind": "media",
+    "coverage": [
+      "Monterey",
+      "Pacific Grove",
+      "Carmel",
+      "Seaside",
+      "Marina",
+      "Salinas",
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.kazu.org/community-calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "santa-cruz-sentinel",
+    "name": "Santa Cruz Sentinel — things to do",
+    "url": "https://www.santacruzsentinel.com/things-to-do/",
+    "kind": "media",
+    "coverage": [
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.santacruzsentinel.com/things-to-do/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "lookout-santa-cruz",
+    "name": "Lookout Santa Cruz — events",
+    "url": "https://lookout.co/santa-cruz/events",
+    "kind": "media",
+    "coverage": [
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "rss",
+    "feedUrl": "https://lookout.co/feed",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "rss": 10
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "edible-monterey-bay",
+    "name": "Edible Monterey Bay — events",
+    "url": "https://www.ediblemontereybay.com/events/",
+    "kind": "media",
+    "coverage": [
+      "Monterey",
+      "Pacific Grove",
+      "Carmel",
+      "Seaside",
+      "Marina",
+      "Salinas",
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "rss",
+    "feedUrl": "https://ediblemontereybay.com/feed/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "rss": 10
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "monterey-conference-center",
+    "name": "Monterey Conference Center — events",
+    "url": "https://montereyconferencecenter.com/monterey/events/",
+    "kind": "venue",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://montereyconferencecenter.com/monterey/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "monterey-fairgrounds",
+    "name": "Monterey County Fair & Event Center — events",
+    "url": "https://montereycountyfair.com/events/",
+    "kind": "venue",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "rss",
+    "feedUrl": "https://montereycountyfair.com/feed/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "rss": 10
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "california-rodeo-salinas",
+    "name": "California Rodeo Salinas / Salinas Sports Complex — events",
+    "url": "https://www.carodeo.com/events",
+    "kind": "venue",
+    "coverage": [
+      "Salinas"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.carodeo.com/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "kaiser-arena",
+    "name": "Kaiser Permanente Arena — events calendar",
+    "url": "https://santacruz.gleague.nba.com/kp-arena-events-calendar",
+    "kind": "venue",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://santacruz.gleague.nba.com/kp-arena-events-calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "mah-santa-cruz",
+    "name": "Santa Cruz Museum of Art & History — events",
+    "url": "https://www.santacruzmah.org/events",
+    "kind": "venue",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.santacruzmah.org/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "santa-cruz-fairgrounds",
+    "name": "Santa Cruz County Fairgrounds — events",
+    "url": "https://www.santacruzcountyfair.com/events",
+    "kind": "venue",
+    "coverage": [
+      "Watsonville"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "blocked",
+    "accessNote": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "monterey-library",
+    "name": "Monterey Public Library — events",
+    "url": "https://monterey.gov/library/events/",
+    "kind": "library",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://monterey.gov/library/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "santa-cruz-libraries",
+    "name": "Santa Cruz Public Libraries — events",
+    "url": "https://santacruzpl.libnet.info/events?n=30&r=days",
+    "kind": "library",
+    "coverage": [
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "html",
+    "feedUrl": "https://santacruzpl.libnet.info/events?n=30&r=days",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "salinas-library",
+    "name": "Salinas Public Library — calendar",
+    "url": "https://library.salinas.gov/calendar",
+    "kind": "library",
+    "coverage": [
+      "Salinas"
+    ],
+    "method": "html",
+    "feedUrl": "https://library.salinas.gov/calendar",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "card-shop-finder",
+    "name": "The Card Shop Finder",
+    "url": "https://thecardshopfinder.com/",
+    "kind": "collectibles",
+    "coverage": [
+      "Monterey",
+      "Pacific Grove",
+      "Carmel",
+      "Seaside",
+      "Marina",
+      "Salinas",
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "html",
+    "feedUrl": "https://thecardshopfinder.com/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "world-of-sports-memorabilia",
+    "name": "World of Sports Memorabilia",
+    "url": "https://www.worldofsportsmemorabilia.com/",
+    "kind": "collectibles",
+    "coverage": [
+      "Seaside",
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.worldofsportsmemorabilia.com/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "food-trucks-a-go-go",
+    "name": "Food Trucks A Go Go",
+    "url": "https://www.foodtrucksagogo.com/",
+    "kind": "food",
+    "coverage": [
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.foodtrucksagogo.com/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "discretion-brewing",
+    "name": "Discretion Brewing — events",
+    "url": "https://www.discretionbrewing.com/events/",
+    "kind": "food",
+    "coverage": [
+      "Capitola",
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.discretionbrewing.com/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "other-brother-beer",
+    "name": "Other Brother Beer Co. — Monterey events",
+    "url": "https://www.otherbrotherbeer.com/monterey-events",
+    "kind": "food",
+    "coverage": [
+      "Seaside",
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.otherbrotherbeer.com/monterey-events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "santa-cruz-makers-market",
+    "name": "Santa Cruz Mountains Makers' Market",
+    "url": "https://scmmakersmarket.com/",
+    "kind": "market",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://scmmakersmarket.com/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "csumb-events",
+    "name": "CSU Monterey Bay — events",
+    "url": "https://csumb.edu/events/",
+    "kind": "education",
+    "coverage": [
+      "Marina",
+      "Seaside"
+    ],
+    "method": "html",
+    "feedUrl": "https://csumb.edu/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "mpc-events",
+    "name": "Monterey Peninsula College — event calendar",
+    "url": "https://www.mpc.edu/calendar/",
+    "kind": "education",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.mpc.edu/calendar/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "cabrillo-college",
+    "name": "Cabrillo College — calendar",
+    "url": "https://www.cabrillo.edu/calendar/",
+    "kind": "education",
+    "coverage": [
+      "Aptos",
+      "Watsonville"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.cabrillo.edu/calendar/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "seymour-center",
+    "name": "Seymour Marine Discovery Center — events",
+    "url": "https://seymourcenter.ucsc.edu/visit/events/",
+    "kind": "attraction",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "html",
+    "feedUrl": "https://seymourcenter.ucsc.edu/visit/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "monterey-zoo",
+    "name": "Monterey Zoo — events & news",
+    "url": "https://www.montereyzoo.org/events-news",
+    "kind": "attraction",
+    "coverage": [
+      "Salinas"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.montereyzoo.org/events-news",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "my-museum",
+    "name": "MY Museum — calendar",
+    "url": "https://www.mymuseum.org/events/",
+    "kind": "attraction",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.mymuseum.org/events/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "sc-childrens-museum",
+    "name": "Santa Cruz Children's Museum of Discovery — events",
+    "url": "https://www.sccmod.org/events",
+    "kind": "attraction",
+    "coverage": [
+      "Capitola"
+    ],
+    "method": "html",
+    "feedUrl": "https://www.sccmod.org/events",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "html": null
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "needs-credentials",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "roaring-camp",
+    "name": "Roaring Camp Railroads — events",
+    "url": "https://www.roaringcamp.com/events",
+    "kind": "attraction",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": "rss",
+    "feedUrl": "https://roaringcamp.com/events/feed/",
+    "access": "ok",
+    "accessNote": null,
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "rss": 10
+    },
+    "lastChecked": "2026-10-11",
+    "lastOutcome": "ok",
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "boardwalk",
+    "name": "Santa Cruz Beach Boardwalk — events",
+    "url": "https://beachboardwalk.com/events/",
+    "kind": "attraction",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "blocked",
+    "accessNote": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "monterey-bay-aquarium",
+    "name": "Monterey Bay Aquarium — calendar",
+    "url": "https://www.montereybayaquarium.org/visit/calendar",
+    "kind": "attraction",
+    "coverage": [
+      "Monterey"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "error",
+    "accessNote": "unexpected HTTP status when probed (HTTP 405)",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "ucsc-events",
+    "name": "UC Santa Cruz — events calendar",
+    "url": "https://calendar.ucsc.edu/",
+    "kind": "education",
+    "coverage": [
+      "Santa Cruz"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "blocked",
+    "accessNote": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "pv-arts",
+    "name": "Pajaro Valley Arts — events",
+    "url": "https://pvarts.org/events/",
+    "kind": "venue",
+    "coverage": [
+      "Watsonville"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "blocked",
+    "accessNote": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "capitola-village",
+    "name": "Capitola Village — events",
+    "url": "https://www.capitolavillage.com/events/",
+    "kind": "business-district",
+    "coverage": [
+      "Capitola"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "blocked",
+    "accessNote": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "eventbrite",
+    "name": "Eventbrite — pop-up search (Monterey, Santa Cruz, Salinas)",
+    "url": "https://www.eventbrite.com/d/ca--monterey/pop-up/",
+    "kind": "platform",
+    "coverage": [
+      "Monterey",
+      "Pacific Grove",
+      "Carmel",
+      "Seaside",
+      "Marina",
+      "Salinas",
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": "jsonld",
+    "feedUrl": "https://www.eventbrite.com/d/ca--monterey/pop-up/",
+    "access": "ok",
+    "accessNote": "robots.txt permits the search pages and they carry Event JSON-LD, but Eventbrite's terms on automated access have not been read and confirmed. Off until the operator decides.",
+    "lastProbed": "2026-10-11",
+    "probe": {
+      "jsonld": 20
+    },
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": false
+  },
+  {
+    "id": "reddit-santacruz",
+    "name": "Reddit — r/santacruz",
+    "url": "https://www.reddit.com/r/santacruz/",
+    "kind": "community",
+    "coverage": [
+      "Watsonville",
+      "Santa Cruz",
+      "Capitola",
+      "Aptos"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "disallowed",
+    "accessNote": "excluded by reddit.com robots.txt; never requested. Official API needs an OAuth app and its terms checked (v4.A item 7). Community not confirmed to exist by this job.",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  },
+  {
+    "id": "reddit-montereybay",
+    "name": "Reddit — r/MontereyBay",
+    "url": "https://www.reddit.com/r/MontereyBay/",
+    "kind": "community",
+    "coverage": [
+      "Monterey",
+      "Pacific Grove",
+      "Carmel",
+      "Seaside",
+      "Marina",
+      "Salinas"
+    ],
+    "method": null,
+    "feedUrl": null,
+    "access": "disallowed",
+    "accessNote": "excluded by reddit.com robots.txt; never requested. Official API needs an OAuth app and its terms checked (v4.A item 7). Community not confirmed to exist by this job.",
+    "lastProbed": "2026-10-11",
+    "probe": null,
+    "lastChecked": null,
+    "lastOutcome": null,
+    "reliability": null,
+    "reviewed": {
+      "verified": 0,
+      "rejected": 0
+    },
+    "enabled": true
+  }
+]

@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "id": "ae7a400a23",
+  "slug": "sc-beach-boardwalk-halloween",
+  "status": "NEEDS_REVIEW",
+  "name": "SC Beach Boardwalk: Halloween",
+  "categories": [
+    "collectibles"
+  ],
+  "matchedTerms": [
+    "collectible"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "Celebrate Halloween with trick-or-treating, a costume contest, and spooktacular Boardwalk fun! It\\'s always free to enter the Boardwalk, but if you would like to receive a collectible Boardwalk bag with a punch card for trick-or-treating, follow the link in the orange button above! Head to the Main Entrance photo op banner to take a costume […]",
+  "venue": "Santa Cruz Beach Boardwalk",
+  "city": "Santa Cruz",
+  "start": {
+    "date": "2026-10-31",
+    "time": "12:00"
+  },
+  "end": {
+    "date": "2026-10-31",
+    "time": "19:00"
+  },
+  "whenNotes": [],
+  "admission": null,
+  "organizer": "Santa Cruz Beach Boardwalk",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/sc-beach-boardwalk-halloween/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2025/07/Boardwalk_Fright-Walk_by-Garrick-Ramirez_2017_1280x960.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

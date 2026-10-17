@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "5b38f24eff",
+  "slug": "simpkins-swim-center-floating-pumpkin-patch",
+  "status": "NEEDS_REVIEW",
+  "name": "Simpkins Swim Center: Floating Pumpkin Patch",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "pumpkin patch"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "The Santa Cruz County Parks Department hosts an annual Floating Pumpkin Patch at Simpkins Family Swim Center in Santa Cruz, California. The event allows people to swim and dive for pumpkins, which they can then decorate at a station with crafts. The event also includes games, prizes, and open swim time. This year, they have […]",
+  "venue": "Simpkins Family Swim Center",
+  "city": "Santa Cruz",
+  "start": {
+    "date": "2026-10-17",
+    "time": "16:00"
+  },
+  "end": {
+    "date": "2026-10-17",
+    "time": "19:00"
+  },
+  "whenNotes": [],
+  "admission": {
+    "raw": "20",
+    "currency": "USD"
+  },
+  "organizer": "Santa Cruz County Parks Department",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/simpkins-swim-center-floating-pumpkin-patch/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2024/09/Simpkins-Swim-Center_Floating-Pumpkin-Patch_2024_640x480.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality",
+    "admission": "jsonld:offers.price (verbatim)"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

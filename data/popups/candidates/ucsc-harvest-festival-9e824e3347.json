@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "id": "9e824e3347",
+  "slug": "ucsc-harvest-festival",
+  "status": "NEEDS_REVIEW",
+  "name": "UCSC: Harvest Festival",
+  "categories": [
+    "food"
+  ],
+  "matchedTerms": [
+    "food trucks"
+  ],
+  "familyTerms": [
+    "all ages"
+  ],
+  "description": null,
+  "sourceDescription": "Enjoy the annual Harvest Festival! Activities for all ages include face painting, flower pressing, pumpkin painting, cider pressing, tractor rides, live music treats from local food trucks, an apple pie bake-off, and more! Admission is $5 for the general public, with cash preferred at the gate. Entry is free for current UC Santa Cruz, Hartnell […]",
+  "venue": "UCSC CASFS Farm and Garden",
+  "city": "Santa Cruz",
+  "start": {
+    "date": "2026-10-17",
+    "time": "11:00"
+  },
+  "end": {
+    "date": "2026-10-17",
+    "time": "15:00"
+  },
+  "whenNotes": [],
+  "admission": {
+    "raw": "Free – 5",
+    "currency": "USD"
+  },
+  "organizer": "UC Santa Cruz Center for Agroecology",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/ucsc-harvest-festival/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2026/09/harvest-festival-1280x960-1.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality",
+    "admission": "jsonld:offers.price (verbatim)"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

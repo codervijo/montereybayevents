@@ -1,0 +1,876 @@
+{
+  "startedAt": "2026-10-11T17:47:30.068Z",
+  "today": "2026-10-11",
+  "dryRun": false,
+  "sources": [
+    {
+      "id": "visit-santa-cruz",
+      "method": "jsonld",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "see-monterey",
+      "method": null,
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-watsonville",
+      "method": "ics",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-seaside",
+      "method": "ics",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-marina",
+      "method": "ics",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-capitola",
+      "method": "ics",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-monterey",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-pacific-grove",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-salinas",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-santa-cruz",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "city-carmel",
+      "method": null,
+      "outcome": "disallowed",
+      "error": "excluded by the host's robots.txt; never requested",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "old-monterey",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "downtown-santa-cruz",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "cannery-row",
+      "method": "rss",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "fishermans-wharf-monterey",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "pg-chamber",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "monterey-chamber",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "salinas-chamber",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "aptos-chamber",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "capitola-chamber",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "santa-cruz-chamber",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "pajaro-valley-chamber",
+      "method": "rss",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "del-monte-center",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "northridge-mall",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "capitola-mall",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "the-barnyard",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "the-crossroads-carmel",
+      "method": "rss",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "abbott-square",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "monterey-county-now",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "good-times-sc",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "kazu-calendar",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "santa-cruz-sentinel",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "lookout-santa-cruz",
+      "method": "rss",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "edible-monterey-bay",
+      "method": "rss",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "monterey-conference-center",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "monterey-fairgrounds",
+      "method": "rss",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "california-rodeo-salinas",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "kaiser-arena",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "mah-santa-cruz",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "santa-cruz-fairgrounds",
+      "method": null,
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "monterey-library",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "santa-cruz-libraries",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "salinas-library",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "card-shop-finder",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "world-of-sports-memorabilia",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "food-trucks-a-go-go",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "discretion-brewing",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "other-brother-beer",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "santa-cruz-makers-market",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "csumb-events",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "mpc-events",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "cabrillo-college",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "seymour-center",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "monterey-zoo",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "my-museum",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "sc-childrens-museum",
+      "method": "html",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "roaring-camp",
+      "method": "rss",
+      "outcome": "skipped",
+      "error": "already checked today",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "boardwalk",
+      "method": null,
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "monterey-bay-aquarium",
+      "method": null,
+      "outcome": "error",
+      "error": "unexpected HTTP status when probed (HTTP 405)",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "ucsc-events",
+      "method": null,
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "pv-arts",
+      "method": null,
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "capitola-village",
+      "method": null,
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "eventbrite",
+      "method": "jsonld",
+      "outcome": "disabled",
+      "error": "robots.txt permits the search pages and they carry Event JSON-LD, but Eventbrite's terms on automated access have not been read and confirmed. Off until the operator decides.",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "reddit-santacruz",
+      "method": null,
+      "outcome": "disallowed",
+      "error": "excluded by reddit.com robots.txt; never requested. Official API needs an OAuth app and its terms checked (v4.A item 7). Community not confirmed to exist by this job.",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    },
+    {
+      "id": "reddit-montereybay",
+      "method": null,
+      "outcome": "disallowed",
+      "error": "excluded by reddit.com robots.txt; never requested. Official API needs an OAuth app and its terms checked (v4.A item 7). Community not confirmed to exist by this job.",
+      "items": 0,
+      "created": 0,
+      "refreshed": 0
+    }
+  ],
+  "totals": {
+    "fetched": 0,
+    "items": 0,
+    "irrelevant": 0,
+    "past": 0,
+    "outOfArea": 0,
+    "duplicateOfMbe": 0,
+    "mergedAcrossSources": 0,
+    "created": 0,
+    "refreshed": 0,
+    "expired": 0
+  },
+  "finishedAt": "2026-10-11T17:48:40.784Z",
+  "queue": {
+    "DISCOVERED": 2,
+    "NEEDS_REVIEW": 14,
+    "VERIFIED": 0,
+    "PUBLISHED": 0,
+    "REJECTED": 0,
+    "EXPIRED": 0,
+    "CANCELLED": 0
+  },
+  "failures": [
+    {
+      "id": "see-monterey",
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)"
+    },
+    {
+      "id": "city-monterey",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "city-pacific-grove",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "city-salinas",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "city-santa-cruz",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "city-carmel",
+      "outcome": "disallowed",
+      "error": "excluded by the host's robots.txt; never requested"
+    },
+    {
+      "id": "old-monterey",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "downtown-santa-cruz",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "fishermans-wharf-monterey",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "pg-chamber",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "monterey-chamber",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "salinas-chamber",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "aptos-chamber",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "capitola-chamber",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "santa-cruz-chamber",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "del-monte-center",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "northridge-mall",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "capitola-mall",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "the-barnyard",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "abbott-square",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "monterey-county-now",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "good-times-sc",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "kazu-calendar",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "santa-cruz-sentinel",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "monterey-conference-center",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "california-rodeo-salinas",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "kaiser-arena",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "mah-santa-cruz",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "santa-cruz-fairgrounds",
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)"
+    },
+    {
+      "id": "monterey-library",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "santa-cruz-libraries",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "salinas-library",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "card-shop-finder",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "world-of-sports-memorabilia",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "food-trucks-a-go-go",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "discretion-brewing",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "other-brother-beer",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "santa-cruz-makers-market",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "csumb-events",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "mpc-events",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "cabrillo-college",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "seymour-center",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "monterey-zoo",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "my-museum",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "sc-childrens-museum",
+      "outcome": "needs-credentials",
+      "error": "ANTHROPIC_API_KEY is not set"
+    },
+    {
+      "id": "boardwalk",
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)"
+    },
+    {
+      "id": "monterey-bay-aquarium",
+      "outcome": "error",
+      "error": "unexpected HTTP status when probed (HTTP 405)"
+    },
+    {
+      "id": "ucsc-events",
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)"
+    },
+    {
+      "id": "pv-arts",
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)"
+    },
+    {
+      "id": "capitola-village",
+      "outcome": "blocked",
+      "error": "host refuses the job's requests (HTTP 401/403); not worked around (HTTP 403)"
+    },
+    {
+      "id": "reddit-santacruz",
+      "outcome": "disallowed",
+      "error": "excluded by reddit.com robots.txt; never requested. Official API needs an OAuth app and its terms checked (v4.A item 7). Community not confirmed to exist by this job."
+    },
+    {
+      "id": "reddit-montereybay",
+      "outcome": "disallowed",
+      "error": "excluded by reddit.com robots.txt; never requested. Official API needs an OAuth app and its terms checked (v4.A item 7). Community not confirmed to exist by this job."
+    }
+  ]
+}

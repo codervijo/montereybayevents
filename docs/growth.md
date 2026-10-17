@@ -192,3 +192,12 @@ https://search.google.com/search-console directly.
 - **Action:** Built `/monterey-bay-card-show/` (1,384 words, WebPage + BreadcrumbList + FAQPage, no Event node while the date is unannounced); linked from `/events/`.
 - **Result:** TBD — review 28 days after deploy
 - **Learning:** TBD — if it ranks, hand-built pages for branded pop-up queries are worth doing ahead of the v4 pipeline, and this is its first data point.
+
+## 2026-10-11 — v4.B: a monitored source list finds pop-up events the dataset misses
+- **Status:** active
+- **Hypothesis:** Short-lived local events (pop-ups, card shows, night markets) never reach the Aug–Dec CSV, and they are exactly the "this weekend" queries the site exists for. A registry of venue, city and aggregator feeds, read on a schedule and gated by human verification, should surface enough real candidates to justify `/pop-ups/` (v4.C). v4.B publishes nothing, so this entry measures supply, not search.
+- **KPI:** candidates reaching NEEDS_REVIEW per run; share of reviewed candidates that reach VERIFIED; spread across the ten cities (not just Santa Cruz County)
+- **Baseline:** first live run 2026-10-11 — 65 sources probed, 55 reachable, 12 read (structured feeds only; the 42 HTML-only sources need `ANTHROPIC_API_KEY`), 349 items → 16 candidates (14 NEEDS_REVIEW, 2 DISCOVERED), 0 VERIFIED. All 16 from Santa Cruz County, Watsonville and Seaside feeds.
+- **Action:** `scripts/popups/` registry + probe + discovery + extraction + file-based review queue in `data/popups/`; `make popups-probe` / `popups-discover` / `popups-queue`.
+- **Result:** TBD — review at v4.E's 30-day evaluation
+- **Learning:** TBD — if Monterey Peninsula sources stay silent once the text extractor runs, the supply problem is coverage, not tooling.

@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "id": "93bfe781cd",
+  "slug": "downtown-santa-cruz-antiques-faire",
+  "status": "NEEDS_REVIEW",
+  "name": "Downtown Santa Cruz: Antiques Faire",
+  "categories": [
+    "collectibles"
+  ],
+  "matchedTerms": [
+    "collectibles"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "The Santa Cruz Antique Faire is on the 2nd Sunday of every month from 9am-5pm, weather permitting. Vendors offer an eclectic blend of antiques and unique items, vintage clothing, collectibles and more! Visit the Antique Faire on Lincoln Street between Pacific and Cedar.",
+  "venue": "Downtown Santa Cruz Antique Faire",
+  "city": "Santa Cruz",
+  "start": {
+    "date": "2026-10-11",
+    "time": "09:00"
+  },
+  "end": {
+    "date": "2026-10-11",
+    "time": "17:00"
+  },
+  "whenNotes": [],
+  "admission": null,
+  "organizer": "Santa Cruz Antique Faire",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/downtown-santa-cruz-antiques-faire/2026-10-11/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2019/12/01-12-20-12-13-20-Downtown-Santa-Cruz-Antique-Street-Faire-75467.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

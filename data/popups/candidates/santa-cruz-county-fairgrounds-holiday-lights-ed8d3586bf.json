@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "ed8d3586bf",
+  "slug": "santa-cruz-county-fairgrounds-holiday-lights",
+  "status": "NEEDS_REVIEW",
+  "name": "Santa Cruz County Fairgrounds: Holiday Lights",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "holiday lights"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "The Santa Cruz County Fairgrounds Foundation and the Agricultural History Project will again present HOLIDAY LIGHTS 2026 at the Santa Cruz County Fairgrounds. Starting November 27, 2026 – Holiday Lights will be open Fridays, Saturdays, and Sundays until Christmas Eve. HOLIDAY LIGHTS is over a 1/2 mile drive-through experience at the Fairgrounds of spectacular lighted […]",
+  "venue": "Santa Cruz County Fairgrounds",
+  "city": "Watsonville",
+  "start": {
+    "date": "2026-11-27",
+    "time": "17:30"
+  },
+  "end": {
+    "date": "2026-11-27",
+    "time": "21:00"
+  },
+  "whenNotes": [],
+  "admission": {
+    "raw": "11.50 – 42",
+    "currency": "USD"
+  },
+  "organizer": "Santa Cruz County Fairgrounds Foundation",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/santa-cruz-county-fairgrounds-holiday-lights/2026-11-27/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2022/12/Fairgrounds-Holiday-Lights_2023_640x480.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality",
+    "admission": "jsonld:offers.price (verbatim)"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

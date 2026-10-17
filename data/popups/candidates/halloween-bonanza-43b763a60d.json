@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "id": "43b763a60d",
+  "slug": "halloween-bonanza",
+  "status": "NEEDS_REVIEW",
+  "name": "Halloween Bonanza",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "haunted house"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "Celebrate Halloween at the Halloween Bonanza at the Oldemeyer Center. The evening will include a haunted house, games, crafts, and candy.",
+  "venue": "Oldemeyer Center - 986 Hilby Avenue Seaside CA 93955",
+  "city": "Seaside",
+  "start": {
+    "date": "2026-10-31",
+    "time": "18:00"
+  },
+  "end": {
+    "date": "2026-10-31",
+    "time": "21:00"
+  },
+  "whenNotes": [],
+  "admission": null,
+  "organizer": null,
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "city-seaside",
+      "url": "https://www.ci.seaside.ca.us/calendar.aspx?EID=12178"
+    }
+  ],
+  "image": null,
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "ics:SUMMARY",
+    "start": "ics:DTSTART",
+    "end": "ics:DTEND",
+    "venue": "ics:LOCATION",
+    "city": "city name found in ics:LOCATION"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

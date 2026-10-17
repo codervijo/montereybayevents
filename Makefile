@@ -24,7 +24,16 @@ maps:              ## Re-render the map + calendar images into public/maps/ (com
 maps-check:        ## Fail if any committed map/calendar image is stale or missing
 	pnpm maps:check
 
-.PHONY: og og-check maps maps-check
+popups-probe:      ## Re-probe every pop-up source and rewrite data/popups/sources.json
+	pnpm popups:probe
+
+popups-discover:   ## Fetch pop-up sources into the review queue (data/popups/candidates/). Publishes nothing
+	pnpm popups:discover
+
+popups-queue:      ## List the pop-up review queue
+	pnpm popups:queue
+
+.PHONY: og og-check maps maps-check popups-probe popups-discover popups-queue
 
 # Forward every target to the parent Makefile with proj set to this project.
 # `make buildsh` (parent) drops you into the dev container; `make run` etc.

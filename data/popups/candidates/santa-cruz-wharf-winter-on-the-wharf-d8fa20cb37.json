@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "d8fa20cb37",
+  "slug": "santa-cruz-wharf-winter-on-the-wharf",
+  "status": "NEEDS_REVIEW",
+  "name": "Santa Cruz Wharf: Winter on the Wharf",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "photos with santa"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "Come enjoy holiday decorations, Wharf specials and see Santa arrive on the Wharf by a vintage fire engine!🎅 📸Take photos with Santa! ☃️ Checkout Wharf Business Specials! ❄️Play in the snow area with Elsa and Anna from Disney\\'s Frozen! 🎈Enjoy custom balloon designs from Lee Balloons! 🎨 Get your face painted or feathers in your […]",
+  "venue": "Santa Cruz Wharf",
+  "city": "Santa Cruz",
+  "start": {
+    "date": "2026-12-12",
+    "time": "14:00"
+  },
+  "end": {
+    "date": "2026-12-12",
+    "time": "17:00"
+  },
+  "whenNotes": [],
+  "admission": {
+    "raw": "0",
+    "currency": null
+  },
+  "organizer": "City of Santa Cruz Parks and Recreation",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/santa-cruz-wharf-winter-on-the-wharf/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2022/11/Santa-Cruz-Wharf_Winter-on-the-Wharf_2023_640x480.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality",
+    "admission": "jsonld:offers.price (verbatim)"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "0bcf55c29b",
+  "slug": "county-sheriff-s-office-trunk-or-treat",
+  "status": "NEEDS_REVIEW",
+  "name": "County Sheriff’s Office: Trunk or Treat",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "trunk or treat"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "Join the county Sheriff\\'s Department for their annual Trunk or Treat event! Decorated Trunks, candy, games, food vendors and more! Free parking and shuttle service will be provided at the Capitola Mall for the Live Oak location and this year they are expanding to the County Fairgrounds too!",
+  "venue": "Santa Cruz County Fairgrounds",
+  "city": "Watsonville",
+  "start": {
+    "date": "2026-10-23",
+    "time": "17:00"
+  },
+  "end": {
+    "date": "2026-10-23",
+    "time": "20:00"
+  },
+  "whenNotes": [],
+  "admission": {
+    "raw": "0",
+    "currency": "USD"
+  },
+  "organizer": "Santa Cruz County Sheriff’s Office",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/county-sheriffs-office-trunk-or-treat/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2023/10/County-Sheriffs-Office_Trunk-or-Treat_2024_640x480.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality",
+    "admission": "jsonld:offers.price (verbatim)"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

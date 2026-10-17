@@ -1,0 +1,11 @@
+{
+  "_note": "Relevance terms for the pop-ups queue, matched as whole words against an item's name and description. An item needs at least one match outside `family` to become a candidate; `family` only tags. Edit freely — this file is the operator's dial, and scripts/popups/lib/classify.mjs reads nothing else.",
+  "categories": {
+    "collectibles": ["card show", "trading card", "trading cards", "pokemon", "pokémon", "tcg", "collectible", "collectibles", "comic con", "comic-con", "comic book", "funko", "toy show", "sports cards", "memorabilia", "lego", "sneaker"],
+    "anime-kpop": ["anime", "manga", "cosplay", "k-pop", "kpop", "sanrio", "hello kitty", "ghibli"],
+    "food": ["food truck", "food trucks", "night market", "pop-up dinner", "pop-up kitchen", "street food"],
+    "pop-up-shop": ["pop-up", "pop up", "popup", "makers market", "makers' market", "maker's market", "artisan market", "craft fair", "craft market", "flea market", "vintage market", "holiday market", "swap meet", "sample sale", "trunk show", "limited edition", "one day only"],
+    "seasonal": ["pumpkin patch", "corn maze", "haunted house", "trunk or treat", "holiday lights", "photos with santa", "ice rink", "ice skating"]
+  },
+  "family": ["kids", "family-friendly", "family friendly", "all ages", "teens", "children"]
+}

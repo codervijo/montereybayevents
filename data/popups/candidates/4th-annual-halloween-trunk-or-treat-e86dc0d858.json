@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "id": "e86dc0d858",
+  "slug": "4th-annual-halloween-trunk-or-treat",
+  "status": "NEEDS_REVIEW",
+  "name": "4th Annual Halloween Trunk or Treat",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "trunk or treat"
+  ],
+  "familyTerms": [
+    "children"
+  ],
+  "description": null,
+  "sourceDescription": "Cypress Coast Subaru is hosting its 4th Annual Halloween Trunk or Treat. Families are invited to enjoy a Halloween-themed community event with activities for children and adults.",
+  "venue": "Cypress Coast Subaru - 2 Geary Plaza Seaside CA 93955",
+  "city": "Seaside",
+  "start": {
+    "date": "2026-10-30",
+    "time": "15:30"
+  },
+  "end": {
+    "date": "2026-10-30",
+    "time": "18:00"
+  },
+  "whenNotes": [],
+  "admission": null,
+  "organizer": null,
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "city-seaside",
+      "url": "https://www.ci.seaside.ca.us/calendar.aspx?EID=12177"
+    }
+  ],
+  "image": null,
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "ics:SUMMARY",
+    "start": "ics:DTSTART",
+    "end": "ics:DTEND",
+    "venue": "ics:LOCATION",
+    "city": "city name found in ics:LOCATION"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "id": "a9b80b043f",
+  "slug": "santa-cruz-holiday-lights-train",
+  "status": "NEEDS_REVIEW",
+  "name": "Santa Cruz Holiday Lights Train",
+  "categories": [
+    "seasonal"
+  ],
+  "matchedTerms": [
+    "holiday lights"
+  ],
+  "familyTerms": [],
+  "description": null,
+  "sourceDescription": "A seasonal tradition returns to Santa Cruz with the Santa Cruz Holiday Lights Train. Vintage excursion cars, adorned with thousands of colorful lights, roll through city streets past homes of Santa Cruz. Itinerary: Santa Cruz Holiday Lights Trains depart and return in front of Neptune’s Kingdom on the Boardwalk of Santa Cruz for a 60-minute […]",
+  "venue": "Santa Cruz Beach Boardwalk",
+  "city": "Santa Cruz",
+  "start": {
+    "date": "2026-11-27",
+    "time": "17:00"
+  },
+  "end": {
+    "date": "2026-11-27",
+    "time": "18:00"
+  },
+  "whenNotes": [],
+  "admission": {
+    "raw": "38.11 – 48.71",
+    "currency": null
+  },
+  "organizer": "Roaring Camp Railroads",
+  "officialUrl": null,
+  "sourceUrls": [
+    {
+      "sourceId": "visit-santa-cruz",
+      "url": "https://www.santacruz.org/upcoming-event/santa-cruz-holiday-lights-train-5/2026-11-27/"
+    }
+  ],
+  "image": {
+    "url": "https://www.santacruz.org/wp-content/uploads/2021/10/RR-BW-Holiday-Lights_640x480.jpg",
+    "rights": "unknown — not cleared for use"
+  },
+  "recurrence": {
+    "kind": "single",
+    "occurrences": 1,
+    "basis": "one date in the feed"
+  },
+  "cancelledAtSource": false,
+  "provenance": {
+    "name": "jsonld:name",
+    "start": "jsonld:startDate",
+    "end": "jsonld:endDate",
+    "venue": "jsonld:location.name",
+    "city": "jsonld:location.address.addressLocality",
+    "admission": "jsonld:offers.price (verbatim)"
+  },
+  "confidence": {
+    "score": 1,
+    "basis": "5 of 5 core fields read from the source (name, start, venue, city, url)"
+  },
+  "discoveredAt": "2026-10-11T17:45:54.895Z",
+  "lastSeenAt": "2026-10-11T17:45:54.895Z",
+  "lastVerifiedAt": null,
+  "duplicateOf": null,
+  "evidence": [],
+  "reviewNotes": "",
+  "statusHistory": [
+    {
+      "status": "NEEDS_REVIEW",
+      "at": "2026-10-11T17:45:54.895Z",
+      "by": "discover",
+      "note": null
+    }
+  ]
+}
