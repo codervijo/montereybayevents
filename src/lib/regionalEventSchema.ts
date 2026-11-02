@@ -8,11 +8,14 @@
  * nothing about price. The output shape is the same, and both are validated
  * against schema.org/Event in the test suite.
  *
- * Two properties the Car Week builder emits are deliberately absent here:
+ * Two properties the Car Week builder emits are absent by default here:
  *
- *   offers      — this dataset records no admission price, and an Offer with no
+ *   offers      — most rows record no admission price, and an Offer with no
  *                 price says nothing while an Offer with a guessed one is worse.
- *   organizer   — no organizer names are recorded, only websites.
+ *                 Emitted only where `admission` is set (v1.L, v1.Y).
+ *   organizer   — most rows record no organizer name, only a website. Emitted
+ *                 only where `organizer` is set from the organiser's own
+ *                 material (v2.P), along with `performer`.
  *
  * Returns null when the event has no confirmed start date. schema.org requires
  * startDate, so an Event node without one is invalid — the three undated events
@@ -48,7 +51,7 @@ export function isoDateTime(iso: string, time?: string): string {
  */
 function officialTime(
   event: RegionalEvent,
-  field: "startTime" | "endTime",
+  field: "startTime" | "endTime" | "doorTime",
 ): string | undefined {
   return event.timesConfidence === "official" ? event[field] : undefined;
 }
@@ -108,8 +111,13 @@ export function buildRegionalOffer(
     price,
     priceCurrency,
     availability: "https://schema.org/InStock",
-    url: event.officialWebsite ?? canonical,
+    url: event.ticketsUrl ?? event.officialWebsite ?? canonical,
   };
+}
+
+/** A PerformingGroup / Organization / Person node from a row's organiser data. */
+function party(p: { type: string; name: string; url?: string }): JsonLd {
+  return { "@type": p.type, name: p.name, ...(p.url ? { url: p.url } : {}) };
 }
 
 export function buildRegionalEventJsonLd(
@@ -122,7 +130,7 @@ export function buildRegionalEventJsonLd(
 
   return {
     "@context": "https://schema.org",
-    "@type": "Event",
+    "@type": event.schemaType ?? "Event",
     name: event.name,
     ...(event.description ? { description: event.description.slice(0, 300) } : {}),
     url: `${site}/event/${event.slug}/`,
@@ -135,10 +143,15 @@ export function buildRegionalEventJsonLd(
           ),
         }
       : {}),
+    ...(officialTime(event, "doorTime")
+      ? { doorTime: isoDateTime(event.start, officialTime(event, "doorTime")) }
+      : {}),
     eventStatus: "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     location: buildPlace(event),
     ...(offer ? { offers: offer } : {}),
+    ...(event.performer?.length ? { performer: event.performer.map(party) } : {}),
+    ...(event.organizer ? { organizer: party(event.organizer) } : {}),
   };
 }
 

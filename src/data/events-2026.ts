@@ -86,6 +86,31 @@ export type RegionalEvent = {
    */
   startTime?: string;
   endTime?: string;
+  /**
+   * 24-hour `HH:MM`, Pacific — when doors open. Same terms as `startTime`:
+   * emitted as schema.org `doorTime` only when `timesConfidence` is
+   * `"official"`.
+   */
+  doorTime?: string;
+  /**
+   * schema.org subtype for the Event node. Absent means plain `Event`, which
+   * is every row until v2.P. One member because one row needed it; add more
+   * only when a row's organiser material clearly puts it in that type.
+   */
+  schemaType?: "MusicEvent";
+  /**
+   * The organiser's ticketing page, where it differs from `officialWebsite`.
+   * Becomes `offers.url` and a visible "Buy tickets" link. Only meaningful
+   * alongside a ticketed `admission`.
+   */
+  ticketsUrl?: string;
+  /**
+   * Who puts the event on, and who performs. Set only from the organiser's
+   * own material — never inferred from a listing — and emitted as schema.org
+   * `organizer` / `performer`. Absent on every row before v2.P.
+   */
+  organizer?: { type: "PerformingGroup" | "Organization"; name: string; url?: string };
+  performer?: { type: "PerformingGroup" | "Person"; name: string; url?: string }[];
   /** Month hub(s) this event belongs to. More than one only when it spans them. */
   months: MonthKey[];
   /** Human-readable date text from the CSV; empty when no date is confirmed. */
@@ -1459,6 +1484,107 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A half marathon run on a single November Sunday through Monterey and Pacific Grove.",
+  },
+  {
+    // v2.P — added 2026-11-01 from the organiser's own email to the operator,
+    // checked against ariamonterey.org (start time, address, running order)
+    // and the choir's TicketSpice page (the three ticket prices). Not one of
+    // the original Aug–Dec import: it is the first row added after it.
+    slug: "aria-womens-choir-where-mercy-dwells",
+    name: "Aria Women's Choir: Where Mercy Dwells",
+    county: "Monterey",
+    cityText: "Pacific Grove (First United Methodist Church of Pacific Grove)",
+    city: "Pacific Grove",
+    venue: "First United Methodist Church of Pacific Grove",
+    streetAddress: "915 Sunset Drive",
+    postalCode: "93950",
+    months: ["november"],
+    dateText: "November 14, 2026",
+    start: "2026-11-14",
+    times: [
+      { day: "Saturday 14 November", hours: "3:00pm – about 4:05pm (doors 2:30pm)" },
+    ],
+    timesConfidence: "official",
+    startTime: "15:00",
+    endTime: "16:05",
+    doorTime: "14:30",
+    category: "Music / Choral",
+    schemaType: "MusicEvent",
+    officialWebsite: "https://www.ariamonterey.org/dbpage.php?dbase=events&id=348597&pg=view",
+    ticketsUrl: "https://ariamonterey.ticketspice.com/aria-where-mercy-dwells",
+    admission: { kind: "ticketed", from: 10, currency: "USD" },
+    organizer: {
+      type: "PerformingGroup",
+      name: "Aria Women's Choir",
+      url: "https://www.ariamonterey.org/",
+    },
+    performer: [
+      { type: "PerformingGroup", name: "Aria Women's Choir", url: "https://www.ariamonterey.org/" },
+    ],
+    updated: "2026-11-01",
+    hideSources: true,
+    referenceUrls: ["https://ariamonterey.ticketspice.com/aria-where-mercy-dwells"],
+    description:
+      "Aria Women's Choir opens its 15th anniversary season with an afternoon of sacred choral music at the Butterfly Church in Pacific Grove.",
+    metaDescription:
+      "Saturday 14 November 2026, 3pm at the Butterfly Church, Pacific Grove. Tickets $10–$25, the full running order, and what the choir has not published.",
+    intro:
+      "Aria Women's Choir sings Where Mercy Dwells at 3:00pm on Saturday 14 November 2026 at First United Methodist Church of Pacific Grove — the Butterfly Church — at 915 Sunset Drive. Doors open at 2:30pm and the choir's published programme runs 65 minutes with an interval, finishing at about 4:05pm. It opens Aria's 15th anniversary season: an afternoon of sacred choral music on compassion, peace, forgiveness and hope, conducted by Dr. Seán Boulware with collaborative pianist Jon-Mark Hurley. Tickets are $25, $20 for seniors, veterans and military families, and $10 for students and under-18s, bought online through the choir's TicketSpice page.",
+    sections: [
+      {
+        heading: "Tickets: three prices, one kind of seat",
+        body: [
+          "The choir sells three tickets, and all three are general admission — the tiers are about who you are, not where you sit. Adult admission is $25. Seniors aged 65 and over, veterans, and active military and their families pay $20. Students with ID and anyone under 18 pay $10.",
+          "Those are the face prices. TicketSpice adds a booking fee to each ticket at checkout, so the $25 ticket costs $28.97 by the time you pay, the $20 ticket $23.79, and the $10 ticket $13.44.",
+          "Because seating is unreserved, the 2:30pm door time is the one to plan around if you want a particular part of the church. Arriving at three means taking what is left.",
+        ],
+      },
+      {
+        heading: "The running order",
+        body: [
+          "The choir publishes its full programme in order, with timings, which is unusual for a concert listing and lets you see the shape of the afternoon before you go. The first half runs from 3:00pm to about 3:25pm: O Virtus Sapientiæ, Salve Regina, Cantate Domino, I Will Be a Child of Peace, And Can It Be, and Song of Miriam.",
+          "A 15-minute interval follows. The second half runs from about 3:40pm to the close at about 4:05pm: Mangisondele Nkosi Yam, We Are Held, I Will Lift My Eyes, I Choose Love, When the Spirit Says Sing, and Elijah Rock to finish.",
+          "The timings are the choir's own estimate of each piece — four or five minutes apiece — rather than a guarantee, so treat 4:05pm as roughly when it ends rather than a hard stop.",
+        ],
+      },
+      {
+        heading: "What the music is",
+        body: [
+          "The programme moves through several centuries of sacred music written or arranged for women's voices. At the older end are Hildegard von Bingen, the twelfth-century abbess and composer, and the Renaissance masters Palestrina and Monteverdi. The contemporary half draws on choral composers Elaine Hagenberg, Dan Forrest, Susan LaBarr, Mark A. Miller, Rollo Dilworth and Stacey V. Gibbs, with gospel and spirituals among them — Elijah Rock and When the Spirit Says Sing close the afternoon.",
+          "The choir describes the theme as music of peace and praise, struggle and hope, compassion and courage, built around a single question: where does mercy dwell? The answers the programme offers are forgiveness, courage, justice and, in the choir's words, the quiet assurance that we are not alone.",
+          "Dr. Seán Boulware conducts, and Jon-Mark Hurley is the collaborative pianist.",
+        ],
+      },
+      {
+        heading: "What the choir has not published",
+        body: [
+          "Three things a concertgoer might want to know are not on the choir's event page or its ticketing page. It does not say whether tickets will be sold at the door, so buying online is the only route we can confirm. It publishes no parking information for the church. And it says nothing about step-free access or accessible seating.",
+          "If any of those decides whether you go, the choir's event page has its contact details — ask before the day rather than assuming.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "What time does Where Mercy Dwells start?",
+        a: "3:00pm on Saturday 14 November 2026. Doors open at 2:30pm, and the choir's published programme runs 65 minutes including a 15-minute interval, finishing at about 4:05pm.",
+      },
+      {
+        q: "How much are tickets?",
+        a: "$25 for adults, $20 for seniors 65 and over, veterans and active military families, and $10 for students with ID and under-18s. TicketSpice adds a booking fee to each, so you pay $28.97, $23.79 or $13.44. All three are general admission.",
+      },
+      {
+        q: "Where is the concert?",
+        a: "First United Methodist Church of Pacific Grove, known locally as the Butterfly Church, at 915 Sunset Drive, Pacific Grove, CA 93950.",
+      },
+      {
+        q: "Who conducts the choir?",
+        a: "Dr. Seán Boulware conducts Aria Women's Choir, with Jon-Mark Hurley as collaborative pianist.",
+      },
+      {
+        q: "Can I buy tickets at the door?",
+        a: "The choir has not said. Tickets are on sale online through its TicketSpice page, which is the only way to buy that we can confirm.",
+      },
+    ],
   },
   {
     slug: "christmas-in-the-adobes",

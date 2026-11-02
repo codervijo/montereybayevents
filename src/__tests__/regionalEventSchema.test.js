@@ -38,6 +38,10 @@ const ALLOWED_EVENT_PROPS = new Set([
   'eventAttendanceMode',
   'location',
   'offers',
+  // v2.P — emitted only where the row carries them, from the organiser.
+  'doorTime',
+  'performer',
+  'organizer',
 ]);
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
@@ -52,17 +56,21 @@ const nodes = regionalEvents
 describe('regional Event JSON-LD', () => {
   it('builds a node for every dated event and none for the undated ones', () => {
     expect(nodes.length).toBe(regionalEvents.filter((e) => e.start).length);
-    expect(nodes.length).toBe(58);
+    expect(nodes.length).toBe(59);
     for (const e of regionalEvents.filter((e) => !e.start)) {
       expect(buildRegionalEventJsonLd(e, SITE), e.name).toBeNull();
     }
   });
 
-  it('emits @context and @type Event', () => {
+  it('emits @context and @type Event, or the subtype the row names', () => {
     for (const { event, ld } of nodes) {
       expect(ld['@context'], event.slug).toBe('https://schema.org');
-      expect(ld['@type'], event.slug).toBe('Event');
+      expect(ld['@type'], event.slug).toBe(event.schemaType ?? 'Event');
     }
+    // v2.P: one subtype, on one row. Widening this is a deliberate act.
+    expect(nodes.filter((n) => n.ld['@type'] !== 'Event').map((n) => n.event.slug)).toEqual([
+      'aria-womens-choir-where-mercy-dwells',
+    ]);
   });
 
   it('uses only real schema.org/Event properties', () => {
@@ -110,9 +118,15 @@ describe('regional Event JSON-LD', () => {
   // set from an organiser's own words, the rule it was really protecting is the
   // one asserted here — an Offer appears if and ONLY if someone checked. A row
   // with no admission data still publishes no price at all.
-  it('publishes an Offer only where admission is sourced, and never an organizer', () => {
+  // "never an organizer" until v2.P; now an organizer appears if and only if
+  // the row carries one from the organiser's own material.
+  it('publishes an Offer only where admission is sourced, and an organizer only where named', () => {
     for (const { event, ld } of nodes) {
-      expect(ld.organizer, event.slug).toBeUndefined();
+      if (!event.organizer) expect(ld.organizer, event.slug).toBeUndefined();
+      if (!event.performer) expect(ld.performer, event.slug).toBeUndefined();
+      if (!(event.timesConfidence === 'official' && event.doorTime)) {
+        expect(ld.doorTime, event.slug).toBeUndefined();
+      }
 
       if (event.admission === undefined) {
         expect(ld.offers, event.slug).toBeUndefined();
@@ -257,5 +271,57 @@ describe('listing ItemList JSON-LD', () => {
       const ld = buildItemListJsonLd(month.events, SITE, href, month.label);
       expect(ld.numberOfItems, month.key).toBeGreaterThan(0);
     }
+  });
+});
+
+// v2.P — the first row added after the Aug–Dec import, and the first with a
+// subtype, a door time, a ticketing URL and a named organiser/performer.
+describe('Aria Women\'s Choir: Where Mercy Dwells (MusicEvent)', () => {
+  const event = regionalEvents.find((e) => e.slug === 'aria-womens-choir-where-mercy-dwells');
+  const ld = buildRegionalEventJsonLd(event, SITE);
+
+  it('is a MusicEvent with organiser-published times in PST', () => {
+    expect(ld['@type']).toBe('MusicEvent');
+    expect(ld.startDate).toBe('2026-11-14T15:00:00-08:00');
+    expect(ld.doorTime).toBe('2026-11-14T14:30:00-08:00');
+    expect(ld.endDate).toBe('2026-11-14T16:05:00-08:00');
+    expect(ld.eventStatus).toBe('https://schema.org/EventScheduled');
+    expect(ld.eventAttendanceMode).toBe('https://schema.org/OfflineEventAttendanceMode');
+    expect(ld.url).toBe(`${SITE}/event/aria-womens-choir-where-mercy-dwells/`);
+  });
+
+  it('locates it at the church with a full PostalAddress', () => {
+    expect(ld.location).toEqual({
+      '@type': 'Place',
+      name: 'First United Methodist Church of Pacific Grove',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: '915 Sunset Drive',
+        addressLocality: 'Pacific Grove',
+        addressRegion: 'CA',
+        postalCode: '93950',
+        addressCountry: 'US',
+      },
+    });
+  });
+
+  it('points the Offer at the ticketing page, priced at the cheapest ticket', () => {
+    expect(ld.offers).toEqual({
+      '@type': 'Offer',
+      price: '10',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: 'https://ariamonterey.ticketspice.com/aria-where-mercy-dwells',
+    });
+  });
+
+  it('names the choir as performer and organizer', () => {
+    const choir = {
+      '@type': 'PerformingGroup',
+      name: "Aria Women's Choir",
+      url: 'https://www.ariamonterey.org/',
+    };
+    expect(ld.performer).toEqual([choir]);
+    expect(ld.organizer).toEqual(choir);
   });
 });

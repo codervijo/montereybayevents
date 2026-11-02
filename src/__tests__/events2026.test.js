@@ -97,8 +97,9 @@ function expectedRange(text) {
 }
 
 describe('events-2026 ↔ CSV source of record', () => {
-  it('reads 61 rows from the CSV', () => {
-    expect(csvRows.length).toBe(61);
+  // 61 from the Aug–Dec import, plus Aria (v2.P, 2026-11-01).
+  it('reads 62 rows from the CSV', () => {
+    expect(csvRows.length).toBe(62);
   });
 
   it('carries every CSV row, and no extras', () => {
