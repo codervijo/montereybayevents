@@ -211,6 +211,12 @@ re-proposed. Append; don't rewrite.
   not URLs, and city hubs and other category hubs stay deferred on the
   terms above.
 
+  **First city hub, 2026-11-01 (v2.Q).** `/events/pacific-grove/`, on the
+  operator's direction, after GSC showed Pacific Grove demand split across
+  several pages with none owning it. The URL shape is `/events/<city>/`.
+  Which towns have hubs lives in `src/data/cityHubs.ts`; every other town
+  stays deferred and gets one only with its own evidence, not by symmetry.
+
 - **See Monterey's compiled annual-events PDF has produced two wrong
   dates.** `2026-Annual-Events-Monterey-County-CA.pdf` is a
   `referenceUrl` on 15 rows and is where several original dates came

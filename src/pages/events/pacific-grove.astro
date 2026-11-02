@@ -1,0 +1,450 @@
+---
+// /events/pacific-grove/ — the first city hub (v2.Q, 2026-11-01).
+//
+// Every Pacific Grove listing across all three datasets on one page: regional
+// rows whose city is Pacific Grove, the Car Week 2026 events whose venue
+// address is in Pacific Grove, and the town's weekly farmers market. Nothing
+// here is written by hand that the data does not already say — the dates,
+// venues, prices and "free" labels all come from the rows, so this page cannot
+// disagree with the event pages it links to.
+//
+// A static route beside events/[month].astro; Astro ranks static routes above
+// dynamic ones, and "pacific-grove" is not a month key, so they cannot collide.
+// Which cities have hubs lives in src/data/cityHubs.ts.
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isPastDate, pacificToday } from "../../lib/isPast";
+import {
+  eventHref,
+  regionalEvents,
+  type RegionalEvent,
+} from "../../data/events-2026";
+import { allEventDetails } from "../../data/eventIndex";
+import {
+  addDays,
+  formatDay,
+  marketHoursText,
+  montereyCountyMarkets,
+  nextSessionOf,
+  weekdayOf,
+  WEEKDAYS,
+} from "../../data/farmersMarkets";
+
+const CITY = "Pacific Grove";
+const site = "https://montereybayevents.com";
+const path = "/events/pacific-grove/";
+const canonical = `${site}${path}`;
+const today = pacificToday();
+
+// ── Data ──────────────────────────────────────────────────────────────────
+const byStart = (a: RegionalEvent, b: RegionalEvent) =>
+  (a.start ?? "9999").localeCompare(b.start ?? "9999") || a.name.localeCompare(b.name);
+
+const inTown = regionalEvents.filter((e) => e.city === CITY).sort(byStart);
+// Rows recorded under another city whose CSV city text still names Pacific
+// Grove — the half marathon is "Monterey / Pacific Grove". Listed separately
+// so the page never claims they are Pacific Grove events.
+const partly = regionalEvents
+  .filter((e) => e.city !== CITY && e.cityText.includes(CITY))
+  .sort(byStart);
+
+const upcoming = inTown.filter((e) => e.start && !isPastDate(e.start, e.end, today));
+const finished = inTown.filter((e) => isPastDate(e.start, e.end, today));
+const partlyUpcoming = partly.filter((e) => e.start && !isPastDate(e.start, e.end, today));
+
+const carWeek = allEventDetails
+  .filter((e) => e.venue?.address.includes(`${CITY}, CA`))
+  .sort((a, b) => a.days[0]!.iso.localeCompare(b.days[0]!.iso) || a.title.localeCompare(b.title));
+const carWeekFirst = carWeek[0]?.days[0];
+const carWeekLast = carWeek.at(-1)?.days.at(-1);
+const carWeekFree = carWeek.filter((e) => e.access === "free");
+
+const market = montereyCountyMarkets.find((m) => m.id === "pacific-grove");
+if (!market) throw new Error("Pacific Grove farmers market missing from farmersMarkets.ts");
+const nextMarket = nextSessionOf(market, today);
+
+// "This weekend" on the homepage's terms: Friday to Sunday; Mon–Thu means the
+// coming weekend, Fri–Sun the one we are in.
+const dayIdx = WEEKDAYS.indexOf(weekdayOf(today));
+const friday = addDays(today, 4 - dayIdx);
+const sunday = addDays(friday, 2);
+const weekendFrom = friday > today ? friday : today;
+const thisWeekend = [...upcoming, ...partlyUpcoming].filter(
+  (e) => !!e.start && e.start <= sunday && (e.end ?? e.start) >= weekendFrom,
+);
+
+const next = upcoming[0];
+const butterfly = inTown.find((e) => e.slug === "pacific-grove-butterfly-parade-bazaar");
+
+// Venues the data records in town, with the address where one is sourced.
+type Place = { name: string; address?: string };
+const placeMap = new Map<string, Place>();
+for (const e of inTown) {
+  if (e.venue) placeMap.set(e.venue, { name: e.venue, address: e.streetAddress });
+}
+for (const e of carWeek) {
+  const v = e.venue!;
+  const key = v.venue.startsWith("Grand Cypress Meadow") ? "Asilomar Conference Grounds" : v.venue;
+  if (key === "Downtown Pacific Grove") continue; // same street as Lighthouse Avenue
+  if (!placeMap.has(key)) {
+    const street = v.address.split(",")[0];
+    // "Lighthouse Ave" adds nothing under "Lighthouse Avenue".
+    const sameStreet = key.split(" ")[0] === street.split(" ")[0];
+    placeMap.set(key, { name: key, address: sameStreet ? undefined : street });
+  }
+}
+const places = [...placeMap.values()];
+
+// ── Copy helpers ──────────────────────────────────────────────────────────
+const label = (e: RegionalEvent) => e.dateText || "Date not yet announced";
+const price = (e: RegionalEvent) =>
+  e.admission === "free"
+    ? "Free"
+    : typeof e.admission === "object"
+      ? `Tickets from $${e.admission.from}`
+      : undefined;
+const cwDays = (days: { short: string }[]) => days.map((d) => d.short).join(", ");
+
+const marketLine = `${market.name}, every ${market.day}, ${marketHoursText(market, market.hours[0]!)}, at ${market.venue}`;
+
+const directAnswer = next
+  ? `The next event we list in Pacific Grove is ${next.name}, on ${formatDay(next.start!)} ${next.start!.slice(0, 4)}${next.venue ? ` at ${next.venue}` : ""}. Every week, the ${marketLine}.`
+  : `We have no more dated Pacific Grove events listed for 2026. Every week, the ${marketLine}.`;
+
+// ── FAQ — rendered visibly and emitted as FAQPage from the same array ───────
+const weekendAnswer = thisWeekend.length
+  ? `${thisWeekend.map((e) => `${e.name} (${label(e)})`).join("; ")}. The farmers market is on ${market.day}s, so it is not a weekend option.`
+  : next
+    ? `Nothing we list falls on the weekend of ${formatDay(weekendFrom)}. The next Pacific Grove event is ${next.name} on ${formatDay(next.start!)}, and the farmers market runs every ${market.day}.`
+    : `Nothing we list falls this weekend. The farmers market runs every ${market.day}.`;
+
+const faq: { q: string; a: string }[] = [
+  { q: "What's on in Pacific Grove this weekend?", a: weekendAnswer },
+  ...(butterfly?.start
+    ? [
+        {
+          q: "When is the Butterfly Parade in Pacific Grove?",
+          a: isPastDate(butterfly.start, butterfly.end, today)
+            ? `The 2026 Butterfly Parade & Bazaar was on ${formatDay(butterfly.start)}. The 2027 date has not been announced; this page and the parade's own listing will carry it once it is.`
+            : `The 2026 Butterfly Parade & Bazaar is on ${formatDay(butterfly.start)}.`,
+        },
+      ]
+    : []),
+  {
+    q: "Is there a farmers market in Pacific Grove?",
+    a: `Yes — the ${market.name} runs every ${market.day}, ${marketHoursText(market, market.hours[0]!)}, at ${market.venue}, year round. The operator, Everyone's Harvest, does not say which months count as winter.`,
+  },
+  ...(carWeek.length
+    ? [
+        {
+          q: "What car events are in Pacific Grove?",
+          a: `During Monterey Car Week 2026, ${carWeek.length} events were held in Pacific Grove between ${carWeekFirst!.date} and ${carWeekLast!.date}: ${carWeek.map((e) => e.title).join(", ")}. ${carWeekFree.length} of them were free for spectators. The 2027 dates have not been announced.`,
+        },
+      ]
+    : []),
+  {
+    q: "Are events in Pacific Grove free?",
+    a: `Some are. Of the Car Week events held in town, ${carWeekFree.map((e) => e.title).join(", ")} were free to watch. ${upcoming
+      .filter((e) => typeof e.admission === "object")
+      .map((e) => `${e.name} is ticketed, from $${(e.admission as { from: number }).from}.`)
+      .join(" ")} We mark an event free only when its organiser says so, so a listing with no price shown means the organiser has not published one, not that it is free.`.replace(/\s+/g, " "),
+  },
+];
+
+// ── Metadata + structured data ────────────────────────────────────────────
+const title = "Pacific Grove Events: What's On and When";
+const description =
+  "Upcoming Pacific Grove events with dates, venues and prices — concerts, the Butterfly Parade, Car Week shows and the Monday farmers market.";
+const image = `${site}/og/city-pacific-grove.png`;
+
+const listed = [
+  ...inTown.map((e) => ({ name: e.name, url: `${site}${eventHref(e)}` })),
+  ...carWeek.map((e) => ({ name: e.title, url: `${site}/event/${e.slug}/` })),
+];
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Events in Pacific Grove",
+    url: canonical,
+    description,
+    about: {
+      "@type": "City",
+      name: "Pacific Grove",
+      containedInPlace: { "@type": "AdministrativeArea", name: "Monterey County, California" },
+    },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: listed.length,
+      itemListElement: listed.map((l, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: l.name,
+        url: l.url,
+      })),
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${site}/` },
+      { "@type": "ListItem", position: 2, name: "Events", item: `${site}/events/` },
+      { "@type": "ListItem", position: 3, name: "Pacific Grove", item: canonical },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((f) => ({
+      "@type": "Question",
+      name: f.q,
+      acceptedAnswer: { "@type": "Answer", text: f.a },
+    })),
+  },
+];
+
+const card =
+  "border-l-2 border-border/80 bg-surface/60 px-5 py-4 transition-colors hover:border-brass";
+const meta =
+  "mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground";
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Events in Pacific Grove" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    {jsonLd.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  </Fragment>
+
+  <main class="mx-auto max-w-4xl px-5 py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <a href="/" class="hover:text-brass">Home</a>
+      <span aria-hidden="true"> / </span>
+      <a href="/events/" class="hover:text-brass">Events</a>
+      <span aria-hidden="true"> / </span>
+      <span class="text-foreground">Pacific Grove</span>
+    </nav>
+
+    <p class="eyebrow mt-6">Monterey County</p>
+    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">
+      Events in <span class="text-brass">Pacific Grove</span>
+    </h1>
+    <p class="mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground">{directAnswer}</p>
+    <p class="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+      This page gathers every Pacific Grove listing on the site in one place —
+      {inTown.length} {inTown.length === 1 ? "event" : "events"} in our 2026
+      calendar, {carWeek.length} Car Week events and the weekly market — with the
+      date, venue and price each organiser has published. Where an organiser has
+      not published a price we show none, rather than guess.
+    </p>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Coming up in Pacific Grove</h2>
+      {
+        upcoming.length === 0 ? (
+          <p class="mt-4 text-base text-muted-foreground">
+            No more dated Pacific Grove events are listed for 2026. The farmers
+            market below runs every week.
+          </p>
+        ) : (
+          <div class="mt-6 grid gap-3">
+            {upcoming.map((e) => (
+              <article class={card}>
+                <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <h3 class="text-xl leading-tight">
+                    <a href={eventHref(e)} class="text-foreground transition-colors hover:text-brass">
+                      {e.name}
+                    </a>
+                  </h3>
+                  <span class="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-brass">
+                    {label(e)}
+                  </span>
+                </div>
+                <div class={meta}>
+                  {e.venue && <span>{e.venue}</span>}
+                  {e.venue && <span aria-hidden="true">·</span>}
+                  <span>{e.category}</span>
+                  {price(e) && <span aria-hidden="true">·</span>}
+                  {price(e) && <span class="text-brass">{price(e)}</span>}
+                </div>
+                {e.description && (
+                  <p class="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+                    {e.description}
+                  </p>
+                )}
+              </article>
+            ))}
+          </div>
+        )
+      }
+      {
+        partlyUpcoming.length > 0 && (
+          <div class="mt-8">
+            <h3 class="text-xl text-foreground">Partly in Pacific Grove</h3>
+            <p class="mt-2 text-sm leading-relaxed text-muted-foreground">
+              Listed under another town, but the organiser's location includes
+              Pacific Grove.
+            </p>
+            <ul class="mt-3 space-y-2">
+              {partlyUpcoming.map((e) => (
+                <li class="text-sm">
+                  <a href={eventHref(e)} class="text-brass hover:underline">{e.name}</a>
+                  <span class="text-muted-foreground"> — {label(e)}, {e.cityText}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </section>
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Every week: the Monday market</h2>
+      <p class="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+        The {market.name} is the one thing in town that happens every week. It runs
+        every {market.day}, {marketHoursText(market, market.hours[0]!)}, at {market.venue},
+        year round — the operator says rain or shine, holiday weekends included.
+        {nextMarket && ` The next one is ${formatDay(nextMarket.date)}.`}
+      </p>
+      {market.seasonal[1] && (
+        <p class="mt-3 max-w-3xl text-base leading-relaxed text-muted-foreground">
+          {market.seasonal[1]}
+        </p>
+      )}
+      {market.transit && (
+        <p class="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          Without a car: {market.transit}
+        </p>
+      )}
+      <a href="/monterey-farmers-market/" class="mt-4 inline-block text-sm text-brass hover:underline">
+        Every Monterey County farmers market, by day →
+      </a>
+    </section>
+
+    {
+      carWeek.length > 0 && (
+        <section class="mt-14">
+          <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Car Week in Pacific Grove</h2>
+          <p class="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+            Monterey Car Week reaches Pacific Grove midweek. In 2026, {carWeek.length}
+            {" "}events were held in town between {carWeekFirst!.weekday} {carWeekFirst!.date}
+            {" "}and {carWeekLast!.weekday} {carWeekLast!.date}, along Lighthouse Avenue,
+            at Asilomar and at Pacific Grove Golf Links — {carWeekFree.length} of them
+            free for spectators. These are the 2026 dates; no organiser has published
+            2027 dates for them yet.
+          </p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            {carWeek.map((e) => (
+              <a href={`/event/${e.slug}/`} class={card}>
+                <span class="block text-base leading-tight text-foreground">{e.title}</span>
+                <span class={meta}>
+                  <span>{cwDays(e.days)} 2026</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{e.venue!.venue}</span>
+                  {e.access === "free" && <span aria-hidden="true">·</span>}
+                  {e.access === "free" && <span class="text-brass">Free to watch</span>}
+                </span>
+              </a>
+            ))}
+          </div>
+          <p class="mt-4 text-sm text-muted-foreground">
+            See where they sit on the{" "}
+            <a href="/monterey-car-week-map/" class="text-brass hover:underline">Monterey Car Week map</a>, or the{" "}
+            <a href="/monterey-car-week/" class="text-brass hover:underline">full Car Week section</a>.
+          </p>
+        </section>
+      )
+    }
+
+    {
+      finished.length > 0 && (
+        <section class="mt-14">
+          <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Earlier in 2026</h2>
+          <p class="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+            These have finished for the year. Their pages stay up with the 2026
+            details, and will carry the next date when the organiser announces it.
+          </p>
+          <ul class="mt-4 space-y-2">
+            {finished.map((e) => (
+              <li class="text-sm">
+                <a href={eventHref(e)} class="text-brass hover:underline">{e.name}</a>
+                <span class="text-muted-foreground"> — {label(e)}{e.venue ? `, ${e.venue}` : ""}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    <section class="mt-14">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Where events happen in town</h2>
+      <p class="mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground">
+        Pacific Grove's events cluster in a handful of places. These are the venues
+        our listings record, with the street address where an organiser publishes one.
+      </p>
+      <ul class="mt-4 space-y-2">
+        {places.map((p) => (
+          <li class="text-sm text-foreground">
+            {p.name}
+            {p.address && <span class="text-muted-foreground"> — {p.address}</span>}
+          </li>
+        ))}
+        <li class="text-sm text-foreground">
+          {market.venue} <span class="text-muted-foreground"> — the {market.day} farmers market</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="mt-14 max-w-3xl">
+      <h2 class="border-b border-border/70 pb-2 text-3xl text-brass">Common questions</h2>
+      <dl class="mt-6 space-y-6">
+        {faq.map((f) => (
+          <div>
+            <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
+            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="mt-16 border-t border-border/70 pt-8">
+      <h2 class="text-2xl text-brass">Nearby on the site</h2>
+      <div class="mt-4 grid gap-2 sm:grid-cols-2">
+        <a href="/events/november/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">
+          Everything on the Central Coast in November
+        </a>
+        <a href="/monterey-events-calendar/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">
+          The Monterey events calendar, month by month
+        </a>
+        <a href="/events/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">
+          All 2026 events in Monterey and Santa Cruz counties
+        </a>
+        <a href="/monterey-farmers-market/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">
+          Monterey County farmers markets by day
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -210,3 +210,13 @@ https://search.google.com/search-console directly.
 - **Action:** New title and H1 ("Monterey Bay Events Calendar"), data-driven weekend / 30-day / month / town / type / annual sections, FAQ, submit CTA (hello@lamill.io); Organization, WebSite, ItemList, FAQPage JSON-LD.
 - **Result:** TBD — review 28 days after deploy
 - **Learning:** TBD — impressions are tiny, so position is the signal to watch. If the homepage climbs while `/monterey-events-calendar/` stays absent, merge rather than keep two pages chasing "calendar". Data runs out 2026-12-31: a January review will see empty lists unless the 2027 calendar exists.
+
+## 2026-11-01 — v2.P + v2.Q: a Pacific Grove hub, and the first event added from an organiser's own email
+- **Status:** active
+- **Hypothesis:** Pacific Grove searches already reach the site but land on single event pages: the Butterfly Parade page ranks 2.6–4.9 for its variants, while "pacific grove car show" impressions are split over five pages at positions 25–93 and "pacific grove events" has no page at all. One hub that gathers every Pacific Grove listing (regional, Car Week, the Monday market) should rank for the town-level queries and give the event pages an up-link. The Aria page tests whether an organiser-submitted listing, sourced completely, ranks on its branded query within its 13-day window.
+- **KPI:** `/events/pacific-grove/` impressions, clicks and position on queries containing "pacific grove" that are not a single event's name; whether "pacific grove car show" consolidates onto the hub; Aria page impressions/clicks on "aria womens choir" and "where mercy dwells" before 14 Nov
+- **Baseline:** GSC 2026-08-01 → 2026-10-30, queries containing "pacific grove": Butterfly Parade page 390 / 241 / 172 / 56 impressions on its four main variants (pos 2.6–4.9); "pacific grove events" 1 impression (pos 34, on the parade page); "pacific grove events today" 13 impressions, 7 clicks, pos 1 (on `/events/october/`); "pacific grove car show" 1–3 impressions each across 5 pages, pos 25–93. Hub and Aria URLs: 0 (new). No external search-volume figure: Ahrefs had no API units on 2026-11-01.
+- **Action:** `/events/pacific-grove/` (CollectionPage + ItemList + BreadcrumbList + FAQPage, built from the data); `/event/aria-womens-choir-where-mercy-dwells/` (MusicEvent with organiser times and a $10 floor Offer); links from the 3 Pacific Grove event pages, the homepage town list and `/events/`.
+- **Result:** TBD — review 2026-11-29
+- **Learning:** TBD — if the hub picks up town-level impressions the event pages were not getting, the next city hub is justified by the same GSC test (which town has demand split over pages), not by building all of them.
+

@@ -1188,3 +1188,21 @@ this line is a verbatim prompt.*
 > the Pebble Beach Concours. The intro claims organiser checks only for the 7 of
 > 19 upcoming events that link an organiser. GSC baseline: positions 19–34 on
 > 1–8 impressions per target query. Then "commit v4.B first, then v2.O".
+
+## 2026-11-01 — v2.P + v2.Q: Aria Women's Choir event page, and the Pacific Grove hub
+
+> Operator pasted a brief from an organiser email: add "Aria Women's Choir:
+> Where Mercy Dwells" (Sat 14 Nov, Butterfly Church, Pacific Grove) as an
+> `/event/` page with MusicEvent JSON-LD, list it on the Pacific Grove hub,
+> November and music listings, build, deploy, ping IndexNow. Not in the PRD, so
+> placed first. No Pacific Grove hub or music listing existed; operator said
+> "build it in pacific grove hub", then "trust the info in this prompt, pick
+> others that works best". Picked: v2.P for the event, v2.Q for the hub at
+> `/events/pacific-grove/`.
+>
+> Organiser pages added what the email lacked: a 4:05pm finish (timed
+> programme) and three ticket prices ($25/$20/$10 + fees), so the Offer
+> carries a real floor of $10. Organiser email kept off the page. GSC showed
+> Pacific Grove demand across the Butterfly Parade and Car Week pages; Ahrefs
+> was out of units. Suite green 354/354.
+

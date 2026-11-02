@@ -135,6 +135,16 @@ for (const m of MONTHS) {
   });
 }
 
+// City hubs (src/data/cityHubs.ts). One card per built hub.
+targets.push({
+  name: "city-pacific-grove",
+  svg: card({
+    kicker: "Monterey County",
+    title: "Events in Pacific Grove",
+    meta: "Concerts, the Butterfly Parade, Car Week and the Monday market",
+  }),
+});
+
 // Rows carrying existingSlug / hubHref have no /event/ page of their own —
 // they link to a Car Week page or a hub — so they get no card.
 for (const e of regionalEvents.filter((e) => !e.existingSlug && !e.hubHref)) {

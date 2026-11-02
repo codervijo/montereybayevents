@@ -40,6 +40,7 @@ import {
   WEEKDAYS,
 } from "../data/farmersMarkets";
 import { isPastDate, pacificToday } from "../lib/isPast";
+import { cityHubHref } from "../data/cityHubs";
 
 const site = "https://montereybayevents.com";
 const canonical = `${site}/`;
@@ -124,8 +125,9 @@ const monthLinks = MONTHS.slice(fromMonth, fromMonth + 6).map((m) => ({
 }));
 
 // ── Towns ─────────────────────────────────────────────────────────────────
-// Every town in the data, with its 2026 listing count. No town pages exist
-// (city hubs are deferred — docs/CLAUDE.md), so these are plain text.
+// Every town in the data, with its 2026 listing count. A town links to its
+// hub where one exists (src/data/cityHubs.ts — Pacific Grove since v2.Q);
+// the rest stay plain text.
 const townCounts = new Map<string, number>();
 let countywide = 0;
 for (const e of regionalEvents) {
@@ -468,7 +470,12 @@ const admissionLabel = (e: RegionalEvent) =>
             {
               towns.map(([town, n]) => (
                 <li class="text-foreground">
-                  {town} <span class="text-muted-foreground">{n}</span>
+                  {cityHubHref(town) ? (
+                    <a href={cityHubHref(town)} class="text-brass hover:underline">{town}</a>
+                  ) : (
+                    town
+                  )}{" "}
+                  <span class="text-muted-foreground">{n}</span>
                 </li>
               ))
             }

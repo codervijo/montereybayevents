@@ -302,6 +302,7 @@ describe('sitemap (built output)', () => {
       '/events/october/',
       '/events/november/',
       '/events/december/',
+      '/events/pacific-grove/',
     ]) {
       expect(xml, path).toContain(`<loc>https://montereybayevents.com${path}</loc>`);
     }

@@ -21,6 +21,7 @@ import {
 } from "../data/events-2026";
 import { buildFaqJsonLd, buildRegionalEventJsonLd } from "../lib/regionalEventSchema";
 import { isPastDate } from "../lib/isPast";
+import { cityHubHref } from "../data/cityHubs";
 
 const { event } = Astro.props as { event: RegionalEvent };
 
@@ -69,6 +70,9 @@ const mapQuery = event.streetAddress
       .filter(Boolean)
       .join(", ");
 const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`;
+
+// Link up to the town's hub, for the towns that have one (src/data/cityHubs.ts).
+const cityHub = cityHubHref(event.city);
 
 const others = eventsInMonth(month.key)
   .filter((e) => e.slug !== event.slug)
@@ -220,6 +224,14 @@ const others = eventsInMonth(month.key)
           >
             Open in maps ↗
           </a>
+          {cityHub && (
+            <a
+              href={cityHub}
+              class="mt-4 block text-sm text-brass hover:underline"
+            >
+              More events in {event.city} →
+            </a>
+          )}
           {(event.venue ?? "").includes("Laguna Seca") && (
             <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
               Entrances, parking, grandstands and where each turn is: the{" "}
