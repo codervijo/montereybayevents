@@ -280,11 +280,13 @@ describe('Aria Women\'s Choir: Where Mercy Dwells (MusicEvent)', () => {
   const event = regionalEvents.find((e) => e.slug === 'aria-womens-choir-where-mercy-dwells');
   const ld = buildRegionalEventJsonLd(event, SITE);
 
-  it('is a MusicEvent with organiser-published times in PST', () => {
+  it('is a MusicEvent with an organiser-published start time in PST', () => {
     expect(ld['@type']).toBe('MusicEvent');
     expect(ld.startDate).toBe('2026-11-14T15:00:00-08:00');
-    expect(ld.doorTime).toBe('2026-11-14T14:30:00-08:00');
-    expect(ld.endDate).toBe('2026-11-14T16:05:00-08:00');
+    // v2.R: no door time is published on either organiser page, and the two
+    // pages disagree on the programme, so neither doorTime nor endDate ships.
+    expect(ld.doorTime).toBeUndefined();
+    expect(ld.endDate).toBeUndefined();
     expect(ld.eventStatus).toBe('https://schema.org/EventScheduled');
     expect(ld.eventAttendanceMode).toBe('https://schema.org/OfflineEventAttendanceMode');
     expect(ld.url).toBe(`${SITE}/event/aria-womens-choir-where-mercy-dwells/`);

@@ -1206,3 +1206,17 @@ this line is a verbatim prompt.*
 > Pacific Grove demand across the Butterfly Parade and Car Week pages; Ahrefs
 > was out of units. Suite green 354/354.
 
+## 2026-11-01 — v2.R: Aria page sourced line-by-line; address spacing; seasonal Car Week notices
+
+> Operator brief: new meta description for the Aria page; fix "Pacific Grove ,
+> Monterey County" and check the template elsewhere; Monteverdi as early
+> Baroque; list the source for prices, fees and the running order and remove
+> anything not on TicketSpice or ariamonterey.org; gate the Car Week notices
+> and "Text CARWEEK" to a config date range (~1 Jul–31 Aug), no hardcoded
+> year; build, validate, deploy, IndexNow the event URL.
+>
+> The audit removed the 2:30pm door time (in the email, on neither page) and
+> found the two organiser pages disagree on the programme and the street
+> suffix. Stray space was on all 54 regional event pages. Season gate covers
+> five CARWEEK mentions plus the event-page Car Week paragraph.
+

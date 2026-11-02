@@ -1,6 +1,10 @@
 ---
 import { ROAD_CLOSURES_URL } from "../data/events";
 import { EMAIL_ENDPOINT, EMAIL_PITCH } from "../lib/newsletter";
+import { inCarWeekSeason } from "../data/season";
+
+// Car Week-only alert; shown in season (src/data/season.ts).
+const carWeekSeason = inCarWeekSeason();
 ---
 
 <footer class="border-t border-border/70 bg-surface">
@@ -84,10 +88,12 @@ import { EMAIL_ENDPOINT, EMAIL_PITCH } from "../lib/newsletter";
           831-755-5025
         </a>
       </p>
-      <p class="mt-3">
-        Text <span class="text-brass">CARWEEK</span> to{" "}
-        <span class="text-brass">65513</span> for public safety alerts.
-      </p>
+      {carWeekSeason && (
+        <p class="mt-3">
+          Text <span class="text-brass">CARWEEK</span> to{" "}
+          <span class="text-brass">65513</span> for public safety alerts.
+        </p>
+      )}
     </div>
 
     <!--

@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FireAlert from "../components/FireAlert.astro";
 import { ROAD_CLOSURES_URL } from "../data/events";
+import { inCarWeekSeason } from "../data/season";
 import {
   SOURCES,
   arrivalTips,
@@ -24,7 +25,9 @@ const canonical = `${site}/traffic/`;
 
 // Live official feeds — these belong at the top because they are the only
 // things on the page that update faster than the page does.
-const liveSources = [
+// The CARWEEK text alert is a Car Week-only service, so its card shows only in
+// season (src/data/season.ts).
+const allLiveSources = [
   {
     title: "County closure map",
     body: "The County of Monterey publishes daily closure and detour information for Highway One, Ocean Avenue, Pacific Grove and the routes into Pebble Beach.",
@@ -45,6 +48,13 @@ const liveSources = [
     cta: { label: "Call 831-755-5025", href: "tel:8317555025" },
   },
 ];
+// Same rule for the CARWEEK entry in the transit list.
+const transitShown = transit.filter(
+  (t) => inCarWeekSeason() || !t.detail.includes("CARWEEK"),
+);
+const liveSources = allLiveSources.filter(
+  (c) => inCarWeekSeason() || !c.body.includes("CARWEEK"),
+);
 
 // Each status is a positive statement about the public record — never a
 // "we haven't checked" marker. `official` needs no badge; its source link
@@ -393,7 +403,7 @@ const webPage = {
       <h2 class="mt-2 text-4xl leading-none sm:text-5xl">Shuttles &amp; transit</h2>
       <div class="mt-8 space-y-3">
         {
-          transit.map((t) => (
+          transitShown.map((t) => (
             <article class="border-l-2 border-border/80 bg-surface/60 px-6 py-5">
               <div class="flex flex-wrap items-baseline gap-x-3">
                 <h3 class="text-xl leading-tight text-foreground">{t.name}</h3>

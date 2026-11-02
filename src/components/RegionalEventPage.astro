@@ -22,6 +22,7 @@ import {
 import { buildFaqJsonLd, buildRegionalEventJsonLd } from "../lib/regionalEventSchema";
 import { isPastDate } from "../lib/isPast";
 import { cityHubHref } from "../data/cityHubs";
+import { inCarWeekSeason } from "../data/season";
 
 const { event } = Astro.props as { event: RegionalEvent };
 
@@ -30,8 +31,8 @@ const month = monthMeta(primaryMonth(event));
 const dateLabel = event.dateText || DATE_TBA;
 // Build-time, not view-time — see src/lib/isPast.ts.
 const isPast = isPastDate(event.start, event.end);
-// Car Week 2026 ran 7–16 August; the footer promo is written in both tenses.
-const carWeekIsPast = isPastDate("2026-08-07", "2026-08-16");
+// Car Week paragraph at the foot of the page: in season only (src/data/season.ts).
+const carWeekSeason = inCarWeekSeason();
 
 const title = event.seoTitle ?? `${event.name} — ${month.label}`;
 const heading = event.headline ?? event.name;
@@ -211,10 +212,10 @@ const others = eventsInMonth(month.key)
           {event.streetAddress && (
             <p class="mt-1 text-sm text-muted-foreground">{event.streetAddress}</p>
           )}
+          {/* One expression, not three: Astro renders the newline between
+              adjacent expressions as a space, which printed "Pacific Grove ,". */}
           <p class={event.venue ? "mt-1 text-sm text-muted-foreground" : "text-base text-foreground"}>
-            {event.city ?? event.cityText}
-            {event.city ? `, ${event.county} County, CA` : ""}
-            {event.postalCode ? ` ${event.postalCode}` : ""}
+            {`${event.city ? `${event.city}, ${event.county} County, CA` : event.cityText}${event.postalCode ? ` ${event.postalCode}` : ""}`}
           </p>
           <a
             href={mapUrl}
@@ -373,40 +374,25 @@ const others = eventsInMonth(month.key)
       )
     }
 
-    <section class="mt-12 border-t border-border/70 pt-8">
-      <p class="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-        {
-          carWeekIsPast ? (
-            <Fragment>
-              Monterey Car Week ran August 7–16 and reshapes traffic across both
-              counties while it does. The{" "}
-              <a href="/monterey-car-week/" class="text-brass hover:underline">
-                Car Week section
-              </a>{" "}
-              keeps the 2026 schedule, and the{" "}
-              <a href="/traffic/" class="text-brass hover:underline">
-                traffic, closures and parking guide
-              </a>{" "}
-              covers road closures across the Peninsula.
-            </Fragment>
-          ) : (
-            <Fragment>
-              Visiting the Peninsula in August? Monterey Car Week runs August 7–16
-              and reshapes traffic across both counties while it does. The{" "}
-              <a href="/free/" class="text-brass hover:underline">
-                free Car Week events list
-              </a>{" "}
-              covers everything you can watch without a ticket, and the{" "}
-              <a href="/traffic/" class="text-brass hover:underline">
-                traffic, closures and parking guide
-              </a>{" "}
-              covers the road closures and parking that affect getting anywhere on
-              the Peninsula that week — including to events that have nothing to do
-              with cars.
-            </Fragment>
-          )
-        }
-      </p>
-    </section>
+    {
+      carWeekSeason && (
+        <section class="mt-12 border-t border-border/70 pt-8">
+          <p class="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            Visiting the Peninsula in August? Monterey Car Week reshapes traffic
+            across both counties while it runs. The{" "}
+            <a href="/monterey-car-week/" class="text-brass hover:underline">
+              Car Week section
+            </a>{" "}
+            has the schedule and the{" "}
+            <a href="/free/" class="text-brass hover:underline">free events list</a>, and the{" "}
+            <a href="/traffic/" class="text-brass hover:underline">
+              traffic, closures and parking guide
+            </a>{" "}
+            covers getting anywhere on the Peninsula that week — including to
+            events that have nothing to do with cars.
+          </p>
+        </section>
+      )
+    }
   </main>
 </BaseLayout>

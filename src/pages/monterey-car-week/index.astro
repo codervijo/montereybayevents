@@ -10,8 +10,11 @@ import FireAlert from "../../components/FireAlert.astro";
 import EventCard from "../../components/EventCard.tsx";
 import { ROAD_CLOSURES_URL, schedule, totalEvents } from "../../data/events";
 import { totalFreeListings } from "../../data/eventIndex";
+import { inCarWeekSeason } from "../../data/season";
 
 const site = "https://montereybayevents.com";
+// The CARWEEK text-alert line shows in season only (src/data/season.ts).
+const carWeekSeason = inCarWeekSeason();
 // TITLE RULE FOR THIS PAGE. "Monterey Car Week" stays at the front, in that
 // order — it is the phrase the page ranks on. The year and the trailing clause
 // are the only movable parts. BOTH years are carried deliberately: GSC still
@@ -477,8 +480,7 @@ const carWeekEvent = {
         <p class="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
           Highway One, Ocean Avenue and the routes into Pebble Beach and Laguna Seca
           slow to a crawl during peak event hours. Check live closures before every
-          trip, and text <span class="text-brass">CARWEEK</span> to{" "}
-          <span class="text-brass">65513</span> for public safety alerts. The{" "}
+          trip{carWeekSeason && <Fragment>, and text <span class="text-brass">CARWEEK</span> to <span class="text-brass">65513</span> for public safety alerts</Fragment>}. The{" "}
           <a href="/monterey-car-week-map/" class="text-brass hover:underline">Car Week map</a>{" "}
           shows how far apart the venues really are — Pebble Beach to Laguna Seca
           is eleven miles as the crow flies — and the{" "}
