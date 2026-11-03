@@ -1496,9 +1496,10 @@ export const regionalEvents: RegionalEvent[] = [
     //         repertoire with composers)
     // except "early Baroque" for Monteverdi, which is the operator's.
     // The email's 2:30pm door time is on neither page, so it is not used.
-    // Conflicts between the two, recorded rather than resolved: TS gives
-    // "915 Sunset Ave" (ORG: Dr); TS lists a seventh Act I piece the ORG
-    // timed programme does not — so no endDate is emitted.
+    // Conflicts between the two: TS gives "915 Sunset Ave" (ORG: Dr) —
+    // operator ruled 2026-11-02 that the choir's own page wins, so Drive;
+    // TS lists a seventh Act I piece the ORG timed programme does not —
+    // recorded, not resolved, so no endDate is emitted.
     slug: "aria-womens-choir-where-mercy-dwells",
     name: "Aria Women's Choir: Where Mercy Dwells",
     county: "Monterey",
