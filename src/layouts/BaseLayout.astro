@@ -1,4 +1,5 @@
 ---
+import Analytics from "../components/Analytics.astro";
 // Shared chrome for every page: <head> boilerplate, fonts, the sticky header
 // island and the footer. Page-specific SEO tags (title, description,
 // canonical, OG/Twitter, JSON-LD) are passed in through the named `head` slot
@@ -22,6 +23,7 @@ const pathname = Astro.url.pathname;
       href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
     />
     <slot name="head" />
+    <Analytics />
   </head>
   <body>
     <div class="min-h-screen">

@@ -15,6 +15,9 @@ custom_domains = [
 indexnow_key = "73972522172889ae8383c67ccc31ad2b"
 indexnow_enabled = true
 
+[analytics]
+ga4_id = "G-80CP1M24ZJ"
+
 [stack]
 framework = "astro"
 
