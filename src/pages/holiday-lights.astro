@@ -26,7 +26,19 @@ const today = pacificToday();
 const groups = byTown();
 const towns = groups.length;
 const total = lights.length;
-const treeLightings = lights.filter((e) => e.category === "tree-lighting").length;
+// A tree lighting is any entry filed as one, plus events that include one under
+// another category (the Boardwalk's opening drone show and tree lighting).
+const lightingEntries = lights.filter((e) => e.category === "tree-lighting" || /tree lighting/i.test(e.name));
+const treeLightings = lightingEntries.length;
+const dayMonth = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
+const dayMonthYear = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+const lightingsFrom = dayMonth(lightingEntries.map(firstNight).sort()[0]!);
+const lightingsTo = dayMonth(lightingEntries.map(lastNight).sort().at(-1)!);
+// Season span from the data: Winter Wonderfest opens 21 November, before Thanksgiving.
+const seasonFrom = dayMonthYear(lights.map(firstNight).sort()[0]!);
+const seasonTo = dayMonthYear(lights.map(lastNight).sort().at(-1)!);
 const free = lights.filter((e) => e.free === true && !isOver(e, today));
 const kids = lights.filter((e) => e.kids && !isOver(e, today));
 const sparkys = lightById("sparkys-holiday-lights");
@@ -39,14 +51,14 @@ const routes = [
     title: "Monterey: the wharf, the rink and Winter Wonderfest",
     when: "Any Friday, Saturday or Sunday from 4 to 20 December",
     stops: ["christmas-on-the-wharf", "ice-skating-by-the-bay", "winter-wonderfest-monterey"].map(lightById),
-    note: "Start at Old Fisherman's Wharf, where the Christmas on the Wharf celebration runs those weekends and the decorations stay lit to 10pm. Custom House Plaza and the rink are a short walk along the waterfront. Then drive to the Fairgrounds for Winter Wonderfest, open 5pm to 9pm on all nine of those nights. The rink's hours vary by day; check its page.",
+    note: "Start at Old Fisherman's Wharf, where the Christmas on the Wharf celebration runs those weekends, with Santa there from 5pm on Fridays, 11am on Saturdays and 1pm on Sundays. Custom House Plaza and the rink are a short walk along the waterfront. Then drive to the Fairgrounds for Winter Wonderfest, open 5pm to 9pm on all nine of those nights. The rink's hours vary by day; check its page.",
   },
   {
     id: "route-santa-cruz",
     title: "Santa Cruz to Capitola on Saturday 5 December",
     when: "Saturday 5 December, from 5pm",
     stops: ["calvary-tree-lighting", "scyc-lighted-boat-parade", "capitola-holiday-extravaganza"].map(lightById),
-    note: "Three things happen within half an hour of each other, so pick two or catch the tail of each: Calvary Episcopal's tree-lighting party downtown from 5pm (countdown 5:30pm), the Santa Cruz Yacht Club's lighted boat parade at the harbour from 5:30pm, and Capitola Village, where the palm tree is lit at 5:30pm, the parade starts at 6pm and shops stay open to 8pm.",
+    note: "Three things start within an hour of each other, between 5pm and 6pm, so pick two or catch part of each: Calvary Episcopal's tree-lighting party downtown from 5pm (countdown 5:30pm), the Santa Cruz Yacht Club's lighted boat parade at the harbour from 5:30pm, and Capitola Village, where the palm tree is lit at 5:30pm, the parade starts at 6pm and shops stay open to 8pm.",
   },
   {
     id: "route-salinas-watsonville",
@@ -58,13 +70,13 @@ const routes = [
 ];
 
 // ── FAQ — rendered visibly and emitted as FAQPage from the same array ───────
-const freeMonterey = free.filter((e) => ["Monterey", "Pacific Grove", "Carmel", "Seaside", "Marina", "Salinas"].includes(e.town));
+const freeMonterey = free.filter((e) => ["Monterey", "Pacific Grove", "Carmel", "Carmel Valley", "Seaside", "Marina", "Salinas"].includes(e.town));
 const freeSantaCruz = free.filter((e) => !freeMonterey.includes(e));
 const names = (es: LightsEntry[]) => es.map((e) => e.name.replace(/ \(\d+\w*\)$/, "")).join("; ");
 const faq: { q: string; a: string }[] = [
   {
     q: "Where are the best Christmas lights in Monterey?",
-    a: `The main displays in Monterey this year are Christmas on the Wharf at Old Fisherman's Wharf (decorations lit daily from 1 December to 3 January, 9am–10pm, free), Winter Wonderfest at the Monterey County Fairgrounds (a ticketed walk-through, 5–9pm on select nights to 27 December), and Christmas in the Adobes on 11 and 12 December, when the historic adobes of Old Monterey open from 5pm to 9pm. The Cannery Row tree is lit on 27 November and the Colton Hall tree on 4 December.`,
+    a: `The main displays in Monterey this year are Christmas on the Wharf at Old Fisherman's Wharf (decorations up daily from 1 December to 3 January, free; Santa visits Fridays 5–8pm, Saturdays 11am–8pm and Sundays 1–6pm, 4–20 December), Winter Wonderfest at the Monterey County Fairgrounds (a ticketed walk-through, 5–9pm on select nights to 27 December), and Christmas in the Adobes on 11 and 12 December, when the historic adobes of Old Monterey open from 5pm to 9pm. The Cannery Row tree is lit on 27 November and the Colton Hall tree on 4 December.`,
   },
   {
     q: "Is there a drive-through Christmas lights display near Santa Cruz?",
@@ -184,13 +196,13 @@ const label = "block text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreg
       <span class="text-foreground">Holiday lights map</span>
     </nav>
 
-    <p class="eyebrow mt-6">Late November 2026 – 3 January 2027</p>
+    <p class="eyebrow mt-6">{seasonFrom} – {seasonTo}</p>
     <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">
       Christmas lights in Monterey &amp; Santa Cruz: <span class="text-brass">the 2026 map</span>
     </h1>
     <p class="mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground">
       {total} places to see holiday lights in {towns} towns around Monterey Bay this
-      season: {treeLightings} tree lightings between 27 November and 6 December, two lighted boat parades, the Sparky's drive-through in
+      season: {treeLightings} tree lightings between {lightingsFrom} and {lightingsTo}, two lighted boat parades, the Sparky's drive-through in
       Watsonville, Winter Wonderfest at the Monterey fairgrounds and the Boardwalk's
       Winter Wonderland in Santa Cruz. {free.length} of them are free.
     </p>
@@ -226,10 +238,10 @@ const label = "block text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreg
     </div>
 
     <section class="mt-14">
-      <h2 class={h2}>Three evenings out</h2>
+      <h2 class={h2}>Three evening routes</h2>
       <p class={p}>
-        Each route is set for a night when every stop on it is on. The directions link
-        opens Google Maps with the stops in order.
+        Each route runs one way, from the first stop to the last, on a night when every
+        stop on it is on. The directions link opens Google Maps with the stops in order.
       </p>
       {routes.map((r) => (
         <article id={r.id} class="mt-6 border-l-2 border-border/80 bg-surface/60 px-5 py-4">
@@ -286,7 +298,10 @@ const label = "block text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreg
         Decorated neighbourhood streets: we list one only when a local news outlet has
         reported it for this year, and none had by {lights[0]!.last_verified.slice(8)} November.
         Also left off: displays whose 2026 dates we could only find on aggregator sites or
-        undated pages, and daytime holiday parades. If you know a spot, tell us below.
+        undated pages, and daytime holiday parades. Soquel and Big Sur have nothing
+        published for 2026 yet: Soquel Village's tree lighting has listings only for
+        earlier years, and the Big Sur inns list holiday dinners, not lights. If you
+        know a spot, tell us below.
       </p>
     </section>
 
@@ -310,16 +325,18 @@ const label = "block text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreg
         goes on the map, so a link helps.
       </p>
       <form id="suggest-form" method="post" action="/api/suggest-spot" class="mt-6 grid gap-4">
-        <label class={label}>What is it? <input name="name" required maxlength="200" class={field} /></label>
+        <p class="text-xs text-muted-foreground">Fields marked <span class="text-brass">*</span> are required.</p>
+        <label class={label}>What is it? <span class="text-brass" aria-hidden="true">*</span> <input name="name" required aria-required="true" maxlength="200" class={field} /></label>
         <div class="grid gap-4 sm:grid-cols-2">
-          <label class={label}>Town <input name="town" required maxlength="100" class={field} /></label>
-          <label class={label}>Street or address <input name="address" maxlength="300" class={field} /></label>
+          <label class={label}>Town <span class="text-brass" aria-hidden="true">*</span> <input name="town" required aria-required="true" maxlength="100" class={field} /></label>
+          <label class={label}>Street or address (optional) <input name="address" maxlength="300" class={field} /></label>
         </div>
-        <label class={label}>Dates and times, if you know them <input name="dates" maxlength="300" class={field} /></label>
-        <label class={label}>Link (organiser, city or news page) <input name="link" type="url" maxlength="500" class={field} /></label>
-        <label class={label}>Anything else <textarea name="notes" rows="3" maxlength="2000" class={field}></textarea></label>
+        <label class={label}>Dates and times, if you know them (optional) <input name="dates" maxlength="300" class={field} /></label>
+        <label class={label}>Link to the organiser, city or news page (optional) <input name="link" type="url" maxlength="500" class={field} /></label>
+        <label class={label}>Anything else (optional) <textarea name="notes" rows="3" maxlength="2000" class={field}></textarea></label>
         <label class={label}>Your email, if you'd like a reply (optional) <input name="email" type="email" maxlength="200" class={field} /></label>
-        <label class="hidden" aria-hidden="true">Leave empty <input name="website" tabindex="-1" autocomplete="off" /></label>
+        <!-- Spam trap: hidden from people and screen readers; bots that fill it are dropped. -->
+        <input name="website" type="text" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <button type="submit" class="justify-self-start border border-brass px-5 py-2 text-sm uppercase tracking-[0.14em] text-brass hover:bg-brass hover:text-background">Send suggestion</button>
         <p id="suggest-status" class="text-sm text-muted-foreground" aria-live="polite"></p>
       </form>

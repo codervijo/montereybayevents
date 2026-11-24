@@ -79,3 +79,47 @@ describe('guide links', () => {
     expect(src).not.toMatch(/label: "[^"]*→",/);
   });
 });
+
+// Review fixes, 2026-11-24.
+describe.skipIf(!existsSync(join(root, 'dist', 'holiday-lights', 'index.html')))('/holiday-lights/ review fixes (built)', () => {
+  const html = readFileSync(join(root, 'dist', 'holiday-lights', 'index.html'), 'utf8');
+  const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+
+  it('publishes no lit-hours figure for Christmas on the Wharf', () => {
+    expect(html).not.toContain('9am–10pm');
+    expect(html).not.toContain('lit to 10pm');
+  });
+
+  it('counts the Boardwalk drone show among the tree lightings', () => {
+    const n = data.entries.filter((e) => e.category === 'tree-lighting' || /tree lighting/i.test(e.name)).length;
+    expect(text).toContain(`${n} tree lightings between`);
+  });
+
+  it('starts the season on the earliest date in the data', () => {
+    const first = data.entries.map((e) => e.range?.from ?? e.nights[0]).sort()[0];
+    expect(first).toBe('2026-11-21');
+    expect(text).toContain('21 November 2026 – 3 January 2027');
+  });
+
+  it('describes the Santa Cruz timing as the data has it', () => {
+    expect(text).not.toContain('within half an hour');
+    expect(text).toContain('between 5pm and 6pm');
+  });
+
+  it('calls them routes, not loops', () => {
+    expect(text).not.toMatch(/\bloops?\b/i);
+  });
+
+  it('marks required suggest fields and has no visible honeypot label', () => {
+    expect(html).not.toContain('Leave empty');
+    expect((html.match(/aria-required="true"/g) ?? []).length).toBe(2);
+    expect(text).toContain('are required');
+  });
+});
+
+describe('holiday lights towns', () => {
+  it('lists every town in the data in LIGHTS_TOWNS order', () => {
+    const src = readFileSync(join(root, 'src', 'data', 'holidayLights.ts'), 'utf8');
+    for (const t of new Set(data.entries.map((e) => e.town))) expect(src, t).toContain(`"${t}"`);
+  });
+});

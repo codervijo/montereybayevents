@@ -89,7 +89,7 @@
         "from": "2026-12-01",
         "to": "2027-01-03"
       },
-      "hours": "9am–10pm",
+      "hours": "Santa visits Fridays 5–8pm, Saturdays 11am–8pm, Sundays 1–6pm (Dec 4–20); the wharf does not publish hours for the lights",
       "cost": "Free",
       "free": true,
       "kids": "23-ft tree, ceiling of lights, free photos with Santa at his Santa House",
@@ -713,6 +713,101 @@
       "event_page": null,
       "lat": 37.13786,
       "lng": -122.12183,
+      "last_verified": "2026-11-24"
+    },
+    {
+      "id": "carmel-valley-tree-lighting",
+      "name": "Carmel Valley Christmas Tree Lighting",
+      "category": "tree-lighting",
+      "town": "Carmel Valley",
+      "address": "Carmel Valley Community Park, Ford Rd, Carmel Valley",
+      "geocode_query": "Carmel Valley Community Park",
+      "dates_text": "Sat Dec 5, 2026",
+      "nights": [
+        "2026-12-05"
+      ],
+      "hours": null,
+      "cost": null,
+      "free": null,
+      "kids": "Children's choir from Tularcitos Elementary",
+      "parking_tip": null,
+      "source_url": "https://www.carmelvalleypark.com/files/e195a5b12/2026+--+Minutes+-11-10-26+-+Special+MtgP.pdf",
+      "year_note": "The park district's board minutes of 10 November 2026 set the date. It has not yet published 2026 times; its standing events page says the evening usually starts at 4:30pm with the tree lit shortly after 5pm.",
+      "event_page": null,
+      "lat": 36.48238,
+      "lng": -121.73589,
+      "geo_precision": "venue",
+      "last_verified": "2026-11-24"
+    },
+    {
+      "id": "aptos-holiday-market-tree-lighting",
+      "name": "Aptos Holiday Market & Tree Lighting",
+      "category": "tree-lighting",
+      "town": "Aptos",
+      "address": "Aptos Village Green, 161 Aptos Village Way, Aptos",
+      "geocode_query": "Aptos Village Way, Aptos",
+      "dates_text": "Sat Dec 5, 2026",
+      "nights": [
+        "2026-12-05"
+      ],
+      "hours": "1–4pm",
+      "cost": "Free",
+      "free": true,
+      "kids": "Santa, live music",
+      "parking_tip": null,
+      "source_url": "https://www.aptoschamber.com/events-2",
+      "year_note": "The Aptos Chamber's flyer says \"Dec 5th\" with no year; the flyer file is named 2026 and Visit Santa Cruz County lists it for 5 December 2026. It is a daytime event, 1–4pm.",
+      "event_page": null,
+      "lat": 36.97809,
+      "lng": -121.901,
+      "geo_precision": "street",
+      "last_verified": "2026-11-24"
+    },
+    {
+      "id": "felton-santa-tree-lighting",
+      "name": "Felton Santa & Tree Lighting",
+      "category": "tree-lighting",
+      "town": "Felton",
+      "address": "Felton Deck, 6237 Hwy 9, Felton",
+      "geocode_query": "6237 Highway 9, Felton",
+      "dates_text": "Sat Nov 28, 2026",
+      "nights": [
+        "2026-11-28"
+      ],
+      "hours": "5–7:30pm; Santa and tree lighting 5:30pm",
+      "cost": "Free (optional $10 cookie flight)",
+      "free": true,
+      "kids": "Photos with Santa, caroling and hot cocoa",
+      "parking_tip": null,
+      "source_url": "https://www.feltonbusinessassociation.org/felton-santa-2026.html",
+      "event_page": null,
+      "lat": 37.05267,
+      "lng": -122.07344,
+      "geo_precision": "address",
+      "last_verified": "2026-11-24"
+    },
+    {
+      "id": "boronda-adobe-illumination",
+      "name": "Illumination at the Boronda Adobe",
+      "category": "historic",
+      "town": "Salinas",
+      "address": "Boronda Adobe, 333 Boronda Rd, Salinas",
+      "geocode_query": "333 Boronda Road, Salinas",
+      "dates_text": "Fri Dec 4, 2026",
+      "nights": [
+        "2026-12-04"
+      ],
+      "hours": "3–7pm",
+      "cost": "Free",
+      "free": true,
+      "kids": null,
+      "parking_tip": null,
+      "source_url": "https://mchsmuseum.com/events/illumination-of-the-boronda-adobe/",
+      "year_note": "The Monterey County Historical Society's page says \"Friday, December 4\" with no year; Monterey Bay Parent confirmed 4 December 2026, 3–7pm, on 13 November 2026.",
+      "event_page": null,
+      "lat": 36.70096,
+      "lng": -121.67885,
+      "geo_precision": "address",
       "last_verified": "2026-11-24"
     }
   ]

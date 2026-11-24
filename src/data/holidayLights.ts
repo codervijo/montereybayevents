@@ -44,8 +44,8 @@ export const lights = raw.entries as LightsEntry[];
 
 /** Towns in map order: Monterey Peninsula, Salinas Valley, Pajaro, then Santa Cruz County north. */
 export const LIGHTS_TOWNS = [
-  "Monterey", "Pacific Grove", "Carmel", "Seaside", "Marina", "Salinas",
-  "Watsonville", "Capitola", "Santa Cruz", "Scotts Valley", "Boulder Creek",
+  "Monterey", "Pacific Grove", "Carmel", "Carmel Valley", "Seaside", "Marina", "Salinas",
+  "Watsonville", "Aptos", "Capitola", "Santa Cruz", "Scotts Valley", "Felton", "Boulder Creek",
 ] as const;
 
 export const firstNight = (e: LightsEntry) => e.range?.from ?? e.nights![0]!;
