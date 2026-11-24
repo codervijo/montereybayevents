@@ -814,6 +814,30 @@
       "lng": -121.67885,
       "geo_precision": "address",
       "last_verified": "2026-11-24"
+    },
+    {
+      "id": "farleys-christmas-wonderland",
+      "name": "Farley's Christmas Wonderland",
+      "category": "display",
+      "town": "Santa Cruz",
+      "address": "108 Seaview Ave, Santa Cruz",
+      "geocode_query": "108 Seaview Avenue, Santa Cruz",
+      "dates_text": "Nightly Fri Nov 27, 2026 to Fri Jan 1, 2027, except rainy nights",
+      "range": {
+        "from": "2026-11-27",
+        "to": "2027-01-01"
+      },
+      "hours": "5:30–8:30pm; closed on rainy nights",
+      "cost": null,
+      "free": null,
+      "kids": null,
+      "parking_tip": null,
+      "source_url": "https://farleys-christmas-wonderland.com/",
+      "event_page": null,
+      "lat": 36.96726,
+      "lng": -122.0114,
+      "geo_precision": "address",
+      "last_verified": "2026-11-24"
     }
   ]
 }
