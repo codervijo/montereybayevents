@@ -1220,3 +1220,19 @@ this line is a verbatim prompt.*
 > suffix. Stray space was on all 54 regional event pages. Season gate covers
 > five CARWEEK mentions plus the event-page Car Week paragraph.
 
+
+## 2026-11-24 — v2.S: Thanksgiving weekend 2026 (`/thanksgiving/` + holiday event pages)
+
+> Operator brief: add Thanksgiving 2026 coverage by Wed 25 Nov — event pages
+> for the Cannery Row, Pacific Grove and Carmel tree lightings plus the 2026
+> turkey trots and Black Friday / Small Business Saturday events, each checked
+> against the organiser's or city's page (skip anything unverifiable); a
+> `/thanksgiving/` hub by day with FAQ and ItemList JSON-LD; "Holidays" in
+> place of "Car Week" in the nav until 4 Jan; a homepage banner; links from
+> the month hubs, the Holidays filter and the town pages; sitemap, IndexNow,
+> rich-results check. Operator placed it as v2.S (maps pushed down) and chose
+> to link from Pacific Grove only, the one town hub that exists.
+>
+> The sitemap was not broken (`/sitemap-index.xml` 200; `/sitemap.xml` was
+> never a URL). Three of the brief's own facts were wrong on the official
+> pages (Cannery Row times, PG venue and end time) and were corrected.

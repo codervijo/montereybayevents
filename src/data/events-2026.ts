@@ -2185,6 +2185,27 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The Boardwalk's holiday season, running from Thanksgiving through the first days of January.",
+    // v2.S, 2026-11-24 — from the Boardwalk's own press release:
+    // https://news.beachboardwalk.com/winter-wonderland-celebrates-the-holiday-season-starting-thursday-november-26/
+    // Daily hours are on beachboardwalk.com/winter-wonderland/, which blocks
+    // automated reads, so none are given here.
+    admission: "free",
+    updated: "2026-11-24",
+    intro:
+      "Winter Wonderland is the Santa Cruz Beach Boardwalk's free-admission holiday season, on select days from Thursday 26 November 2026 to Sunday 3 January 2027. The Boardwalk lists a new tunnel of lights, holiday décor, free nightly light shows, photos with Santa, seasonal treats, fire pits and Boardwalk rides, which cost $2 each after 5:00pm. On Saturday 28 November there is a holiday drone show — the Boardwalk calls it Santa Cruz County's only one — with a tree lighting ceremony, the Santa Cruz High School Jazz Band and free holiday cookies.",
+    sections: [
+      {
+        heading: "Which days it is open",
+        body: [
+          "The Boardwalk says operating days and hours vary through the season and publishes them, with ticket prices, on its Winter Wonderland page. Check the date you plan to go before setting out. Advance purchase is not required for most Winter Wonderland events and activities.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
+    },
   },
   {
     slug: "a-taste-of-ireland-a-celtic-christmas",
@@ -2291,6 +2312,661 @@ export const regionalEvents: RegionalEvent[] = [
       "https://www.santacruz.org/upcoming-event/hotel-paradox-holiday-market/",
     ],
     description: "A one-day holiday market at the Hotel Paradox in Santa Cruz.",
+  },  // ── v2.S — Thanksgiving weekend 2026, added 2026-11-24. Every fact below is
+  // from the source URL in the row's own comment, fetched that day; notes in
+  // data/research/v2s-thanksgiving-sources-2026-11-24.md (untracked).
+  {
+    // Active.com event page, which the club's own site links to for
+    // registration. cvaclife.com/turkey-trot/ blocks automated fetches.
+    slug: "cvac-turkey-trot-2026",
+    name: "CVAC Turkey Trot 2026",
+    county: "Monterey",
+    cityText: "Carmel Valley (South Bank Trail)",
+    city: "Carmel Valley",
+    venue: "South Bank Trail",
+    streetAddress: "27050 Rancho San Carlos",
+    postalCode: "93923",
+    months: ["november"],
+    dateText: "November 26, 2026",
+    start: "2026-11-26",
+    times: [{ day: "Thanksgiving, Thursday 26 November", hours: "Coffee from 8:00am; family games 8:15am; 5K starts 9:00am" }],
+    timesConfidence: "official",
+    startTime: "09:00",
+    category: "Running / Sports",
+    officialWebsite: "https://www.active.com/carmel-ca/running/distance-running-races/cvac-turkey-trot-2026",
+    ticketsUrl: "https://endurancecui.active.com/event-reg/select-race?e=97557421&regnow=awe-regnow",
+    organizer: { type: "Organization", name: "Carmel Valley Athletic Club", url: "https://cvaclife.com/" },
+    referenceUrls: ["https://cvaclife.com/turkey-trot/"],
+    updated: "2026-11-24",
+    description:
+      "Carmel Valley Athletic Club's Thanksgiving morning 5K run and walk on the South Bank Trail, for the Food Bank for Monterey County.",
+    metaDescription:
+      "CVAC Turkey Trot, Thanksgiving Thu Nov 26, 5K at 9am on Carmel Valley's South Bank Trail. Kids 10 and under free; proceeds to the food bank.",
+    intro:
+      "The Carmel Valley Athletic Club's Turkey Trot is a 5K run and walk on Thanksgiving morning, Thursday 26 November 2026, starting at 9:00am from the South Bank Trail entrance at 27050 Rancho San Carlos, Carmel. It is a non-competitive fun run and is untimed. Coffee and hot chocolate are out from 8:00am and family games, including a three-legged race, start at 8:15am. The club says all proceeds go to the Food Bank for Monterey County, and the race goes ahead even with rain.",
+    sections: [
+      {
+        heading: "Registration and prices",
+        body: [
+          "Registration is through Active. Children 10 and under run free without a shirt, or for $10 with one. Ages 11 to 17 are $45 and adults $50. Same-day registration is open until 9:00am. The club issues no refunds, and registrations could be transferred until 19 November.",
+          "Shirts are collected from the CVAC front desk at 27300 Rancho San Carlos Rd., on Tuesday 24 and Wednesday 25 November, 10:00am to 7:00pm — a different address from the start.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
+    },
+    faq: [
+      {
+        q: "What time does the CVAC Turkey Trot start?",
+        a: "The 5K starts at 9:00am on Thanksgiving, Thursday 26 November 2026. Coffee and hot chocolate are available from 8:00am and family games start at 8:15am.",
+      },
+      {
+        q: "How much does it cost?",
+        a: "Free for children 10 and under without a shirt, $10 with a shirt; $45 for ages 11 to 17; $50 for adults.",
+      },
+      {
+        q: "Is the race timed?",
+        a: "No. The club describes it as a non-competitive fun run and lists it as untimed.",
+      },
+    ],
+  },
+  {
+    // RunSignup pages published by Fleet Feet Aptos.
+    slug: "run-for-pie-2026",
+    name: "Run For Pie 2026",
+    county: "Santa Cruz",
+    cityText: "Soquel",
+    city: "Soquel",
+    streetAddress: "401 Soquel San Jose Rd",
+    postalCode: "95073",
+    months: ["november"],
+    dateText: "November 26, 2026",
+    start: "2026-11-26",
+    times: [
+      { day: "Thanksgiving, Thursday 26 November", hours: "Kids ½ mile 8:35am; 5K 9:05am; Pie Mile 10:15am" },
+    ],
+    timesConfidence: "official",
+    startTime: "08:35",
+    category: "Running / Sports",
+    officialWebsite: "https://runsignup.com/Race/Info/CA/Soquel/RUNFORPIE2021",
+    ticketsUrl: "https://runsignup.com/Race/Register/?raceId=116368",
+    // Cheapest entry: the kids' half mile, $9.48 including a $1.48 fee.
+    admission: { kind: "ticketed", from: 8, currency: "USD" },
+    organizer: { type: "Organization", name: "Fleet Feet Aptos" },
+    referenceUrls: ["https://runsignup.com/Race/Events/CA/Soquel/RUNFORPIE2021"],
+    updated: "2026-11-24",
+    description:
+      "Fleet Feet Aptos's 13th annual Thanksgiving Day race in Soquel: a kids' half mile, a 5K and the Pie Mile, for Second Harvest Food Bank.",
+    metaDescription:
+      "Run For Pie, Thanksgiving Thu Nov 26 in Soquel: kids' ½ mile 8:35am, 5K 9:05am, Pie Mile 10:15am. Prices, packet pickup and what the Pie Mile is.",
+    intro:
+      "Run For Pie is Fleet Feet Aptos's 13th annual Thanksgiving Day race, on Thursday 26 November 2026 at 401 Soquel San Jose Rd, Soquel. There are three races: a kids' half mile at 8:35am, a 5K at 9:05am and the Pie Mile at 10:15am — a one-mile race on the track in which runners eat one piece of pie per lap, four laps and four pieces, or split it as a relay of four. The race benefits Second Harvest Food Bank and the Soquel High School track team; all proceeds from the kids' race go to Second Harvest.",
+    sections: [
+      {
+        heading: "Prices",
+        body: [
+          "RunSignup currently shows the 5K at $59.30 including a $4.30 fee, the kids' half mile at $9.48 including a $1.48 fee, and the Pie Mile or relay at $13.72 including a $1.72 fee. The race's information page also says the 5K price displayed is \"$45 + processing fee\", which does not match the $55 base price in the current tier — check at checkout. A t-shirt can be added for $5. The organisers say they have capped registrations.",
+          "5K registration closes at 1:00pm on 26 November; Pie Mile registration closes at 11:59pm on 25 November.",
+        ],
+      },
+      {
+        heading: "Packet pickup",
+        body: [
+          "At Fleet Feet Aptos, 7960 Soquel Drive, suite i, Aptos: Tuesday 24 November, 3:00pm to 7:00pm, and Wednesday 25 November, 10:00am to 5:00pm. On race morning, at Soquel High School, 7:30am to 8:20am.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
+    },
+    faq: [
+      {
+        q: "What is the Pie Mile?",
+        a: "A one-mile race on the track at 10:15am in which runners eat one piece of pie per lap — four laps, four pieces — or run it as a relay of four.",
+      },
+      {
+        q: "What time does Run For Pie start?",
+        a: "The kids' half mile starts at 8:35am, the 5K at 9:05am and the Pie Mile at 10:15am, on Thanksgiving, Thursday 26 November 2026.",
+      },
+      {
+        q: "Who does it benefit?",
+        a: "Second Harvest Food Bank and the Soquel High School track team. All proceeds from the kids' half mile go to Second Harvest.",
+      },
+    ],
+  },
+  {
+    // https://iceskatingbythebay.com/ — the rink's own site.
+    slug: "ice-skating-by-the-bay",
+    name: "Ice Skating by the Bay",
+    county: "Monterey",
+    cityText: "Monterey (Custom House Plaza)",
+    city: "Monterey",
+    venue: "Custom House Plaza",
+    months: ["november", "december"],
+    dateText: "November 26, 2026 - January 3, 2027",
+    start: "2026-11-26",
+    end: "2027-01-03",
+    times: [
+      { day: "Monday to Saturday", hours: "11am–10pm" },
+      { day: "Sundays and holidays, including Thanksgiving", hours: "12pm–8pm" },
+    ],
+    timesConfidence: "official",
+    category: "Holiday / Ice Rink",
+    officialWebsite: "https://iceskatingbythebay.com/",
+    admission: { kind: "ticketed", from: 18, currency: "USD" },
+    referenceUrls: [],
+    updated: "2026-11-24",
+    description:
+      "Monterey's seasonal outdoor ice rink in Custom House Plaza, open from Thanksgiving to 3 January.",
+    metaDescription:
+      "Ice Skating by the Bay in Monterey: open Nov 26 2026 to Jan 3 2027 at Custom House Plaza, including Thanksgiving. Hours, prices and parking.",
+    intro:
+      "Ice Skating by the Bay is Monterey's outdoor holiday rink in Custom House Plaza, behind the Portola Hotel & Spa. The 2026 season runs from Thursday 26 November 2026 to Sunday 3 January 2027. It is open Monday to Saturday from 11am to 10pm, and on Sundays and holidays — Thanksgiving, Christmas Eve, Christmas Day, New Year's Eve and New Year's Day included — from 12pm to 8pm. The rink notes exceptions to the weekday hours on some dates.",
+    sections: [
+      {
+        heading: "Prices and parking",
+        body: [
+          "Skating is $20 for adults and $18 for children 12 and under, who must be with an adult. Skate rental is $5. A season pass is $225.",
+          "The rink points drivers to the Waterfront parking lot, $1.75 an hour or $12 a day.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
+    },
+    faq: [
+      {
+        q: "Is the Monterey ice rink open on Thanksgiving?",
+        a: "Yes. The rink lists Thanksgiving among the holidays it opens, from 12pm to 8pm.",
+      },
+      {
+        q: "How much is ice skating in Monterey?",
+        a: "$20 for adults, $18 for children 12 and under, plus $5 for skate rental.",
+      },
+      {
+        q: "When does the rink close for the season?",
+        a: "The 2026 season ends on Sunday 3 January 2027.",
+      },
+    ],
+  },
+  {
+    // https://canneryrow.com/experience/32nd_tree_lighting/ — Cannery Row's
+    // own site. The "700 Cannery Row" address in secondary listings is not on
+    // it, so no street address is given.
+    slug: "cannery-row-holiday-tree-lighting",
+    name: "Cannery Row Holiday Tree Lighting (32nd Annual)",
+    county: "Monterey",
+    cityText: "Monterey (Steinbeck Plaza)",
+    city: "Monterey",
+    venue: "Steinbeck Plaza",
+    months: ["november"],
+    dateText: "November 27, 2026",
+    start: "2026-11-27",
+    times: [
+      {
+        day: "Friday 27 November",
+        hours: "2:00pm–9:00pm; tree lit about 5:45–6:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "14:00",
+    endTime: "21:00",
+    category: "Holiday / Tree Lighting",
+    officialWebsite: "https://canneryrow.com/experience/32nd_tree_lighting/",
+    admission: "free",
+    referenceUrls: [],
+    updated: "2026-11-24",
+    headline: "Cannery Row Holiday Tree Lighting 2026",
+    description:
+      "Cannery Row's 32nd annual tree lighting in Steinbeck Plaza, the day after Thanksgiving, with Santa's arrival and his toy factory.",
+    metaDescription:
+      "Cannery Row tree lighting, Fri Nov 27: free, 2–9pm, tree lit about 6pm in Steinbeck Plaza. Schedule, Santa's Toy Factory and parking.",
+    intro:
+      "Cannery Row lights its holiday tree for the 32nd year on Friday 27 November 2026, the day after Thanksgiving, in Steinbeck Plaza at the corner of Cannery Row and Prescott Avenue. It is free and open to all. The afternoon starts at 2:00pm, Santa arrives on the balcony over the plaza, and the countdown to lighting the tree comes at about 6:00pm.",
+    sections: [
+      {
+        heading: "The schedule",
+        body: [
+          "2:00pm to 5:00pm, family entertainment, with holiday music and balloon artists. 3:30pm to 5:30pm, carolers from I Cantori di Carmel. 5:45pm to 6:00pm, the tree lighting in Steinbeck Plaza. 6:00pm to 9:00pm, Santa in his toy factory — bring a camera for a free photo.",
+        ],
+      },
+      {
+        heading: "Santa's Toy Factory",
+        body: [
+          "The toy factory is on the second floor of the 685 Cannery Row building, the one with the clock tower. Visits and photos are free. After the lighting it is also open on Saturdays and Sundays from 28 November to 20 December, noon to 3:00pm.",
+        ],
+      },
+      {
+        heading: "Parking",
+        body: [
+          "Cannery Row points drivers to the Cannery Row parking garage at Foam and Wave Streets.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
+    },
+    faq: [
+      {
+        q: "When is the Cannery Row tree lighting?",
+        a: "Friday 27 November 2026, the day after Thanksgiving. The tree is lit between 5:45pm and 6:00pm in Steinbeck Plaza; the event runs from 2:00pm to 9:00pm.",
+      },
+      {
+        q: "Is the Cannery Row tree lighting free?",
+        a: "Yes. Cannery Row says it is free and open to all, and visits and photos with Santa are free too.",
+      },
+      {
+        q: "Where do I park?",
+        a: "Cannery Row recommends its parking garage at Foam and Wave Streets.",
+      },
+    ],
+  },
+  {
+    // City of Pacific Grove calendar, event 1692 (read from the calendar's
+    // own data feed). The City gives "Jewell Park" with no street address;
+    // the "Grand & Forest" location in secondary listings is not the City's.
+    // The City does not state a cost, so none is shown.
+    slug: "pacific-grove-holiday-tree-lighting",
+    name: "Pacific Grove Holiday Tree Lighting",
+    county: "Monterey",
+    cityText: "Pacific Grove (Jewell Park)",
+    city: "Pacific Grove",
+    venue: "Jewell Park",
+    months: ["november"],
+    dateText: "November 30, 2026",
+    start: "2026-11-30",
+    times: [{ day: "Monday 30 November", hours: "4:30pm–7:30pm; tree lit 6:00pm" }],
+    timesConfidence: "official",
+    startTime: "16:30",
+    endTime: "19:30",
+    category: "Holiday / Tree Lighting",
+    officialWebsite: "https://www.cityofpacificgrove.org/calendar.php",
+    organizer: { type: "Organization", name: "City of Pacific Grove", url: "https://www.cityofpacificgrove.org/" },
+    referenceUrls: [],
+    updated: "2026-11-24",
+    description:
+      "The City of Pacific Grove lights its tree in Jewell Park on the Monday after Thanksgiving, after the weekly farmers market.",
+    metaDescription:
+      "Pacific Grove tree lighting, Mon Nov 30, 4:30–7:30pm at Jewell Park; tree lit at 6pm. The City's schedule, from the 3pm farmers market on.",
+    intro:
+      "The City of Pacific Grove lights its holiday tree on Monday 30 November 2026 in Jewell Park. The City's calendar lists the event from 4:30pm to 7:30pm: holiday entertainment from 4:30pm, the tree lighting at 6:00pm, and then, in the City's words, a special visitor from the North Pole. The Monday farmers market runs beforehand, from 3:00pm.",
+    sections: [
+      {
+        heading: "Where it is",
+        body: [
+          "The City lists the location as Jewell Park, Pacific Grove, and gives no street address. Some listings place the event at Grand and Forest Avenues; the City's own calendar says Jewell Park, and this page follows the City.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/events/pacific-grove/",
+      label: "Events in Pacific Grove →",
+      blurb: "Everything we list in town, with the Monday farmers market.",
+    },
+    faq: [
+      {
+        q: "When is the Pacific Grove tree lighting?",
+        a: "Monday 30 November 2026. The City lists it from 4:30pm to 7:30pm, with the tree lit at 6:00pm.",
+      },
+      {
+        q: "Where is the Pacific Grove tree lighting?",
+        a: "Jewell Park, according to the City of Pacific Grove's calendar.",
+      },
+      {
+        q: "Is it free?",
+        a: "The City's listing does not mention a cost.",
+      },
+    ],
+  },
+  {
+    // Date: City of Carmel-by-the-Sea events list ("Friday, December 4 –
+    // Annual Holiday Celebration"); the City's detail page returns 403.
+    // Times and programme: Visit Carmel, which credits the City. Because the
+    // times are not on the City's own readable page they are marked
+    // unconfirmed and kept out of the JSON-LD.
+    slug: "carmel-holidays-in-the-park-tree-menorah-lighting",
+    name: "Carmel Holidays in the Park: Tree & Menorah Lighting",
+    county: "Monterey",
+    cityText: "Carmel-by-the-Sea (Devendorf Park)",
+    city: "Carmel-by-the-Sea",
+    venue: "Devendorf Park",
+    months: ["december"],
+    dateText: "December 4, 2026",
+    start: "2026-12-04",
+    times: [
+      {
+        day: "Friday 4 December",
+        hours: "3:00pm–7:00pm; menorah 4:00pm, tree lit about 5:30pm",
+      },
+    ],
+    timesConfidence: "unconfirmed",
+    category: "Holiday / Tree Lighting",
+    officialWebsite: "https://ci.carmel.ca.us/events",
+    organizer: { type: "Organization", name: "City of Carmel-by-the-Sea", url: "https://ci.carmel.ca.us/" },
+    referenceUrls: [
+      "https://carmelcalifornia.com/event/holiday-tree-and-menorah-lighting-ceremony/",
+      "https://carmelplaza.com/happening/annual-holiday-open-house/",
+    ],
+    updated: "2026-11-24",
+    description:
+      "Carmel-by-the-Sea's annual holiday celebration in Devendorf Park: Santa by fire truck, a menorah lighting and the tree lighting.",
+    metaDescription:
+      "Carmel tree lighting, Fri Dec 4, Devendorf Park: Santa by fire truck 3:30pm, menorah 4pm, tree lit about 5:30pm, then Carmel Plaza's open house.",
+    intro:
+      "Carmel-by-the-Sea holds its annual holiday celebration on Friday 4 December 2026 in Devendorf Park, on Ocean Avenue between Junipero and Mission. The City lists the date. Visit Carmel's listing gives the programme, from 3:00pm to 7:00pm: Santa Claus arrives by fire truck at 3:30pm with the Del Monte Brass, the menorah is lit from 4:00pm to 4:30pm with gelt, dreidel spinning and singing, and the tree lighting ceremony follows, with the tree lit at 5:30pm or soon after. Carmel Plaza's own page lists its annual holiday open house in the Plaza courtyard from 5:00pm to 7:00pm, after the tree lighting, with live holiday music, treats from Plaza tenants, Santa and an elf.",
+    sections: [
+      {
+        heading: "Where the details come from",
+        body: [
+          "The City of Carmel-by-the-Sea's 2026 events list gives Friday 4 December for its Annual Holiday Celebration, but its detail page could not be read when this page was written. The times and programme above are from Visit Carmel, which credits the event to the City. Visit Carmel says the event is open to the public.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend and holiday events →",
+      blurb: "Tree lightings across Monterey and Santa Cruz counties.",
+    },
+    faq: [
+      {
+        q: "When is the Carmel tree lighting?",
+        a: "Friday 4 December 2026 in Devendorf Park. Visit Carmel's listing has the tree lit at 5:30pm or soon after, within an event running 3:00pm to 7:00pm.",
+      },
+      {
+        q: "Is there a menorah lighting in Carmel?",
+        a: "Yes, at the same event: 4:00pm to 4:30pm, with gelt, dreidel spinning and singing.",
+      },
+      {
+        q: "How does Santa arrive?",
+        a: "By fire truck, at about 3:30pm, with the Del Monte Brass playing.",
+      },
+    ],
+  },
+  {
+    // https://carmelplaza.com/happening/black-friday-happenings-2/ — Carmel
+    // Plaza's own post, dated 9 November 2026. No cost stated.
+    slug: "carmel-plaza-black-friday-happenings",
+    name: "Carmel Plaza Black Friday Happenings",
+    county: "Monterey",
+    cityText: "Carmel-by-the-Sea (Carmel Plaza)",
+    city: "Carmel-by-the-Sea",
+    venue: "Carmel Plaza",
+    streetAddress: "Ocean Avenue & Mission Street",
+    months: ["november"],
+    dateText: "November 27, 2026",
+    start: "2026-11-27",
+    times: [{ day: "Friday 27 November", hours: "Santa and live music noon–2pm" }],
+    timesConfidence: "official",
+    startTime: "12:00",
+    endTime: "14:00",
+    category: "Holiday / Shopping",
+    officialWebsite: "https://carmelplaza.com/happening/black-friday-happenings-2/",
+    organizer: { type: "Organization", name: "Carmel Plaza", url: "https://carmelplaza.com/" },
+    referenceUrls: [],
+    updated: "2026-11-24",
+    description:
+      "Black Friday at Carmel Plaza: Santa and live music in the courtyard from noon to 2pm, and store promotions all weekend.",
+    metaDescription:
+      "Carmel Plaza on Black Friday, Nov 27: Santa and live music in the courtyard noon–2pm, KMBY live with giveaways, store deals all weekend.",
+    intro:
+      "Carmel Plaza, at Ocean Avenue and Mission Street in Carmel-by-the-Sea, marks Black Friday, 27 November 2026, with Santa in the courtyard and live music from noon to 2:00pm. KMBY broadcasts live from the courtyard, with a prize wheel at its booth and Carmel Plaza giveaways. Participating shops run their own promotions through Black Friday weekend.",
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+    },
+  },
+  {
+    // https://downtownsantacruz.com/do/downtown-santa-cruz-makers-market-holiday-pop-up-1
+    // — the Downtown Association of Santa Cruz's listing.
+    slug: "downtown-santa-cruz-makers-market-holiday-pop-up",
+    name: "Downtown Santa Cruz Makers Market Holiday Pop-up",
+    county: "Santa Cruz",
+    cityText: "Santa Cruz (1407 Pacific Ave)",
+    city: "Santa Cruz",
+    venue: "Former Palace Arts space",
+    streetAddress: "1407 Pacific Ave",
+    months: ["november", "december"],
+    dateText: "November 27, 2026 - December 20, 2026",
+    start: "2026-11-27",
+    end: "2026-12-20",
+    times: [
+      { day: "Fridays and Saturdays", hours: "11am–7pm" },
+      { day: "Sundays", hours: "11am–5pm" },
+    ],
+    timesConfidence: "official",
+    category: "Holiday / Market",
+    officialWebsite: "https://downtownsantacruz.com/do/downtown-santa-cruz-makers-market-holiday-pop-up-1",
+    referenceUrls: [],
+    updated: "2026-11-24",
+    description:
+      "A weekend holiday pop-up of 25+ local makers and artists on Pacific Avenue, Friday to Sunday from Thanksgiving weekend to 20 December.",
+    metaDescription:
+      "Santa Cruz Makers Market holiday pop-up at 1407 Pacific Ave: Fri–Sun from Nov 27 to Dec 20, 25+ local makers. Weekends and hours.",
+    intro:
+      "The Makers Market holiday pop-up fills the old Palace Arts space at 1407 Pacific Ave in downtown Santa Cruz on four weekends: 27–29 November, 4–6 December, 11–13 December and 18–20 December 2026. It opens 11am to 7pm on Fridays and Saturdays and 11am to 5pm on Sundays, with 25 or more local makers and artists each weekend. Leashed, friendly dogs are welcome.",
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+    },
+  },
+  {
+    // https://capitolavillage.com/event/surfin-santa-visits-capitola-2026/ —
+    // Capitola Village's site (Capitola Chamber of Commerce). The site blocks
+    // direct downloads; read through a fetch tool on 2026-11-24.
+    slug: "surfin-santa-visits-capitola-2026",
+    name: "Surfin' Santa Visits Capitola 2026",
+    county: "Santa Cruz",
+    cityText: "Capitola (Capitola Beach)",
+    city: "Capitola",
+    venue: "Capitola Beach",
+    postalCode: "95010",
+    months: ["november"],
+    dateText: "November 28, 2026",
+    start: "2026-11-28",
+    times: [{ day: "Saturday 28 November", hours: "12:00pm–3:00pm; Santa arrives by kayak at noon" }],
+    timesConfidence: "official",
+    startTime: "12:00",
+    endTime: "15:00",
+    category: "Holiday / Shopping",
+    officialWebsite: "https://capitolavillage.com/event/surfin-santa-visits-capitola-2026/",
+    organizer: { type: "Organization", name: "Capitola Chamber of Commerce" },
+    referenceUrls: [],
+    updated: "2026-11-24",
+    description:
+      "Santa arrives at Capitola Beach by kayak at noon on Small Business Saturday, the village's annual holiday visit.",
+    metaDescription:
+      "Surfin' Santa in Capitola, Sat Nov 28: Santa paddles in to Capitola Beach at noon, 12–3pm, on Small Business Saturday. Free 3-hour village parking.",
+    intro:
+      "Santa paddles in to Capitola Beach by kayak at noon on Saturday 28 November 2026 for his annual visit to Capitola Village, and stays until 3:00pm. The Capitola Chamber of Commerce ties the day to Small Business Saturday. In heavy rain the event is cancelled.",
+    sections: [
+      {
+        heading: "Parking",
+        body: [
+          "Parking in Capitola Village is free for three hours from Thanksgiving Day through Christmas Day, according to the organiser.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+    },
+  },
+  {
+    // https://www.salinas.gov/Events/Tree-For-Peace — City of Salinas.
+    slug: "salinas-tree-for-peace-lighting-ceremony",
+    name: "Salinas Tree For Peace Lighting Ceremony",
+    county: "Monterey",
+    cityText: "Salinas (1 Main St)",
+    city: "Salinas",
+    venue: "One Main Street",
+    streetAddress: "1 Main St",
+    postalCode: "93901",
+    months: ["november"],
+    dateText: "November 28, 2026",
+    start: "2026-11-28",
+    times: [{ day: "Saturday 28 November", hours: "6:00pm–6:30pm; tree lit 6:30pm" }],
+    timesConfidence: "official",
+    startTime: "18:00",
+    endTime: "18:30",
+    category: "Holiday / Tree Lighting",
+    officialWebsite: "https://www.salinas.gov/Events/Tree-For-Peace",
+    admission: "free",
+    organizer: { type: "Organization", name: "City of Salinas", url: "https://www.salinas.gov/" },
+    referenceUrls: [],
+    updated: "2026-11-24",
+    description:
+      "The City of Salinas lights its Tree For Peace at One Main Street on Small Business Saturday, with Santa and Salinas Fire.",
+    metaDescription:
+      "Salinas Tree For Peace lighting, Sat Nov 28 at 1 Main St: free, 6–6:30pm, tree lit at 6:30 with Santa and Salinas Fire. Free garage parking.",
+    intro:
+      "The City of Salinas holds its annual Tree For Peace lighting ceremony on Saturday 28 November 2026 at One Main Street, downtown. The ceremony runs from 6:00pm to 6:30pm, and the tree is lit at 6:30pm with Santa and Salinas Fire. It is free. The City says parking is free all day in the Monterey Street Parking Garage that Saturday.",
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+    },
+  },
+  {
+    // https://salinasholidayparadeoflights.org/ — the parade's own site.
+    slug: "salinas-holiday-parade-of-lights",
+    name: "Salinas Holiday Parade of Lights",
+    county: "Monterey",
+    cityText: "Salinas (Main Street)",
+    city: "Salinas",
+    venue: "Main Street",
+    months: ["november"],
+    dateText: "November 29, 2026",
+    start: "2026-11-29",
+    times: [{ day: "Sunday 29 November", hours: "6:00pm–8:00pm" }],
+    timesConfidence: "official",
+    startTime: "18:00",
+    endTime: "20:00",
+    category: "Holiday / Parade",
+    officialWebsite: "https://salinasholidayparadeoflights.org/",
+    admission: "free",
+    referenceUrls: [],
+    updated: "2026-11-24",
+    description:
+      "A lighted holiday parade up Main Street in Salinas on the Sunday of Thanksgiving weekend, free to watch.",
+    metaDescription:
+      "Salinas Holiday Parade of Lights, Sun Nov 29, 6–8pm: free, from Acacia & S. Main St up Main Street toward downtown.",
+    intro:
+      "The Salinas Holiday Parade of Lights runs on Sunday 29 November 2026 from 6:00pm to 8:00pm. It starts at Acacia Street and South Main Street and travels up Main Street toward downtown. The organisers say it is free for all ages to attend.",
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+    },
+  },
+  {
+    // Date range for 2026: https://aghistoryproject.org/holiday-lights/
+    // (co-organiser, "select dates, November 27 thru December 24, 2026").
+    // Night-by-night schedule: sparkysholidaylights.com; prices:
+    // fairgrounds-foundation.org/holiday-lights/. Neither prints a year beside
+    // its dates, but both match 2026 weekdays (bonus nights "Monday December
+    // 21 thru Thursday December 24th"). Recorded as organiser-published.
+    slug: "sparkys-holiday-lights",
+    name: "Sparky's Holiday Lights",
+    county: "Santa Cruz",
+    cityText: "Watsonville (Santa Cruz County Fairgrounds)",
+    city: "Watsonville",
+    venue: "Santa Cruz County Fairgrounds",
+    streetAddress: "2601 E Lake Ave",
+    postalCode: "95076",
+    months: ["november", "december"],
+    dateText: "November 27, 2026 - December 24, 2026",
+    start: "2026-11-27",
+    end: "2026-12-24",
+    times: [
+      { day: "Drive-through: 27, 28, 29 November; 6, 11, 12, 13, 18–24 December", hours: "5:30pm–9:00pm" },
+      { day: "Walk-through Krampus night: Thursday 3 December", hours: "5:00pm–9:30pm" },
+      { day: "Walk-through with the Heritage Holiday Fair: 4 and 5 December", hours: "5:00pm–9:00pm" },
+    ],
+    timesConfidence: "official",
+    category: "Holiday / Lights",
+    officialWebsite: "https://aghistoryproject.org/holiday-lights/",
+    admission: { kind: "ticketed", from: 20, currency: "USD" },
+    referenceUrls: ["https://sparkysholidaylights.com/", "https://fairgrounds-foundation.org/holiday-lights/"],
+    updated: "2026-11-24",
+    description:
+      "A drive-through holiday lights display at the Santa Cruz County Fairgrounds in Watsonville, on select nights from 27 November to Christmas Eve.",
+    metaDescription:
+      "Sparky's Holiday Lights at the Santa Cruz County Fairgrounds, Watsonville: drive-through nights Nov 27–Dec 24, 5:30–9pm, $20 a car online.",
+    intro:
+      "Sparky's Holiday Lights is a drive-through lights display at the Santa Cruz County Fairgrounds, 2601 E Lake Ave, Watsonville, on select nights from Friday 27 November to Thursday 24 December 2026. Drive-through nights are 27, 28 and 29 November and 6, 11, 12, 13 and 18 to 24 December, 5:30pm to 9:00pm. On three nights it opens on foot instead: a Krampus walk-through on 3 December, 5:00pm to 9:30pm, and the Heritage Holiday Fair on 4 and 5 December, 5:00pm to 9:00pm, which needs a fair ticket. Proceeds go to the Fairgrounds Foundation and the Agricultural History Project.",
+    sections: [
+      {
+        heading: "Prices",
+        body: [
+          "$20 a vehicle bought online, $25 at the gate. RVs and buses are $40 online.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+    },
+  },
+  {
+    // https://winterwonderfestmonterey.com/tickets/ — the organiser's own
+    // 2026 page; parking from its FAQ page on the same site.
+    slug: "winter-wonderfest-monterey",
+    name: "Winter Wonderfest Monterey",
+    county: "Monterey",
+    cityText: "Monterey (Monterey County Fairgrounds)",
+    city: "Monterey",
+    venue: "Monterey County Fairgrounds",
+    streetAddress: "2004 Fairground Rd",
+    postalCode: "93940",
+    months: ["november", "december"],
+    dateText: "November 21, 2026 - December 27, 2026",
+    start: "2026-11-21",
+    end: "2026-12-27",
+    times: [
+      {
+        day: "21–22 and 27–29 November; 3–6, 10–13, 16–23 and 26–27 December",
+        hours: "5pm–9pm",
+      },
+    ],
+    timesConfidence: "official",
+    category: "Holiday / Lights",
+    officialWebsite: "https://winterwonderfestmonterey.com/tickets/",
+    admission: { kind: "ticketed", from: 11, currency: "USD" },
+    referenceUrls: ["https://winterwonderfestmonterey.com/faqs/"],
+    updated: "2026-11-24",
+    description:
+      "A walk-through holiday light festival at the Monterey County Fairgrounds, on weekends and select weekdays to 27 December.",
+    metaDescription:
+      "Winter Wonderfest Monterey: walk-through holiday lights at the Fairgrounds, Nov 21–Dec 27, 5–9pm. Dates, ticket prices and free parking.",
+    intro:
+      "Winter Wonderfest is a walk-through holiday light festival at the Monterey County Fairgrounds, 2004 Fairground Rd, entered through Gate 5. The 2026 season runs from 21 November to 27 December on all weekends and some weekdays — 21–22 and 27–29 November, then 3–6, 10–13, 16–23 and 26–27 December — from 5pm to 9pm each night. The organisers list new light installations for 2026, and it runs rain or shine with no refunds.",
+    sections: [
+      {
+        heading: "Tickets and parking",
+        body: [
+          "Advance general admission is $27.50 for ages 13 and up and $11 for children 6 to 12; children 5 and under are free. A season pass is $80.",
+          "Parking is free along Fairgrounds Road and in the Carnival Lot, according to the organisers' FAQ.",
+        ],
+      },
+    ],
+    guideLink: {
+      href: "/thanksgiving/",
+      label: "Thanksgiving weekend 2026 →",
+      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+    },
   },
 ];
 

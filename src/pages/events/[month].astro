@@ -38,6 +38,8 @@ const hasLagunaSeca = events.some(
     !isPastDate(e.start, e.end),
 );
 const { prev, next } = adjacentMonths(monthKey);
+// v2.S — the Thanksgiving weekend guide, linked from the two months it touches.
+const showThanksgiving = monthKey === "november" || monthKey === "december";
 
 // Feature pin, same terms as the homepage's: one event lifted out of the
 // month's list into a callout for a fixed window, self-retiring on BOTH the
@@ -238,6 +240,23 @@ const dateLabel = (e: RegionalEvent) => e.dateText || DATE_TBA;
           <p class="mt-2 text-base leading-relaxed text-muted-foreground">
             Three days and six stages at the Fairgrounds, led by a first-ever
             Herbie Hancock and Ron Carter duo.
+          </p>
+        </a>
+      )
+    }
+    {
+      showThanksgiving && (
+        <a
+          href="/thanksgiving/"
+          class="mt-10 block border-l-2 border-brass bg-surface/60 px-6 py-6 transition-colors hover:bg-surface"
+        >
+          <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Holiday guide
+          </p>
+          <p class="mt-2 text-2xl leading-tight text-brass">Thanksgiving weekend 2026 →</p>
+          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+            Thursday 26 to Sunday 29 November, day by day: turkey trots, tree
+            lightings, Small Business Saturday and what's open on Thanksgiving.
           </p>
         </a>
       )

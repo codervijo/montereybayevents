@@ -56,7 +56,7 @@ const nodes = regionalEvents
 describe('regional Event JSON-LD', () => {
   it('builds a node for every dated event and none for the undated ones', () => {
     expect(nodes.length).toBe(regionalEvents.filter((e) => e.start).length);
-    expect(nodes.length).toBe(59);
+    expect(nodes.length).toBe(72);
     for (const e of regionalEvents.filter((e) => !e.start)) {
       expect(buildRegionalEventJsonLd(e, SITE), e.name).toBeNull();
     }

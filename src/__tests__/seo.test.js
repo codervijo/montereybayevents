@@ -303,6 +303,7 @@ describe('sitemap (built output)', () => {
       '/events/november/',
       '/events/december/',
       '/events/pacific-grove/',
+      '/thanksgiving/',
     ]) {
       expect(xml, path).toContain(`<loc>https://montereybayevents.com${path}</loc>`);
     }
@@ -329,11 +330,14 @@ describe('site header', () => {
     expect(header).not.toContain('Monterey Car Week 2026<');
   });
 
-  it('has exactly the Events / Car Week / Traffic nav', () => {
+  it('has exactly the Events / Car Week / Traffic nav, Car Week swappable for the season', () => {
     const labels = [...header.matchAll(/label:\s*"([^"]+)"/g)].map((m) => m[1]);
-    expect(labels).toEqual(['Events', 'Car Week', 'Traffic']);
+    expect(labels).toEqual(['Car Week', 'Events', 'Traffic']);
     const hrefs = [...header.matchAll(/to:\s*"([^"]+)"/g)].map((m) => m[1]);
-    expect(hrefs).toEqual(['/', '/monterey-car-week/', '/traffic/']);
+    expect(hrefs).toEqual(['/monterey-car-week/', '/', '/traffic/']);
+    // The middle slot is the seasonal item when one is passed in (v2.S).
+    expect(header).toMatch(/seasonal \?\? CAR_WEEK/);
+    expect(read('src', 'layouts', 'BaseLayout.astro')).toContain('seasonal={seasonal}');
   });
 
   it('navigates with plain anchors — no client-side router', () => {

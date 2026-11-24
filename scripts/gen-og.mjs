@@ -145,6 +145,16 @@ targets.push({
   }),
 });
 
+// Thanksgiving weekend guide (v2.S).
+targets.push({
+  name: "thanksgiving",
+  svg: card({
+    kicker: "Thanksgiving weekend 2026",
+    title: "Monterey & Santa Cruz",
+    meta: "Turkey trots, tree lightings and what's open, Nov 26–29",
+  }),
+});
+
 // Rows carrying existingSlug / hubHref have no /event/ page of their own —
 // they link to a Car Week page or a hub — so they get no card.
 for (const e of regionalEvents.filter((e) => !e.existingSlug && !e.hubHref)) {

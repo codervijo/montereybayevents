@@ -7,8 +7,13 @@ import Analytics from "../components/Analytics.astro";
 import "../styles/global.css";
 import SiteHeader from "../components/SiteHeader.tsx";
 import SiteFooter from "../components/SiteFooter.astro";
+import { holidayNavItem } from "../data/season";
 
 const pathname = Astro.url.pathname;
+// Computed at build and passed in, so the island hydrates with the same nav it
+// was rendered with — evaluating the date in the browser would disagree with
+// the prerendered HTML whenever the page is older than today.
+const seasonal = holidayNavItem();
 ---
 
 <!doctype html>
@@ -27,7 +32,7 @@ const pathname = Astro.url.pathname;
   </head>
   <body>
     <div class="min-h-screen">
-      <SiteHeader client:load pathname={pathname} />
+      <SiteHeader client:load pathname={pathname} seasonal={seasonal} />
       <slot />
       <SiteFooter />
     </div>

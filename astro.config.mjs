@@ -16,6 +16,7 @@ const GUIDE_LASTMOD = {
   '/monterey-events-calendar/': '2026-10-05',
   '/monterey-bay-card-show/': '2026-10-11',
   '/events/pacific-grove/': '2026-11-01',
+  '/thanksgiving/': '2026-11-24',
 };
 
 // <image:image> entries for the pages whose point is an image — the maps and

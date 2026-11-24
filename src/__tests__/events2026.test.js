@@ -97,9 +97,10 @@ function expectedRange(text) {
 }
 
 describe('events-2026 ↔ CSV source of record', () => {
-  // 61 from the Aug–Dec import, plus Aria (v2.P, 2026-11-01).
+  // 61 from the Aug–Dec import, plus Aria (v2.P, 2026-11-01), plus thirteen
+  // Thanksgiving-weekend and holiday rows (v2.S, 2026-11-24).
   it('reads 62 rows from the CSV', () => {
-    expect(csvRows.length).toBe(62);
+    expect(csvRows.length).toBe(75);
   });
 
   it('carries every CSV row, and no extras', () => {
@@ -274,9 +275,17 @@ describe('month hubs', () => {
 
   it('lists a run that spans two months under both', () => {
     const spans = regionalEvents.filter((e) => e.months.length > 1);
-    expect(spans.map((e) => e.slug)).toEqual(['santa-cruz-beach-boardwalk-winter-wonderland']);
-    expect(eventsInMonth('november')).toContain(spans[0]);
-    expect(eventsInMonth('december')).toContain(spans[0]);
+    expect(spans.map((e) => e.slug).sort()).toEqual([
+      'downtown-santa-cruz-makers-market-holiday-pop-up',
+      'ice-skating-by-the-bay',
+      'santa-cruz-beach-boardwalk-winter-wonderland',
+      'sparkys-holiday-lights',
+      'winter-wonderfest-monterey',
+    ]);
+    for (const e of spans) {
+      expect(eventsInMonth('november'), e.slug).toContain(e);
+      expect(eventsInMonth('december'), e.slug).toContain(e);
+    }
   });
 
   it('links hubs to their neighbours, with no wrap-around at the ends', () => {

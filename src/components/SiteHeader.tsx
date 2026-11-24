@@ -1,10 +1,8 @@
 import { useState } from "react";
 
-const links = [
-  { to: "/", label: "Events" },
-  { to: "/monterey-car-week/", label: "Car Week" },
-  { to: "/traffic/", label: "Traffic" },
-] as const;
+type NavLink = { to: string; label: string };
+
+const CAR_WEEK: NavLink = { to: "/monterey-car-week/", label: "Car Week" };
 
 /**
  * Mounted as an Astro island (client:load) — the mobile menu needs state.
@@ -14,8 +12,20 @@ const links = [
  * Every link is a plain <a> — content pages are prerendered HTML and navigate
  * with a full request, no client-side routing.
  */
-export function SiteHeader({ pathname = "/" }: { pathname?: string }) {
+export function SiteHeader({
+  pathname = "/",
+  seasonal,
+}: {
+  pathname?: string;
+  /** Holiday-season item that replaces "Car Week" (src/data/season.ts). */
+  seasonal?: NavLink;
+}) {
   const [open, setOpen] = useState(false);
+  const links: NavLink[] = [
+    { to: "/", label: "Events" },
+    seasonal ?? CAR_WEEK,
+    { to: "/traffic/", label: "Traffic" },
+  ];
 
   // "Events" is the site index and would otherwise match every path, so it is
   // exact-match only. /free/ is Car Week content, so it lights up "Car Week".

@@ -20,3 +20,23 @@ describe('Car Week season (src/data/season.ts)', () => {
     }
   });
 });
+
+describe('holiday season (v2.S)', () => {
+  it('wraps the year: Nov 1 to Jan 4 inclusive', async () => {
+    const { inHolidaySeason } = await import('../data/season.ts');
+    expect(inHolidaySeason('2026-10-31')).toBe(false);
+    expect(inHolidaySeason('2026-11-01')).toBe(true);
+    expect(inHolidaySeason('2026-12-31')).toBe(true);
+    expect(inHolidaySeason('2027-01-04')).toBe(true);
+    expect(inHolidaySeason('2027-01-05')).toBe(false);
+    expect(inHolidaySeason('2027-07-15')).toBe(false);
+  });
+
+  it('points Holidays at /thanksgiving/ through the weekend, then December', async () => {
+    const { holidayNavItem } = await import('../data/season.ts');
+    expect(holidayNavItem('2026-11-24')).toEqual({ to: '/thanksgiving/', label: 'Holidays' });
+    expect(holidayNavItem('2026-11-29')).toEqual({ to: '/thanksgiving/', label: 'Holidays' });
+    expect(holidayNavItem('2026-11-30')).toEqual({ to: '/events/december/', label: 'Holidays' });
+    expect(holidayNavItem('2027-01-05')).toBeUndefined();
+  });
+});
