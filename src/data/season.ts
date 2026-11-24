@@ -57,5 +57,6 @@ export function thanksgivingIsCurrent(today: string = pacificToday()): boolean {
 /** The header's seasonal nav item, or undefined out of season. */
 export function holidayNavItem(today: string = pacificToday()): { to: string; label: string } | undefined {
   if (!inHolidaySeason(today)) return undefined;
-  return { to: thanksgivingIsCurrent(today) ? THANKSGIVING_2026.href : HOLIDAY_LIGHTS_HREF, label: "Holidays" };
+  // Always the lights map (operator 2026-11-24); /thanksgiving/ is reached from the homepage banner.
+  return { to: HOLIDAY_LIGHTS_HREF, label: "Holidays" };
 }

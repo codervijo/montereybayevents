@@ -28,6 +28,10 @@
     "historic": {
       "label": "Christmas in the Adobes & inn tours",
       "color": "#a16207"
+    },
+    "trains-rides": {
+      "label": "Trains & rides",
+      "color": "#be185d"
     }
   },
   "entries": [
@@ -298,7 +302,7 @@
       "nights": [
         "2026-12-04"
       ],
-      "hours": "3–7pm per Visit Carmel; tree lit about 5:30pm",
+      "hours": "3–7pm per Visit Carmel: Santa arrives by fire truck 3:30pm, menorah lit 4pm, tree lit about 5:30pm",
       "cost": null,
       "free": null,
       "kids": "Santa arrives by fire truck",
@@ -535,7 +539,8 @@
       "lat": 36.96456,
       "lng": -122.01538,
       "geo_precision": "venue",
-      "last_verified": "2026-11-24"
+      "last_verified": "2026-11-24",
+      "free_label": "Free entry (rides extra)"
     },
     {
       "id": "boardwalk-opening-drone-show",
@@ -563,7 +568,7 @@
     {
       "id": "holiday-lights-train",
       "name": "Santa Cruz Holiday Lights Train",
-      "category": "display",
+      "category": "trains-rides",
       "town": "Santa Cruz",
       "address": "Departs the Boardwalk, by the Looff Carousel (Merry-Go-Round)",
       "geocode_query": "Looff Carousel, Santa Cruz, California",

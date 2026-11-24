@@ -2655,7 +2655,7 @@ export const regionalEvents: RegionalEvent[] = [
     times: [
       {
         day: "Friday 4 December",
-        hours: "3:00pm–7:00pm; menorah 4:00pm, tree lit about 5:30pm",
+        hours: "3:00pm–7:00pm; Santa by fire truck 3:30pm, menorah 4:00pm, tree lit about 5:30pm; Carmel Plaza open house 5:00pm–7:00pm",
       },
     ],
     timesConfidence: "unconfirmed",

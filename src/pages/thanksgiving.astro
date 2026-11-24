@@ -24,7 +24,7 @@ const DAYS = [
   { iso: "2026-11-26", label: "Thursday 26 November", short: "Thanksgiving Day" },
   { iso: "2026-11-27", label: "Friday 27 November", short: "Black Friday" },
   { iso: "2026-11-28", label: "Saturday 28 November", short: "Small Business Saturday" },
-  { iso: "2026-11-29", label: "Sunday 29 November", short: null },
+  { iso: "2026-11-29", label: "Sunday 29 November", short: "Holiday Parade of Lights" },
 ];
 
 const on = (e: RegionalEvent, iso: string) => !!e.start && e.start <= iso && (e.end ?? e.start) >= iso;
@@ -62,8 +62,8 @@ const BOARDWALK_DAYS = "on select days from Thursday 26 November to Sunday 3 Jan
 
 // Weekend days and hours per row, each from the row's own times[] (organiser-published).
 const allWeekend: { e: RegionalEvent; when: string }[] = [
-  { e: rink, when: "Open every day. Thanksgiving and Sunday 12pm–8pm; Friday and Saturday 11am–10pm (the rink notes exceptions on some dates)." },
-  { e: boardwalk, when: `Free admission, ${BOARDWALK_DAYS}; hours vary by day. Holiday drone show and tree lighting on Saturday 28 November.` },
+  { e: rink, when: "Opens for the season on Thanksgiving Day, 12pm–8pm (holiday hours). Friday and Saturday 11am–10pm, Sunday 12pm–8pm (the rink notes exceptions on some dates). $20 adults, $18 for 12 and under, plus $5 skate rental." },
+  { e: boardwalk, when: `Opens on Thanksgiving Day. Free entry (rides extra: $2 each after 5pm), ${BOARDWALK_DAYS}; the Boardwalk publishes each day's hours, including Thanksgiving's, on its Winter Wonderland page. Holiday drone show and tree lighting on Saturday 28 November.` },
   { e: sparkys, when: "Drive-through Friday to Sunday, 27–29 November, 5:30pm–9pm. $20 a car online, $25 at the gate." },
   { e: wonderfest, when: "Walk-through Friday to Sunday, 27–29 November, 5pm–9pm. Not open on Thanksgiving Day." },
   { e: makers, when: "Friday and Saturday 11am–7pm, Sunday 11am–5pm, at 1407 Pacific Ave." },
@@ -340,24 +340,9 @@ const link = "text-brass hover:underline";
 
     <section class="mt-14">
       <h2 class={h2}>Things to do on Thanksgiving Day</h2>
-      <h3 class="mt-6 text-xl text-foreground">
-        <a href={eventHref(boardwalk)} class="hover:text-brass">Santa Cruz Beach Boardwalk: Winter Wonderland</a>
-      </h3>
       <p class={p}>
-        The Boardwalk's free-admission holiday season opens on Thanksgiving Day and
-        runs {BOARDWALK_DAYS}: a tunnel of lights, light shows on open evenings,
-        Santa photos, fire pits, and rides at $2 each after 5pm. Its holiday drone
-        show and tree lighting are on Saturday 28 November. The Boardwalk publishes
-        each day's hours on its own Winter Wonderland page, which we could not read —
-        check it for Thanksgiving before you go.
-      </p>
-      <h3 class="mt-6 text-xl text-foreground">
-        <a href={eventHref(rink)} class="hover:text-brass">Ice skating in Monterey</a>
-      </h3>
-      <p class={p}>
-        Ice Skating by the Bay opens for the season on Thanksgiving in Custom House
-        Plaza, 12pm to 8pm (holiday hours). Skating is $20 for adults and $18 for
-        children 12 and under, plus $5 skate rental.
+        Ice Skating by the Bay and the Boardwalk's Winter Wonderland both open on
+        Thanksgiving Day; their Thanksgiving hours are in <a href="#all-weekend" class={link}>All weekend</a> above.
       </p>
       <h3 class="mt-6 text-xl text-foreground">Monterey Bay Aquarium</h3>
       <p class={p}>

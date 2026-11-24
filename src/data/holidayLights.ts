@@ -31,6 +31,8 @@ export type LightsEntry = {
   hours: string | null;
   cost: string | null;
   free: boolean | null;
+  /** Overrides the plain "Free" label where entry is free but extras cost (the Boardwalk). */
+  free_label?: string;
   kids: string | null;
   parking_tip: string | null;
   source_url: string;

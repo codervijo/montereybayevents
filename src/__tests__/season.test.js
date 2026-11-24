@@ -32,10 +32,10 @@ describe('holiday season (v2.S)', () => {
     expect(inHolidaySeason('2027-07-15')).toBe(false);
   });
 
-  it('points Holidays at /thanksgiving/ through the weekend, then the lights map', async () => {
+  it('points Holidays at the lights map all season', async () => {
     const { holidayNavItem } = await import('../data/season.ts');
-    expect(holidayNavItem('2026-11-24')).toEqual({ to: '/thanksgiving/', label: 'Holidays' });
-    expect(holidayNavItem('2026-11-29')).toEqual({ to: '/thanksgiving/', label: 'Holidays' });
+    expect(holidayNavItem('2026-11-24')).toEqual({ to: '/holiday-lights/', label: 'Holidays' });
+    expect(holidayNavItem('2026-11-29')).toEqual({ to: '/holiday-lights/', label: 'Holidays' });
     expect(holidayNavItem('2026-11-30')).toEqual({ to: '/holiday-lights/', label: 'Holidays' });
     expect(holidayNavItem('2027-01-05')).toBeUndefined();
   });

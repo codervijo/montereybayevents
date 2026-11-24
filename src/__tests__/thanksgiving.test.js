@@ -52,3 +52,33 @@ describe.skipIf(!built)('/thanksgiving/ (built output)', () => {
     expect(html.slice(i, html.indexOf('</section>', i))).not.toContain('sparkys-holiday-lights');
   });
 });
+
+describe.skipIf(!built)('/thanksgiving/ round 2 (built output)', () => {
+  it('labels Sunday like the other days', () => {
+    expect(html).toMatch(/Sunday 29 November\s*(<[^>]+>\s*)*·\s*Holiday Parade of Lights/);
+  });
+
+  it('keeps the rink and the Boardwalk out of "Things to do on Thanksgiving Day"', () => {
+    const i = html.indexOf('Things to do on Thanksgiving Day');
+    const day = html.slice(i, html.indexOf('</section>', i));
+    expect(day).not.toContain('/event/ice-skating-by-the-bay/');
+    expect(day).not.toContain('/event/santa-cruz-beach-boardwalk-winter-wonderland/');
+    expect(section('all-weekend')).toContain('Opens for the season on Thanksgiving Day, 12pm–8pm');
+  });
+});
+
+const evDir = join(root, 'dist', 'event');
+describe.skipIf(!existsSync(evDir))('holiday event pages link the lights map', () => {
+  it('every Holiday-category listing links /holiday-lights/', () => {
+    const src = readFileSync(join(root, 'src', 'data', 'events-2026.ts'), 'utf8');
+    const slugs = src.split('\n    slug: "').slice(1)
+      .filter((p) => /category: "Holiday/.test(p.split('\n  },')[0]))
+      .map((p) => p.split('"')[0]);
+    expect(slugs.length).toBeGreaterThan(10);
+    for (const s of slugs) {
+      const f = join(evDir, s, 'index.html');
+      if (!existsSync(f)) continue; // past/undated rows may not build a page
+      expect(readFileSync(f, 'utf8'), s).toContain('href="/holiday-lights/"');
+    }
+  });
+});

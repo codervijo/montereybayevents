@@ -330,6 +330,18 @@ const others = eventsInMonth(month.key)
       )
     }
 
+    {/* Every holiday listing links the lights map (operator 2026-11-24); rows
+        whose guide card already points there don't repeat it. */}
+    {
+      event.category.startsWith("Holiday") && event.guideLink?.href !== "/holiday-lights/" && (
+        <p class="mt-6 max-w-3xl text-base text-muted-foreground">
+          More this season:{" "}
+          <a href="/holiday-lights/" class="text-brass hover:underline">the holiday lights map</a>,
+          with every tree lighting, boat parade and light display around Monterey Bay.
+        </p>
+      )
+    }
+
     {
       event.faq && event.faq.length > 0 && (
         <section class="mt-14 max-w-3xl">

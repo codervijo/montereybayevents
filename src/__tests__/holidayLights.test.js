@@ -123,3 +123,23 @@ describe('holiday lights towns', () => {
     for (const t of new Set(data.entries.map((e) => e.town))) expect(src, t).toContain(`"${t}"`);
   });
 });
+
+describe.skipIf(!existsSync(join(root, 'dist', 'holiday-lights', 'index.html')))('/holiday-lights/ round 2 (built)', () => {
+  const html = readFileSync(join(root, 'dist', 'holiday-lights', 'index.html'), 'utf8');
+  it('labels the Boardwalk free entry and files the train under Trains & rides', () => {
+    expect(html).toContain('Free entry (rides extra)');
+    expect(html).toContain('Trains &amp; rides');
+  });
+  it('puts the Carmel fire-truck and menorah times on the card', () => {
+    expect(html).toContain('Santa arrives by fire truck 3:30pm, menorah lit 4pm');
+  });
+  it('every Event node has startDate, location and address', () => {
+    const ld = [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)].map((m) => JSON.parse(m[1]));
+    const events = ld.filter((j) => j['@type'] === 'Event');
+    expect(events.length).toBeGreaterThan(0);
+    for (const e of events) {
+      expect(e.startDate, e.name).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(e.location?.address?.streetAddress, e.name).toBeTruthy();
+    }
+  });
+});
