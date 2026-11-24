@@ -2189,7 +2189,7 @@ export const regionalEvents: RegionalEvent[] = [
       "https://www.santacruz.org/upcoming-event/santa-cruz-beach-boardwalk-winter-wonderland/",
     ],
     description:
-      "The Boardwalk's holiday season, running from Thanksgiving through the first days of January.",
+      "The Boardwalk's free holiday season, on select days from Thursday 26 November 2026 to Sunday 3 January 2027.",
     // v2.S, 2026-11-24 — from the Boardwalk's own press release:
     // https://news.beachboardwalk.com/winter-wonderland-celebrates-the-holiday-season-starting-thursday-november-26/
     // Daily hours are on beachboardwalk.com/winter-wonderland/, which blocks

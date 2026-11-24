@@ -10,3 +10,7 @@
 # linked or indexed.
 /schedule/ /monterey-car-week/schedule/ 301
 /schedule /monterey-car-week/schedule/ 301
+
+# Astro's sitemap integration emits /sitemap-index.xml (robots.txt points there).
+# /sitemap.xml is the path crawlers and tools guess first; without this it 404s.
+/sitemap.xml /sitemap-index.xml 301

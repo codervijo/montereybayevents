@@ -24,17 +24,19 @@ const DAYS = [
   { iso: "2026-11-26", label: "Thursday 26 November", short: "Thanksgiving Day" },
   { iso: "2026-11-27", label: "Friday 27 November", short: "Black Friday" },
   { iso: "2026-11-28", label: "Saturday 28 November", short: "Small Business Saturday" },
-  { iso: "2026-11-29", label: "Sunday 29 November", short: "Sunday" },
+  { iso: "2026-11-29", label: "Sunday 29 November", short: null },
 ];
 
 const on = (e: RegionalEvent, iso: string) => !!e.start && e.start <= iso && (e.end ?? e.start) >= iso;
+const multiDay = (e: RegionalEvent) => !!e.end && e.end !== e.start;
 const byName = (a: RegionalEvent, b: RegionalEvent) =>
-  (a.end ? 1 : 0) - (b.end ? 1 : 0) || (a.startTime ?? "99").localeCompare(b.startTime ?? "99") || a.name.localeCompare(b.name);
+  (a.startTime ?? "99").localeCompare(b.startTime ?? "99") || a.name.localeCompare(b.name);
 
-// The makers market is Friday–Sunday only and the Boardwalk is "select days";
-// a row's day list says which days it is on, where the organiser publishes one.
+// Day by day shows only that day's one-off events. Season-long and multi-day
+// listings (rink, Boardwalk, Sparky's, Wonderfest, Makers Market) go in the
+// "All weekend" block instead, with their weekend days and hours spelled out.
 const weekend = regionalEvents.filter((e) => DAYS.some((d) => on(e, d.iso)));
-const byDay = DAYS.map((d) => ({ ...d, events: weekend.filter((e) => on(e, d.iso)).sort(byName) }));
+const byDay = DAYS.map((d) => ({ ...d, events: weekend.filter((e) => !multiDay(e) && on(e, d.iso)).sort(byName) }));
 
 const bySlug = (slug: string) => {
   const e = regionalEvents.find((x) => x.slug === slug);
@@ -50,6 +52,22 @@ const runForPie = bySlug("run-for-pie-2026");
 const rink = bySlug("ice-skating-by-the-bay");
 const boardwalk = bySlug("santa-cruz-beach-boardwalk-winter-wonderland");
 const sparkys = bySlug("sparkys-holiday-lights");
+const wonderfest = bySlug("winter-wonderfest-monterey");
+const makers = bySlug("downtown-santa-cruz-makers-market-holiday-pop-up");
+
+// One wording for the Boardwalk's dates, from its own announcement
+// (news.beachboardwalk.com, 2026): "on select days from Thursday, November 26
+// through Sunday, January 3, 2027". Used in every mention on this page.
+const BOARDWALK_DAYS = "on select days from Thursday 26 November to Sunday 3 January";
+
+// Weekend days and hours per row, each from the row's own times[] (organiser-published).
+const allWeekend: { e: RegionalEvent; when: string }[] = [
+  { e: rink, when: "Open every day. Thanksgiving and Sunday 12pm–8pm; Friday and Saturday 11am–10pm (the rink notes exceptions on some dates)." },
+  { e: boardwalk, when: `Free admission, ${BOARDWALK_DAYS}; hours vary by day. Holiday drone show and tree lighting on Saturday 28 November.` },
+  { e: sparkys, when: "Drive-through Friday to Sunday, 27–29 November, 5:30pm–9pm. $20 a car online, $25 at the gate." },
+  { e: wonderfest, when: "Walk-through Friday to Sunday, 27–29 November, 5pm–9pm. Not open on Thanksgiving Day." },
+  { e: makers, when: "Friday and Saturday 11am–7pm, Sunday 11am–5pm, at 1407 Pacific Ave." },
+];
 
 const listed = [...new Map(weekend.map((e) => [e.slug, e])).values()].sort(
   (a, b) => a.start!.localeCompare(b.start!) || a.name.localeCompare(b.name),
@@ -61,10 +79,10 @@ const price = (e: RegionalEvent) =>
 const hoursOn = (e: RegionalEvent) => (e.times && e.times.length === 1 ? e.times[0]!.hours : undefined);
 
 // ── FAQ — rendered visibly and emitted as FAQPage from the same array ───────
-const faq: { q: string; a: string }[] = [
+const faq: { q: string; a: string; sources?: { href: string; label: string }[] }[] = [
   {
     q: "What's open on Thanksgiving in Monterey?",
-    a: `Ice Skating by the Bay in Custom House Plaza opens its season on Thanksgiving Day, 12pm to 8pm. Monterey-Salinas Transit runs free rides systemwide on Thanksgiving, on a limited holiday schedule (JAZZ A and B, and lines 1, 5, 20, 23, 41 and 49). The Monterey Bay Aquarium says it is open daily except Christmas Day, and lists its hours on its own schedule page; we could not read Thanksgiving hours there, so check before you go. Capitola Mall is closed on Thanksgiving.`,
+    a: `Ice Skating by the Bay in Custom House Plaza opens its season on Thanksgiving Day, 12pm to 8pm. Monterey-Salinas Transit runs free rides systemwide on Thanksgiving, on a limited holiday schedule (JAZZ A and B, and lines 1, 5, 20, 23, 41 and 49). The Monterey Bay Aquarium says it is open daily except Christmas Day, and lists its hours on its own schedule page; we could not read Thanksgiving hours there, so check before you go.`,
   },
   {
     q: "When is the Cannery Row tree lighting?",
@@ -77,6 +95,11 @@ const faq: { q: string; a: string }[] = [
   {
     q: "When is the Carmel tree lighting?",
     a: `Friday 4 December 2026, in Devendorf Park — the week after Thanksgiving. Visit Carmel's listing has Santa arriving by fire truck at 3:30pm, a menorah lighting at 4:00pm and the tree lit at about 5:30pm, followed by Carmel Plaza's holiday open house from 5:00pm to 7:00pm.`,
+    sources: [
+      { href: "https://carmelcalifornia.com/event/holiday-tree-and-menorah-lighting-ceremony/", label: "Visit Carmel: Holiday Tree and Menorah Lighting" },
+      { href: "https://ci.carmel.ca.us/events", label: "City of Carmel-by-the-Sea events (date)" },
+      { href: "https://carmelplaza.com/happening/annual-holiday-open-house/", label: "Carmel Plaza: Annual Holiday Open House" },
+    ],
   },
 ];
 
@@ -170,6 +193,8 @@ const link = "text-brass hover:underline";
       Steinbeck Plaza at about 6pm, free. Saturday brings Santa by kayak to Capitola
       Beach and the Tree For Peace lighting in Salinas, and Sunday the Salinas
       Holiday Parade of Lights. The Monterey ice rink opens on Thanksgiving Day itself.
+      For every tree lighting, boat parade and light display of the season, see
+      our <a href="/holiday-lights/" class={link}>holiday lights map</a>.
     </p>
     <p class={p}>
       Every listing below links to its own page with the organiser's times, prices
@@ -178,11 +203,37 @@ const link = "text-brass hover:underline";
       rather than guess.
     </p>
 
-    <!-- Day by day -->
+    <!-- All weekend: season-long and multi-day listings -->
+    <section class="mt-14" id="all-weekend">
+      <h2 class={h2}>All weekend</h2>
+      <p class={p}>
+        These run across the weekend and beyond, so they are listed once here
+        rather than under each day.
+      </p>
+      <div class="mt-6 grid gap-3">
+        {allWeekend.map(({ e, when }) => (
+          <article class={card}>
+            <h3 class="text-xl leading-tight">
+              <a href={eventHref(e)} class="text-foreground transition-colors hover:text-brass">{e.name}</a>
+            </h3>
+            <div class={meta}>
+              <span>{e.city ?? e.cityText}</span>
+              {e.venue && <span aria-hidden="true">·</span>}
+              {e.venue && <span>{e.venue}</span>}
+              {price(e) && <span aria-hidden="true">·</span>}
+              {price(e) && <span class="text-brass">{price(e)}</span>}
+            </div>
+            <p class="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">{when}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Day by day: one-off events only -->
     {byDay.map((d) => (
       <section class="mt-14" id={d.iso}>
         <h2 class={h2}>
-          {d.label} <span class="text-lg text-muted-foreground">· {d.short}</span>
+          {d.label}{d.short && <span class="text-lg text-muted-foreground"> · {d.short}</span>}
         </h2>
         <div class="mt-6 grid gap-3">
           {d.events.map((e) => (
@@ -237,7 +288,8 @@ const link = "text-brass hover:underline";
       <h2 class={h2}>Tree lightings</h2>
       <p class={p}>
         The lightings start the day after Thanksgiving and run into the next week.
-        In date order:
+        In date order (the rest of the season's lightings are on the{" "}
+        <a href="/holiday-lights/" class={link}>holiday lights map</a>):
       </p>
       <ul class="mt-4 space-y-3">
         {lightings.map((e) => (
@@ -257,10 +309,16 @@ const link = "text-brass hover:underline";
 
     <section class="mt-14">
       <h2 class={h2}>Shopping: Black Friday and Small Business Saturday</h2>
+      <h3 class="mt-6 text-xl text-foreground">Monterey County</h3>
       <p class={p}>
         Carmel Plaza has Santa and live music in its courtyard from noon to 2pm on
         Black Friday, with KMBY broadcasting live, and shops running offers all
-        weekend. In downtown Santa Cruz, the Makers Market holiday pop-up opens at
+        weekend. In Salinas, the City pairs Saturday's Tree For Peace lighting with
+        free all-day parking in the Monterey Street garage.
+      </p>
+      <h3 class="mt-6 text-xl text-foreground">Santa Cruz County</h3>
+      <p class={p}>
+        In downtown Santa Cruz, the Makers Market holiday pop-up opens at
         1407 Pacific Ave on Friday with 25 or more local makers, 11am to 7pm Friday
         and Saturday and 11am to 5pm Sunday. The Downtown Association's Reindeer
         Round-Up also starts on Friday: pick up a map at the information kiosk or
@@ -272,9 +330,7 @@ const link = "text-brass hover:underline";
         On Small Business Saturday, Santa arrives by kayak at Capitola Beach at noon.
         Capitola Village has free three-hour parking from Thanksgiving through
         Christmas Day. Capitola Mall is closed on Thanksgiving and opens 8am–8pm on
-        Friday, 10am–7pm on Saturday and 11am–6pm on Sunday. In Salinas, the City
-        pairs Saturday's Tree For Peace lighting with free all-day parking in the
-        Monterey Street garage.
+        Friday, 10am–7pm on Saturday and 11am–6pm on Sunday.
       </p>
       <p class="mt-3 text-sm text-muted-foreground">
         We found no Black Friday or Small Business Saturday event published by
@@ -289,7 +345,7 @@ const link = "text-brass hover:underline";
       </h3>
       <p class={p}>
         The Boardwalk's free-admission holiday season opens on Thanksgiving Day and
-        runs on select days to 3 January: a tunnel of lights, nightly light shows,
+        runs {BOARDWALK_DAYS}: a tunnel of lights, light shows on open evenings,
         Santa photos, fire pits, and rides at $2 each after 5pm. Its holiday drone
         show and tree lighting are on Saturday 28 November. The Boardwalk publishes
         each day's hours on its own Winter Wonderland page, which we could not read —
@@ -330,15 +386,6 @@ const link = "text-brass hover:underline";
         schedule, with lines 25, 40 and 47 not running; regular service resumes on
         Saturday.
       </p>
-      <h3 class="mt-6 text-xl text-foreground">
-        <a href={eventHref(sparkys)} class="hover:text-brass">Lights after dark</a>
-      </h3>
-      <p class={p}>
-        Sparky's Holiday Lights at the Santa Cruz County Fairgrounds in Watsonville
-        opens its drive-through on Friday and runs Friday to Sunday this weekend,
-        5:30pm to 9pm, $20 a car online. Every other display, tree lighting and
-        boat parade of the season is on our <a href="/holiday-lights/" class={link}>holiday lights map</a>.
-      </p>
     </section>
 
     <section class="mt-14 max-w-3xl">
@@ -347,7 +394,17 @@ const link = "text-brass hover:underline";
         {faq.map((f) => (
           <div>
             <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
-            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</dd>
+            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">
+              {f.a}
+              {f.sources && (
+                <span class="mt-2 block text-sm">
+                  Sources:{" "}
+                  {f.sources.map((s, i) => (
+                    <Fragment>{i > 0 && " · "}<a href={s.href} class={link} rel="noopener">{s.label}</a></Fragment>
+                  ))}
+                </span>
+              )}
+            </dd>
           </div>
         ))}
       </dl>
