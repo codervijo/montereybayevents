@@ -519,7 +519,7 @@
       "town": "Santa Cruz",
       "address": "Santa Cruz Beach Boardwalk, 400 Beach St",
       "geocode_query": "Santa Cruz Beach Boardwalk, Santa Cruz, California",
-      "dates_text": "Select days Nov 26, 2026–Jan 3, 2027",
+      "dates_text": "Select days from Thursday 26 November 2026 to Sunday 3 January 2027",
       "range": {
         "from": "2026-11-26",
         "to": "2027-01-03"
