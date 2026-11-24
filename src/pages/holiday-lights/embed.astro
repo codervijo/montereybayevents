@@ -1,0 +1,26 @@
+---
+// /holiday-lights/embed/ — the holiday lights map alone, for other sites to
+// iframe (v2.T). noindex and left out of the sitemap; public/_headers lifts
+// X-Frame-Options for this path only. Every popup and the footer link back to
+// the full page, which is the point of offering it.
+import "../../styles/global.css";
+import HolidayLightsMap from "../../components/HolidayLightsMap.astro";
+const site = "https://montereybayevents.com";
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Holiday lights map 2026 — Monterey Bay Events</title>
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href={`${site}/holiday-lights/`} />
+  </head>
+  <body class="bg-background p-2 text-foreground">
+    <HolidayLightsMap height="calc(100vh - 140px)" linkBase={site} />
+    <p class="mt-2 text-xs text-muted-foreground">
+      <a href={`${site}/holiday-lights/`} target="_top" class="text-brass hover:underline">Monterey &amp; Santa Cruz holiday lights map 2026</a>
+      — dates, prices and directions for every spot, by Monterey Bay Events
+    </p>
+  </body>
+</html>

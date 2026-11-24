@@ -1,0 +1,160 @@
+---
+// Leaflet + OpenStreetMap map of the holiday-lights entries, with the town /
+// category / free / open-tonight filters. Shared by /holiday-lights/ and its
+// iframe-able /holiday-lights/embed/.
+//
+// Mobile and Lighthouse: Leaflet (JS + CSS) and the OSM tiles load only when
+// the map scrolls near the viewport, so the first paint is the server-rendered
+// page. Markers are circle markers coloured by category — no marker images.
+//
+// The filters also hide/show any element carrying `data-light` (the list on
+// the main page) and `data-light-group` wrappers that end up empty.
+import { lights, LIGHTS_CATEGORIES, LIGHTS_TOWNS, lightsHref, directionsHref } from "../data/holidayLights";
+
+interface Props { height?: string; linkBase?: string }
+const { height = "min(70vh, 560px)", linkBase = "" } = Astro.props;
+
+const payload = {
+  categories: LIGHTS_CATEGORIES,
+  entries: lights.map((e) => ({
+    id: e.id, name: e.name, category: e.category, town: e.town, lat: e.lat, lng: e.lng,
+    dates: e.dates_text, hours: e.hours, cost: e.cost, free: e.free === true,
+    nights: e.nights ?? null, range: e.range ?? null, select: !!e.select_dates,
+    href: linkBase + lightsHref(e), directions: directionsHref(e),
+  })),
+};
+const presentCats = Object.entries(LIGHTS_CATEGORIES).filter(([k]) => lights.some((e) => e.category === k));
+const presentTowns = LIGHTS_TOWNS.filter((t) => lights.some((e) => e.town === t));
+const field = "w-full border border-border bg-surface px-2 py-2 text-sm text-foreground";
+---
+
+<div class="lights-map-wrap">
+  <form class="lights-filters grid grid-cols-2 gap-2 sm:grid-cols-4" aria-label="Filter the holiday lights" onsubmit="return false">
+    <label class="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+      Town
+      <select name="town" class={field}>
+        <option value="">All towns</option>
+        {presentTowns.map((t) => <option value={t}>{t}</option>)}
+      </select>
+    </label>
+    <label class="text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground">
+      Type
+      <select name="category" class={field}>
+        <option value="">All types</option>
+        {presentCats.map(([k, c]) => <option value={k}>{c.label}</option>)}
+      </select>
+    </label>
+    <label class="flex items-center gap-2 self-end py-2 text-sm text-foreground">
+      <input type="checkbox" name="free" class="h-4 w-4 accent-[#ddb049]" /> Free only
+    </label>
+    <label class="flex items-center gap-2 self-end py-2 text-sm text-foreground">
+      <input type="checkbox" name="tonight" class="h-4 w-4 accent-[#ddb049]" /> On tonight
+    </label>
+  </form>
+  <p class="lights-count mt-2 text-xs text-muted-foreground" aria-live="polite"></p>
+
+  <div
+    class="lights-map mt-3 w-full border border-border bg-surface"
+    style={`height:${height}`}
+    role="region"
+    aria-label="Map of holiday lights around Monterey Bay"
+  >
+    <noscript><p class="p-4 text-sm text-muted-foreground">The map needs JavaScript; every spot is listed below with directions.</p></noscript>
+  </div>
+  <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground" aria-label="Map key">
+    {presentCats.map(([, c]) => (
+      <li class="flex items-center gap-1.5">
+        <span class="inline-block h-3 w-3 rounded-full border border-white/70" style={`background:${c.color}`}></span>{c.label}
+      </li>
+    ))}
+  </ul>
+  <script type="application/json" class="lights-data" set:html={JSON.stringify(payload)} />
+</div>
+
+<script>
+  type E = {
+    id: string; name: string; category: string; town: string; lat: number; lng: number;
+    dates: string; hours: string | null; cost: string | null; free: boolean;
+    nights: string[] | null; range: { from: string; to: string } | null; select: boolean;
+    href: string; directions: string;
+  };
+
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
+  // Select-days entries (the Boardwalk) count as "maybe": shown under "On tonight", flagged in the popup.
+  const onTonight = (e: E) =>
+    e.nights ? e.nights.includes(today) : !!e.range && today >= e.range.from && today <= e.range.to;
+
+  for (const wrap of document.querySelectorAll<HTMLElement>(".lights-map-wrap")) {
+    const data = JSON.parse(wrap.querySelector(".lights-data")!.textContent!) as {
+      categories: Record<string, { label: string; color: string }>; entries: E[];
+    };
+    const form = wrap.querySelector<HTMLFormElement>(".lights-filters")!;
+    const count = wrap.querySelector<HTMLElement>(".lights-count")!;
+    const mapEl = wrap.querySelector<HTMLElement>(".lights-map")!;
+    const markers = new Map<string, any>();
+    let map: any;
+
+    const visible = () => {
+      const f = new FormData(form);
+      const town = f.get("town"), cat = f.get("category"), free = f.has("free"), tonight = f.has("tonight");
+      return new Set(
+        data.entries
+          .filter((e) => (!town || e.town === town) && (!cat || e.category === cat) && (!free || e.free) && (!tonight || onTonight(e)))
+          .map((e) => e.id),
+      );
+    };
+
+    const apply = () => {
+      const ids = visible();
+      count.textContent = `Showing ${ids.size} of ${data.entries.length} spots` + (form.tonight.checked ? ` on tonight (${today})` : "");
+      for (const el of document.querySelectorAll<HTMLElement>("[data-light]")) el.hidden = !ids.has(el.dataset.light!);
+      for (const g of document.querySelectorAll<HTMLElement>("[data-light-group]"))
+        g.hidden = !g.querySelector("[data-light]:not([hidden])");
+      if (!map) return;
+      const shown: [number, number][] = [];
+      for (const [id, m] of markers) {
+        if (ids.has(id)) { m.addTo(map); shown.push(m.getLatLng()); } else m.remove();
+      }
+      if (shown.length) map.fitBounds(shown, { padding: [24, 24], maxZoom: 15 });
+    };
+    form.addEventListener("change", apply);
+    apply();
+
+    const load = async () => {
+      const [{ default: L }] = await Promise.all([import("leaflet"), import("leaflet/dist/leaflet.css")]);
+      mapEl.innerHTML = "";
+      map = L.map(mapEl, { scrollWheelZoom: false });
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      }).addTo(map);
+      for (const e of data.entries) {
+        const color = data.categories[e.category]?.color ?? "#ddb049";
+        const box = document.createElement("div");
+        const h = document.createElement("strong"); h.textContent = e.name; box.append(h);
+        for (const line of [`${e.town} · ${data.categories[e.category]?.label ?? ""}`, e.dates, e.hours, e.cost]) {
+          if (!line) continue;
+          const p = document.createElement("div"); p.textContent = line; box.append(p);
+        }
+        if (e.select) { const p = document.createElement("div"); p.textContent = "Open select days: check before you go"; box.append(p); }
+        const links = document.createElement("div");
+        links.innerHTML = `<a href="${e.href}" target="_top">Details</a> · <a href="${e.directions}" target="_blank" rel="noopener">Directions</a>`;
+        box.append(links);
+        markers.set(
+          e.id,
+          L.circleMarker([e.lat, e.lng], { radius: 9, color: "#fff", weight: 2, fillColor: color, fillOpacity: 0.95 })
+            .bindPopup(box)
+            .bindTooltip(e.name),
+        );
+      }
+      apply();
+    };
+
+    const io = new IntersectionObserver((entries) => {
+      if (entries.some((x) => x.isIntersecting)) { io.disconnect(); load(); }
+    }, { rootMargin: "300px" });
+    io.observe(mapEl);
+  }
+</script>

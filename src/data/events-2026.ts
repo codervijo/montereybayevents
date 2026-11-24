@@ -1620,6 +1620,11 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-evening holiday heritage event through Monterey's historic downtown adobes.",
+    guideLink: {
+      href: "/holiday-lights/",
+      label: "Holiday lights map 2026",
+      blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
+    },
   },
   {
     slug: "first-night-monterey",
@@ -2202,9 +2207,9 @@ export const regionalEvents: RegionalEvent[] = [
       },
     ],
     guideLink: {
-      href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
-      blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
+      href: "/holiday-lights/",
+      label: "Holiday lights map 2026",
+      blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
     },
   },
   {
@@ -2259,6 +2264,11 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-evening parade of lit boats through Santa Cruz Harbor.",
+    guideLink: {
+      href: "/holiday-lights/",
+      label: "Holiday lights map 2026",
+      blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
+    },
   },
   {
     slug: "hallcrest-vineyards-holiday-market",
@@ -2355,7 +2365,7 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
     },
     faq: [
@@ -2421,7 +2431,7 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
     },
     faq: [
@@ -2477,9 +2487,9 @@ export const regionalEvents: RegionalEvent[] = [
       },
     ],
     guideLink: {
-      href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
-      blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
+      href: "/holiday-lights/",
+      label: "Holiday lights map 2026",
+      blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
     },
     faq: [
       {
@@ -2552,7 +2562,7 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and what's open, Thursday to Sunday.",
     },
     faq: [
@@ -2609,7 +2619,7 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     guideLink: {
       href: "/events/pacific-grove/",
-      label: "Events in Pacific Grove →",
+      label: "Events in Pacific Grove",
       blurb: "Everything we list in town, with the Monday farmers market.",
     },
     faq: [
@@ -2672,9 +2682,9 @@ export const regionalEvents: RegionalEvent[] = [
       },
     ],
     guideLink: {
-      href: "/thanksgiving/",
-      label: "Thanksgiving weekend and holiday events →",
-      blurb: "Tree lightings across Monterey and Santa Cruz counties.",
+      href: "/holiday-lights/",
+      label: "Holiday lights map 2026",
+      blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
     },
     faq: [
       {
@@ -2721,7 +2731,7 @@ export const regionalEvents: RegionalEvent[] = [
       "Carmel Plaza, at Ocean Avenue and Mission Street in Carmel-by-the-Sea, marks Black Friday, 27 November 2026, with Santa in the courtyard and live music from noon to 2:00pm. KMBY broadcasts live from the courtyard, with a prize wheel at its booth and Carmel Plaza giveaways. Participating shops run their own promotions through Black Friday weekend.",
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
     },
   },
@@ -2756,7 +2766,7 @@ export const regionalEvents: RegionalEvent[] = [
       "The Makers Market holiday pop-up fills the old Palace Arts space at 1407 Pacific Ave in downtown Santa Cruz on four weekends: 27–29 November, 4–6 December, 11–13 December and 18–20 December 2026. It opens 11am to 7pm on Fridays and Saturdays and 11am to 5pm on Sundays, with 25 or more local makers and artists each weekend. Leashed, friendly dogs are welcome.",
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
     },
   },
@@ -2799,7 +2809,7 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
     },
   },
@@ -2834,7 +2844,7 @@ export const regionalEvents: RegionalEvent[] = [
       "The City of Salinas holds its annual Tree For Peace lighting ceremony on Saturday 28 November 2026 at One Main Street, downtown. The ceremony runs from 6:00pm to 6:30pm, and the tree is lit at 6:30pm with Santa and Salinas Fire. It is free. The City says parking is free all day in the Monterey Street Parking Garage that Saturday.",
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
     },
   },
@@ -2866,7 +2876,7 @@ export const regionalEvents: RegionalEvent[] = [
       "The Salinas Holiday Parade of Lights runs on Sunday 29 November 2026 from 6:00pm to 8:00pm. It starts at Acacia Street and South Main Street and travels up Main Street toward downtown. The organisers say it is free for all ages to attend.",
     guideLink: {
       href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
+      label: "Thanksgiving weekend 2026",
       blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
     },
   },
@@ -2915,9 +2925,9 @@ export const regionalEvents: RegionalEvent[] = [
       },
     ],
     guideLink: {
-      href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
-      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+      href: "/holiday-lights/",
+      label: "Holiday lights map 2026",
+      blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
     },
   },
   {
@@ -2963,9 +2973,9 @@ export const regionalEvents: RegionalEvent[] = [
       },
     ],
     guideLink: {
-      href: "/thanksgiving/",
-      label: "Thanksgiving weekend 2026 →",
-      blurb: "Turkey trots, tree lightings and shopping, Thursday to Sunday.",
+      href: "/holiday-lights/",
+      label: "Holiday lights map 2026",
+      blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
     },
   },
 ];

@@ -1236,3 +1236,22 @@ this line is a verbatim prompt.*
 > The sitemap was not broken (`/sitemap-index.xml` 200; `/sitemap.xml` was
 > never a URL). Three of the brief's own facts were wrong on the official
 > pages (Cannery Row times, PG venue and end time) and were corrected.
+
+
+## 2026-11-24 — v2.T: Holiday Lights Map 2026 (`/holiday-lights/`)
+
+> Operator brief: a Holiday Lights Map live by Fri 27 Nov — data in
+> `data/holiday-lights-2026.json` (40+ entries across 13 towns, 2026-verified
+> only, skipped list), a Leaflet/OSM map with town / category / free /
+> open-tonight filters, a server-rendered list by town, three route loops with
+> Google Maps links, Free and Best-for-kids callouts, an embed snippet, a
+> "Suggest a spot" form stored for review, FAQ + FAQPage, ItemList + Event
+> JSON-LD, OG image; title "Holiday Lights Map 2026 — Monterey & Santa Cruz
+> Christmas Lights (40+ Spots)"; links from the banner, nav, Thanksgiving,
+> December hub, town and holiday event pages; sitemap, IndexNow; outreach
+> drafts for six local outlets and two subreddits. Operator placed it as v2.T
+> (maps → v2.U–X), chose Pages Function + KV for suggestions and news-only
+> sourcing for neighbourhood displays, then: drop the number from the title,
+> include the four entries whose pages print no year.
+>
+> 27 entries verified, in 11 towns; the title carries no count.

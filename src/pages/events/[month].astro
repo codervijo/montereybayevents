@@ -262,6 +262,23 @@ const dateLabel = (e: RegionalEvent) => e.dateText || DATE_TBA;
       )
     }
     {
+      showThanksgiving && (
+        <a
+          href="/holiday-lights/"
+          class="mt-4 block border-l-2 border-brass bg-surface/60 px-6 py-6 transition-colors hover:bg-surface"
+        >
+          <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Holiday map
+          </p>
+          <p class="mt-2 text-2xl leading-tight text-brass">Holiday lights map 2026 →</p>
+          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+            Every tree lighting, lighted boat parade and drive-through display around
+            Monterey Bay on one map, with dates, prices and directions.
+          </p>
+        </a>
+      )
+    }
+    {
       hasLagunaSeca && (
         <a
           href="/laguna-seca/camping/"

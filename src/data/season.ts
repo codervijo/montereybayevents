@@ -44,6 +44,10 @@ export function inHolidaySeason(today: string = pacificToday()): boolean {
  * banner shows until the last day; after it the "Holidays" nav item points at
  * the December hub instead, because the Thanksgiving page is then a record.
  */
+/** The Holiday Lights Map (v2.T): the Holidays nav target once Thanksgiving is past. */
+export const HOLIDAY_LIGHTS_HREF = "/holiday-lights/";
+export const HOLIDAY_LIGHTS_UNTIL = "2027-01-03";
+
 export const THANKSGIVING_2026 = { from: "2026-11-26", to: "2026-11-29", href: "/thanksgiving/" } as const;
 
 export function thanksgivingIsCurrent(today: string = pacificToday()): boolean {
@@ -53,5 +57,5 @@ export function thanksgivingIsCurrent(today: string = pacificToday()): boolean {
 /** The header's seasonal nav item, or undefined out of season. */
 export function holidayNavItem(today: string = pacificToday()): { to: string; label: string } | undefined {
   if (!inHolidaySeason(today)) return undefined;
-  return { to: thanksgivingIsCurrent(today) ? THANKSGIVING_2026.href : "/events/december/", label: "Holidays" };
+  return { to: thanksgivingIsCurrent(today) ? THANKSGIVING_2026.href : HOLIDAY_LIGHTS_HREF, label: "Holidays" };
 }

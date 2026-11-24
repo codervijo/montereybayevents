@@ -618,6 +618,43 @@ function calendarOg() {
 }
 
 // ---------------------------------------------------------------------------
+// Holiday lights (v2.T): OG card for /holiday-lights/ — OSM coastline + pins
+// ---------------------------------------------------------------------------
+
+function holidayLightsOg() {
+  const W = 1200, H = 630;
+  const data = JSON.parse(readFileSync(join(ROOT, "data", "holiday-lights-2026.json"), "utf8"));
+  const coast = JSON.parse(readFileSync(join(ROOT, "data", "geo", "monterey-bay-coast.osm.json"), "utf8"));
+  const towns = new Set(data.entries.map((e) => e.town)).size;
+  const { p, height } = projection({ minLon: -122.2, maxLon: -121.62, minLat: 36.5, maxLat: 37.16, width: 380, top: 40, left: 770 });
+  const lines = coast.ways.map((w) => `<path d="${path(w.map(([lon, lat]) => p([lat, lon])))}" fill="none" stroke="#4f8496" stroke-width="3" stroke-linejoin="round"/>`).join("");
+  const pins = data.entries.map((e) => {
+    const [x, y] = p([e.lat, e.lng]);
+    return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="8" fill="${data.categories[e.category].color}" stroke="${C.fg}" stroke-width="2"/>`;
+  }).join("");
+  const town = (name, lat, lon, anchor = "start", dx = 14) => {
+    const [x, y] = p([lat, lon]);
+    return label(x + (anchor === "start" ? dx : -dx), y + 6, name, { size: 18, anchor, fill: C.muted, weight: 600 });
+  };
+  return { W, H, svg: `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <rect width="${W}" height="${H}" fill="${C.bg}"/>
+  <rect x="740" y="0" width="${W - 740}" height="${H}" fill="${C.sea}"/>
+  ${lines}${pins}
+  ${town("Santa Cruz", 36.9741, -122.0308, "end")}
+  ${town("Monterey", 36.6002, -121.8947, "end")}
+  ${town("Salinas", 36.6777, -121.6555, "end")}
+  <rect x="0" y="0" width="${W}" height="9" fill="${C.brass}"/>
+  <text x="70" y="110" font-family="Barlow" font-weight="600" font-size="26" letter-spacing="5.2" fill="${C.brass}">MONTEREY &amp; SANTA CRUZ</text>
+  <text x="70" y="225" font-family="Bebas Neue" font-size="120" fill="${C.fg}">Holiday lights</text>
+  <text x="70" y="335" font-family="Bebas Neue" font-size="120" fill="${C.brass}">map 2026</text>
+  <text x="70" y="410" font-family="Barlow" font-size="32" fill="${C.fg}">${data.entries.length} spots in ${towns} towns</text>
+  <text x="70" y="456" font-family="Barlow" font-size="26" fill="${C.muted}">Tree lightings · drive-through · boat parades</text>
+  <text x="70" y="556" font-family="Barlow" font-weight="600" font-size="26" letter-spacing="2.4" fill="${C.brassSoft}">montereybayevents.com</text>
+  <text x="${W - 16}" y="${H - 14}" text-anchor="end" font-family="Barlow" font-size="14" fill="${C.muted}">Coastline © OpenStreetMap contributors (ODbL)</text>
+</svg>` };
+}
+
+// ---------------------------------------------------------------------------
 // Open Graph cards: 1200x630 crops of the primary visual
 // ---------------------------------------------------------------------------
 
@@ -642,6 +679,7 @@ const targets = [
     widths: [800, 1600],
   })),
   { name: "og-monterey-events-calendar", make: calendarOg, widths: [] },
+  { name: "og-holiday-lights", make: holidayLightsOg, widths: [] },
 ];
 
 const check = process.argv.includes("--check");

@@ -1,0 +1,367 @@
+---
+// /holiday-lights/ — Holiday Lights Map 2026 (v2.T, 2026-11-24).
+//
+// Every spot comes from data/holiday-lights-2026.json via src/data/holidayLights.ts:
+// one entry per display, tree lighting or parade, each confirmed for 2026 on the
+// organiser's or host's own page (linked on the card). Counts, the free list,
+// the kids list and the routes are all derived from that file, so adding or
+// removing an entry updates the whole page. No count appears in the title on
+// purpose (operator 2026-11-24): the number moves as spots are added.
+//
+// Routes name no drive times: holiday-weekend traffic makes any typical figure
+// wrong on exactly the night someone uses it.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import HolidayLightsMap from "../components/HolidayLightsMap.astro";
+import { pacificToday } from "../lib/isPast";
+import {
+  lights, LIGHTS_CATEGORIES, byTown, isOver, firstNight, lastNight, lightById, routeHref,
+  eventPageHref, directionsHref, type LightsEntry,
+} from "../data/holidayLights";
+
+const site = "https://montereybayevents.com";
+const path = "/holiday-lights/";
+const canonical = `${site}${path}`;
+const today = pacificToday();
+
+const groups = byTown();
+const towns = groups.length;
+const total = lights.length;
+const treeLightings = lights.filter((e) => e.category === "tree-lighting").length;
+const free = lights.filter((e) => e.free === true && !isOver(e, today));
+const kids = lights.filter((e) => e.kids && !isOver(e, today));
+const sparkys = lightById("sparkys-holiday-lights");
+const wonderfest = lightById("winter-wonderfest-monterey");
+const boardwalk = lightById("boardwalk-winter-wonderland");
+
+const routes = [
+  {
+    id: "route-monterey",
+    title: "Monterey: the wharf, the rink and Winter Wonderfest",
+    when: "Any Friday, Saturday or Sunday from 4 to 20 December",
+    stops: ["christmas-on-the-wharf", "ice-skating-by-the-bay", "winter-wonderfest-monterey"].map(lightById),
+    note: "Start at Old Fisherman's Wharf, where the Christmas on the Wharf celebration runs those weekends and the decorations stay lit to 10pm. Custom House Plaza and the rink are a short walk along the waterfront. Then drive to the Fairgrounds for Winter Wonderfest, open 5pm to 9pm on all nine of those nights. The rink's hours vary by day; check its page.",
+  },
+  {
+    id: "route-santa-cruz",
+    title: "Santa Cruz to Capitola on Saturday 5 December",
+    when: "Saturday 5 December, from 5pm",
+    stops: ["calvary-tree-lighting", "scyc-lighted-boat-parade", "capitola-holiday-extravaganza"].map(lightById),
+    note: "Three things happen within half an hour of each other, so pick two or catch the tail of each: Calvary Episcopal's tree-lighting party downtown from 5pm (countdown 5:30pm), the Santa Cruz Yacht Club's lighted boat parade at the harbour from 5:30pm, and Capitola Village, where the palm tree is lit at 5:30pm, the parade starts at 6pm and shops stay open to 8pm.",
+  },
+  {
+    id: "route-salinas-watsonville",
+    title: "Salinas to Watsonville on Saturday 28 November",
+    when: "Saturday 28 November, from 6pm",
+    stops: ["salinas-tree-for-peace", "sparkys-holiday-lights"].map(lightById),
+    note: "Watch the Tree For Peace lit at 1 Main St in Salinas at 6:30pm (parking in the Monterey Street garage is free all day), then drive to the Santa Cruz County Fairgrounds for the Sparky's Holiday Lights drive-through, open until 9pm. Book the $20 car ticket online; it is $25 at the gate.",
+  },
+];
+
+// ── FAQ — rendered visibly and emitted as FAQPage from the same array ───────
+const freeMonterey = free.filter((e) => ["Monterey", "Pacific Grove", "Carmel", "Seaside", "Marina", "Salinas"].includes(e.town));
+const freeSantaCruz = free.filter((e) => !freeMonterey.includes(e));
+const names = (es: LightsEntry[]) => es.map((e) => e.name.replace(/ \(\d+\w*\)$/, "")).join("; ");
+const faq: { q: string; a: string }[] = [
+  {
+    q: "Where are the best Christmas lights in Monterey?",
+    a: `The main displays in Monterey this year are Christmas on the Wharf at Old Fisherman's Wharf (decorations lit daily from 1 December to 3 January, 9am–10pm, free), Winter Wonderfest at the Monterey County Fairgrounds (a ticketed walk-through, 5–9pm on select nights to 27 December), and Christmas in the Adobes on 11 and 12 December, when the historic adobes of Old Monterey open from 5pm to 9pm. The Cannery Row tree is lit on 27 November and the Colton Hall tree on 4 December.`,
+  },
+  {
+    q: "Is there a drive-through Christmas lights display near Santa Cruz?",
+    a: `Yes: Sparky's Holiday Lights at the Santa Cruz County Fairgrounds in Watsonville, the only drive-through we found for 2026. ${sparkys.dates_text}. The drive-through runs 5:30pm to 9pm; it is $20 a car online and $25 at the gate. The Boardwalk's Holiday Lights Train is the other way to see lights from your seat: it leaves from the Boardwalk at 5pm and 6:30pm on select nights.`,
+  },
+  {
+    q: "Where can I see free holiday lights around Monterey Bay?",
+    a: `On the Monterey side: ${names(freeMonterey)}. On the Santa Cruz side: ${names(freeSantaCruz)}. Several more are likely free but their organisers do not say so, so we have not marked them.`,
+  },
+  {
+    q: "When is the Carmel tree lighting in 2026?",
+    a: `Friday 4 December 2026, in Devendorf Park on Ocean Avenue. Visit Carmel's listing runs the afternoon from 3pm to 7pm: Santa arrives by fire truck at 3:30pm, the menorah is lit at 4pm and the tree at about 5:30pm.`,
+  },
+];
+
+// ── Metadata + structured data ────────────────────────────────────────────
+const title = "Holiday Lights Map 2026 — Monterey & Santa Cruz Christmas Lights";
+const description =
+  "Tree lightings, drive-through lights, boat parades and Winter Wonderland on one map, from Carmel to Boulder Creek, with dates, prices and free spots.";
+const image = `${site}/maps/og-holiday-lights.png`;
+
+const itemUrl = (e: LightsEntry) => (e.event_page ? `${site}/event/${e.event_page}/` : `${canonical}#${e.id}`);
+const ordered = groups.flatMap((g) => g.entries);
+const eventNodes = ordered
+  .filter((e) => !e.event_page && !e.year_note && !isOver(e, today))
+  .map((e) => ({
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "@id": `${canonical}#${e.id}`,
+    name: e.name,
+    url: `${canonical}#${e.id}`,
+    startDate: firstNight(e),
+    endDate: lastNight(e),
+    eventStatus: "https://schema.org/EventScheduled",
+    eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+    ...(e.free === true ? { isAccessibleForFree: true } : {}),
+    location: {
+      "@type": "Place",
+      name: e.address.split(",")[0],
+      address: { "@type": "PostalAddress", streetAddress: e.address, addressLocality: e.town, addressRegion: "CA", addressCountry: "US" },
+      ...(e.geo_precision === "town" ? {} : { geo: { "@type": "GeoCoordinates", latitude: e.lat, longitude: e.lng } }),
+    },
+    sameAs: e.source_url,
+  }));
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Holiday lights around Monterey Bay, 2026",
+    url: canonical,
+    numberOfItems: ordered.length,
+    itemListElement: ordered.map((e, i) => ({ "@type": "ListItem", position: i + 1, name: e.name, url: itemUrl(e) })),
+  },
+  ...eventNodes,
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${site}/` },
+      { "@type": "ListItem", position: 2, name: "Events", item: `${site}/events/` },
+      { "@type": "ListItem", position: 3, name: "Holiday lights map", item: canonical },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  },
+];
+
+const embedSnippet = `<iframe src="${site}/holiday-lights/embed/" width="100%" height="520" style="border:0" loading="lazy" title="Monterey Bay holiday lights map 2026"></iframe>
+<p><a href="${canonical}">Monterey &amp; Santa Cruz holiday lights map 2026</a> by Monterey Bay Events</p>`;
+
+const h2 = "border-b border-border/70 pb-2 text-3xl text-brass";
+const p = "mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground";
+const link = "text-brass hover:underline";
+const meta = "mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground";
+const field = "mt-1 w-full border border-border bg-surface px-3 py-2 text-base text-foreground";
+const label = "block text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground";
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Map of holiday lights around Monterey Bay, 2026" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    {jsonLd.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  </Fragment>
+
+  <main class="mx-auto max-w-4xl px-4 py-10 sm:px-5 sm:py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <a href="/" class="hover:text-brass">Home</a>
+      <span aria-hidden="true"> / </span>
+      <a href="/events/" class="hover:text-brass">Events</a>
+      <span aria-hidden="true"> / </span>
+      <span class="text-foreground">Holiday lights map</span>
+    </nav>
+
+    <p class="eyebrow mt-6">Late November 2026 – 3 January 2027</p>
+    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl">
+      Christmas lights in Monterey &amp; Santa Cruz: <span class="text-brass">the 2026 map</span>
+    </h1>
+    <p class="mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+      {total} places to see holiday lights in {towns} towns around Monterey Bay this
+      season: {treeLightings} tree lightings between 27 November and 6 December, two lighted boat parades, the Sparky's drive-through in
+      Watsonville, Winter Wonderfest at the Monterey fairgrounds and the Boardwalk's
+      Winter Wonderland in Santa Cruz. {free.length} of them are free.
+    </p>
+    <p class={p}>
+      Every spot is on the map only because its organiser, city or host has published
+      it for 2026; each card links to that page. Where an organiser has not published a
+      price or a time, the card says so rather than guess. Filter by town, type, free,
+      or what's on tonight.
+    </p>
+
+    <section class="mt-8" aria-label="Map">
+      <HolidayLightsMap />
+    </section>
+
+    <div class="mt-12 grid gap-4 sm:grid-cols-2">
+      <section class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+        <h2 class="text-2xl text-brass">Free lights</h2>
+        <ul class="mt-3 space-y-2 text-sm">
+          {free.map((e) => (
+            <li><a href={`#${e.id}`} class="text-foreground hover:text-brass">{e.name}</a> <span class="text-muted-foreground">— {e.town}, {e.dates_text}</span></li>
+          ))}
+        </ul>
+      </section>
+      <section class="border-l-2 border-brass bg-surface/60 px-5 py-5">
+        <h2 class="text-2xl text-brass">Best for kids</h2>
+        <p class="mt-2 text-xs text-muted-foreground">Where the organiser lists something for children.</p>
+        <ul class="mt-3 space-y-2 text-sm">
+          {kids.map((e) => (
+            <li><a href={`#${e.id}`} class="text-foreground hover:text-brass">{e.name}</a> <span class="text-muted-foreground">— {e.kids}</span></li>
+          ))}
+        </ul>
+      </section>
+    </div>
+
+    <section class="mt-14">
+      <h2 class={h2}>Three evenings out</h2>
+      <p class={p}>
+        Each route is set for a night when every stop on it is on. The directions link
+        opens Google Maps with the stops in order.
+      </p>
+      {routes.map((r) => (
+        <article id={r.id} class="mt-6 border-l-2 border-border/80 bg-surface/60 px-5 py-4">
+          <h3 class="text-xl leading-tight text-foreground">{r.title}</h3>
+          <p class="mt-1 text-[0.65rem] uppercase tracking-[0.14em] text-brass">{r.when}</p>
+          <ol class="mt-3 list-decimal space-y-1 pl-5 text-sm text-foreground">
+            {r.stops.map((s) => <li><a href={`#${s.id}`} class="hover:text-brass">{s.name}</a> <span class="text-muted-foreground">— {s.address}</span></li>)}
+          </ol>
+          <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{r.note}</p>
+          <p class="mt-3"><a href={routeHref(r.stops)} class={link} target="_blank" rel="noopener">Open this route in Google Maps →</a></p>
+        </article>
+      ))}
+    </section>
+
+    <section class="mt-14">
+      <h2 class={h2}>Every spot, town by town</h2>
+      {groups.map((g) => (
+        <section class="mt-10" data-light-group={g.town}>
+          <h3 class="text-2xl text-foreground">{g.town} <span class="text-base text-muted-foreground">· {g.entries.length}</span></h3>
+          <div class="mt-4 grid gap-3">
+            {g.entries.map((e) => (
+              <article id={e.id} data-light={e.id} class="scroll-mt-24 border-l-4 bg-surface/60 px-5 py-4" style={`border-color:${LIGHTS_CATEGORIES[e.category].color}`}>
+                <h4 class="text-xl leading-tight text-foreground">
+                  {eventPageHref(e) ? <a href={eventPageHref(e)} class="hover:text-brass">{e.name}</a> : e.name}
+                </h4>
+                <div class={meta}>
+                  <span>{LIGHTS_CATEGORIES[e.category].label}</span>
+                  {e.free === true && <span class="text-brass">Free</span>}
+                  {isOver(e, today) && <span class="text-brass">Ended</span>}
+                </div>
+                <dl class="mt-3 grid gap-x-4 gap-y-1 text-sm sm:grid-cols-[7rem_1fr]">
+                  <dt class="text-muted-foreground">When</dt><dd class="text-foreground">{e.dates_text}{e.hours && `, ${e.hours}`}</dd>
+                  <dt class="text-muted-foreground">Where</dt><dd class="text-foreground">{e.address}</dd>
+                  <dt class="text-muted-foreground">Cost</dt><dd class="text-foreground">{e.cost ?? "Not published by the organiser"}</dd>
+                  {e.parking_tip && <Fragment><dt class="text-muted-foreground">Parking</dt><dd class="text-foreground">{e.parking_tip}</dd></Fragment>}
+                </dl>
+                {e.year_note && <p class="mt-2 text-xs text-muted-foreground">Note: {e.year_note}</p>}
+                {e.geo_precision === "town" && <p class="mt-2 text-xs text-muted-foreground">The map pin marks the town, not the exact spot.</p>}
+                <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                  <a href={directionsHref(e)} class={link} target="_blank" rel="noopener">Directions</a>
+                  <a href={e.source_url} class={link} rel="noopener">Organiser's page</a>
+                  {eventPageHref(e) && <a href={eventPageHref(e)} class={link}>Full listing</a>}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </section>
+
+    <section class="mt-14">
+      <h2 class={h2}>Not on the map yet</h2>
+      <p class={p}>
+        Decorated neighbourhood streets: we list one only when a local news outlet has
+        reported it for this year, and none had by {lights[0]!.last_verified.slice(8)} November.
+        Also left off: displays whose 2026 dates we could only find on aggregator sites or
+        undated pages, and daytime holiday parades. If you know a spot, tell us below.
+      </p>
+    </section>
+
+    <section class="mt-14 max-w-3xl">
+      <h2 class={h2}>Common questions</h2>
+      <dl class="mt-6 space-y-6">
+        {faq.map((f) => (
+          <div>
+            <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
+            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section id="suggest" class="mt-14 max-w-3xl scroll-mt-24">
+      <h2 class={h2}>Suggest a spot</h2>
+      <p class={p}>
+        Know a display, a decorated street or a lighting we've missed? Send it in. We
+        check every suggestion against the organiser or a local news report before it
+        goes on the map, so a link helps.
+      </p>
+      <form id="suggest-form" method="post" action="/api/suggest-spot" class="mt-6 grid gap-4">
+        <label class={label}>What is it? <input name="name" required maxlength="200" class={field} /></label>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class={label}>Town <input name="town" required maxlength="100" class={field} /></label>
+          <label class={label}>Street or address <input name="address" maxlength="300" class={field} /></label>
+        </div>
+        <label class={label}>Dates and times, if you know them <input name="dates" maxlength="300" class={field} /></label>
+        <label class={label}>Link (organiser, city or news page) <input name="link" type="url" maxlength="500" class={field} /></label>
+        <label class={label}>Anything else <textarea name="notes" rows="3" maxlength="2000" class={field}></textarea></label>
+        <label class={label}>Your email, if you'd like a reply (optional) <input name="email" type="email" maxlength="200" class={field} /></label>
+        <label class="hidden" aria-hidden="true">Leave empty <input name="website" tabindex="-1" autocomplete="off" /></label>
+        <button type="submit" class="justify-self-start border border-brass px-5 py-2 text-sm uppercase tracking-[0.14em] text-brass hover:bg-brass hover:text-background">Send suggestion</button>
+        <p id="suggest-status" class="text-sm text-muted-foreground" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="mt-14 max-w-3xl">
+      <h2 class={h2}>Put this map on your site</h2>
+      <p class={p}>
+        Schools, inns, neighbourhood groups and newsrooms are welcome to embed the map.
+        Copy this code; it stays up to date as we add spots.
+      </p>
+      <textarea readonly rows="4" class="mt-4 w-full border border-border bg-surface p-3 font-mono text-xs text-foreground" aria-label="Embed code" onclick="this.select()">{embedSnippet}</textarea>
+    </section>
+
+    <section class="mt-16 border-t border-border/70 pt-8">
+      <h2 class="text-2xl text-brass">More around the holidays</h2>
+      <div class="mt-4 grid gap-2 sm:grid-cols-2">
+        <a href="/events/december/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">December events on the Central Coast</a>
+        <a href="/thanksgiving/" class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Thanksgiving weekend, day by day</a>
+        <a href={`/event/${wonderfest.event_page}/`} class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Winter Wonderfest Monterey: nights and tickets</a>
+        <a href={`/event/${boardwalk.event_page}/`} class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">Boardwalk Winter Wonderland</a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById("suggest-form") as HTMLFormElement | null;
+  const status = document.getElementById("suggest-status");
+  if (form && status) {
+    if (new URLSearchParams(location.search).has("suggested")) status.textContent = "Thanks — we'll check it and add it if it holds up.";
+    form.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      status.textContent = "Sending…";
+      try {
+        const r = await fetch(form.action, { method: "POST", body: new FormData(form), headers: { Accept: "application/json" } });
+        const j = await r.json().catch(() => ({}));
+        if (r.ok) { form.reset(); status.textContent = "Thanks — we'll check it and add it if it holds up."; }
+        else status.textContent = j.error ?? "That didn't go through. Please try again later.";
+      } catch {
+        status.textContent = "That didn't go through. Please try again later.";
+      }
+    });
+  }
+</script>

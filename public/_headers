@@ -21,3 +21,9 @@
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
+
+# /holiday-lights/embed/ is offered for other sites to iframe (v2.T): lift the
+# site-wide DENY for that one path. Every other page stays unframeable.
+/holiday-lights/embed/
+  ! X-Frame-Options
+  Content-Security-Policy: frame-ancestors *

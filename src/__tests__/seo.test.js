@@ -304,9 +304,12 @@ describe('sitemap (built output)', () => {
       '/events/december/',
       '/events/pacific-grove/',
       '/thanksgiving/',
+      '/holiday-lights/',
     ]) {
       expect(xml, path).toContain(`<loc>https://montereybayevents.com${path}</loc>`);
     }
+    // The iframe-only map is noindex and must stay out (v2.T).
+    expect(xml).not.toContain('/holiday-lights/embed/');
   });
 
   it.skipIf(!built)('lists every generated event page, apex host, trailing slash', async () => {

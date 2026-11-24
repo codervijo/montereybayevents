@@ -17,6 +17,7 @@ const GUIDE_LASTMOD = {
   '/monterey-bay-card-show/': '2026-10-11',
   '/events/pacific-grove/': '2026-11-01',
   '/thanksgiving/': '2026-11-24',
+  '/holiday-lights/': '2026-11-24',
 };
 
 // <image:image> entries for the pages whose point is an image — the maps and
@@ -42,6 +43,8 @@ export default defineConfig({
   build: { format: 'directory' },
   integrations: [
     sitemap({
+      // The iframe-only map (v2.T) is noindex; keep it out of the sitemap.
+      filter: (page) => !page.includes('/holiday-lights/embed/'),
       // Per-URL <lastmod>, and ONLY for pages whose content we know changed —
       // `updated` on a regional event row, set by hand when that row is
       // substantively rewritten. Every other URL ships with no lastmod at all.
