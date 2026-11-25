@@ -1,0 +1,62 @@
+---
+// /new-years-eve/monterey/ (v2.U, 2026-11-25). Monterey Peninsula and Salinas.
+// Listings: data/nye-2026.json. Prose facts below are each from the source
+// linked beside them, checked 2026-11-25.
+import NyeTownPage from "../../components/NyeTownPage.astro";
+
+const FNM = "https://www.firstnightmonterey.org/";
+const FNM_FACTS = "https://www.firstnightmonterey.org/FNM/FastFacts.php";
+const FNM_PARK = "https://www.firstnightmonterey.org/FNM/ParkRide.php";
+const RINK = "/event/ice-skating-by-the-bay/";
+
+const props = {
+  region: "monterey" as const,
+  place: "Monterey",
+  title: "New Year's Eve 2026 in Monterey: Events, Fireworks & Things to Do",
+  description:
+    "First Night Monterey, the Portola's speakeasy party, a brass band at the Golden State and a Carmel tribute bash: New Year's Eve 2026 on the Peninsula, checked.",
+  h1: `New Year's Eve in <span class="text-brass">Monterey</span>`,
+  eyebrow: "Thursday 31 December 2026 · Monterey, Carmel, Pacific Grove, Seaside, Carmel Valley, Salinas",
+  intro: [
+    `First Night Monterey is the night most people mean: an alcohol-free arts festival across downtown Monterey from 3pm to midnight, one button for 50-plus performances, with an indoor countdown finale from 11:15pm. For a grown-up party, the Portola Hotel's Countdown Club (21+, 7pm to 12:30am) includes dinner and an open bar. Don't expect fireworks: we found no permitted show anywhere on the Peninsula, and First Night's countdown is indoors.`,
+    `Everything listed here is confirmed for 2026 on the organiser's own page, linked on each card with the date we checked. Hotels and restaurants post New Year's plans late; we re-check every listing on 15 and 28 December and add what has been announced.`,
+  ],
+  picks: [
+    { label: "Best free", name: "Christmas on the Wharf", href: "/holiday-lights/#christmas-on-the-wharf", why: "Old Fisherman's Wharf stays decorated every day to 3 January; free to walk. No free countdown is confirmed for 2026." },
+    { label: "Best for families", name: "First Night Monterey", href: "#first-night-monterey", why: "Alcohol-free, 3pm to midnight; under-6s free, ages 6–15 from $15." },
+    { label: "Best party", name: "The Countdown Club, Portola Hotel", href: "#portola-countdown-club", why: "21+, 7pm–12:30am: open bar, buffet, live band, midnight toast. $220–250." },
+    { label: "Best dinner", name: "The Countdown Club, Portola Hotel", href: "#portola-countdown-club", why: "The only confirmed ticket that includes a dinner. No Peninsula restaurant had posted a 2026 New Year's menu by 25 November." },
+  ],
+  allNight: [
+    { name: "Ice Skating by the Bay", href: RINK, when: "Custom House Plaza. On New Year's Eve and New Year's Day the rink keeps its holiday hours, 12pm to 8pm. $20 adults, $18 for 12 and under, plus $5 skate rental." },
+    { name: "Christmas on the Wharf", href: "/holiday-lights/#christmas-on-the-wharf", when: "Old Fisherman's Wharf, 201 Washington St. Decorated daily to Sunday 3 January; free. The wharf does not publish hours for the lights." },
+  ],
+  newYearsDay: [
+    { text: `The rink opens 12pm to 8pm and the wharf is still decorated. California State Parks has announced its First Day Hikes for 1 January 2027 statewide, but no Monterey County hike was listed when we checked; when one is, it goes here.`, sources: [{ href: "https://www.parks.ca.gov/FirstDayHikes", label: "California State Parks: First Day Hikes" }] },
+    { text: `The Monterey Bay Aquarium describes itself as open every day except Christmas Day; it had not posted New Year's Day hours by 25 November, so check its schedule before you go.`, sources: [{ href: "https://www.montereybayaquarium.org/visit/schedule", label: "Monterey Bay Aquarium schedule" }] },
+  ],
+  gettingHome: [
+    { text: `First Night's park-and-ride page says MST buses are free to anyone wearing a First Night button. A free shuttle runs from Del Monte Center (Macy's lower lot) every 15 minutes from 3:15pm to the downtown transit centre at Alvarado and Pearl, and the last bus back leaves at 12:30am. Monterey-Salinas Transit had not posted its New Year's Eve or New Year's Day schedule by 25 November.`, sources: [{ href: FNM_PARK, label: "First Night: buses and parking" }, { href: "https://mst.org/news/", label: "MST news" }] },
+    { text: `The two 21+ parties both make it easy not to drive: the Portola sells room packages with two party tickets, and Le Rouge is at a hotel with free parking on site.`, sources: [{ href: "https://www.portolahotel.com/offers/nye-package", label: "Portola NYE package" }, { href: "https://lerougenye.com", label: "Le Rouge" }] },
+  ],
+  faq: [
+    { q: "What is there to do in Monterey on New Year's Eve?", a: "First Night Monterey runs from 3pm to midnight across downtown, with 50+ performances on one button and an indoor countdown from 11:15pm. The Portola Hotel's Countdown Club is a 21+ speakeasy party from 7pm to 12:30am. The Dirty Dozen Brass Band plays the Golden State Theatre at 7pm, PacRep's Sonny & Cher tribute bash is at the Golden Bough in Carmel, and Le Rouge is a 21+ party from 9pm in Sand City. The ice rink is open 12pm to 8pm.", sources: [{ href: FNM_FACTS, label: "First Night fast facts" }] },
+    { q: "Are there fireworks in Monterey on New Year's Eve?", a: "No. We found no permitted New Year's Eve fireworks show anywhere on the Monterey Peninsula for 2026, and First Night's pages mention none: its finale is an indoor countdown from 11:15pm. Monterey police have said fireworks of every kind are illegal in the city.", sources: [{ href: FNM_FACTS, label: "First Night fast facts" }, { href: "https://kioncentralcoast.com/?p=58604", label: "KION: Monterey police on fireworks" }] },
+    { q: "Are there free New Year's Eve events in Monterey?", a: "No free countdown is confirmed for 2026. First Night is free for children 5 and under (adults $30–35, ages 6–15 $15–20), and Christmas on the Wharf's decorations are free to walk every day to 3 January." },
+    { q: "What's kid-friendly on New Year's Eve in Monterey?", a: "First Night Monterey: it is alcohol-free, runs from 3pm, and children 5 and under get in free. The rink in Custom House Plaza is open 12pm to 8pm. The MY Museum's Noon Year's Eve has not been announced for 2026; we will add it if it is." },
+    { q: "What's open on New Year's Day in Monterey?", a: "The rink (12pm to 8pm) and the wharf's decorations. The aquarium says it is open every day except Christmas but had not posted New Year's Day hours by 25 November. No First Day Hike in Monterey County was listed yet." },
+  ],
+  skipped:
+    "Not listed because nothing on the organiser's own site confirms 2026 yet: Monterey Plaza Hotel, InterContinental The Clement, Hyatt Regency, Carmel Valley Ranch, Bernardus Lodge, Quail Lodge, Pacific's Edge, Aubergine, the Shearwater Tavern's Decades Party, MY Museum's Noon Year's Eve and the Salinas library's.",
+  related: [
+    { href: "/new-years-eve/", label: "New Year's Eve 2026 around Monterey Bay" },
+    { href: "/new-years-eve/santa-cruz/", label: "New Year's Eve in Santa Cruz: shows, parties and dinners" },
+    { href: "/event/first-night-monterey/", label: "First Night Monterey: buttons and venues" },
+    { href: "/holiday-lights/", label: "Holiday lights map: displays open to 3 January" },
+    { href: "/events/december/", label: "Everything on the Central Coast in December" },
+    { href: "/events/pacific-grove/", label: "Events in Pacific Grove" },
+  ],
+};
+---
+
+<NyeTownPage {...props} />

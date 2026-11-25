@@ -279,6 +279,23 @@ const dateLabel = (e: RegionalEvent) => e.dateText || DATE_TBA;
       )
     }
     {
+      monthKey === "december" && (
+        <a
+          href="/new-years-eve/"
+          class="mt-4 block border-l-2 border-brass bg-surface/60 px-6 py-6 transition-colors hover:bg-surface"
+        >
+          <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+            Thursday 31 December
+          </p>
+          <p class="mt-2 text-2xl leading-tight text-brass">New Year's Eve 2026 →</p>
+          <p class="mt-2 text-base leading-relaxed text-muted-foreground">
+            First Night Monterey, hotel parties, Santa Cruz shows and dinners, and
+            what's open on New Year's Day, in Monterey and Santa Cruz.
+          </p>
+        </a>
+      )
+    }
+    {
       hasLagunaSeca && (
         <a
           href="/laguna-seca/camping/"

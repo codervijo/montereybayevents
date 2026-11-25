@@ -88,7 +88,13 @@ describe('canonicals — apex host, trailing slash (CHECK_161)', () => {
     for (const p of pageFiles) {
       // 404 is noindex by design and needs no canonical.
       if (p[p.length - 1] === '404.astro') continue;
-      expect(read(...p), p.join('/')).toMatch(/rel="canonical"/);
+      const src = read(...p);
+      // v2.U: the NYE town pages render NyeTownPage, which emits the canonical.
+      if (/<NyeTownPage\b/.test(src)) {
+        expect(read('src', 'components', 'NyeTownPage.astro')).toMatch(/rel="canonical"/);
+        continue;
+      }
+      expect(src, p.join('/')).toMatch(/rel="canonical"/);
     }
   });
 

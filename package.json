@@ -17,6 +17,7 @@
     "og:check": "node --experimental-strip-types scripts/gen-og.mjs --check",
     "maps": "node --experimental-strip-types scripts/gen-maps.mjs",
     "maps:check": "node --experimental-strip-types scripts/gen-maps.mjs --check",
+    "nye:reverify": "node scripts/nye-reverify.mjs",
     "popups:probe": "node scripts/popups/probe.mjs",
     "popups:discover": "node --experimental-strip-types scripts/popups/discover.mjs",
     "popups:queue": "node scripts/popups/review.mjs list"

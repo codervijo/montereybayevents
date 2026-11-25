@@ -155,6 +155,13 @@ targets.push({
   }),
 });
 
+// New Year's Eve 2026 (v2.U): hub + two town pages.
+targets.push(
+  { name: "nye", svg: card({ kicker: "Thursday 31 December 2026", title: "New Year's Eve", meta: "Monterey & Santa Cruz: parties, dinners, family countdowns" }) },
+  { name: "nye-monterey", svg: card({ kicker: "New Year's Eve 2026", title: "Monterey", meta: "First Night, galas, dinners and New Year's Day" }) },
+  { name: "nye-santa-cruz", svg: card({ kicker: "New Year's Eve 2026", title: "Santa Cruz", meta: "Shows, parties, dinners and New Year's Day" }) },
+);
+
 // Rows carrying existingSlug / hubHref have no /event/ page of their own —
 // they link to a Car Week page or a hub — so they get no card.
 for (const e of regionalEvents.filter((e) => !e.existingSlug && !e.hubHref)) {

@@ -1,0 +1,95 @@
+---
+// NYE listings (v2.U): time-ordered cards with a client-side tag filter.
+// Every card is server-rendered; the filter only hides cards, so the full list
+// is in the raw HTML for crawlers and for anyone without JavaScript.
+import { clock, FILTERS, type NyeEntry } from "../data/nye";
+
+interface Props {
+  entries: NyeEntry[];
+  /** Unique per page section, so two lists on one page filter independently. */
+  id: string;
+}
+const { entries, id } = Astro.props;
+
+const card = "border-l-2 border-border/80 bg-surface/60 px-5 py-4 transition-colors hover:border-brass";
+const meta =
+  "mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground";
+const link = "text-brass hover:underline";
+const when = (e: NyeEntry) => (e.start ? (e.end ? `${clock(e.start)}–${clock(e.end)}` : `From ${clock(e.start)}`) : "Time not published");
+const filters = FILTERS;
+---
+
+<div data-nye-list={id}>
+  {entries.length > 1 && (
+    <div class="mt-6 flex flex-wrap gap-2" role="group" aria-label="Filter listings">
+      <button type="button" data-filter="" aria-pressed="true" class="nye-filter">All</button>
+      {filters.map((f) => (
+        <button type="button" data-filter={f.tag} aria-pressed="false" class="nye-filter">{f.label}</button>
+      ))}
+    </div>
+  )}
+  <p class="mt-3 text-sm text-muted-foreground" data-nye-empty hidden>Nothing confirmed for 2026 in this list matches that filter yet.</p>
+  <div class="mt-4 grid gap-3">
+    {entries.map((e) => (
+      <article class={card} id={e.id} data-tags={e.tags.join(" ")}>
+        <h3 class="text-xl leading-tight text-foreground">
+          {e.event_page ? <a href={`/event/${e.event_page}/`} class="transition-colors hover:text-brass">{e.name}</a> : e.name}
+        </h3>
+        <div class={meta}>
+          <span>{when(e)}</span>
+          <span aria-hidden="true">·</span>
+          <span>{e.venue}, {e.town}</span>
+          {e.ages && <span aria-hidden="true">·</span>}
+          {e.ages && <span>{e.ages}</span>}
+          <span aria-hidden="true">·</span>
+          <span class="text-brass">{e.free ? "Free" : e.price ?? "Price not published"}</span>
+        </div>
+        <p class="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+          {e.note} {e.hours_text}
+        </p>
+        <p class="mt-2 text-xs text-muted-foreground">
+          {e.address} ·{" "}
+          {e.ticket_url && e.ticket_url !== e.source_url && <Fragment><a href={e.ticket_url} class={link} rel="noopener">Tickets</a> · </Fragment>}
+          <a href={e.source_url} class={link} rel="noopener">Source</a> · checked {e.last_verified}
+        </p>
+      </article>
+    ))}
+  </div>
+</div>
+
+<style>
+  .nye-filter {
+    border: 1px solid var(--color-border, currentColor);
+    padding: 0.4rem 0.9rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    min-height: 44px;
+  }
+  .nye-filter[aria-pressed="true"] {
+    border-color: var(--color-brass, currentColor);
+    color: var(--color-brass, currentColor);
+  }
+</style>
+
+<script>
+  for (const list of document.querySelectorAll<HTMLElement>("[data-nye-list]")) {
+    const buttons = list.querySelectorAll<HTMLButtonElement>("[data-filter]");
+    const cards = list.querySelectorAll<HTMLElement>("article[data-tags]");
+    const empty = list.querySelector<HTMLElement>("[data-nye-empty]");
+    for (const b of buttons) {
+      b.addEventListener("click", () => {
+        const tag = b.dataset.filter ?? "";
+        for (const x of buttons) x.setAttribute("aria-pressed", String(x === b));
+        let shown = 0;
+        for (const c of cards) {
+          const on = !tag || (c.dataset.tags ?? "").split(" ").includes(tag);
+          c.hidden = !on;
+          if (on) shown++;
+        }
+        if (empty) empty.hidden = shown > 0;
+      });
+    }
+  }
+</script>

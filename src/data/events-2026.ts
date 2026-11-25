@@ -1644,6 +1644,11 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "Monterey's New Year's Eve arts festival, held across downtown on December 31.",
+    guideLink: {
+      href: "/new-years-eve/monterey/",
+      label: "New Year's Eve 2026 in Monterey",
+      blurb: "First Night and everything else on the Peninsula that night: hotel parties, concerts, getting home, and what's open on New Year's Day.",
+    },
   },
 
   // ── Santa Cruz County ────────────────────────────────────────────────────

@@ -1,0 +1,60 @@
+---
+// /new-years-eve/santa-cruz/ (v2.U, 2026-11-25). Santa Cruz County.
+// Listings: data/nye-2026.json. Prose facts below are each from the source
+// linked beside them, checked 2026-11-25.
+import NyeTownPage from "../../components/NyeTownPage.astro";
+
+const BOARDWALK = "/event/santa-cruz-beach-boardwalk-winter-wonderland/";
+const LOOKOUT_FIREWORKS =
+  "https://lookout.co/santa-cruz-county-has-some-of-the-strictest-fireworks-laws-in-california-heres-what-you-need-to-know-ahead-of-july-fourth/story";
+
+const props = {
+  region: "santa-cruz" as const,
+  place: "Santa Cruz",
+  title: "New Year's Eve 2026 in Santa Cruz: Events, Fireworks & Things to Do",
+  description:
+    "The Catalyst, Moe's Alley, China Cats at the Vets Hall, Chaminade and Shadowbrook: New Year's Eve 2026 in Santa Cruz County, each checked with the organiser.",
+  h1: `New Year's Eve in <span class="text-brass">Santa Cruz</span>`,
+  eyebrow: "Thursday 31 December 2026 · Santa Cruz, Capitola, Aptos, Soquel, Scotts Valley, Watsonville",
+  intro: [
+    `Santa Cruz rings in the year with live music. The Catalyst's party (16+, 7:30pm to 1am) is the biggest night downtown; the China Cats play their annual Grateful Dead ball at the Veterans Hall; Moe's Alley, Chaminade and Seascape Golf Club all have 21+ parties from 9pm. For dinner, Shadowbrook in Capitola opens New Year's Eve bookings on 1 December. There are no fireworks: they are banned in the city, the county and on the state beaches.`,
+    `Everything listed here is confirmed for 2026 on the organiser's own page, linked on each card with the date we checked. Venues post New Year's plans late; we re-check every listing on 15 and 28 December and add what has been announced.`,
+  ],
+  picks: [
+    { label: "Best free", name: "Farley's Christmas Wonderland", href: "/holiday-lights/#farleys-christmas-wonderland", why: "A home display on Seaview Ave, lit 5:30–8:30pm through 1 January except on rainy nights; no ticket, the Farleys ask for donations. No free countdown is confirmed for 2026." },
+    { label: "Best for families", name: "Boardwalk Winter Wonderland", href: BOARDWALK, why: "Free entry, rides extra, on select days to 3 January. No family countdown is confirmed for 2026; the Catalyst admits 16+." },
+    { label: "Best party", name: "New Year's Eve at The Catalyst", href: "#catalyst-nye", why: "7:30pm–1am, 16+: a Bruno Mars tribute, a live band, a DJ and a midnight toast." },
+    { label: "Best dinner", name: "Shadowbrook, Capitola", href: "#shadowbrook-nye", why: "New Year's Eve reservations open Tuesday 1 December at 10am." },
+  ],
+  allNight: [
+    { name: "Santa Cruz Beach Boardwalk Winter Wonderland", href: BOARDWALK, when: "Free entry (rides extra), on select days from Thursday 26 November to Sunday 3 January. The Boardwalk publishes each day's hours on its own calendar; we could not confirm whether it opens on 31 December or 1 January, so check before you go." },
+    { name: "Farley's Christmas Wonderland", href: "/holiday-lights/#farleys-christmas-wonderland", when: "108 Seaview Ave, Santa Cruz. Lit nightly 5:30–8:30pm to Friday 1 January, its last night; closed on rainy nights." },
+  ],
+  newYearsDay: [
+    { text: `Farley's has its last night on 1 January, and the Boardwalk's Winter Wonderland runs on select days to 3 January. California State Parks has announced First Day Hikes for 1 January 2027 statewide, but no Santa Cruz County hike was listed when we checked; when one is, it goes here. The Santa Cruz polar plunge is not a New Year's event: the 2027 one is in March.`, sources: [{ href: "https://www.parks.ca.gov/FirstDayHikes", label: "California State Parks: First Day Hikes" }] },
+  ],
+  gettingHome: [
+    { text: `Santa Cruz METRO had not posted New Year's Eve or New Year's Day service changes by 25 November; its service alerts page is where they will appear.`, sources: [{ href: "https://scmetro.org/rider-info/service-alerts/", label: "Santa Cruz METRO service alerts" }] },
+    { text: `If you would rather not drive home, Chaminade sells an overnight package with a party ticket and a room, from $585.`, sources: [{ href: "https://www.chaminade.com/santa-cruz-restaurants/new-years-at-chaminade/", label: "Chaminade New Year's Eve" }] },
+  ],
+  faq: [
+    { q: "What is there to do in Santa Cruz on New Year's Eve?", a: "The Catalyst's party (16+, 7:30pm to 1am) with a Bruno Mars tribute, a live band and a DJ; China Cats' Grateful Dead New Year's ball at the Veterans Hall from 9pm; 21+ parties at Moe's Alley, Chaminade and Seascape Golf Club in Aptos, all from 9pm; and dinner at Shadowbrook in Capitola, bookable from 1 December." },
+    { q: "Are there fireworks in Santa Cruz on New Year's Eve?", a: "No. We found no permitted New Year's Eve fireworks show anywhere in Santa Cruz County for 2026. The City of Santa Cruz and the unincorporated county ban all fireworks, including \"safe and sane\" ones, and state beaches prohibit them. Watsonville allows safe and sane fireworks only from 1 to 5 July.", sources: [{ href: LOOKOUT_FIREWORKS, label: "Lookout Santa Cruz: county fireworks rules" }] },
+    { q: "Are there free New Year's Eve events in Santa Cruz?", a: "No free countdown is confirmed for 2026. Farley's Christmas Wonderland on Seaview Ave is lit 5:30–8:30pm through 1 January, with no ticket (the family asks for donations), and entry to the Boardwalk's Winter Wonderland is free on the days it opens (rides extra)." },
+    { q: "What's kid-friendly on New Year's Eve in Santa Cruz?", a: "Nothing family-specific is confirmed for 2026 yet: the library and children's museum Noon Year's events we found were last year's. The Catalyst admits 16 and up; every other party listed is 21+. Farley's lights and the Boardwalk's Winter Wonderland are the family options; check the Boardwalk's calendar for 31 December." },
+    { q: "What's open on New Year's Day in Santa Cruz?", a: "Shadowbrook in Capitola is open, with reservations from 2 December. Farley's lights have their last night, and the Boardwalk's Winter Wonderland runs on select days to 3 January. No First Day Hike in Santa Cruz County was listed yet." },
+  ],
+  skipped:
+    "Not listed because nothing on the organiser's own site confirms 2026 yet: Hotel Paradox, Dream Inn, Inn at Pasatiempo, La Bahia, Vino by the Sea, the Rio Theatre, Kuumbwa, Lumina, the 418 Project and the Noon Year's events at the libraries and the Children's Museum of Discovery. The Crow's Nest lists a New Year's Eve party for \"Thursday December 31st\" with no year, and the Santa Cruz KOA's \"Welcome 2027\" party could not be checked; both are on our 15 December re-check.",
+  related: [
+    { href: "/new-years-eve/", label: "New Year's Eve 2026 around Monterey Bay" },
+    { href: "/new-years-eve/monterey/", label: "New Year's Eve in Monterey: First Night and the parties" },
+    { href: BOARDWALK, label: "Boardwalk Winter Wonderland" },
+    { href: "/holiday-lights/", label: "Holiday lights map: displays open to 3 January" },
+    { href: "/events/december/", label: "Everything on the Central Coast in December" },
+    { href: "/thanksgiving/", label: "Thanksgiving weekend around Monterey Bay" },
+  ],
+};
+---
+
+<NyeTownPage {...props} />

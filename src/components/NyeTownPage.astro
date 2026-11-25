@@ -1,0 +1,200 @@
+---
+// New Year's Eve town page (v2.U): /new-years-eve/monterey/ and /santa-cruz/.
+// Same shape as /thanksgiving/: an "All night" block for things that run all
+// evening and beyond, then the night's listings in start-time order. Listings
+// come from data/nye-2026.json (one organiser source each); the page-specific
+// prose, quick picks and FAQ come in as props from the page file.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NyeListings from "./NyeListings.astro";
+import { forRegion, eventJsonLd, NYE_DATE, NYD_DATE, NYE_PAGES, type NyeRegion } from "../data/nye";
+
+type Source = { href: string; label: string };
+type Para = { text: string; sources?: Source[] };
+interface Props {
+  region: NyeRegion;
+  place: string;
+  title: string;
+  description: string;
+  h1: string;
+  eyebrow: string;
+  intro: string[];
+  picks: { label: string; name: string; href: string; why: string }[];
+  allNight: { name: string; href: string; when: string }[];
+  gettingHome: Para[];
+  newYearsDay: Para[];
+  faq: { q: string; a: string; sources?: Source[] }[];
+  skipped: string;
+  related: { href: string; label: string }[];
+}
+const p = Astro.props;
+
+const site = "https://montereybayevents.com";
+const path = NYE_PAGES[p.region];
+const canonical = `${site}${path}`;
+const all = forRegion(p.region);
+const eve = all.filter((e) => e.date === NYE_DATE);
+const day = all.filter((e) => e.date === NYD_DATE);
+const image = `${site}/og/nye-${p.region}.png`;
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: p.title,
+    url: canonical,
+    numberOfItems: all.length,
+    itemListElement: all.map((e, i) => ({ "@type": "ListItem", position: i + 1, name: e.name, url: `${canonical}#${e.id}` })),
+  },
+  ...all.map((e) => eventJsonLd(e, site)),
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${site}/` },
+      { "@type": "ListItem", position: 2, name: "New Year's Eve", item: `${site}${NYE_PAGES.hub}` },
+      { "@type": "ListItem", position: 3, name: p.place, item: canonical },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: p.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  },
+];
+
+const h2 = "border-b border-border/70 pb-2 text-3xl text-brass";
+const para = "mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground";
+const link = "text-brass hover:underline";
+const card = "border-l-2 border-border/80 bg-surface/60 px-5 py-4 transition-colors hover:border-brass";
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{p.title}</title>
+    <meta name="description" content={p.description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={p.title} />
+    <meta property="og:description" content={p.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`New Year's Eve 2026 in ${p.place}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={p.title} />
+    <meta name="twitter:description" content={p.description} />
+    <meta name="twitter:image" content={image} />
+    {jsonLd.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  </Fragment>
+
+  <main class="mx-auto max-w-4xl px-5 py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <a href="/" class="hover:text-brass">Home</a>
+      <span aria-hidden="true"> / </span>
+      <a href={NYE_PAGES.hub} class="hover:text-brass">New Year's Eve</a>
+      <span aria-hidden="true"> / </span>
+      <span class="text-foreground">{p.place}</span>
+    </nav>
+
+    <p class="eyebrow mt-6">{p.eyebrow}</p>
+    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl" set:html={p.h1} />
+    {p.intro.map((t, i) => <p class={i === 0 ? "mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground" : para} set:html={t} />)}
+
+    <section class="mt-10 border border-brass/60 bg-surface/60 px-6 py-5" aria-labelledby="picks">
+      <h2 id="picks" class="text-2xl text-brass">Quick picks</h2>
+      <dl class="mt-4 grid gap-4 sm:grid-cols-2">
+        {p.picks.map((k) => (
+          <div>
+            <dt class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">{k.label}</dt>
+            <dd class="mt-1 text-base leading-snug">
+              <a href={k.href} class={link}>{k.name}</a>
+              <span class="block text-sm text-muted-foreground">{k.why}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="mt-14" id="all-night">
+      <h2 class={h2}>All night</h2>
+      <p class={para}>
+        These run through the evening and past New Year's, so they are listed once
+        here. Every lit-up spot of the season is on the <a href="/holiday-lights/" class={link}>holiday lights map</a>.
+      </p>
+      <div class="mt-6 grid gap-3">
+        {p.allNight.map((a) => (
+          <article class={card}>
+            <h3 class="text-xl leading-tight"><a href={a.href} class="text-foreground transition-colors hover:text-brass">{a.name}</a></h3>
+            <p class="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">{a.when}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14" id="new-years-eve">
+      <h2 class={h2}>Thursday 31 December <span class="text-lg text-muted-foreground">· by start time</span></h2>
+      <p class={para}>
+        {eve.length} events confirmed by their organiser for New Year's Eve 2026, earliest first. Each one
+        links to the page we checked, with the date we checked it.
+      </p>
+      <NyeListings entries={eve} id="eve" />
+      <p class="mt-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">{p.skipped}</p>
+    </section>
+
+    <section class="mt-14" id="new-years-day">
+      <h2 class={h2}>Friday 1 January 2027 <span class="text-lg text-muted-foreground">· New Year's Day</span></h2>
+      {day.length > 0 && <NyeListings entries={day} id="day" />}
+      {p.newYearsDay.map((x) => (
+        <p class={para}>
+          <Fragment set:html={x.text} />
+          {x.sources && <span class="mt-1 block text-sm">Sources: {x.sources.map((s, i) => <Fragment>{i > 0 && " · "}<a href={s.href} class={link} rel="noopener">{s.label}</a></Fragment>)}</span>}
+        </p>
+      ))}
+    </section>
+
+    <section class="mt-14" id="getting-home">
+      <h2 class={h2}>Getting home safely</h2>
+      {p.gettingHome.map((x) => (
+        <p class={para}>
+          <Fragment set:html={x.text} />
+          {x.sources && <span class="mt-1 block text-sm">Sources: {x.sources.map((s, i) => <Fragment>{i > 0 && " · "}<a href={s.href} class={link} rel="noopener">{s.label}</a></Fragment>)}</span>}
+        </p>
+      ))}
+    </section>
+
+    <section class="mt-14 max-w-3xl">
+      <h2 class={h2}>Common questions</h2>
+      <dl class="mt-6 space-y-6">
+        {p.faq.map((f) => (
+          <div>
+            <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
+            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">
+              {f.a}
+              {f.sources && (
+                <span class="mt-2 block text-sm">
+                  Sources:{" "}
+                  {f.sources.map((s, i) => <Fragment>{i > 0 && " · "}<a href={s.href} class={link} rel="noopener">{s.label}</a></Fragment>)}
+                </span>
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="mt-16 border-t border-border/70 pt-8">
+      <h2 class="text-2xl text-brass">More around New Year's</h2>
+      <div class="mt-4 grid gap-2 sm:grid-cols-2">
+        {p.related.map((r) => (
+          <a href={r.href} class="border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass">{r.label}</a>
+        ))}
+      </div>
+    </section>
+  </main>
+</BaseLayout>

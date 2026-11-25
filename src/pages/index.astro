@@ -41,7 +41,7 @@ import {
 } from "../data/farmersMarkets";
 import { isPastDate, pacificToday } from "../lib/isPast";
 import { cityHubHref } from "../data/cityHubs";
-import { THANKSGIVING_2026, thanksgivingIsCurrent, HOLIDAY_LIGHTS_HREF, HOLIDAY_LIGHTS_UNTIL, inHolidaySeason } from "../data/season";
+import { NYE_2026, THANKSGIVING_2026, thanksgivingIsCurrent, HOLIDAY_LIGHTS_HREF, HOLIDAY_LIGHTS_UNTIL, inHolidaySeason } from "../data/season";
 
 const site = "https://montereybayevents.com";
 const canonical = `${site}/`;
@@ -65,6 +65,8 @@ const CONCOURS_2027_TEXT = "Sunday 15 August 2027";
 const today = pacificToday();
 // Holiday Lights Map banner (v2.T): through the season's last night.
 const showLightsBanner = inHolidaySeason(today) && today <= HOLIDAY_LIGHTS_UNTIL;
+// New Year's Eve (v2.U): through New Year's Day; it takes Thanksgiving's slot once that weekend is over.
+const showNyeBanner = inHolidaySeason(today) && today <= NYE_2026.until;
 const year = (iso: string) => iso.slice(0, 4);
 const longDate = (iso: string) => `${formatDay(iso)} ${year(iso)}`;
 
@@ -178,6 +180,7 @@ const types: { label: string; count: string; links: { href: string; label: strin
     links: [
       { href: THANKSGIVING_2026.href, label: "Thanksgiving weekend" },
       { href: HOLIDAY_LIGHTS_HREF, label: "Holiday lights map" },
+      { href: NYE_2026.href, label: "New Year's Eve" },
     ],
   },
 ];
@@ -369,10 +372,11 @@ const admissionLabel = (e: RegionalEvent) =>
     </section>
 
     <!-- Holiday banners: Thanksgiving (v2.S) until the Sunday of the weekend;
-         the Holiday Lights Map (v2.T) through the season's last night. -->
+         the Holiday Lights Map (v2.T) through the season's last night;
+         New Year's Eve (v2.U) through 1 January. -->
     {
-      (thanksgivingIsCurrent(today) || showLightsBanner) && (
-        <div class="mx-auto grid max-w-6xl gap-3 px-5 pt-10 sm:grid-cols-2">
+      (thanksgivingIsCurrent(today) || showLightsBanner || showNyeBanner) && (
+        <div class={`mx-auto grid max-w-6xl gap-3 px-5 pt-10 sm:grid-cols-2 ${thanksgivingIsCurrent(today) && showLightsBanner && showNyeBanner ? "lg:grid-cols-3" : ""}`}>
           {thanksgivingIsCurrent(today) && (
             <a
               href={THANKSGIVING_2026.href}
@@ -398,6 +402,20 @@ const admissionLabel = (e: RegionalEvent) =>
               <p class="mt-1 text-2xl leading-tight text-brass">Holiday lights map 2026 →</p>
               <p class="mt-1 text-sm leading-relaxed text-muted-foreground">
                 Tree lightings, drive-through lights, boat parades and Winter Wonderland, from Carmel to Boulder Creek.
+              </p>
+            </a>
+          )}
+          {showNyeBanner && (
+            <a
+              href={NYE_2026.href}
+              class="block border-l-2 border-brass bg-surface/60 px-6 py-5 transition-colors hover:bg-surface"
+            >
+              <p class="text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                Thursday 31 December
+              </p>
+              <p class="mt-1 text-2xl leading-tight text-brass">New Year's Eve 2026 →</p>
+              <p class="mt-1 text-sm leading-relaxed text-muted-foreground">
+                First Night Monterey, hotel parties, Santa Cruz shows and dinners, and New Year's Day.
               </p>
             </a>
           )}

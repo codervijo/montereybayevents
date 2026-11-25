@@ -48,6 +48,9 @@ export function inHolidaySeason(today: string = pacificToday()): boolean {
 export const HOLIDAY_LIGHTS_HREF = "/holiday-lights/";
 export const HOLIDAY_LIGHTS_UNTIL = "2027-01-03";
 
+/** New Year's Eve 2026 (v2.U): homepage banner through New Year's Day. */
+export const NYE_2026 = { href: "/new-years-eve/", until: "2027-01-01" } as const;
+
 export const THANKSGIVING_2026 = { from: "2026-11-26", to: "2026-11-29", href: "/thanksgiving/" } as const;
 
 export function thanksgivingIsCurrent(today: string = pacificToday()): boolean {
