@@ -1,0 +1,259 @@
+---
+// "Things to Do" town hub (v7.B): /things-to-do/<town>/.
+// Items from data/things-to-do/<town>.json via src/data/thingsToDo.ts; the
+// "Happening this week" block is computed at build from the events data. The
+// page file passes the hand-written parts: intro, quick picks, by-season links,
+// FAQ and nearby hubs.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import PlacesMap from "./PlacesMap.astro";
+import {
+  SECTIONS, bySection, comingUp, directionsHref, happeningThisWeek, hubHref, type TownHub,
+} from "../data/thingsToDo";
+import { eventHref } from "../data/events-2026";
+import { pacificToday } from "../lib/isPast";
+
+type Link = { href: string; label: string };
+interface Props {
+  hub: TownHub;
+  title: string;
+  description: string;
+  h1: string;
+  intro: string[];
+  picks: { label: string; id: string; why: string }[];
+  seasons: { season: string; text: string; links: Link[] }[];
+  faq: { q: string; a: string }[];
+  nearby: Link[];
+  related: Link[];
+}
+const p = Astro.props;
+const { hub } = p;
+
+const site = "https://montereybayevents.com";
+const canonical = `${site}${hubHref(hub.slug)}`;
+const today = pacificToday();
+const sections = bySection(hub.items);
+const week = happeningThisWeek(hub.town, today);
+const later = week.length < 3 ? comingUp(hub.town, 4, today) : [];
+const byId = new Map(hub.items.map((i) => [i.id, i]));
+const pick = (id: string) => {
+  const i = byId.get(id);
+  if (!i) throw new Error(`${hubHref(hub.slug)}: quick pick "${id}" is not in the data`);
+  return i;
+};
+const image = `${site}/og/ttd-${hub.slug}.png`;
+const lastVerified = hub.items.map((i) => i.last_verified).sort().at(-1);
+
+const points = hub.items.map((i) => ({
+  id: i.id, name: i.name, category: i.section, lat: i.lat, lng: i.lng, free: i.free === true,
+  lines: [i.free ? "Free" : i.cost, i.hours], href: `#${i.id}`, directions: directionsHref(i),
+}));
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: p.title,
+    url: canonical,
+    numberOfItems: hub.items.length,
+    itemListElement: sections.flatMap((s) => s.items).map((i, k) => ({
+      "@type": "ListItem",
+      position: k + 1,
+      item: {
+        "@type": "TouristAttraction",
+        "@id": `${canonical}#${i.id}`,
+        name: i.name,
+        description: i.description,
+        url: i.official_url,
+        ...(i.free === true ? { isAccessibleForFree: true } : {}),
+        address: { "@type": "PostalAddress", streetAddress: i.address.split(",")[0], addressLocality: i.town, addressRegion: "CA", addressCountry: "US" },
+        geo: { "@type": "GeoCoordinates", latitude: i.lat, longitude: i.lng },
+      },
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: `${site}/` },
+      { "@type": "ListItem", position: 2, name: "Things to do", item: `${site}/things-to-do/` },
+      { "@type": "ListItem", position: 3, name: hub.town, item: canonical },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: p.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+  },
+];
+
+const h2 = "border-b border-border/70 pb-2 text-3xl text-brass";
+const para = "mt-4 max-w-3xl text-base leading-relaxed text-muted-foreground";
+const link = "text-brass hover:underline";
+const card = "border-l-2 border-border/80 bg-surface/60 px-5 py-4";
+const meta = "mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[0.65rem] uppercase tracking-[0.14em] text-muted-foreground";
+const tile = "border-l-2 border-border/80 bg-surface/60 px-4 py-3 text-sm text-foreground transition-colors hover:border-brass hover:text-brass";
+---
+
+<BaseLayout>
+  <Fragment slot="head">
+    <title>{p.title}</title>
+    <meta name="description" content={p.description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={p.title} />
+    <meta property="og:description" content={p.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="Monterey Bay Events" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:image" content={image} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`Things to do in ${hub.town}`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={p.title} />
+    <meta name="twitter:description" content={p.description} />
+    <meta name="twitter:image" content={image} />
+    {jsonLd.map((j) => <script type="application/ld+json" set:html={JSON.stringify(j)} />)}
+  </Fragment>
+
+  <main class="mx-auto max-w-4xl px-5 py-14">
+    <nav aria-label="Breadcrumb" class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <a href="/" class="hover:text-brass">Home</a>
+      <span aria-hidden="true"> / </span>
+      <a href="/things-to-do/" class="hover:text-brass">Things to do</a>
+      <span aria-hidden="true"> / </span>
+      <span class="text-foreground">{hub.town}</span>
+    </nav>
+
+    <p class="eyebrow mt-6">{hub.items.length} places, each checked with its official site · last checked {lastVerified}</p>
+    <h1 class="mt-2 text-5xl leading-[0.88] sm:text-7xl" set:html={p.h1} />
+    {p.intro.map((t, i) => <p class={i === 0 ? "mt-6 max-w-3xl text-lg leading-relaxed text-muted-foreground" : para} set:html={t} />)}
+
+    <section class="mt-10 border border-brass/60 bg-surface/60 px-6 py-5" aria-labelledby="picks">
+      <h2 id="picks" class="text-2xl text-brass">Quick picks</h2>
+      <dl class="mt-4 grid gap-4 sm:grid-cols-2">
+        {p.picks.map((k) => (
+          <div>
+            <dt class="text-[0.65rem] font-bold uppercase tracking-[0.2em] text-muted-foreground">{k.label}</dt>
+            <dd class="mt-1 text-base leading-snug">
+              <a href={`#${k.id}`} class={link}>{pick(k.id).name}</a>
+              <span class="block text-sm text-muted-foreground">{k.why}</span>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="mt-14" id="this-week">
+      <h2 class={h2}>Happening this week</h2>
+      <p class={para}>
+        From our events calendar, for the seven days from {new Date(`${today}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", timeZone: "UTC" })}.
+        This list is rebuilt every day.
+      </p>
+      {week.length > 0 ? (
+        <ul class="mt-4 space-y-2">
+          {week.map((w) => (
+            <li class="text-base"><a href={w.href} class={link}>{w.name}</a> <span class="text-muted-foreground">— {w.when}</span></li>
+          ))}
+        </ul>
+      ) : (
+        <p class="mt-4 text-base text-muted-foreground">Nothing in our calendar for {hub.town} this week.</p>
+      )}
+      {later.length > 0 && (
+        <Fragment>
+          <p class="mt-4 text-sm text-muted-foreground">Coming up later:</p>
+          <ul class="mt-2 space-y-2">
+            {later.map((e) => <li class="text-base"><a href={eventHref(e)} class={link}>{e.name}</a> <span class="text-muted-foreground">— {e.dateText}</span></li>)}
+          </ul>
+        </Fragment>
+      )}
+      <p class="mt-4 text-sm"><a href="/events/" class={link}>Every upcoming event around the bay →</a></p>
+    </section>
+
+    <section class="mt-14" id="map">
+      <h2 class={h2}>Map</h2>
+      <p class={para}>Every place on this page. Filter by type or to free places; the list below follows the filter.</p>
+      <div class="mt-6"><PlacesMap points={points} categories={SECTIONS} label={`Map of things to do in ${hub.town}`} /></div>
+    </section>
+
+    {sections.map((s) => (
+      <section class="mt-14" id={s.key} data-place-group>
+        <h2 class={h2}>{s.label}</h2>
+        <div class="mt-6 grid gap-3">
+          {s.items.map((i) => (
+            <article class={card} id={i.id} data-place={i.id}>
+              <h3 class="text-xl leading-tight text-foreground">{i.name}</h3>
+              <div class={meta}>
+                <span class="text-brass">{i.free ? "Free" : i.cost ?? "Price not published"}</span>
+                {i.hours && <span aria-hidden="true">·</span>}
+                {i.hours && <span>{i.hours}</span>}
+                {i.town !== hub.town && <span aria-hidden="true">·</span>}
+                {i.town !== hub.town && <span>{i.town}</span>}
+              </div>
+              <p class="mt-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">{i.description}</p>
+              {i.best_time && <p class="mt-1 max-w-3xl text-sm text-muted-foreground"><span class="text-foreground">Best time:</span> {i.best_time}</p>}
+              {i.notes && <p class="mt-1 max-w-3xl text-sm text-muted-foreground">{i.notes}</p>}
+              {i.check_before_you_go && <p class="mt-1 text-sm text-brass">Check before you go: hours or prices aren't fully published.</p>}
+              {i.site_link && <p class="mt-1 text-sm"><a href={i.site_link.href} class={link}>{i.site_link.label} →</a></p>}
+              <p class="mt-2 text-xs text-muted-foreground">
+                {i.address} · <a href={directionsHref(i)} class={link} rel="noopener">Directions</a> ·{" "}
+                <a href={i.official_url} class={link} rel="noopener">Official site</a> · checked {i.last_verified}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <section class="mt-14" id="by-season">
+      <h2 class={h2}>{hub.town} by season</h2>
+      <div class="mt-6 grid gap-4">
+        {p.seasons.map((s) => (
+          <div>
+            <h3 class="text-xl text-foreground">{s.season}</h3>
+            <p class="mt-1 max-w-3xl text-base leading-relaxed text-muted-foreground">
+              {s.text}{" "}
+              {s.links.map((l, k) => <Fragment>{k > 0 && " · "}<a href={l.href} class={link}>{l.label}</a></Fragment>)}
+            </p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section class="mt-14 max-w-3xl">
+      <h2 class={h2}>Common questions</h2>
+      <dl class="mt-6 space-y-6">
+        {p.faq.map((f) => (
+          <div>
+            <dt class="text-lg font-semibold text-foreground">{f.q}</dt>
+            <dd class="mt-2 text-base leading-relaxed text-muted-foreground">{f.a}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    {hub.skipped.length > 0 && (
+      <section class="mt-14 max-w-3xl">
+        <h2 class="text-2xl text-brass">Not on this list yet</h2>
+        <p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+          We only list a place once its own site confirms what we say about it. Left off for now:{" "}
+          {hub.skipped.map((s) => s.name).join(", ")}.
+        </p>
+      </section>
+    )}
+
+    <section class="mt-16 border-t border-border/70 pt-8">
+      {p.nearby.length > 0 && (
+        <Fragment>
+          <h2 class="text-2xl text-brass">Nearby</h2>
+          <div class="mt-4 grid gap-2 sm:grid-cols-2">{p.nearby.map((l) => <a href={l.href} class={tile}>{l.label}</a>)}</div>
+        </Fragment>
+      )}
+      <h2 class="mt-8 text-2xl text-brass">More on the site</h2>
+      <div class="mt-4 grid gap-2 sm:grid-cols-2">{p.related.map((l) => <a href={l.href} class={tile}>{l.label}</a>)}</div>
+    </section>
+  </main>
+</BaseLayout>

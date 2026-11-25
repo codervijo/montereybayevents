@@ -162,6 +162,12 @@ targets.push(
   { name: "nye-santa-cruz", svg: card({ kicker: "New Year's Eve 2026", title: "Santa Cruz", meta: "Shows, parties, dinners and New Year's Day" }) },
 );
 
+// Things to Do hubs (v7.B).
+targets.push(
+  { name: "ttd", svg: card({ kicker: "Monterey Bay, town by town", title: "Things to Do", meta: "Sights, beaches, hikes, free things and what's on this week" }) },
+  { name: "ttd-monterey", svg: card({ kicker: "Things to do", title: "Monterey, CA", meta: "Sights, coast, hikes, free things and events this week" }) },
+);
+
 // Rows carrying existingSlug / hubHref have no /event/ page of their own —
 // they link to a Car Week page or a hub — so they get no card.
 for (const e of regionalEvents.filter((e) => !e.existingSlug && !e.hubHref)) {

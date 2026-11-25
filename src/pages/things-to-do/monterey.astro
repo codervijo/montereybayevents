@@ -1,0 +1,56 @@
+---
+// /things-to-do/monterey/ (v7.B, 2026-11-25) — the first town hub.
+// Items: data/things-to-do/monterey.json (each from its official site, checked
+// 2026-11-25). The hand-written parts below only point at those items or at
+// pages already on this site.
+import TownHubPage from "../../components/TownHubPage.astro";
+import { HUBS } from "../../data/thingsToDo";
+
+const hub = HUBS.monterey!;
+const n = hub.items.length;
+const count = n >= 40 ? "40+" : undefined;
+
+const props = {
+  hub,
+  title: `Things to Do in Monterey, CA (2026):${count ? ` ${count}` : ""} Ideas + Events This Week`,
+  description:
+    "Cannery Row, the aquarium, the bay trail, adobes, beaches and day trips to Point Lobos and Big Sur, plus what's on in Monterey this week. Every place checked.",
+  h1: `Things to do in <span class="text-brass">Monterey</span>`,
+  intro: [
+    `Most visits to Monterey start on the water: the aquarium at the end of Cannery Row, the wharf, and the paved bay trail that links them. Behind the waterfront is the old town, where California's first constitutional convention met at Colton Hall and a state park looks after the adobes. Point Lobos, Carmel, Pacific Grove and the Big Sur coast are all short drives away.`,
+    `Each of the ${n} places below has its address, cost, hours where published, and a link to its own official site, which is where we checked it. Where a place doesn't publish hours or prices, we say so. The week's events at the top come from our calendar and change every day.`,
+  ],
+  picks: [
+    { label: "First time", id: "cannery-row", why: "Walk the old cannery street to the aquarium, then follow the bay trail back toward the wharf." },
+    { label: "Free", id: "monterey-bay-coastal-recreation-trail", why: "A paved path along the whole waterfront, free on foot or by bike." },
+    { label: "With kids", id: "dennis-the-menace-playground", why: "Free city playground in El Estero Park (closed non-holiday Tuesdays from Labor Day to Memorial Day)." },
+    { label: "Rainy day", id: "monterey-bay-aquarium", why: "Indoors, all day. Book tickets ahead." },
+    { label: "Date night", id: "golden-state-theatre", why: "A show at the historic theatre on Alvarado Street, in the middle of downtown's restaurants." },
+    { label: "Sunset", id: "asilomar-state-beach", why: "The dunes and tide pools on Pacific Grove's west shore." },
+  ],
+  seasons: [
+    { season: "Winter (December–February)", text: "Holiday lights on the wharf and Cannery Row, the ice rink in Custom House Plaza, First Night on New Year's Eve.", links: [{ href: "/holiday-lights/", label: "Holiday lights map" }, { href: "/new-years-eve/monterey/", label: "New Year's Eve in Monterey" }, { href: "/events/december/", label: "December events" }] },
+    { season: "Spring (March–May)", text: "The Tuesday market on Alvarado Street runs all year: 4–7pm from October to April, 4–8pm from May to September.", links: [{ href: "/monterey-farmers-market/", label: "Farmers markets, day by day" }] },
+    { season: "Summer (June–August)", text: "August brings Monterey Car Week, ten days of concours, auctions and races across the Peninsula, with road closures to plan around.", links: [{ href: "/monterey-car-week/", label: "Monterey Car Week" }, { href: "/traffic/", label: "Car Week traffic" }, { href: "/events/august/", label: "August events" }] },
+    { season: "Fall (September–November)", text: "The county fair and the Monterey Jazz Festival both fall in September at the fairgrounds; October brings the Butterfly Parade in Pacific Grove, and the tree lightings start the day after Thanksgiving.", links: [{ href: "/event/monterey-county-fair/", label: "Monterey County Fair" }, { href: "/event/monterey-jazz-festival/", label: "Monterey Jazz Festival" }, { href: "/events/september/", label: "September events" }, { href: "/events/october/", label: "October events" }] },
+  ],
+  faq: [
+    { q: "What are the best free things to do in Monterey?", a: "Walk or bike the Monterey Bay Coastal Recreation Trail along the waterfront; stroll Cannery Row and Old Fisherman's Wharf; visit the Presidio of Monterey Museum (weekends) and the walled gardens behind the state park's adobes; take kids to Dennis the Menace Playground; and spend time on San Carlos, McAbee and Del Monte beaches." },
+    { q: "What is there to do in Monterey with kids?", a: "The Monterey Bay Aquarium, Dennis the Menace Playground and Lake El Estero, MY Museum (a hands-on children's museum downtown, Wednesday to Sunday), the skate park, and the beaches along Cannery Row. The public library has a children's area." },
+    { q: "What can you do in Monterey on a rainy day?", a: "The aquarium is the obvious one. Downtown, the Monterey Museum of Art (Thursday to Sunday; closed 21 December 2026 to 6 January 2027), Colton Hall and the Old Monterey Jail are indoors, and the Monterey Sports Center sells drop-in passes for its indoor pools." },
+    { q: "How many days do you need in Monterey?", a: "Two days covers the aquarium, Cannery Row, the wharf, old town and the bay trail. A third day lets you add a day trip: Point Lobos and Carmel, 17-Mile Drive and Pacific Grove, or the drive down the Big Sur coast." },
+    { q: "When is the best time to visit Monterey?", a: "It depends on what you want. August has Monterey Car Week. September has the county fair and the jazz festival. Winter brings holiday lights, gray whale season and New Year's Eve at First Night, with quieter weekdays. Check Highway 1 conditions with Caltrans before any Big Sur trip, especially after winter storms." },
+  ],
+  nearby: [] as { href: string; label: string }[],
+  related: [
+    { href: "/events/", label: "Every upcoming event around Monterey Bay" },
+    { href: "/monterey-events-calendar/", label: "The Monterey events calendar, month by month" },
+    { href: "/monterey-farmers-market/", label: "Monterey County farmers markets" },
+    { href: "/holiday-lights/", label: "Holiday lights map" },
+    { href: "/events/pacific-grove/", label: "Events in Pacific Grove" },
+    { href: "/monterey-car-week/", label: "Monterey Car Week" },
+  ],
+};
+---
+
+<TownHubPage {...props} />
