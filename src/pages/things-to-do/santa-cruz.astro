@@ -1,0 +1,55 @@
+---
+// /things-to-do/santa-cruz/ (v7.B, 2026-11-25).
+// Items: data/things-to-do/santa-cruz.json (each from its official site,
+// checked 2026-11-25). The hand-written parts below only point at those items
+// or at pages already on this site.
+import TownHubPage from "../../components/TownHubPage.astro";
+import { HUBS } from "../../data/thingsToDo";
+
+const hub = HUBS["santa-cruz"]!;
+const n = hub.items.length;
+const count = n >= 50 ? "50+" : n >= 40 ? "40+" : undefined;
+
+const props = {
+  hub,
+  title: `Things to Do in Santa Cruz, CA (2026):${count ? ` ${count}` : ""} Ideas + Events This Week`,
+  description:
+    "The Boardwalk, West Cliff Drive, Natural Bridges, redwood parks, downtown music venues and day trips to Capitola and Año Nuevo, plus this week's Santa Cruz events.",
+  h1: `Things to do in <span class="text-brass">Santa Cruz</span>`,
+  intro: [
+    `Santa Cruz packs a beach town, a surf break and redwood forest into a few miles. The Boardwalk and the wharf sit on the main beach; West Cliff Drive runs from there past the lighthouse and Steamer Lane to Natural Bridges. Inland are Henry Cowell's redwoods and the Pogonip trails, and downtown has the art and history museum, a food hall and most of the music venues.`,
+    `Each of the ${n} places below has its address, cost, hours where published, and a link to its own official site, which is where we checked it. Where a place doesn't publish hours or prices, we say so. The week's events at the top come from our calendar and change every day.`,
+  ],
+  picks: [
+    { label: "First time", id: "santa-cruz-beach-boardwalk", why: "Free to walk in; rides and games are paid. Then walk out along the wharf next door." },
+    { label: "Free", id: "west-cliff-drive", why: "About 2.5 miles of coastal path from the wharf to Natural Bridges, past the lighthouse." },
+    { label: "With kids", id: "museum-of-natural-history", why: "A small museum on East Cliff Drive; under-18s get in free." },
+    { label: "Rainy day", id: "museum-of-art-and-history", why: "Downtown, with the Abbott Square food hall in its plaza." },
+    { label: "Date night", id: "kuumbwa-jazz-center", why: "Jazz in a small downtown room, with dinner from the cafe on show nights." },
+    { label: "Sunset", id: "natural-bridges-state-beach", why: "At the west end of West Cliff Drive, facing the open ocean." },
+  ],
+  seasons: [
+    { season: "Winter (December–February)", text: "Monarch butterflies overwinter in the grove at Natural Bridges, and Año Nuevo runs guided walks to see the elephant seals. The Boardwalk's Winter Wonderland runs on select days to 3 January.", links: [{ href: "/event/santa-cruz-beach-boardwalk-winter-wonderland/", label: "Winter Wonderland" }, { href: "/holiday-lights/", label: "Holiday lights map" }, { href: "/new-years-eve/santa-cruz/", label: "New Year's Eve in Santa Cruz" }, { href: "/events/december/", label: "December events" }] },
+    { season: "Spring (March–May)", text: "The downtown Wednesday market and the Westside and Live Oak weekend markets run all year.", links: [{ href: "/santa-cruz-farmers-market/", label: "Santa Cruz County farmers markets" }] },
+    { season: "Summer (June–August)", text: "The Cabrillo Festival of Contemporary Music fills the Civic Auditorium from late July, Santa Cruz Shakespeare plays outdoors in DeLaveaga Park from mid-July, and the Church Street Fair comes in August.", links: [{ href: "/event/cabrillo-festival-of-contemporary-music/", label: "Cabrillo Festival" }, { href: "/event/church-street-fair/", label: "Church Street Fair" }, { href: "/events/august/", label: "August events" }] },
+    { season: "Fall (September–November)", text: "Capitola's art and wine festival in September; Open Studios, the Santa Cruz Film Festival and Halloween at the Boardwalk in October.", links: [{ href: "/event/capitola-art-wine-festival/", label: "Capitola Art & Wine" }, { href: "/event/santa-cruz-film-festival-2026/", label: "Santa Cruz Film Festival" }, { href: "/events/september/", label: "September events" }, { href: "/events/october/", label: "October events" }] },
+  ],
+  faq: [
+    { q: "What are the best free things to do in Santa Cruz?", a: "Walk West Cliff Drive from the wharf to Natural Bridges; spend a day on Cowell or Main Beach; walk into the Boardwalk (entry is free, rides are paid); visit the Monterey Bay National Marine Sanctuary Exploration Center on the beachfront; hike the Moore Creek or Arana Gulch preserves; and go to the UCSC Arboretum on the first Tuesday of the month, when it is free." },
+    { q: "What is there to do in Santa Cruz with kids?", a: "The Boardwalk, the Museum of Natural History (free for under-18s), the Seymour Marine Discovery Center and the Sanctuary Exploration Center, the playground and bike park at Depot Park, Harvey West Park, and the steam train at Roaring Camp in Felton." },
+    { q: "What can you do in Santa Cruz on a rainy day?", a: "The Museum of Art & History and the Abbott Square food hall downtown, the Sanctuary Exploration Center, the Seymour Center, a film at the Del Mar Theatre, Bookshop Santa Cruz, or a Santa Cruz Warriors game at Kaiser Permanente Arena in season." },
+    { q: "How many days do you need in Santa Cruz?", a: "Two days covers the Boardwalk, the wharf, West Cliff Drive and Natural Bridges on one day, and downtown plus the Henry Cowell redwoods on the other. A third day adds a trip to Capitola, Año Nuevo's elephant seals, Big Basin, or the Monterey Bay Aquarium across the bay." },
+    { q: "When is the best time to visit Santa Cruz?", a: "Winter is when the monarchs gather at Natural Bridges and Año Nuevo runs its elephant seal walks. Summer brings the Cabrillo Festival and outdoor Shakespeare; October has Open Studios and the film festival. The Boardwalk's rides run on a seasonal calendar, so check it before you plan around them." },
+  ],
+  nearby: [{ href: "/things-to-do/monterey/", label: "Across the bay: things to do in Monterey" }],
+  related: [
+    { href: "/events/", label: "Every upcoming event around Monterey Bay" },
+    { href: "/santa-cruz-farmers-market/", label: "Santa Cruz County farmers markets" },
+    { href: "/holiday-lights/", label: "Holiday lights map" },
+    { href: "/new-years-eve/santa-cruz/", label: "New Year's Eve in Santa Cruz" },
+    { href: "/monterey-events-calendar/", label: "The events calendar, month by month" },
+  ],
+};
+---
+
+<TownHubPage {...props} />

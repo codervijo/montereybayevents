@@ -14,7 +14,7 @@ for e in d["items"]:
         continue
     query = e.get("geocode_query") or e["address"]
     q = urllib.parse.urlencode({"q": query, "format": "jsonv2", "limit": 1, "countrycodes": "us",
-                                "viewbox": "-122.3,37.2,-121.3,35.8", "bounded": 1})
+                                "viewbox": "-122.5,37.3,-121.3,35.8", "bounded": 1})
     r = json.load(urllib.request.urlopen(urllib.request.Request(f"https://nominatim.openstreetmap.org/search?{q}", headers=UA)))
     time.sleep(1.1)
     if not r:

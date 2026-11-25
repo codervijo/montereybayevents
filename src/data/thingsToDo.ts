@@ -9,6 +9,7 @@
  * NYE data (pacificToday), and the daily rebuild keeps it current.
  */
 import monterey from "../../data/things-to-do/monterey.json";
+import santaCruz from "../../data/things-to-do/santa-cruz.json";
 import { pacificToday } from "../lib/isPast";
 import { regionalEvents, eventHref } from "./events-2026";
 import { lights, isOn, lightsHref } from "./holidayLights";
@@ -67,6 +68,7 @@ const load = (slug: string, town: string, raw: unknown): TownHub => {
 
 export const HUBS: Record<string, TownHub> = {
   monterey: load("monterey", "Monterey", monterey),
+  "santa-cruz": load("santa-cruz", "Santa Cruz", santaCruz),
 };
 
 export const hubHref = (slug: string) => `/things-to-do/${slug}/`;
@@ -117,7 +119,9 @@ export function happeningThisWeek(town: string, today = pacificToday()): WeekIte
     if (l.town !== town || l.event_page || seen.has(l.name)) continue;
     const on = days.filter((d) => isOn(l, d) !== false);
     if (!on.length) continue;
-    out.push({ name: l.name, href: lightsHref(l), when: on.length === 7 ? "Every night this week" : on.map(fmt).join(", "), sortKey: `1${on[0]}` });
+    const tail = on.length > 2 && on.join() === days.slice(days.indexOf(on[0]!)).join();
+    const when = on.length === 7 ? "Every night this week" : tail ? `Nightly from ${fmt(on[0]!)}` : on.map(fmt).join(", ");
+    out.push({ name: l.name, href: lightsHref(l), when, sortKey: `1${on[0]}` });
   }
   for (const n of nye) {
     if (n.town !== town || !days.includes(n.date) || n.event_page) continue;
