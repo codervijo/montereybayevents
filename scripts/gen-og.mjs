@@ -168,6 +168,7 @@ targets.push(
   { name: "ttd-monterey", svg: card({ kicker: "Things to do", title: "Monterey, CA", meta: "Sights, coast, hikes, free things and events this week" }) },
   { name: "ttd-santa-cruz", svg: card({ kicker: "Things to do", title: "Santa Cruz, CA", meta: "Boardwalk, beaches, redwoods, music and events this week" }) },
   { name: "ttd-carmel", svg: card({ kicker: "Things to do", title: "Carmel-by-the-Sea", meta: "Beach, Point Lobos, galleries, trails and events this week" }) },
+  { name: "ttd-pacific-grove", svg: card({ kicker: "Things to do", title: "Pacific Grove, CA", meta: "Monarchs, tidepools, Lovers Point and events this week" }) },
 );
 
 // Rows carrying existingSlug / hubHref have no /event/ page of their own —

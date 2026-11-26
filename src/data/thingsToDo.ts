@@ -11,6 +11,7 @@
 import monterey from "../../data/things-to-do/monterey.json";
 import santaCruz from "../../data/things-to-do/santa-cruz.json";
 import carmel from "../../data/things-to-do/carmel.json";
+import pacificGrove from "../../data/things-to-do/pacific-grove.json";
 import { pacificToday } from "../lib/isPast";
 import { regionalEvents, eventHref } from "./events-2026";
 import { lights, isOn, lightsHref } from "./holidayLights";
@@ -71,6 +72,7 @@ export const HUBS: Record<string, TownHub> = {
   monterey: load("monterey", "Monterey", monterey),
   "santa-cruz": load("santa-cruz", "Santa Cruz", santaCruz),
   carmel: load("carmel", "Carmel-by-the-Sea", carmel),
+  "pacific-grove": load("pacific-grove", "Pacific Grove", pacificGrove),
 };
 
 export const hubHref = (slug: string) => `/things-to-do/${slug}/`;

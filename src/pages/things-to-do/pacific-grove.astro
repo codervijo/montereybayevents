@@ -1,0 +1,59 @@
+---
+// /things-to-do/pacific-grove/ (v7.B, 2026-11-25).
+// Items: data/things-to-do/pacific-grove.json (each from its official site,
+// checked 2026-11-25). The hand-written parts below only point at those items
+// or at pages already on this site. /events/pacific-grove/ stays the
+// events-only view (v7.A decision 1).
+import TownHubPage from "../../components/TownHubPage.astro";
+import { HUBS } from "../../data/thingsToDo";
+
+const hub = HUBS["pacific-grove"]!;
+const n = hub.items.length;
+const count = n >= 50 ? "50+" : n >= 40 ? "40+" : n >= 30 ? "30+" : n >= 20 ? "20+" : undefined;
+
+const props = {
+  hub,
+  title: `Things to Do in Pacific Grove, CA (2026):${count ? ` ${count}` : ""} Ideas + Events This Week`,
+  description:
+    "The Monarch Sanctuary, Lovers Point, Point Pinos Lighthouse, tidepools, the Asilomar coast and the natural history museum, plus this week's Pacific Grove events.",
+  h1: `Things to do in <span class="text-brass">Pacific Grove</span>`,
+  intro: [
+    `Pacific Grove sits on the tip of the Monterey Peninsula, between Cannery Row and Asilomar. Almost its whole shoreline is public: the Recreation Trail runs from the Aquarium to Lovers Point, and Ocean View Boulevard carries on past the tidepools of the Marine Gardens to Point Pinos Lighthouse and Asilomar State Beach. Downtown, a few blocks uphill, has the natural history museum, the library and the Monday farmers market, and the monarchs winter in a grove on Ridge Road.`,
+    `Each of the ${n} places below has its address, cost, hours where published, and a link to its own official site, which is where we checked it. Many of the city's parks don't publish hours, and we say so rather than guess. The week's events at the top come from our calendar and change every day.`,
+  ],
+  picks: [
+    { label: "First time", id: "lovers-point-park", why: "The waterfront park at the foot of 17th Street: coves, a pier and a lawn above the bay." },
+    { label: "Free", id: "monarch-grove-sanctuary", why: "Free, open sunrise to sunset; monarchs overwinter here, with docents on site in season." },
+    { label: "With kids", id: "pacific-grove-museum-of-natural-history", why: "Wildlife, geology and a native plant garden downtown; free for Monterey County residents." },
+    { label: "Rainy day", id: "pacific-grove-art-center", why: "Four galleries of changing exhibits on Lighthouse Avenue, free to visit." },
+    { label: "Tidepools", id: "pacific-grove-marine-gardens-tidepools", why: "A mile and a half of protected rocky shore; go at low tide on a calm day." },
+    { label: "Sunset", id: "asilomar-state-beach", why: "White sand and rocky coves facing the open ocean along Sunset Drive." },
+  ],
+  seasons: [
+    { season: "Winter (December–February)", text: "Monarchs overwinter at the sanctuary, with museum docents there on most days from October to February. The holiday tree lighting in Jewell Park, the Parade of Lights and Holiday at the Inns all fall between late November and early December.", links: [{ href: "/event/pacific-grove-holiday-tree-lighting/", label: "Holiday tree lighting" }, { href: "/holiday-lights/#pacific-grove-parade-of-lights", label: "Parade of Lights" }, { href: "/holiday-lights/#pacific-grove-holiday-at-the-inns", label: "Holiday at the Inns" }, { href: "/events/december/", label: "December events" }] },
+    { season: "Spring (March–May)", text: "The Monday farmers market runs all year apart from a short break over Christmas and New Year's, and low tides open up the Marine Gardens tidepools.", links: [{ href: "/monterey-farmers-market/", label: "Monterey County farmers markets" }] },
+    { season: "Summer (June–August)", text: "Car Week brings shows to Pacific Grove Golf Links and Asilomar, and a vehicle show to Lighthouse Avenue, in mid-August. The Stillwell Children's Pool at Lovers Point is due to reopen in summer 2027.", links: [{ href: "/events/pacific-grove/", label: "Pacific Grove events, including Car Week" }, { href: "/monterey-car-week/", label: "Monterey Car Week" }] },
+    { season: "Fall (September–November)", text: "The monarchs start arriving in October, and the town celebrates them with the Butterfly Parade and a sunset evening at Point Pinos Lighthouse.", links: [{ href: "/event/pacific-grove-butterfly-parade-bazaar/", label: "Butterfly Parade & Bazaar" }, { href: "/event/butterfly-days-sunset-celebration-at-point-pinos-lighthouse/", label: "Butterfly Days at Point Pinos" }, { href: "/events/october/", label: "October events" }] },
+  ],
+  faq: [
+    { q: "What are the best free things to do in Pacific Grove?", a: "Visit the Monarch Grove Sanctuary; walk the Recreation Trail and Ocean View Boulevard from Lovers Point to Point Pinos; look into the Marine Gardens tidepools at low tide; walk the Asilomar Coast Trail and the dunes boardwalk at the Asilomar Conference Grounds, where the self-guided architecture tour is free; and see the exhibits at the Pacific Grove Art Center and the Trotter museum-gallery." },
+    { q: "What is there to do in Pacific Grove with kids?", a: "The Museum of Natural History (ages 3 and under free, and free for Monterey County residents), the tidepools at low tide, Lovers Point, the playgrounds at Caledonia Park and George Washington Park, storytimes at the library, and the Monterey Bay Aquarium at the end of the Recreation Trail." },
+    { q: "What can you do in Pacific Grove on a rainy day?", a: "The Museum of Natural History (Wednesday to Sunday), the Pacific Grove Art Center, the Trotter museum-gallery across from City Hall, the public library, the shops on Lighthouse Avenue, or the Monterey Bay Aquarium next door on Cannery Row." },
+    { q: "How many days do you need in Pacific Grove?", a: "One full day covers the shoreline from Lovers Point to Asilomar, the lighthouse (open Thursday to Sunday) and downtown. Add a second day for the Aquarium and Cannery Row, or for Point Lobos south of Carmel." },
+    { q: "When is the best time to visit Pacific Grove?", a: "November to January for the monarchs, which the museum says are best seen clustering before 11 a.m. or on cool overcast days. October has the Butterfly Parade, and early December the tree lighting and Parade of Lights. The tidepools are best at low tide in any season." },
+  ],
+  nearby: [
+    { href: "/things-to-do/monterey/", label: "Next door: things to do in Monterey" },
+    { href: "/things-to-do/carmel/", label: "Over the hill: things to do in Carmel-by-the-Sea" },
+  ],
+  related: [
+    { href: "/events/pacific-grove/", label: "Pacific Grove events, all year" },
+    { href: "/events/", label: "Every upcoming event around Monterey Bay" },
+    { href: "/monterey-farmers-market/", label: "Monterey County farmers markets" },
+    { href: "/holiday-lights/", label: "Holiday lights map" },
+    { href: "/monterey-events-calendar/", label: "The events calendar, month by month" },
+  ],
+};
+---
+
+<TownHubPage {...props} />
