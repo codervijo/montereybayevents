@@ -1,0 +1,58 @@
+---
+// /things-to-do/carmel/ (v7.B, 2026-11-25).
+// Items: data/things-to-do/carmel.json (each from its official site,
+// checked 2026-11-25). The hand-written parts below only point at those items
+// or at pages already on this site.
+import TownHubPage from "../../components/TownHubPage.astro";
+import { HUBS } from "../../data/thingsToDo";
+
+const hub = HUBS.carmel!;
+const n = hub.items.length;
+const count = n >= 50 ? "50+" : n >= 40 ? "40+" : n >= 30 ? "30+" : undefined;
+
+const props = {
+  hub,
+  title: `Things to Do in Carmel-by-the-Sea, CA (2026):${count ? ` ${count}` : ""} Ideas + Events This Week`,
+  description:
+    "Carmel Beach, Point Lobos, the Mission, Tor House, downtown galleries and tasting rooms, Carmel Valley trails and Big Sur day trips, plus this week's Carmel events.",
+  h1: `Things to do in <span class="text-brass">Carmel-by-the-Sea</span>`,
+  intro: [
+    `Carmel-by-the-Sea sits between Highway 1 and Carmel Bay. Ocean Avenue runs downhill through the shops, galleries and tasting rooms to Carmel Beach, where dogs may run off leash, and Scenic Road follows the bluff south from there. Just outside the city are the Mission on Rio Road, Point Lobos three miles down the coast, the trails of Carmel Valley inland, and the road into Big Sur.`,
+    `Each of the ${n} places below has its address, cost, hours where published, and a link to its own official site, which is where we checked it. Many of the city's parks and beaches don't publish hours or fees, and we say so rather than guess. The week's events at the top come from our calendar and change every day.`,
+  ],
+  picks: [
+    { label: "First time", id: "carmel-mission-basilica", why: "The Mission on Rio Road: a self-guided visit takes in the basilica, museums and grounds." },
+    { label: "Free", id: "carmel-beach", why: "White sand at the bottom of Ocean Avenue, with stairways down from Scenic Road." },
+    { label: "With kids", id: "earthbound-farm-stand", why: "A Carmel Valley farm stand and café where you can pick your own herbs and berries." },
+    { label: "Rainy day", id: "carmel-art-association", why: "An artist-run downtown gallery, founded in 1927 and open daily." },
+    { label: "Date night", id: "founders-theatre-golden-bough", why: "Pacific Repertory Theatre's stage in the historic Golden Bough Playhouse, downtown." },
+    { label: "Coast walk", id: "point-lobos-state-natural-reserve", why: "Headlands, coves and the Whalers Cabin, three miles south on Highway 1." },
+  ],
+  seasons: [
+    { season: "Winter (December–February)", text: "The tree and menorah lighting in Devendorf Park opens December, the Carmel Heritage Society's Inns of Distinction tour follows, and Pacific Repertory Theatre stages a New Year's Eve show at the Golden Bough.", links: [{ href: "/event/carmel-holidays-in-the-park-tree-menorah-lighting/", label: "Holidays in the Park" }, { href: "/holiday-lights/#carmel-inns-of-distinction", label: "Inns of Distinction tour" }, { href: "/new-years-eve/monterey/", label: "New Year's Eve on the peninsula" }, { href: "/events/december/", label: "December events" }] },
+    { season: "Spring (March–May)", text: "The Thursday farmers market on Sixth Avenue, and the inland trails at Garland Ranch and Palo Corona.", links: [{ href: "/monterey-farmers-market/", label: "Monterey County farmers markets" }] },
+    { season: "Summer (June–August)", text: "Carmel Car Week runs six days of car events in the village in mid-August, and the Forest Theater's family musical plays in August and September.", links: [{ href: "/event/carmel-car-week/", label: "Carmel Car Week" }, { href: "/events/august/", label: "August events" }] },
+    { season: "Fall (September–November)", text: "The Great Sandcastle Contest on Carmel Beach in September; Poodle Day, the Carmel International Film Festival, Meet the Makers in Devendorf Park and the Carmel Shakespeare Festival at the Forest Theater in October.", links: [{ href: "/event/the-great-sandcastle-contest/", label: "Great Sandcastle Contest" }, { href: "/event/poodle-day/", label: "Poodle Day" }, { href: "/event/carmel-international-film-festival/", label: "Carmel International Film Festival" }, { href: "/event/meet-the-makers-art-wine-walk/", label: "Meet the Makers" }, { href: "/events/october/", label: "October events" }] },
+  ],
+  faq: [
+    { q: "What are the best free things to do in Carmel-by-the-Sea?", a: "Walk Carmel Beach and the Scenic Road bluff path; browse the downtown galleries, including the free Marjorie Evans Gallery at Sunset Center; hike the Mission Trail Nature Preserve; walk Carmel River State Beach to the lagoon; and stop at Devendorf Park or First Murphy Park, whose deck looks toward Carmel Bay. Point Lobos charges $10 to park inside." },
+    { q: "What is there to do in Carmel with kids?", a: "Carmel Beach, the playground at Forest Hill Park, pick-your-own herbs and berries at the Earthbound Farm Stand in Carmel Valley, the trails and Whalers Cabin at Point Lobos, the Carmel Mission (ages 6 and under free), and the Monterey Bay Aquarium on Cannery Row." },
+    { q: "What can you do in Carmel on a rainy day?", a: "The Carmel Art Association and the galleries downtown, the Center for Photographic Art and Marjorie Evans Gallery at Sunset Center, the tasting rooms in the village and in Carmel Valley, the covered courtyards of Carmel Plaza and The Barnyard, the Mission, or a show at Sunset Center or the Golden Bough." },
+    { q: "How many days do you need in Carmel?", a: "One day covers the village, Carmel Beach and Scenic Road, and the Mission. A second day adds Point Lobos and either the Carmel Valley tasting rooms and trails or a drive south into Big Sur. Check Caltrans before driving Highway 1." },
+    { q: "When is the best time to visit Carmel-by-the-Sea?", a: "Any season works for the beach, galleries and trails. September has the Sandcastle Contest, October the film festival, Poodle Day and Shakespeare at the Forest Theater, and December the tree lighting in Devendorf Park. August has Carmel Car Week." },
+  ],
+  nearby: [
+    { href: "/things-to-do/monterey/", label: "Over the hill: things to do in Monterey" },
+    { href: "/things-to-do/santa-cruz/", label: "Across the bay: things to do in Santa Cruz" },
+  ],
+  related: [
+    { href: "/events/", label: "Every upcoming event around Monterey Bay" },
+    { href: "/monterey-farmers-market/", label: "Monterey County farmers markets" },
+    { href: "/holiday-lights/", label: "Holiday lights map" },
+    { href: "/monterey-car-week/", label: "Monterey Car Week" },
+    { href: "/monterey-events-calendar/", label: "The events calendar, month by month" },
+  ],
+};
+---
+
+<TownHubPage {...props} />

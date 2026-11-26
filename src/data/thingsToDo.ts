@@ -10,6 +10,7 @@
  */
 import monterey from "../../data/things-to-do/monterey.json";
 import santaCruz from "../../data/things-to-do/santa-cruz.json";
+import carmel from "../../data/things-to-do/carmel.json";
 import { pacificToday } from "../lib/isPast";
 import { regionalEvents, eventHref } from "./events-2026";
 import { lights, isOn, lightsHref } from "./holidayLights";
@@ -69,6 +70,7 @@ const load = (slug: string, town: string, raw: unknown): TownHub => {
 export const HUBS: Record<string, TownHub> = {
   monterey: load("monterey", "Monterey", monterey),
   "santa-cruz": load("santa-cruz", "Santa Cruz", santaCruz),
+  carmel: load("carmel", "Carmel-by-the-Sea", carmel),
 };
 
 export const hubHref = (slug: string) => `/things-to-do/${slug}/`;
@@ -95,7 +97,12 @@ export function weekDates(today = pacificToday()): string[] {
 export type WeekItem = { name: string; href: string; when: string; sortKey: string };
 
 /** What's on in `town` over the next seven days, from the events, lights and NYE data. */
+// The events data says "Carmel-by-the-Sea"; the lights and NYE data say "Carmel".
+const ALIASES: Record<string, string[]> = { "Carmel-by-the-Sea": ["Carmel"] };
+const names = (town: string) => new Set([town, ...(ALIASES[town] ?? [])]);
+
 export function happeningThisWeek(town: string, today = pacificToday()): WeekItem[] {
+  const here = names(town);
   const days = weekDates(today);
   const first = days[0]!, last = days[6]!;
   const out: WeekItem[] = [];
@@ -103,7 +110,7 @@ export function happeningThisWeek(town: string, today = pacificToday()): WeekIte
     new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
 
   for (const e of regionalEvents) {
-    if (e.city !== town || !e.start) continue;
+    if (!here.has(e.city ?? "") || !e.start) continue;
     const end = e.end ?? e.start;
     if (end < first || e.start > last) continue;
     const ongoing = e.start < first;
@@ -116,7 +123,7 @@ export function happeningThisWeek(town: string, today = pacificToday()): WeekIte
   }
   const seen = new Set(out.map((o) => o.name));
   for (const l of lights) {
-    if (l.town !== town || l.event_page || seen.has(l.name)) continue;
+    if (!here.has(l.town) || l.event_page || seen.has(l.name)) continue;
     const on = days.filter((d) => isOn(l, d) !== false);
     if (!on.length) continue;
     const tail = on.length > 2 && on.join() === days.slice(days.indexOf(on[0]!)).join();
@@ -124,7 +131,7 @@ export function happeningThisWeek(town: string, today = pacificToday()): WeekIte
     out.push({ name: l.name, href: lightsHref(l), when, sortKey: `1${on[0]}` });
   }
   for (const n of nye) {
-    if (n.town !== town || !days.includes(n.date) || n.event_page) continue;
+    if (!here.has(n.town) || !days.includes(n.date) || n.event_page) continue;
     out.push({ name: n.name, href: nyeHref(n), when: `${fmt(n.date)}${n.start ? `, ${clock(n.start)}` : ""}`, sortKey: `1${n.date}${n.start ?? ""}` });
   }
   return out.sort((a, b) => a.sortKey.localeCompare(b.sortKey) || a.name.localeCompare(b.name));
@@ -134,7 +141,7 @@ export function happeningThisWeek(town: string, today = pacificToday()): WeekIte
 export function comingUp(town: string, n = 4, today = pacificToday()) {
   const after = weekDates(today)[6]!;
   return regionalEvents
-    .filter((e) => e.city === town && e.start && e.start > after)
+    .filter((e) => names(town).has(e.city ?? "") && e.start && e.start > after)
     .sort((a, b) => a.start!.localeCompare(b.start!))
     .slice(0, n);
 }
