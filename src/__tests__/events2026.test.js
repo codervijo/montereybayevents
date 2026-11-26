@@ -182,19 +182,19 @@ describe('data rules', () => {
     }
   });
 
-  it('ships exactly the three undated events with no date at all', () => {
+  // v2.Z (2026-11-26): Open Studios and the Downtown Holiday Parade got their
+  // organisers' 2026 dates, leaving one undated row.
+  it('ships exactly the one undated event with no date at all', () => {
     const undated = regionalEvents.filter((e) => !e.start);
     expect(undated.map((e) => e.name).sort()).toEqual([
-      'Downtown Santa Cruz Holiday Parade',
       'Monterey Bay Greek Festival',
-      'Open Studios Art Tour (41st Annual)',
     ]);
     for (const e of undated) {
       expect(e.dateText, e.name).toBe('');
       expect(e.end, e.name).toBeUndefined();
     }
     // Matches the CSV: those rows and only those have an empty date column.
-    expect(csvRows.filter((r) => !r.date_or_date_range).length).toBe(3);
+    expect(csvRows.filter((r) => !r.date_or_date_range).length).toBe(1);
   });
 
   it('has a date label to render in place of a date', () => {

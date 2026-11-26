@@ -148,6 +148,15 @@ export type RegionalEvent = {
   intro?: string;
   sections?: { heading: string; body: string[] }[];
   /**
+   * v2.Z. When the event normally happens, in one sentence, set ONLY where the
+   * organiser says it recurs ("annual", "Nth annual", "every October"). Once
+   * the 2026 run is over the page reads as an annual-event page: this line,
+   * then `nextEdition` or a plain "not announced".
+   */
+  recurrence?: string;
+  /** v2.Z. The next edition's dates, only as the organiser announces them. */
+  nextEdition?: { start: string; end?: string; source: string };
+  /**
    * Admission, and the first field in this dataset that unblocks v1.C.
    *
    * Set ONLY where the ORGANISER states it in their own words. The CSV carries
@@ -306,6 +315,52 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "Carmel-by-the-Sea's own six-day run of automotive and community events inside the wider Car Week fortnight.",
+    venue: "Ocean Avenue, Carmel-by-the-Sea",
+    metaDescription: "Carmel's own Car Week days on Ocean Avenue: what ran 11–16 August 2026, the free Larson Field shuttle, and the $40 Concours shuttle from Carmel Plaza.",
+    intro: "Carmel Car Week is the town's share of the wider Monterey Car Week fortnight: a run of street car shows on Ocean Avenue in Carmel-by-the-Sea, followed by shuttles out to the Pebble Beach events. In 2026 it ran from Tuesday 11 to Sunday 16 August. The three Carmel days were Concours for a Cause on the Tuesday, Astons on the Avenue on the Wednesday and the Ferrari Owners Club's fourth annual Concours Carmel on the Thursday, each closing several blocks of Ocean Avenue to display cars. Visit Carmel, which publishes the Car Week page, has not yet posted 2027 dates.",
+    sections: [
+      {
+        heading: "The three Ocean Avenue days in 2026",
+        body: [
+          "Concours for a Cause opened the week on Tuesday 11 August, 10am to 4pm, on Ocean Avenue between Junipero and Lincoln Streets. It was free and open to the public, and visitors voted for their favourite cars with wooden tokens, with the event supporting local non-profits.",
+          "Astons on the Avenue followed on Wednesday 12 August, 11am to 4pm, on Ocean Avenue between Monte Verde and Lincoln Streets, in aid of the Multiple Myeloma Research Foundation. Visit Carmel says the previous year's event raised more than $43,000.",
+          "On Thursday 13 August the Ferrari Owners Club of Northern California held its fourth annual Concours Carmel from 9am to 4pm, spread over five blocks around Ocean Avenue and Dolores Street. It was free, and alongside Ferraris it took in Maseratis and Italian motorcycles, with live entertainment, owner interviews and awards.",
+        ],
+      },
+      {
+        heading: "Parking and the shuttles",
+        body: [
+          "For the three Ocean Avenue days, Visit Carmel pointed drivers to free parking at Larson Field, next to Carmel Mission on Rio Road, with a free shuttle looping to and from Carmel Plaza every 10 to 15 minutes between 8am and 9pm.",
+          "For the Pebble Beach Concours d'Elegance on Sunday 16 August, the Carmel Chamber of Commerce ran a separate shuttle from Carmel Plaza to Pebble Beach between 8am and 6pm, every 20 to 30 minutes. It cost $40 a person for unlimited rides that day, with children under 12 free and no refunds; passes were sold online, at the Carmel Visitor Center in Carmel Plaza and at the shuttle stop on the day.",
+        ],
+      },
+      {
+        heading: "How it fits around Pebble Beach",
+        body: [
+          "The second half of the week belongs to Pebble Beach rather than Carmel itself. Visit Carmel's page lists the Tour d'Elegance on Thursday 13 August, Concours Village and the RetroAuto automobilia market from 13 to 15 or 16 August, the ticketed Classic Car Forum, and the ticketed Pebble Beach Concours d'Elegance at The Lodge at Pebble Beach on Sunday 16 August. The Carmel shows are the free, walk-up part of the week; the Pebble Beach Concours is not.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was Carmel Car Week in 2026?",
+        a: "Tuesday 11 to Sunday 16 August 2026, inside the wider Monterey Car Week that ran 7 to 16 August.",
+      },
+      {
+        q: "Were the Carmel car shows free?",
+        a: "Concours for a Cause and the Ferrari Concours Carmel were listed as free. Visit Carmel gave no admission price for Astons on the Avenue, which was a charity fundraiser.",
+      },
+      {
+        q: "Where do you park for the Ocean Avenue shows?",
+        a: "In 2026 Visit Carmel listed free parking at Larson Field by Carmel Mission on Rio Road, with a free shuttle to Carmel Plaza from 8am to 9pm on the Tuesday to Thursday.",
+      },
+      {
+        q: "Have the 2027 dates been announced?",
+        a: "Not on Visit Carmel's Car Week page yet.",
+      },
+    ],
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "motorlux",
@@ -1040,13 +1095,56 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-09-18",
     end: "2026-09-20",
     category: "Motorsports / Music Festival",
-    officialWebsite: "https://weathertechraceway.com/",
+    officialWebsite: "https://weathertechraceway.com/pages/gridlife-laguna",
     referenceUrls: [
       "https://www.weathertechracing.com/2026-full-schedule",
       "https://weathertechraceway.com/pages/tickets",
     ],
     description:
       "A three-day combined motorsports and music festival at WeatherTech Raceway Laguna Seca.",
+    metaDescription: "GRIDLIFE Laguna at Laguna Seca: track racing, Corkscrew drifting and live music. What ran 18–20 September 2026 and what we know about 2027.",
+    intro: "GRIDLIFE Laguna is a three-day motorsport and music festival at WeatherTech Raceway Laguna Seca, outside Monterey, that mixes amateur and club racing on track with live music, camping and car displays off it. The 2026 edition ran from Friday 18 to Sunday 20 September and closed the raceway's 2026 season. It was the season finale for the GRIDLIFE Touring Cup and the NOS Energy TrackBattle Time Attack, with drifting demonstrations alongside. The raceway's own news page described the 2025 festival as the third held at the track. No 2027 date has been posted by the raceway or by GRIDLIFE.",
+    sections: [
+      {
+        heading: "What happens on and off the track",
+        body: [
+          "The raceway lists two championship finales for 2026: the GRIDLIFE Touring Cup, a touring-car series, and the NOS Energy TrackBattle Time Attack, where drivers run against the clock rather than each other. Drifting demonstrations ran alongside.",
+          "Off the track the festival is built to keep people at the circuit after the cars stop: live music, an open-air arcade, concours displays, food vendors and camping inside the venue. For the 2025 edition the raceway's news page described drifting through the Corkscrew and evening sets on the main stage; it has not published an equivalent line-up for 2026.",
+        ],
+      },
+      {
+        heading: "Camping and getting in",
+        body: [
+          "Camping is part of the festival rather than an add-on elsewhere, with campgrounds marked on the raceway's facility map. The raceway publishes no camping prices, gate times or ticket prices for GRIDLIFE on its own page; tickets were sold through GRIDLIFE, and GRIDLIFE's 2026 Laguna pages have since been taken down.",
+          "The raceway's map shows the parking lots, but it warns that facility locations and access routes vary by event, so the layout for one weekend is not a guide to the next.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was GRIDLIFE Laguna in 2026?",
+        a: "Friday 18 to Sunday 20 September 2026 at WeatherTech Raceway Laguna Seca, as the final event of the raceway's 2026 season.",
+      },
+      {
+        q: "What racing is there?",
+        a: "In 2026, season finales for the GRIDLIFE Touring Cup and the NOS Energy TrackBattle Time Attack, plus drifting demonstrations.",
+      },
+      {
+        q: "Can you camp?",
+        a: "Yes. Camping inside the venue is part of the festival, but the raceway does not publish the prices on its own page.",
+      },
+      {
+        q: "Are the 2027 dates out?",
+        a: "Not yet. GRIDLIFE Laguna is not on the raceway's published 2027 schedule so far.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "GRIDLIFE",
+      url: "https://www.grid.life/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "pure-insurance-championship-at-pebble-beach",
@@ -1066,6 +1164,62 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A PGA TOUR Champions tournament played over three days at Pebble Beach.",
+    venue: "Pebble Beach Golf Links and Spyglass Hill Golf Course",
+    metaDescription: "PGA Tour Champions pros and First Tee juniors at Pebble Beach. Next edition 24–26 September 2027; no ticket needed and parking is free.",
+    intro: "The PURE Insurance Championship is a PGA Tour Champions event played over Pebble Beach Golf Links and Spyglass Hill, in which 80 tour professionals are paired with First Tee juniors. The 2026 edition ran from 18 to 20 September. The organiser has announced the next edition for 24 to 26 September 2027, which it describes as the tournament's 24th year at Pebble Beach. Spectators can walk the course without a ticket, and parking inside Pebble Beach is free.",
+    sections: [
+      {
+        heading: "How the tournament works",
+        body: [
+          "This is a pro-junior event rather than a straight professional tournament. Eighty PGA Tour Champions players each play with a First Tee junior, and the first rounds are split across Pebble Beach Golf Links and Spyglass Hill.",
+          "The final round is played at Pebble Beach alone. For 2026 the organiser listed a cut to the low 50 professionals and ties, the low 24 pro-junior teams (12 boys, 12 girls) and the low 10 amateur teams, with an awards ceremony at the 18th green and a 6pm scheduled finish. The Golf Channel carried 3pm to 6pm Pacific on each of the three tournament days.",
+        ],
+      },
+      {
+        heading: "Watching, parking and cost",
+        body: [
+          "The organiser says spectators can walk Pebble Beach Golf Links alongside the players with no ticket required.",
+          "Spectator parking is free at the Special Events Field, also called Lot 10, inside Pebble Beach and signed \"Spectator Parking\", with a shuttle to the course. It runs Friday to Sunday and includes accessible parking. The organiser's Policies and Prohibited Items page sets out what can be brought on to the course.",
+        ],
+      },
+      {
+        heading: "Who runs it",
+        body: [
+          "The Monterey Peninsula Foundation, which also stages the AT&T Pebble Beach Pro-Am, puts on the tournament, and the organiser says its proceeds support hundreds of non-profits across the Central Coast. First Tee, the youth golf and life-skills programme, supplies the junior players.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the PURE Insurance Championship in 2027?",
+        a: "24 to 26 September 2027 at Pebble Beach, according to the organiser.",
+      },
+      {
+        q: "Do you need a ticket?",
+        a: "No. The organiser says spectators can walk Pebble Beach Golf Links with no ticket required.",
+      },
+      {
+        q: "Where do spectators park?",
+        a: "Free at the Special Events Field (Lot 10) inside Pebble Beach, with a shuttle to the course, Friday to Sunday.",
+      },
+      {
+        q: "Which courses are used?",
+        a: "Pebble Beach Golf Links and Spyglass Hill Golf Course, with the final round at Pebble Beach.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Monterey Peninsula Foundation",
+      url: "https://www.pureinsurancechampionship.com/",
+    },
+    recurrence: "The organiser says the tournament has been played at Pebble Beach since 2004.",
+    nextEdition: {
+      start: "2027-09-24",
+      end: "2027-09-26",
+      source: "https://www.pureinsurancechampionship.com/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "the-great-sandcastle-contest",
@@ -1084,6 +1238,55 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The 63rd running of Carmel's one-day sandcastle-building contest, held on Carmel Beach.",
+    officialWebsite: "https://ci.carmel.ca.us/events",
+    metaDescription: "Carmel's 63rd Great Sandcastle Contest was 19 September 2026, theme 'Carmel at 110'. Who won the Golden Shovel and how the contest runs.",
+    intro: "The Great Sandcastle Contest is the City of Carmel-by-the-Sea's annual sand-building competition on Carmel Beach, open to anyone who turns up with a team and a theme. The 63rd contest was held on Saturday 19 September 2026 under the theme \"It Never Gets Old: Carmel at 110\", marking the city's 110th year. The top award, the Golden Shovel, went to \"Sunset Performing Dragon Center\". The city has not yet announced the 2027 date or theme; for 2026 it posted both in late August.",
+    sections: [
+      {
+        heading: "How the day runs",
+        body: [
+          "The contest is a single morning on the beach. In the city's announcement for the 2024 contest, building started at 7am and judging at 11am, and entry was free and open to all. Earlier city listings put the building area on Carmel Beach between 10th and 12th Avenues, with the registration table on the sand at 11th. The city has not published the 2026 timings separately, so treat those as how it has run rather than a fixed schedule.",
+        ],
+      },
+      {
+        heading: "The 2026 winners",
+        body: [
+          "The city published the 2026 results under the theme \"It Never Gets Old: Carmel at 110\". The Golden Shovel went to \"Sunset Performing Dragon Center\" by Patrick, Ryn and Anna. The Sour Grapes award went to \"Birthday Paw-ty\" by Matt Maksim, Best Theme to \"Scenic Drive\", Best Kids to \"Turtle Town\" by Team Turtle, Best Traditional to \"Solo Mio\" by Dereck Farreh, and Best Bribe to \"Happy B-day Carmel\" by Whitson Engineers.",
+        ],
+      },
+      {
+        heading: "Finding out about 2027",
+        body: [
+          "The city posts the date and theme on its events page in late summer; for 2026 it appeared in a list of the year's events with the theme already attached. Questions go to the city's Community Activities office on 831-620-2020.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was the 2026 Great Sandcastle Contest?",
+        a: "Saturday 19 September 2026 on Carmel Beach. It was the 63rd contest.",
+      },
+      {
+        q: "What was the 2026 theme?",
+        a: "\"It Never Gets Old: Carmel at 110\", for the city's 110th year.",
+      },
+      {
+        q: "Does it cost anything to enter?",
+        a: "The city described the 2024 contest as free and open to all to participate. It has not published separate entry terms for 2026.",
+      },
+      {
+        q: "When is the 2027 contest?",
+        a: "Not announced yet. For 2026 the city published the date and theme in late August.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "City of Carmel-by-the-Sea",
+      url: "https://ci.carmel.ca.us/",
+    },
+    recurrence: "An annual contest run by the City of Carmel-by-the-Sea on Carmel Beach; 2026 was the 63rd.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "monterey-jazz-festival",
@@ -1362,6 +1565,59 @@ export const regionalEvents: RegionalEvent[] = [
       "https://business.pacificgrove.org/events",
     ],
     description: "A four-day film festival in Carmel-by-the-Sea.",
+    venue: "Golden Bough Playhouse (Founders Theatre)",
+    streetAddress: "851 Monte Verde St.",
+    postalCode: "93921",
+    officialWebsite: "https://ciffest.com/",
+    metaDescription: "Carmel International Film Festival at the Golden Bough Playhouse: 2026 ran 1–4 October; 2027 passes are $150 a day or $500 for all four days.",
+    intro: "The Carmel International Film Festival is a four-day festival of independent features, shorts, documentaries and industry panels centred on the Founders Theatre at the Golden Bough Playhouse, 851 Monte Verde Street, Carmel-by-the-Sea. The 2026 festival ran from Thursday 1 to Sunday 4 October, with early pass pick-up and a filmmaker kick-off party the evening before. The organiser traces the festival back to 1929 and is already selling passes for 2027, which its site gives as 30 September to 3 October.",
+    sections: [
+      {
+        heading: "What the festival is like",
+        body: [
+          "Screenings run through the day in the Founders Theatre, many followed by a short Q&A, with panels held at nearby venues. The 2026 programme opened at 9am on the Thursday with remarks from writer-director Edward Burns, followed by a documentary on Steinbeck, Ed Ricketts and the restored Western Flyer. A panel on financing independent film that day was held at the Cypress Inn, limited to 40 seats.",
+          "Frank Darabont, director of The Shawshank Redemption and creator of The Walking Dead, was the organiser's headline guest for 2026.",
+        ],
+      },
+      {
+        heading: "Passes and pick-up",
+        body: [
+          "The festival sells all-access passes rather than single-screening tickets. For 2027 the organiser lists a one-day pass at $150, covering every film and event on a single day, and a four-day pass at $500 for the whole festival. It was also advertising an early-bird discount code at the time of writing.",
+          "Passes are collected at the theatre, either at the early pick-up the day before the festival opens or at any point during it. In 2026 the early pick-up ran from 2pm to 5pm on Wednesday 30 September in the Golden Bough's main lobby.",
+        ],
+      },
+      {
+        heading: "The 1929 connection",
+        body: [
+          "The organiser describes Carmel's festival as started in 1929 by Mildred Taylor, with the Carmel artist James Blanding Sloan credited on the original poster, and is building towards a centennial in 2029. The present festival is run by Lawrence Roeck and Annette Andersen.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Carmel International Film Festival in 2027?",
+        a: "The organiser's site gives 30 September to 3 October for the 2027 festival, with passes already on sale.",
+      },
+      {
+        q: "How much is a pass?",
+        a: "For 2027, $150 for a one-day all-access pass or $500 for all four days.",
+      },
+      {
+        q: "Where are the screenings?",
+        a: "Mainly in the Founders Theatre at the Golden Bough Playhouse, 851 Monte Verde St., Carmel-by-the-Sea, with some panels at nearby venues such as the Cypress Inn.",
+      },
+      {
+        q: "When did the 2026 festival run?",
+        a: "Thursday 1 to Sunday 4 October 2026, with early pass pick-up and a kick-off party on Wednesday 30 September.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Carmel International Film Festival",
+      url: "https://ciffest.com/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "laguna-seca-speedtour",
@@ -1375,10 +1631,44 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-10-02",
     end: "2026-10-04",
     category: "Motorsports",
-    officialWebsite: "https://weathertechraceway.com/",
+    officialWebsite: "https://weathertechraceway.com/pages/laguna-seca-speedtour-trans-am",
     referenceUrls: ["https://www.weathertechracing.com/2026-full-schedule"],
     description:
       "A three-day Trans-Am SpeedTour race meeting at WeatherTech Raceway Laguna Seca.",
+    metaDescription: "Trans Am at Laguna Seca: the October 2026 Western Championship doubleheader, and the 2027 Racing America weekend moving to 6–8 May.",
+    intro: "The Trans Am weekend at WeatherTech Raceway Laguna Seca brings the Trans Am Series, with its Mustangs, Camaros and Challengers, to the Monterey circuit for a race meeting the raceway sells as Mission Foods Racing America at Laguna Seca. In 2026 it ran from Friday 2 to Sunday 4 October as a Trans Am Western Championship doubleheader, the second of three Western rounds. For 2027 the raceway has moved the weekend to the spring: 6 to 8 May, with Trans Am and SVRA historic racing heading the bill.",
+    sections: [
+      {
+        heading: "What races",
+        body: [
+          "Trans Am is an American production-based road-racing series that the raceway says debuted in 1966. Its fields include an 850-plus horsepower top class, where Mustangs, Camaros and Challengers race against Audi and Mercedes-AMG machinery, alongside production-based classes.",
+          "The 2026 Laguna Seca round was a doubleheader in Trans Am's Western Championship, between Sonoma in April and the Circuit of the Americas in November. For the 2027 weekend the raceway adds SVRA vintage racing and a full grid of historic Trans Am cars.",
+        ],
+      },
+      {
+        heading: "Getting there and around the circuit",
+        body: [
+          "The raceway lists numbered parking lots 1 to 10 plus general parking near Turn 11, and the paddock sits inside the circuit near Turns 10 and 11. Camping is available in several areas, including General, Terrace, Turn 9, Turn 5 Right, A Camp and B Camp.",
+          "The raceway says lot locations can change from one event to the next and asks visitors who need accessible parking or step-free routes to confirm arrangements with it before the weekend. It does not publish ticket prices on the event page; tickets are sold through its ticketing page.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Trans Am weekend at Laguna Seca in 2027?",
+        a: "6 to 8 May 2027, sold by the raceway as Mission Foods Racing America at Laguna Seca, with Trans Am and SVRA.",
+      },
+      {
+        q: "When was it in 2026?",
+        a: "Friday 2 to Sunday 4 October 2026, as a Trans Am Western Championship doubleheader.",
+      },
+      {
+        q: "Can you camp at the circuit?",
+        a: "Yes. The raceway lists several campgrounds, including General, Terrace and Turn 9, but no prices on the event page.",
+      },
+    ],
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "pacific-grove-butterfly-parade-bazaar",
@@ -1396,6 +1686,46 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "Pacific Grove's annual butterfly parade and community bazaar, held on a single Saturday in early October.",
+    venue: "Downtown Pacific Grove (Lighthouse Avenue)",
+    officialWebsite: "https://www.cityofpacificgrove.gov/our_city/departments/recreation/special_events.php",
+    metaDescription: "Pacific Grove's school Butterfly Parade on Lighthouse Avenue: 2026 was Saturday 3 October, part of Butterfly Days weekend. 2027 not yet set.",
+    intro: "The Butterfly Parade is Pacific Grove's school-district parade through downtown, on Lighthouse Avenue, held on the Saturday of the town's Butterfly Days weekend in early October. In 2026 it took place on Saturday 3 October, with the City of Pacific Grove's events calendar listing a 10am start and the Pacific Grove Unified School District as organiser. The same weekend brought the Heritage Society's Butterfly Days events at Chautauqua Hall and a Sunset Celebration at Point Pinos Lighthouse. A 2027 date has not been published.",
+    sections: [
+      {
+        heading: "The 2026 parade and the weekend around it",
+        body: [
+          "The city's 2026–27 special events calendar lists the Butterfly Parade on Saturday 3 October 2026 at 10am on Lighthouse Avenue downtown, organised by the Pacific Grove Unified School District. The city's previous calendar listed it on Saturday 4 October 2025, also at 10am, also on Lighthouse Avenue.",
+          "It sits inside a wider weekend. The Pacific Grove Heritage Society ran Butterfly Days on 3 and 4 October 2026 around Chautauqua Hall, 16th Street and Central Avenue, with a free lecture, downtown architecture walks and a birdhouse silent auction, plus a croquet tournament in Caledonia Park. The Heritage Society's Sunset Celebration at Point Pinos Lighthouse followed at 5pm on the Saturday.",
+        ],
+      },
+      {
+        heading: "What we could not confirm",
+        body: [
+          "The school district does not publish a parade page of its own that we could find, so this page does not give a route, a bazaar location or bazaar hours for 2026. The 10am time is the city's calendar entry for the event permit, not a timetable from the organiser, and the 2027 date will appear in the city's next special events calendar.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was the Pacific Grove Butterfly Parade in 2026?",
+        a: "Saturday 3 October 2026. The city's events calendar listed a 10am start on Lighthouse Avenue downtown.",
+      },
+      {
+        q: "Who organises it?",
+        a: "The Pacific Grove Unified School District, according to the city's special events calendar.",
+      },
+      {
+        q: "What else happens that weekend?",
+        a: "The Heritage Society's Butterfly Days at Chautauqua Hall on the Saturday and Sunday, a croquet tournament in Caledonia Park, and the Sunset Celebration at Point Pinos Lighthouse on the Saturday evening.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Pacific Grove Unified School District",
+      url: "https://www.pgusd.org/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "butterfly-days-sunset-celebration-at-point-pinos-lighthouse",
@@ -1411,6 +1741,46 @@ export const regionalEvents: RegionalEvent[] = [
     referenceUrls: ["https://business.pacificgrove.org/events"],
     description:
       "A one-evening community and heritage event at Point Pinos Lighthouse, on the same day as the Butterfly Parade.",
+    officialWebsite: "https://pacificgroveheritage.org/",
+    metaDescription: "The Heritage Society's Sunset Celebration at Point Pinos Lighthouse on Butterfly Days Saturday: 3 October 2026 at 5pm. 2027 not yet set.",
+    intro: "The Sunset Celebration is the Pacific Grove Heritage Society's evening event at Point Pinos Lighthouse on the Saturday of Butterfly Days weekend. In 2026 it was held on Saturday 3 October, with the City of Pacific Grove's events calendar listing a 5pm start at the lighthouse, after the morning Butterfly Parade and the Heritage Society's daytime programme at Chautauqua Hall. Point Pinos, lit since 1855, is the oldest continuously operating lighthouse on the West Coast according to the city. No 2027 date has been published.",
+    sections: [
+      {
+        heading: "Where it fits in Butterfly Days",
+        body: [
+          "Butterfly Days is the Heritage Society's weekend in early October. In 2026 it ran on 3 and 4 October, with a free lecture, walks led by Heritage Society members through nine downtown architectural styles starting from Chautauqua Hall at 16th Street and Central Avenue, and a silent auction of handmade birdhouses. The Sunset Celebration moved the Saturday out to the lighthouse for the evening.",
+          "The city's special events calendars list the Sunset Celebration on the Butterfly Days Saturday in both 2025 (4 October) and 2026 (3 October), at 5pm both times.",
+        ],
+      },
+      {
+        heading: "The lighthouse",
+        body: [
+          "Point Pinos sits on the northern tip of the Monterey Peninsula and has shown a light since 1 February 1855; the city, which owns it, says it is the oldest continuously operating lighthouse on the West Coast. The lighthouse's own site asks visitors to bring no drones or pets and to walk bicycles to a four-space rack.",
+          "Neither the Heritage Society nor the lighthouse publishes a page for the Sunset Celebration itself, so we cannot give a ticket price or programme for it.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was the Sunset Celebration in 2026?",
+        a: "Saturday 3 October 2026 at Point Pinos Lighthouse, listed by the city at 5pm.",
+      },
+      {
+        q: "Who runs it?",
+        a: "The Pacific Grove Heritage Society, which also runs Butterfly Days at Chautauqua Hall.",
+      },
+      {
+        q: "Can I bring my dog?",
+        a: "The lighthouse asks visitors not to bring pets.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Pacific Grove Heritage Society",
+      url: "https://pacificgroveheritage.org/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "poodle-day",
@@ -1430,6 +1800,57 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-day community pet event held at The Crossroads and on Carmel Beach.",
+    metaDescription: "Poodle Day in Carmel: the 3 October 2026 parade, beach play and evening parties for NorCal Poodle Rescue, and why 2027 moves to Cathedral City.",
+    intro: "Poodle Day is an annual day out for poodles, poodle mixes and their owners, raising money for NorCal Poodle Rescue. The 2026 edition was held in Carmel-by-the-Sea on Saturday 3 October, with a parade, off-leash play on Carmel Beach in the afternoon and ticketed cocktail parties over the Friday and Saturday evenings. The organiser says the next Poodle Day will be held in Cathedral City, in the Coachella Valley, rather than Carmel, and it has not yet given a 2027 date.",
+    sections: [
+      {
+        heading: "How the 2026 day ran",
+        body: [
+          "The day centred on a parade for poodles, poodle mixes and their people, followed by off-leash beach play on Carmel Beach in the afternoon. Parade registration came first: the organiser required it before anyone could buy a ticket for the evening events.",
+          "The evening parties were small and sold in advance. On Friday 2 October there was a $45 pizza night at Allegro Pizza in the Barnyard and $75 gatherings at the De Tierra and Wrath tasting rooms and at Mad Dog & Englishmen. On the Saturday the options were the Cypress Inn ($85, 4pm to 6pm), VIN By the SEA ($82, 4pm to 6pm) and Mad Dog & Englishmen ($82, 6pm to 8pm). Each had a ticket cap and a per-booking limit, with waiting lists for sold-out events.",
+        ],
+      },
+      {
+        heading: "Dogs on the beach",
+        body: [
+          "The organiser asked owners to keep dogs away from live or recently dead marine animals on the beach because of a leptospirosis outbreak among sea lions on the California coast including Monterey Bay, to stop them drinking from stagnant puddles, and to check with a vet about the leptospirosis vaccine.",
+          "Expect a sandy dog afterwards. The organiser points to outdoor showers at most Carmel hotels and a self-serve dog wash at Pet Food Express in the Crossroads.",
+        ],
+      },
+      {
+        heading: "Where the money goes, and the move",
+        body: [
+          "Proceeds go to NorCal Poodle Rescue, which the organiser says has been rehoming poodles and poodle mixes in Northern California and Southern Oregon since 1985. The Crossroads Carmel shopping centre was the event's sponsor in 2026.",
+          "The organiser's parade page says next year's event will be in Cathedral City, California, and shows a Poodle Day 2027 poster, but no date. Anyone hoping for another Carmel Poodle Day should watch the organiser's newsletter rather than assume an October repeat.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was Poodle Day in 2026?",
+        a: "Saturday 3 October 2026 in Carmel-by-the-Sea, with evening parties on Friday 2 and Saturday 3 October.",
+      },
+      {
+        q: "Is Poodle Day coming back to Carmel in 2027?",
+        a: "The organiser says the next event will be held in Cathedral City, California. It has not given a date.",
+      },
+      {
+        q: "Who does Poodle Day raise money for?",
+        a: "NorCal Poodle Rescue, which helps poodles and poodle mixes in Northern California and Southern Oregon.",
+      },
+      {
+        q: "Can poodle mixes take part?",
+        a: "Yes. The parade and beach play are for poodles, poodle mixes and their owners.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Poodle Day",
+      url: "https://poodleday.com/",
+    },
+    recurrence: "An annual gathering for poodles, poodle mixes and their owners; held in Carmel through 2026, with the organiser moving it to Cathedral City in 2027.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "meet-the-makers-art-wine-walk",
@@ -1449,6 +1870,50 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The 7th annual art and wine walk in Carmel-by-the-Sea, centred on Devendorf Park.",
+    metaDescription: "Meet the Makers in Carmel: artist-owned galleries plus Monterey County wine, 4–7pm. 2026 was 10 October; the 8th is Saturday 9 October 2027, $50.",
+    intro: "Meet the Makers is an evening tour of Carmel-by-the-Sea's artist-owned galleries with Monterey County wine and local food poured along the way, starting from Devendorf Park. The 7th edition was held on Saturday 10 October 2026. Visit Carmel, which runs it with the Carmel Art Walk, has set the 8th for Saturday 9 October 2027 from 4pm to 7pm, at $50 a person, and says it will have a similar line-up to 2026.",
+    sections: [
+      {
+        heading: "How the walk works",
+        body: [
+          "You start in Devendorf Park and make your own way through downtown, looking for blue lanterns outside the participating galleries. At each stop the draw is the artist being there in person, with a Monterey County winery pouring and, at some stops, a local food maker.",
+          "For 2027 the ticket is $50 a person and covers the gallery visits, the wine tastings and the food tastings.",
+        ],
+      },
+      {
+        heading: "Who took part in 2026",
+        body: [
+          "The 2026 walk took in 19 galleries, including the Carmel Art Association, Aaron Chang Gallery, Jennifer Perlmutter Gallery and Patricia Qualls Gallery, and 17 wineries, among them Albatross Ridge, De Tierra Vineyards, I. Brand & Family, Scheid Family Vineyards and Silvestri Vineyards.",
+          "Six food makers joined in, including Lula's Chocolate, The Nut Hut and Flaherty's Seafood Grill & Oyster Bar, with live music from Julie Capili, Anne Sibley, Pete Sibley and Justin Noseworthy, and musicians from the Monterey Symphony.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is Meet the Makers in 2027?",
+        a: "Saturday 9 October 2027, 4pm to 7pm, starting in Devendorf Park.",
+      },
+      {
+        q: "How much is a ticket?",
+        a: "$50 a person for 2027, covering the gallery tour, wine tastings and food tastings.",
+      },
+      {
+        q: "How do I find the participating galleries?",
+        a: "Look for the blue lanterns outside them.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Visit Carmel",
+      url: "https://www.carmelcalifornia.com/",
+    },
+    recurrence: "An annual October evening; 2026 was the 7th and the 8th is set for Saturday 9 October 2027.",
+    nextEdition: {
+      start: "2027-10-09",
+      source: "https://www.carmelcalifornia.com/event/meet-the-makers/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "big-sur-food-wine-festival",
@@ -1467,6 +1932,56 @@ export const regionalEvents: RegionalEvent[] = [
       "https://www.seemonterey.com/wp-content/uploads/2026-Annual-Events-Monterey-County-CA.pdf",
     ],
     description: "A three-day food and wine festival held in Big Sur.",
+    metaDescription: "Big Sur Food & Wine: three days of tastings, hikes and dinners along the Big Sur coast. What ran 5–7 November 2026, the 21+ rule and the shuttles.",
+    intro: "The Big Sur Food & Wine Festival is a three-day run of separately ticketed tastings, hikes and dinners held at venues along the Big Sur coast, raising money for local non-profits. The 2026 festival ran from Thursday 5 to Saturday 7 November, opening with a party at Alila Ventana Big Sur and ending with the Grand Party at the Henry Miller Memorial Library. Every event is 21 and over, and some require the festival shuttle. The organiser has not yet announced 2027 dates.",
+    sections: [
+      {
+        heading: "The 2026 programme",
+        body: [
+          "Thursday 5 November opened with the Magical Mystery Tour from 10am to 3pm and the Opening Night at Alila Ventana Big Sur from 6pm to 9pm.",
+          "Friday 6 November had a panel tasting in The Loft at Alila Ventana (10am to 1pm), Hiking with Stemware (10:30am to 3:30pm), the Wine Walkabout in the Sierra Mar chef's garden at Post Ranch Inn (noon to 3pm), an izakaya dinner at the Big Sur Roadhouse that sold out, and the Annual Sommelier Dinner at The Village Big Sur.",
+          "Saturday 7 November brought Bubbles & Brushes in the Redwoods at Big Sur Lodge (10am to 1pm), the Live Auction for Big Sur at The Village (11am to 2pm), and the Grand Party at the Henry Miller Memorial Library from 6:30pm to 9:30pm.",
+        ],
+      },
+      {
+        heading: "Shuttles, age rule and what to bring",
+        body: [
+          "For the Grand Party the shuttle was mandatory: the organiser says there is no parking at or near the Henry Miller Library, and guests rode either the shuttle from Carmel or the free roaming shuttle in the Big Sur valley. Shuttle tickets were sold separately, as they were for the Sommelier Dinner.",
+          "All events are 21 and over, and the organiser says no pets or children. Many events are outdoors and off-trail, so footwear matters, and refillable water bottles are allowed. Tickets can be transferred up to 48 hours before an event, and the organiser refunds in full if it cancels for weather or any other reason.",
+        ],
+      },
+      {
+        heading: "Where the money goes",
+        body: [
+          "The festival is a project of the Big Sur Food & Wine Foundation, a volunteer-run 501(c)(3), and proceeds go to Big Sur non-profits working in health, safety, education and the arts. The organiser says the 2025 festival raised $165,000, with grants to groups including the Big Sur Health Center and Big Sur Fire, and that its cumulative grants have passed $1 million.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was the Big Sur Food & Wine Festival in 2026?",
+        a: "Thursday 5 to Saturday 7 November 2026.",
+      },
+      {
+        q: "Can I bring children?",
+        a: "No. The organiser says every event is 21 and over, with no children or pets.",
+      },
+      {
+        q: "Can I drive to the Grand Party?",
+        a: "No. There is no parking at or near the Henry Miller Memorial Library, so the shuttle is mandatory.",
+      },
+      {
+        q: "Are the 2027 dates out?",
+        a: "Not yet on the organiser's site.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Big Sur Food & Wine Foundation",
+      url: "https://www.bigsurfoodandwine.org/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "monterey-bay-half-marathon",
@@ -1484,6 +1999,62 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A half marathon run on a single November Sunday through Monterey and Pacific Grove.",
+    venue: "Downtown Monterey (start on Del Monte Avenue)",
+    officialWebsite: "https://www.montereybayhalfmarathon.org/",
+    metaDescription: "Monterey Bay Half Marathon: Cannery Row and the Pacific Grove shore. 2026 ran 8 November; next race Sunday 14 November 2027, registration opens May.",
+    intro: "The Monterey Bay Half Marathon is an out-and-back road half marathon from downtown Monterey along Cannery Row to the Pacific Grove shoreline, run each November by the Big Sur Marathon Foundation. The 2026 race was on Sunday 8 November, with the Pacific Grove Lighthouse 5K and By-the-Bay 3K the day before. The next half marathon is on Sunday 14 November 2027, starting at 7am on Del Monte Avenue; the organiser says registration opens in May 2027.",
+    sections: [
+      {
+        heading: "The course and the cut-off",
+        body: [
+          "The race starts on Del Monte Avenue in downtown Monterey, runs out along Cannery Row and beside the Pacific Grove shoreline, and returns to finish at Custom House Plaza in Monterey State Historic Park, where the finish village has the awards ceremony and a free beer for finishers. The course is USATF-certified and close to flat, with about 106 feet of climb in total.",
+          "There is a 3.5-hour limit, about 16 minutes a mile, counted from the last start wave. Runners who fall behind may be turned around early or sent onto a shorter route, and only those inside 3:30 get a medal, an official time and the post-race food. Entry is capped at 9,000 and runners must be 12 or older.",
+        ],
+      },
+      {
+        heading: "Race-day parking",
+        body: [
+          "The organiser's options for the Sunday are the downtown East and West garages on Franklin Street between Washington and Alvarado (arrive by 5:30am; free until 11am), or free all-day parking at Monterey Peninsula College or Del Monte Center with shuttles to the start every 10 minutes from 5am to 6:15am. Return shuttles leave Figueroa Street at the Recreation Trail from 8:30am to noon.",
+          "Private drop-offs go to Pacific Street between Jefferson and Madison, outside City Hall, a five-minute walk from the start, and there is free bike valet near the finish from 5:30am to 11:30am.",
+        ],
+      },
+      {
+        heading: "Watching the race",
+        body: [
+          "The organiser suggests picking one or two spots because road closures make it slow to move between them: Window on the Bay and Lake El Estero for the start, Cannery Row for miles 3 and 12, Lighthouse Avenue in downtown Pacific Grove at mile 4, Lovers Point at miles 4.4 and 10.8, and Custom House Plaza for the finish.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Monterey Bay Half Marathon in 2027?",
+        a: "Sunday 14 November 2027, starting at 7am on Del Monte Avenue. The Pacific Grove Lighthouse 5K is on Saturday 13 November.",
+      },
+      {
+        q: "What is the time limit?",
+        a: "3.5 hours, about 16 minutes per mile, from the final start wave.",
+      },
+      {
+        q: "When does registration open?",
+        a: "The organiser says registration for 2027 opens in May 2027.",
+      },
+      {
+        q: "Where do runners park?",
+        a: "Downtown garages on Franklin Street if you arrive by 5:30am, or free parking with shuttles at Monterey Peninsula College or Del Monte Center.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Big Sur Marathon Foundation",
+      url: "https://www.montereybayhalfmarathon.org/",
+    },
+    recurrence: "Held each November by the Big Sur Marathon Foundation, with the half marathon on the Sunday of race weekend.",
+    nextEdition: {
+      start: "2027-11-14",
+      source: "https://www.montereybayhalfmarathon.org/races/half-marathon/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     // v2.P — added 2026-11-01 from the organiser's email; content audited
@@ -1596,19 +2167,25 @@ export const regionalEvents: RegionalEvent[] = [
   },
   {
     slug: "christmas-in-the-adobes",
-    updated: "2026-08-18",
+    updated: "2026-11-26",
     name: "Christmas in the Adobes",
     county: "Monterey",
     cityText: "Monterey (historic downtown adobes)",
     city: "Monterey",
-    venue: "Historic downtown adobes",
+    venue: "Historic adobes of Old Monterey",
     months: ["december"],
     dateText: "December 11-12, 2026",
     start: "2026-12-11",
     end: "2026-12-12",
     times: [
-      { day: "Friday, December 11", hours: "5:00 - 9:00 p.m." },
-      { day: "Saturday, December 12", hours: "5:00 - 9:00 p.m." },
+      {
+        day: "Friday 11 December",
+        hours: "5:00pm – 9:00pm",
+      },
+      {
+        day: "Saturday 12 December",
+        hours: "5:00pm – 9:00pm",
+      },
     ],
     timesConfidence: "official",
     category: "Holiday / Heritage",
@@ -1625,6 +2202,62 @@ export const regionalEvents: RegionalEvent[] = [
       label: "Holiday lights map 2026",
       blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
     },
+    metaDescription: "Christmas in the Adobes 2026: Fri 11 & Sat 12 December, 5–9pm, Old Monterey. $30 a night, $45 both nights, under-18s free. Where to collect wristbands.",
+    intro: "Christmas in the Adobes is two evenings of luminaria-lit open houses in the historic adobes of Old Monterey, run by the Monterey State Historic Park Association. The 42nd annual event is on Friday 11 and Saturday 12 December 2026, from 5pm to 9pm both nights. Tickets are $30 for one night or $45 for both, and anyone 17 or under gets in free. You do not show a ticket at each adobe: everyone collects a wristband and map at one of three will-call points first, which open at 4pm. It goes ahead rain or shine.",
+    sections: [
+      {
+        heading: "Tickets, and the wristband step",
+        body: [
+          "An adult single-night ticket is $30 and the two-night Gold Pass is $45. Youth 17 and under are free. Military and MSHPA member discounts are not sold online; buy those in person at the Custom House Store. No refunds are given.",
+          "Online tickets are not accepted at the adobes themselves, whether printed or on your phone. Exchange them for a wristband and map at will-call, which opens at 4pm each night at the Stanton Center in Custom House Plaza, at Casa Gutierrez, 590 Calle Principal, or at Stevenson House, 530 Houston Street. Choosing the will-call nearest where you park saves a walk back.",
+        ],
+      },
+      {
+        heading: "What the evening is",
+        body: [
+          "The adobes are lit with luminarias and dressed for the season, with music and refreshments, and with displays on early Monterey's holiday traditions and history. The organiser has said a 2026 route map is still to come, so the exact list of open buildings is not yet published.",
+          "The event is outdoors between buildings and runs whatever the weather, so dress for a December evening on foot.",
+        ],
+      },
+      {
+        heading: "Friday's separate reception",
+        body: [
+          "On Friday 11 December only, the organiser holds a reception from 4pm to 7pm in the Memory Garden, 20 Custom House Plaza. It costs $65 a person, includes seasonal bites, wine from Joyce Winery and admission, and has limited space. It is not included in a Christmas in the Adobes ticket.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is Christmas in the Adobes 2026?",
+        a: "Friday 11 and Saturday 12 December 2026, 5pm to 9pm both nights.",
+      },
+      {
+        q: "How much are tickets?",
+        a: "$30 for one night or $45 for the two-night Gold Pass. Youth 17 and under are free.",
+      },
+      {
+        q: "Can I show my e-ticket at the adobes?",
+        a: "No. Collect a wristband and map at will-call first: the Stanton Center, Casa Gutierrez or Stevenson House, from 4pm.",
+      },
+      {
+        q: "Is it cancelled if it rains?",
+        a: "No. The organiser says it runs rain or shine.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Monterey State Historic Park Association",
+      url: "https://www.mshpa.org/",
+    },
+    startTime: "17:00",
+    endTime: "21:00",
+    admission: {
+      kind: "ticketed",
+      from: 30,
+      currency: "USD",
+    },
+    recurrence: "An annual December event; 2026 is the 42nd.",
+    hideSources: true,
   },
   {
     slug: "first-night-monterey",
@@ -1649,6 +2282,70 @@ export const regionalEvents: RegionalEvent[] = [
       label: "New Year's Eve 2026 in Monterey",
       blurb: "First Night and everything else on the Peninsula that night: hotel parties, concerts, getting home, and what's open on New Year's Day.",
     },
+    metaDescription: "First Night Monterey, 31 December 2026, 3pm–midnight downtown. Buttons $30 adult, $15 youth (early bird to 14 Dec), under-6s free; free shuttle.",
+    intro: "First Night Monterey is the town's New Year's Eve arts festival: nine hours of music, dance, fire shows and family activities across indoor and outdoor venues in historic downtown Monterey, from 3pm to midnight on Thursday 31 December 2026. Entry is by a button rather than a ticket. Early-bird buttons are $30 for adults and $15 for ages 6 to 15 until 14 December, and children 5 and under are free. The organiser badges this edition First Night Monterey 2027, with the theme \"Color the Night!\", and says most venues and the midnight countdown are indoors.",
+    sections: [
+      {
+        heading: "Buttons: prices and where to get them",
+        body: [
+          "Adult buttons (16 and over) are $30 early bird, $32 in advance to 30 December and $35 on the night. Youth buttons (6 to 15) are $15, $18 and $20 on the same pattern. Children 5 and under are free. Buttons are non-refundable.",
+          "Online sales close on 28 December, and online orders are not posted: collect them at will-call in the Monterey Conference Center lobby on 30 December from 10am to 3pm or on 31 December from 9am to 7pm. From December buttons are also sold at Monterey County Safeway stores, Andronico's and the Grove Market in Pacific Grove.",
+        ],
+      },
+      {
+        heading: "The shape of the night",
+        body: [
+          "The festival opens at 3pm. Kids' Night Out runs from the opening until the Twilight Procession at 5:30pm, so families with young children can do the first part and the procession and still be home early. After that the evening is performances across the downtown venues, plus hands-on art stations and food and drink booths.",
+          "The countdown finale starts at 11:15pm and is held indoors. The organiser says about 85% of the sites are indoors and the festival goes ahead rain or shine.",
+        ],
+      },
+      {
+        heading: "Parking and the free shuttle",
+        body: [
+          "The festival area is closed to cars and there is no valet. The organiser's advice is to park at Del Monte Center, near the lower level by Macy's, and take the free shuttle from the MST stop there, which runs every 15 minutes from 3:15pm to the downtown transit centre at Alvarado and Pearl. The last bus back to Del Monte Center leaves at 12:30am.",
+          "Anyone wearing a button rides any operating MST line free from 3pm, on a Saturday timetable. There are no other late-night routes this year, so plan the trip home before you go. Bike racks are along Alvarado Street and near the Del Monte Center shuttle stop, but bikes must be walked within the festival and are not allowed in venues.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "What time does First Night Monterey start and finish?",
+        a: "3pm to midnight on Thursday 31 December 2026, with the Twilight Procession at 5:30pm and the countdown finale from 11:15pm.",
+      },
+      {
+        q: "How much is a button?",
+        a: "$30 for adults and $15 for ages 6 to 15 until the early-bird deadline on 14 December, rising to $35 and $20 on the night. Children 5 and under are free.",
+      },
+      {
+        q: "Where should I park?",
+        a: "At Del Monte Center, then take the free shuttle downtown, which runs every 15 minutes from 3:15pm. The last return bus leaves at 12:30am.",
+      },
+      {
+        q: "What happens if it rains?",
+        a: "It goes ahead. About 85% of the venues are indoors, including the midnight countdown.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "First Night Monterey",
+      url: "https://www.firstnightmonterey.org/",
+    },
+    times: [
+      {
+        day: "Thursday 31 December",
+        hours: "3:00pm – midnight",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "15:00",
+    admission: {
+      kind: "ticketed",
+      from: 15,
+      currency: "USD",
+    },
+    recurrence: "Held every New Year's Eve in downtown Monterey; the organiser says it has run for more than 30 years.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
 
   // ── Santa Cruz County ────────────────────────────────────────────────────
@@ -1664,7 +2361,7 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-07-26",
     end: "2026-08-09",
     category: "Music Festival",
-    officialWebsite: "https://cabrillomusic.org/2026-season/",
+    officialWebsite: "https://cabrillomusic.org/",
     referenceUrls: [
       "https://www.santacruz.org/upcoming-events/category/festival/",
       "https://www.kalw.org/2026-04-08/santa-cruzs-cabrillo-festival-of-contemporary-music-announces-its-64th-season-we-the-dreamers",
@@ -1672,6 +2369,71 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The 64th season of the Cabrillo Festival of Contemporary Music, running two weeks at the Santa Cruz Civic Auditorium.",
+    streetAddress: "307 Church Street",
+    postalCode: "95060",
+    metaDescription: "Santa Cruz's two-week summer festival of new orchestral music. 2027 runs 1–15 August; what the 2026 season held, ticket prices and what was free.",
+    intro: "The Cabrillo Festival of Contemporary Music is a two-week summer festival of new orchestral music at the Santa Cruz Civic Auditorium, 307 Church Street. The organiser describes it as an annual event and as the longest-running American festival devoted solely to new music for orchestra. Its 64th season, \"We the Dreamers\", ran from 26 July to 9 August 2026 with four orchestra concerts led by music director Cristian Măcelaru, alongside free open rehearsals, a family concert and a youth ensemble concert. The next festival is already dated: 1 to 15 August 2027.",
+    sections: [
+      {
+        heading: "What the festival is",
+        body: [
+          "Almost everything played here is recent work, and much of it is being heard in the United States or on the West Coast for the first time. The organiser says it has presented hundreds of world, US and West Coast premieres and commissioned more than 50 works in the past fifteen years.",
+          "Its own history page traces the festival to concerts at the Sticky Wicket coffeehouse in Aptos in the early 1960s; the first festival opened on 21 August 1963, and it moved to the Civic Auditorium in downtown Santa Cruz in 1991. Cristian Măcelaru is music director and Marin Alsop music director laureate; 2026 was Măcelaru's tenth summer with the orchestra, and the organiser says the full celebration of that anniversary is planned for 2027.",
+        ],
+      },
+      {
+        heading: "How the 2026 season ran",
+        body: [
+          "Open rehearsals began on the evening of Sunday 26 July and ran on most days up to 7 August. The Conductors/Composers Workshop's In the Works concert followed on Tuesday 28 July. The four main concerts were On Freedom on Friday 31 July at 8pm (with Philip Glass's Symphony No. 15, \"Lincoln\", and a free picnic and fanfare from 6:30pm), Defiant Dreams on Saturday 1 August at 7pm, Control on Saturday 8 August at 7pm, and the Hope as Our Banner finale on Sunday 9 August at 7pm.",
+          "The free family concert was on Sunday 2 August at 1pm, Meet the Composers on 1 August at 1:30pm, and the youth ensemble played on 8 August at 3:30pm. The season was framed around the 250th anniversary of the Declaration of Independence, and KALW 91.7 FM scheduled broadcasts of the four main concerts on Sundays from 30 August to 20 September.",
+        ],
+      },
+      {
+        heading: "Tickets, and what costs nothing",
+        body: [
+          "On the organiser's 2026 order form, single tickets for each orchestra concert were $41, $80 or $96, with $26 tickets for anyone 35 or under. Subscriptions for all four concerts were $320 or $380 depending on seating tier.",
+          "A good share of the festival is free: the open rehearsals, the In the Works concert, the family concert, Meet the Composers and the youth ensemble concert. The Civic box office at 307 Church Street sells tickets by phone on 831-420-5260 ext. 5, Tuesday to Friday from noon to 4pm and during festival events.",
+        ],
+      },
+      {
+        heading: "Getting to the Civic",
+        body: [
+          "The Civic Auditorium is downtown at the corner of Center and Church Streets, opposite City Hall. The organiser points to several city-owned car parks within walking distance and advises leaving plenty of time before a concert.",
+          "By bus, the organiser suggests the 17 from San Jose Diridon to Soquel Avenue and Front Street, about an eight-minute walk away. From Monterey it is the 20 to Salinas, the 28 to Watsonville and then the 1 or 2 into Santa Cruz. Anyone with access needs is asked to call the box office ahead of time.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the 2027 Cabrillo Festival?",
+        a: "The organiser has announced 1 to 15 August 2027, at the Santa Cruz Civic Auditorium. Concert dates within that run have not yet been published.",
+      },
+      {
+        q: "How much were tickets in 2026?",
+        a: "Single tickets for the orchestra concerts were $41, $80 or $96, and $26 for anyone aged 35 or under. Full-season subscriptions were $320 or $380.",
+      },
+      {
+        q: "Is any of it free?",
+        a: "Yes. Open rehearsals, the In the Works concert, the family concert, Meet the Composers and the youth ensemble concert were all free in 2026.",
+      },
+      {
+        q: "Where is it held?",
+        a: "At the Santa Cruz Civic Auditorium, 307 Church Street, on the corner of Center and Church Streets in downtown Santa Cruz.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Cabrillo Festival of Contemporary Music",
+      url: "https://cabrillomusic.org/",
+    },
+    recurrence: "An annual two-week festival of new orchestral music held each summer at the Santa Cruz Civic Auditorium.",
+    nextEdition: {
+      start: "2027-08-01",
+      end: "2027-08-15",
+      source: "https://cabrillomusic.org/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "annual-watsonville-strawberry-festival",
@@ -1690,6 +2452,60 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "Watsonville's two-day food and agricultural festival built around the strawberry harvest.",
+    venue: "Historic downtown Watsonville",
+    officialWebsite: "https://watsonville.gov/1117/Watsonville-Strawberry-Festival",
+    metaDescription: "Watsonville's free downtown strawberry festival: what the 2026 weekend held, its hours, the Friday kick-off, and how it began after Loma Prieta.",
+    intro: "The Watsonville Strawberry Festival is a free, family weekend in historic downtown Watsonville run by the city's Parks & Community Services department. In 2026 it ran on Saturday 1 August from 11am to 8pm and Sunday 2 August from 11am to 7pm, after a Friday-evening kick-off with carnival rides in City Plaza Park. Expect live entertainment, carnival rides, children's activities, local artisans and a lot of strawberry-themed food. The city has not yet announced dates for 2027.",
+    sections: [
+      {
+        heading: "What happens",
+        body: [
+          "The city describes live entertainment, carnival rides, kids' activities and booths from local artisans and vendors, with food built around the fruit: strawberry pizza, tacos, churros, popcorn and shortcake among them. Beer is also sold.",
+          "The kick-off on Friday 31 July 2026 ran from 5pm to 9pm at City Plaza Park, at Main Street and Peck Street, with live entertainment and carnival rides only, ahead of the full festival opening on Saturday.",
+        ],
+      },
+      {
+        heading: "Why Watsonville holds it",
+        body: [
+          "The city traces the festival to the Watsonville Strawberry Dessert Festival, founded in 1994 to help the downtown recover from the Loma Prieta earthquake. Its stated aims are to give the downtown a safe, family event, to recognise strawberries as the Pajaro Valley's largest and most valuable crop, and to let local non-profits raise money and awareness.",
+          "After the 2026 festival the city ran an attendee survey in English and Spanish, with a prize raffle for those who completed it, to shape next year's event.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Is the Watsonville Strawberry Festival free?",
+        a: "Yes. The city describes it as a free, family-friendly festival.",
+      },
+      {
+        q: "What were the 2026 hours?",
+        a: "Saturday 1 August 11am–8pm and Sunday 2 August 11am–7pm, with a kick-off at City Plaza Park on Friday 31 July from 5pm to 9pm.",
+      },
+      {
+        q: "When is the 2027 festival?",
+        a: "The City of Watsonville has not announced 2027 dates yet.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "City of Watsonville Parks & Community Services",
+      url: "https://watsonville.gov/1117/Watsonville-Strawberry-Festival",
+    },
+    times: [
+      {
+        day: "Saturday 1 August",
+        hours: "11:00am – 8:00pm",
+      },
+      {
+        day: "Sunday 2 August",
+        hours: "11:00am – 7:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "11:00",
+    endTime: "19:00",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "scotts-valley-60th-anniversary-celebration-at-skypark",
@@ -1708,6 +2524,61 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-day community festival at Skypark marking Scotts Valley's 60th anniversary.",
+    streetAddress: "361 Kings Village Road",
+    postalCode: "95066",
+    officialWebsite: "https://www.scottsvalley.gov/CivicAlerts.aspx?AID=342",
+    metaDescription: "How Scotts Valley marked 60 years as a city: the 2 August 2026 birthday bash at Skypark and the week of events around it.",
+    intro: "Scotts Valley's 60th anniversary celebration was a one-off birthday party at Skypark, 361 Kings Village Road, on Sunday 2 August 2026, the exact date the city was incorporated in 1966. It opened at 10:30am with residents telling stories about the town's past, followed by a group birthday song and cake, a set by Vintage Point, a roller rink on the basketball court and a restored stagecoach. The party anchored a week of city events running into the following weekend.",
+    sections: [
+      {
+        heading: "Why 2 August",
+        body: [
+          "The city recounts that residents voted to incorporate on 14 April 1964, without a city property tax, and that the result was fought in court for two years before it stood. Scotts Valley formally became a city on 2 August 1966, which made the 2026 party a true 60th birthday.",
+        ],
+      },
+      {
+        heading: "What happened at Skypark",
+        body: [
+          "The day began with a Share Your Story programme in which residents gave three-to-five-minute recollections of growing up in Scotts Valley and of landmarks such as Skypark Airport, The Barn and Santa's Village; the city's recap says 14 people spoke. Council members then led the birthday song and served cake.",
+          "Around that were interactive history booths, inflatables, 1960s-themed craft tables, vintage Volkswagens and food trucks, roller skating in the style of the old rink, and a restored 1860s Wells Fargo stagecoach. Vintage Point played as the birthday band, and the city asked people to bring chairs or blankets.",
+        ],
+      },
+      {
+        heading: "The rest of the week",
+        body: [
+          "The city spread the celebration over the following days: Coffee with the Legends at the Senior Center on the Monday, with former mayors, council members and staff; National Night Out hosted by the police at MacDorsa Park on the Tuesday; guided walks at Glenwood Preserve and Lodato Park on the Wednesday; and a shop-local receipt draw from Friday to Sunday.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Is the Scotts Valley 60th celebration happening again?",
+        a: "No. It marked the city's 60th birthday on 2 August 2026 and was a one-off.",
+      },
+      {
+        q: "Where is Skypark?",
+        a: "361 Kings Village Road, Scotts Valley.",
+      },
+      {
+        q: "When was Scotts Valley incorporated?",
+        a: "On 2 August 1966, after residents voted to incorporate in April 1964 and a two-year court challenge.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "City of Scotts Valley",
+      url: "https://www.scottsvalley.gov/",
+    },
+    times: [
+      {
+        day: "Sunday 2 August",
+        hours: "From 10:30am",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "10:30",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "santa-cruz-jug-band-festival",
@@ -1762,6 +2633,61 @@ export const regionalEvents: RegionalEvent[] = [
     referenceUrls: ["https://www.santacruz.org/upcoming-events/category/festival/"],
     description:
       "The Cabrillo Festival's free family orchestral concert at the Santa Cruz Civic Auditorium.",
+    streetAddress: "307 Church Street",
+    postalCode: "95060",
+    metaDescription: "The Cabrillo Festival's free Sunday-afternoon orchestra concert for families at the Santa Cruz Civic. What the 2026 programme held; 2027 date not yet set.",
+    intro: "The Cabrillo Festival's Free Family Concert is a no-charge Sunday-afternoon orchestra concert at the Santa Cruz Civic Auditorium, 307 Church Street, given during the festival's two-week summer season. In 2026 it took place at 1pm on Sunday 2 August, conducted by Octavio Más-Arocas, with a tour of the orchestra and students from El Sistema Santa Cruz/Pajaro Valley playing alongside the professional musicians. The organiser has set the 2027 festival for 1 to 15 August but has not yet given the family concert's date.",
+    sections: [
+      {
+        heading: "What the 2026 concert included",
+        body: [
+          "The programme paired two short orchestral pieces chosen with younger listeners in mind: Paul Dooley's The Conductor's Spellbook and Gala Flagello's Bravado. Octavio Más-Arocas conducted.",
+          "Between the music, the orchestra gave a \"Tour of the Orchestra\" introducing its sections, and honour students from El Sistema Santa Cruz/Pajaro Valley performed side by side with festival musicians.",
+        ],
+      },
+      {
+        heading: "Cost and how it is paid for",
+        body: [
+          "Entry is free. The organiser's 2026 order form listed the family concert at no charge next to the paid orchestra concerts, and invited buyers to add $10 to their order to help fund the festival's free education programmes, which include this concert, the open rehearsals and Meet the Composers.",
+        ],
+      },
+      {
+        heading: "Where it is",
+        body: [
+          "The Civic Auditorium is in downtown Santa Cruz at the corner of Center and Church Streets, opposite City Hall, with city-owned car parks within walking distance. The festival box office there answers on 831-420-5260 ext. 5, Tuesday to Friday from noon to 4pm.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Is the Cabrillo Festival family concert really free?",
+        a: "Yes. The organiser lists it as free, and it was free in 2026.",
+      },
+      {
+        q: "When is the 2027 family concert?",
+        a: "Not announced yet. The 2027 festival runs 1 to 15 August; in 2026 the family concert was on Sunday 2 August at 1pm.",
+      },
+      {
+        q: "Where is it held?",
+        a: "At the Santa Cruz Civic Auditorium, 307 Church Street, Santa Cruz.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Cabrillo Festival of Contemporary Music",
+      url: "https://cabrillomusic.org/",
+    },
+    times: [
+      {
+        day: "Sunday 2 August",
+        hours: "1:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "13:00",
+    recurrence: "A free family concert held during the Cabrillo Festival each summer, which the organiser describes as one of the festival's continuing free traditions.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "cabrillo-festival-grand-finale",
@@ -1781,6 +2707,61 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The closing concert of the 2026 Cabrillo Festival, at the Santa Cruz Civic Auditorium.",
+    streetAddress: "307 Church Street",
+    postalCode: "95060",
+    metaDescription: "The closing concert of the 2026 Cabrillo Festival, Hope as Our Banner: the programme, ticket prices, and when the 2027 festival runs.",
+    intro: "Hope as Our Banner was the grand finale of the 2026 Cabrillo Festival of Contemporary Music, played at 7pm on Sunday 9 August at the Santa Cruz Civic Auditorium, 307 Church Street. The programme was made up of four West Coast or US premieres, including Lisa Bielawa's Pulse with violinist Tessa Lark, and closed with poet Rita Dove reading her own work honouring Martin Luther King Jr. alongside Barber's Adagio for Strings. The festival returns from 1 to 15 August 2027; the date of next year's finale has not been announced.",
+    sections: [
+      {
+        heading: "The 2026 programme",
+        body: [
+          "Eunike Tanzil's Ascending Creatures (West Coast premiere), Lisa Bielawa's Pulse with soloist Tessa Lark (West Coast premiere), Elena Kats-Chernin's Rainbow Promise (US premiere) and Sean Shepherd's Wanderlust (West Coast premiere).",
+          "The organiser billed the final item as a post-season reflection: Rita Dove performing original poetry honouring Martin Luther King Jr. with Samuel Barber's Adagio for Strings, the first West Coast performance of the poetry. Cake and bubbly followed the concert.",
+        ],
+      },
+      {
+        heading: "Tickets",
+        body: [
+          "On the organiser's 2026 order form, seats for each orchestra concert, the finale included, were $41, $80 or $96, with $26 tickets for anyone aged 35 or under. The finale was also part of the four-concert subscription.",
+          "Anyone who missed it could hear it later: KALW 91.7 FM scheduled a broadcast of Hope as Our Banner for 6pm on Sunday 20 September.",
+        ],
+      },
+      {
+        heading: "Next year",
+        body: [
+          "The organiser has announced 1 to 15 August 2027 for its next festival at the Civic Auditorium, which will also mark music director Cristian Măcelaru's tenth anniversary with the orchestra. Individual concert dates, including the finale, have not been published yet.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "What was played at the 2026 Cabrillo Festival finale?",
+        a: "Works by Eunike Tanzil, Lisa Bielawa, Elena Kats-Chernin and Sean Shepherd, followed by Rita Dove's poetry honouring Martin Luther King Jr. with Barber's Adagio for Strings.",
+      },
+      {
+        q: "How much were tickets?",
+        a: "$41, $80 or $96, and $26 for anyone aged 35 or under.",
+      },
+      {
+        q: "When is the 2027 finale?",
+        a: "Not announced. The 2027 festival runs 1 to 15 August at the Santa Cruz Civic Auditorium.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Cabrillo Festival of Contemporary Music",
+      url: "https://cabrillomusic.org/",
+    },
+    times: [
+      {
+        day: "Sunday 9 August",
+        hours: "7:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "19:00",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "hwy-17-studios-all-star-food-fest",
@@ -1797,6 +2778,61 @@ export const regionalEvents: RegionalEvent[] = [
       "https://www.santacruz.org/upcoming-event/hwy-17-studios-all-star-food-fest/",
     ],
     description: "A one-day food festival in Santa Cruz.",
+    venue: "HWY 17 Studios",
+    streetAddress: "831 Almar Ave",
+    officialWebsite: "https://www.collectivesocialclub.com/",
+    metaDescription: "All-Star Fest at HWY 17 Studios, Santa Cruz: a free food, drink and makers day on 5 September 2026. What it was, parking and the dog rule.",
+    intro: "All-Star Fest was a free, all-ages food, drink and makers market at HWY 17 Studios, 831 Almar Ave, Santa Cruz, on Saturday 5 September 2026 from 11am to 5pm. Collective Santa Cruz and the food account Double Meat Please put it on, filling a 20,000 sq ft indoor-and-outdoor space with restaurants, breweries, coffee roasters, artists and makers they had picked from Santa Cruz and further afield. No ticket was needed. The hosts have not announced another edition.",
+    sections: [
+      {
+        heading: "What it was",
+        body: [
+          "The idea, in the hosts' words, was a \"best of the best\" roster: the local businesses they had come across that they thought everyone should know about, gathered in one place for a day. Food and drink vendors were invited to apply alongside artists and makers selling prints, ceramics, vintage, jewellery, clothing and homewares, and there was music and interactive activities through the day.",
+          "Collective Santa Cruz runs community events and a directory of local pop-ups and businesses; Double Meat Please is a food-focused social media account covering local restaurants, chefs and pop-ups.",
+        ],
+      },
+      {
+        heading: "Getting in, parking and dogs",
+        body: [
+          "Entry was free and open to all ages, with no ticket. The hosts said there would be street parking in the surrounding neighbourhood and asked visitors to be considerate of nearby businesses and residents.",
+          "Only service animals were allowed; the hosts asked people to leave other dogs at home.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Did you need a ticket for All-Star Fest?",
+        a: "No. Admission was free and the event was open to all ages.",
+      },
+      {
+        q: "Where was it held?",
+        a: "At HWY 17 Studios, 831 Almar Ave, Santa Cruz.",
+      },
+      {
+        q: "Could I bring my dog?",
+        a: "No. The hosts allowed service animals only.",
+      },
+      {
+        q: "Will there be another one?",
+        a: "Nothing has been announced. The hosts post news on Instagram as @CollectiveSantaCruz and @DoubleMeatPlease.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Collective Santa Cruz",
+      url: "https://www.collectivesocialclub.com/",
+    },
+    times: [
+      {
+        day: "Saturday 5 September",
+        hours: "11:00am – 5:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "11:00",
+    endTime: "17:00",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "capitola-art-wine-festival",
@@ -1818,6 +2854,75 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The 43rd Capitola Art & Wine Festival, two days through Capitola Village.",
+    metaDescription: "Capitola Art & Wine Festival returns 11–12 September 2027. Free entry, $20 tasting glass, Capitola Mall shuttle, no pets: how the weekend works.",
+    intro: "The Capitola Art & Wine Festival is a free weekend of fine art, local wine, food and live music in Capitola's seaside village, organised each September by the Capitola-Soquel Chamber of Commerce. The 2026 festival ran on Saturday 12 September from 10am to 6pm and Sunday 13 September from 10am to 5pm. The organiser has already announced the next one: Saturday 11 and Sunday 12 September 2027, with the same hours. Entry costs nothing; wine tasting needs a festival glass and tokens.",
+    sections: [
+      {
+        heading: "Entry and wine tasting",
+        body: [
+          "Walking in and looking at the art is free. To taste, you buy a festival glass, $20 in 2026 and again for 2027, plus tasting tokens at the Glass & Token booths around the festival. Tasting is 21 and over and ID is required. The organiser does not publish the token price.",
+          "The festival is a fundraiser for the Chamber, a 501(c)(6) non-profit, and for the local schools and community groups that staff it. The organiser says it draws more than 30,000 people.",
+        ],
+      },
+      {
+        heading: "Parking, shuttle and bikes",
+        body: [
+          "The organiser directs drivers to the guest parking area at Capitola Mall on 41st Avenue, where a free shuttle runs to the festival entrance about every 20 minutes. In 2026 it ran from 9:30am to 8pm on Saturday and 9:30am to 6pm on Sunday, and the organiser says it is wheelchair accessible.",
+          "Cyclists can use the free bike valet run by Harbor High Leadership in the David Lyng Real Estate car park at Capitola Avenue and Stockton Avenue in the village.",
+        ],
+      },
+      {
+        heading: "Pets and the 2026 poster",
+        body: [
+          "Pets are not allowed: the organiser asks people to leave them at home because of the crowds on foot.",
+          "Each year has a featured poster artist. For 2026 it was Jacque Price, a Santa Cruz painter with a studio gallery in Soquel, whose poster was titled Birdfolk on Capitola Beach.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the 2027 Capitola Art & Wine Festival?",
+        a: "Saturday 11 September 2027, 10am–6pm, and Sunday 12 September 2027, 10am–5pm.",
+      },
+      {
+        q: "Is it free?",
+        a: "Entry is free. Wine tasting needs a $20 festival glass plus tokens, and you must be 21 or over with ID.",
+      },
+      {
+        q: "Where should I park?",
+        a: "At the guest parking area at Capitola Mall on 41st Avenue, then take the free shuttle to the festival entrance.",
+      },
+      {
+        q: "Can I bring my dog?",
+        a: "No. The organiser asks visitors to leave pets at home.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Capitola-Soquel Chamber of Commerce",
+      url: "https://capitolaartandwine.com/",
+    },
+    times: [
+      {
+        day: "Saturday 12 September",
+        hours: "10:00am – 6:00pm",
+      },
+      {
+        day: "Sunday 13 September",
+        hours: "10:00am – 5:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "10:00",
+    endTime: "17:00",
+    recurrence: "An annual September weekend festival of art, wine, food and music in Capitola, hosted by the Capitola-Soquel Chamber of Commerce.",
+    nextEdition: {
+      start: "2027-09-11",
+      end: "2027-09-12",
+      source: "https://capitolaartandwine.com/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "santa-cruz-county-fair",
@@ -1831,7 +2936,7 @@ export const regionalEvents: RegionalEvent[] = [
     start: "2026-09-16",
     end: "2026-09-20",
     category: "County Fair",
-    officialWebsite: "https://santacruzcountyfair.com/",
+    officialWebsite: "https://www.santacruzcountyfair.com/",
     referenceUrls: [
       "https://www.santacruzcountyfair.com/news-releases/2026-santa-cruz-county-fair-theme-revealed",
       "https://www.santacruz.org/upcoming-event/santa-cruz-county-fair-2/",
@@ -1839,6 +2944,65 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "Santa Cruz County's annual fair, five days at the fairgrounds in Watsonville under the theme “Apple Pies and Starry Skies”.",
+    streetAddress: "2601 East Lake Ave",
+    postalCode: "95076",
+    metaDescription: "Santa Cruz County Fair in Watsonville: what the 2026 \"Apple Pies and Starry Skies\" fair held, from livestock to drones, and how to get there.",
+    intro: "The Santa Cruz County Fair is a five-day agricultural fair at the Santa Cruz County Fairgrounds, 2601 East Lake Ave, on Highway 152 just east of Watsonville. The 2026 fair ran from Wednesday 16 to Sunday 20 September under the theme \"Apple Pies and Starry Skies!\", with nightly concerts, a new 300-drone show, monster trucks, exhibit halls and the Junior Livestock Auction. Opening-day entry was $2.50 to mark the country's 250th birthday. Dates for 2027 have not been announced.",
+    sections: [
+      {
+        heading: "What the 2026 fair held",
+        body: [
+          "Concerts on the Friday, Saturday and Sunday nights featured Andy Vargas, the Watsonville-born lead singer of Santana; James Durbin, the American Idol alumnus from Santa Cruz; and Los Mismos. A new 300-drone show ran on the same three nights, and the Monster X Tour monster trucks played the Wednesday and Thursday evenings on a separate ticket.",
+          "During the day there were shows including Twinkle Time, hypnotist Michael Mezmer, POWERHOUSE!!! Percussive Dance and magician Frank Thurston, plus carnival rides and pig races. Exhibit halls covered baked goods, flowers, photography, quilts, LEGO, handspinning and weaving, poetry, fine art and farm produce.",
+        ],
+      },
+      {
+        heading: "Livestock and the auction",
+        body: [
+          "The fair's centre of gravity is still agriculture. Local young people showed hogs, steers, goats, lambs, poultry and rabbits, and the Junior Livestock Auction on the Saturday morning raised a record $785,323.50, according to the organiser.",
+          "The organiser says more than 53,000 people were on the grounds over the five days, with over 10,800 on opening day, and that paid admissions were up 11% on the previous year.",
+        ],
+      },
+      {
+        heading: "Getting there",
+        body: [
+          "The fairgrounds sit on Highway 152 (East Lake Avenue) just east of Watsonville. The organiser publishes an alternate-routes map and suggests the back roads, Casserly and Carlton among them, can be quicker than the highway even if they are not shorter.",
+          "Presale tickets for the fair and the monster trucks are sold through the organiser's ticket site, and it publishes a list of allowed and prohibited items and a code of conduct before you go.",
+        ],
+      },
+      {
+        heading: "A long history",
+        body: [
+          "The organiser's history page dates the first Santa Cruz County fair to 1885 or 1887, depending on the historian, when it opened in a skating rink near the plaza in Watsonville. The fair has been held on its current site along what was Hecker Pass Road, now East Lake Avenue, since 1941.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the 2027 Santa Cruz County Fair?",
+        a: "The organiser has not announced 2027 dates yet. The 2026 fair ran Wednesday 16 to Sunday 20 September.",
+      },
+      {
+        q: "Where is the fair held?",
+        a: "At the Santa Cruz County Fairgrounds, 2601 East Lake Ave, Watsonville, on Highway 152 just east of town.",
+      },
+      {
+        q: "How much was admission?",
+        a: "Opening day in 2026 was $2.50, cash only at the gate. The organiser's 2026 releases do not list the regular daily prices.",
+      },
+      {
+        q: "Were the monster trucks included in admission?",
+        a: "No. The Monster X Tour on the Wednesday and Thursday nights needed a separate ticket.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Santa Cruz County Fair",
+      url: "https://www.santacruzcountyfair.com/",
+    },
+    recurrence: "A yearly five-day county fair at the Santa Cruz County Fairgrounds outside Watsonville, which the organiser traces back to the 1880s and which has been on its East Lake Avenue site since 1941.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "aloha-outrigger-races",
@@ -1857,6 +3021,56 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The 34th annual outrigger canoe races, run for a day off the Santa Cruz Wharf.",
+    officialWebsite: "https://www.santacruzca.gov/City-News-Press-Releases/New-page-16",
+    metaDescription: "The Aloha Outrigger Races off the Santa Cruz Wharf: how team entry works, what the 2026 races cost, the hula schedule, and free spectating.",
+    intro: "The Aloha Outrigger Races are an annual day of outrigger canoe racing on Monterey Bay at the Santa Cruz Wharf, hosted by the City of Santa Cruz Parks & Recreation Department with the Pu Pu 'O Hawaii Outrigger Club. The 34th edition took place on Saturday 19 September 2026. Teams of four paddle with experienced outrigger crews, so no experience is needed, and watching from the wharf is free. Hula performances run through the day. The 2027 date has not been announced.",
+    sections: [
+      {
+        heading: "How the racing works",
+        body: [
+          "Each team of four races alongside experienced outrigger paddlers from the club, which is why the city pitches the event at all levels, first-timers included. Alongside the race awards there is an Aloha Spirit Award for the team that shows the most teamwork, sportsmanship and enthusiasm; in 2026 it came with a $100 gift card for the Jack O'Neill Restaurant & Lounge donated by the Dream Inn.",
+          "Teams are encouraged to dress up in themed costumes and decorate their canoes.",
+        ],
+      },
+      {
+        heading: "Entering a team in 2026",
+        body: [
+          "Team entry was $120 at the early-bird rate until 16 August and $150 after that until registration closed on 4 September. The fee covered four event T-shirts and offers from businesses on the wharf. Registration ran through the city's Parks & Recreation booking system (activity #419602) or by phone on 831-420-5727.",
+        ],
+      },
+      {
+        heading: "For spectators",
+        body: [
+          "Watching is free, and the city encourages people to come in Hawaiian dress. In 2026 Kūhai Hālau O Mehanakealohakalaua'eikapoli Pā ʻŌlapa Kahiko danced hula from 11:30am to noon, and Te Hau Nui School of Hula and Tahitian Dance performed from 1:30pm to 2pm.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Do I need outrigger experience to race?",
+        a: "No. Teams of four paddle with experienced outrigger paddlers, and the city says the races are open to all levels, including first-timers.",
+      },
+      {
+        q: "How much did it cost to enter a team in 2026?",
+        a: "$120 per team before 16 August, then $150 until 4 September, including four T-shirts.",
+      },
+      {
+        q: "Is it free to watch?",
+        a: "Yes. Spectator admission is free.",
+      },
+      {
+        q: "When are the 2027 races?",
+        a: "The city has not announced a 2027 date yet.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "City of Santa Cruz Parks & Recreation",
+      url: "https://www.santacruzca.gov/",
+    },
+    recurrence: "An annual day of outrigger canoe racing at the Santa Cruz Wharf; 2026 was the 34th.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "bonny-doon-art-wine-and-beer-festival",
@@ -1976,6 +3190,52 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A two-day community beach festival across Capitola Village and beach, themed “Toy Takeover” for 2026.",
+    metaDescription: "Capitola Beach Festival: a free weekend of sand sculpture, a lighted boat parade on Soquel Creek, rowboat races and more. What the 2026 schedule held.",
+    intro: "The Capitola Beach Festival is a free, family weekend of contests on Capitola Beach, the Esplanade and Soquel Creek. The 2026 festival, themed \"Toy Takeover\", ran on Saturday 26 and Sunday 27 September, with a sand sculpture contest, a lighted nautical parade on the creek followed by the festival's first drone show, then a fishing derby, paddleboard races, horseshoes, chalk art and rowboat races on the Sunday. Almost everything is free to enter or watch. Dates for 2027 have not been announced.",
+    sections: [
+      {
+        heading: "Saturday",
+        body: [
+          "The day opened with the Little Wharf 3-miler, a paid fun run from the East Cliff Shopping Center into Capitola run by the Wharf to Wharf race committee. The sand sculpture contest ran from 10am to 2pm on the beach with awards at 2:30pm, the cornhole tournament started at 11am on the Esplanade, and children's art and a village scavenger hunt ran from midday in Esplanade Park, with music by The Beach Cowboys there from 4pm to 6pm.",
+          "At dusk, around 7pm, lighted barges paraded down Soquel Creek from the trestle to the lagoon. There is no access to the trestle during the parade. In 2026 a drone show over the beach and creek followed straight after.",
+        ],
+      },
+      {
+        heading: "Sunday",
+        body: [
+          "The fishing derby ran from 7am to 11am from the end of Capitola Wharf, open to all ages with your own rod. Paddleboard racing and a swim around the wharf took up the morning from 9am, ukuleles played in Esplanade Park from 10am, the doubles horseshoes tournament started on the sand at 10am, and chalk art on the seawall ran from 11am to 2pm.",
+          "The weekend finished with the rowboat races on Soquel Creek from 1pm: timed two-person heats between the bridge and the trestle in age groups from under-12 to over-31. Boats and oars are supplied, and sign-up is at the Stockton Bridge path from noon.",
+        ],
+      },
+      {
+        heading: "Entering the contests",
+        body: [
+          "Only two events charge: the Little Wharf fun run and the paddleboard races, where in 2026 the 2-mile paddle was $20 for juniors and $45 for adults, and the wharf swim was free. Building a parade barge needs pre-registration and a refundable $100 fee, and each float can nominate a charity to receive $1,000, $750 or $500 if it places.",
+          "Some events have age rules: cornhole competitors must be 16 or over, and the horseshoes tournament is closed to children under 10. Under-18s in the parade, rowboat races and horseshoes need a parent's signature on the waiver.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Is the Capitola Beach Festival free?",
+        a: "Yes, apart from the Little Wharf fun run and the paddleboard races, which charge entry fees. Everything else is free to enter and watch.",
+      },
+      {
+        q: "What time is the lighted boat parade?",
+        a: "Around 7pm on the Saturday, at dusk, on Soquel Creek between the trestle and the lagoon.",
+      },
+      {
+        q: "When is the 2027 festival?",
+        a: "The organiser has not announced 2027 dates yet.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Capitola Beach Festival",
+      url: "https://capitolabeachfestival.com/",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "open-studios-art-tour",
@@ -1984,7 +3244,7 @@ export const regionalEvents: RegionalEvent[] = [
     cityText:
       "Countywide (Santa Cruz, Watsonville, Felton, Scotts Valley, Bonny Doon, Aptos)",
     months: ["october"],
-    dateText: "",
+    dateText: "October 3-18, 2026",
     category: "Art Tour",
     officialWebsite: "https://santacruzopenstudios.com",
     referenceUrls: [
@@ -1994,6 +3254,75 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The 41st annual countywide artist studio tour, spanning Santa Cruz, Watsonville, Felton, Scotts Valley, Bonny Doon and Aptos. The 2026 dates have not been announced.",
+    metaDescription: "Santa Cruz County's free, self-guided October studio tour: how the three weekends split the county, the 11am–5pm hours, and where to get the guide.",
+    intro: "Open Studios is a free, self-guided tour of artists' studios, homes and workspaces across Santa Cruz County, presented by Arts Council Santa Cruz County over the first three weekends of October. The 2026 tour was its 41st year and ran 3–4, 10–11 and 17–18 October, 11am to 5pm each day, with more than 340 artists taking part. Visitors plan a route from the printed Artist Guide, the digital guide or the Open Studios app, follow the green signs to each door, and can buy work directly from the artist. 2027 dates have not been announced.",
+    sections: [
+      {
+        heading: "How the three weekends divide the county",
+        body: [
+          "The tour is split by geography rather than run all at once. The first weekend covers South County, which the Arts Council defines as everything south of the Yacht Harbor, from Live Oak down to Watsonville. The second covers North County: Santa Cruz, Scotts Valley, the San Lorenzo Valley and the north coast.",
+          "The third weekend is the All County weekend, when a selection of artists from both halves open again. They are marked with an All County symbol in the listings, so if you can only go on one weekend, that is the one where both ends of the county are on the map, but not every artist is.",
+        ],
+      },
+      {
+        heading: "Planning a route",
+        body: [
+          "The printed Artist Guide is handed out at Good Times locations, at the preview exhibit galleries and at public libraries around the county while copies last. The same listings are in an online artist directory and in the Open Studios Santa Cruz app for iOS and Android, which the Arts Council says goes live in September.",
+          "The directory flags which studios are accessible, which artists are giving demonstrations, which speak Spanish and who is new to the tour. That is worth checking before you set off, because a studio is often someone's home or garden and access varies from door to door.",
+        ],
+      },
+      {
+        heading: "Preview exhibits before the tour",
+        body: [
+          "Three galleries hang a sample of tour artists' work in the weeks around the tour, which is a way to choose whose studio to visit. In 2026 Pajaro Valley Arts in Watsonville showed South County artists, the Santa Cruz Art League on Broadway showed North Coast and Santa Cruz Mountains artists, and M.K. Contemporary Art Gallery on Front Street showed artists from across the county.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Does Open Studios cost anything?",
+        a: "No. The Arts Council describes it as a free, self-guided tour. You pay only for any art you choose to buy from the artists.",
+      },
+      {
+        q: "When is Open Studios held?",
+        a: "Over the first three weekends of October. In 2026 that was 3–4 October (South County), 10–11 October (North County) and 17–18 October (All County), 11am to 5pm each day. 2027 dates have not been announced.",
+      },
+      {
+        q: "Where do I get the Artist Guide?",
+        a: "Printed copies are available at Good Times locations, the preview exhibit galleries and county public libraries while supplies last. There is also an online directory and an app called Open Studios Santa Cruz.",
+      },
+      {
+        q: "How many artists take part?",
+        a: "The Arts Council says more than 340 artists took part in 2026.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Arts Council Santa Cruz County",
+      url: "https://artscouncilsc.org/",
+    },
+    times: [
+      {
+        day: "Saturday 3 – Sunday 4 October (South County)",
+        hours: "11:00am – 5:00pm",
+      },
+      {
+        day: "Saturday 10 – Sunday 11 October (North County)",
+        hours: "11:00am – 5:00pm",
+      },
+      {
+        day: "Saturday 17 – Sunday 18 October (All County)",
+        hours: "11:00am – 5:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "11:00",
+    endTime: "17:00",
+    recurrence: "Held over the first three weekends of October each year, according to Arts Council Santa Cruz County.",
+    updated: "2026-11-26",
+    hideSources: true,
+    start: "2026-10-03",
+    end: "2026-10-18",
   },
   {
     slug: "downtown-santa-cruz-harvest-festival",
@@ -2001,7 +3330,7 @@ export const regionalEvents: RegionalEvent[] = [
     county: "Santa Cruz",
     cityText: "Santa Cruz (Downtown)",
     city: "Santa Cruz",
-    venue: "Downtown Santa Cruz",
+    venue: "Lot 16 and Church Street, behind the Downtown Library",
     months: ["october"],
     dateText: "October 3, 2026",
     start: "2026-10-03",
@@ -2012,6 +3341,54 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-day seasonal community festival in downtown Santa Cruz.",
+    officialWebsite: "https://downtownsantacruz.com/do/harvest-festival-1",
+    metaDescription: "Downtown Santa Cruz's free autumn street fair behind the library: farm animals, a mechanical bull, wreath-making, local food and live music.",
+    intro: "The Downtown Santa Cruz Harvest Festival is a free autumn afternoon fair on Lot 16 and Church Street, behind the Downtown Library. The 2026 edition ran from noon to 4pm on Saturday 3 October, produced by the Downtown Association of Santa Cruz with the Santa Cruz Community Farmers' Markets. It mixes a farmers and makers market with fairground-style games, a farm animal meet-and-greet, food stalls, local beer and live music. The organiser describes it as returning to downtown, but has not announced a 2027 date.",
+    sections: [
+      {
+        heading: "What was on in 2026",
+        body: [
+          "The games side leaned towards families: a mechanical bull, glitter tattoos, face painting, cornhole, foosball and a wreath-making station, plus farm animals to meet. The market side, in the city's description, was a farmers and makers market with fresh produce and handmade goods.",
+          "Food came from local vendors including La Casa de Churros, Hummus Heaven, Empanadas La Linda and Melrose Cafe, with beer from two local breweries. Rhythm Wranglers and Cayuga Jazz played.",
+        ],
+      },
+      {
+        heading: "Where it is held",
+        body: [
+          "The festival takes over Lot 16 and the adjoining stretch of Church Street, directly behind the Downtown Library in central Santa Cruz. The City of Santa Cruz lists it as a free community event.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Is the Harvest Festival free?",
+        a: "Yes. The City of Santa Cruz lists it as free. Food, drink and market goods are paid for separately.",
+      },
+      {
+        q: "When was the 2026 Harvest Festival?",
+        a: "Saturday 3 October 2026, noon to 4pm. A 2027 date has not been announced.",
+      },
+      {
+        q: "Where exactly is it?",
+        a: "Lot 16 and Church Street, behind the Downtown Library in downtown Santa Cruz.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Downtown Association of Santa Cruz",
+      url: "https://downtownsantacruz.com/",
+    },
+    times: [
+      {
+        day: "Saturday 3 October",
+        hours: "12:00pm – 4:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "12:00",
+    endTime: "16:00",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "open-studios-satellite-preview-exhibit",
@@ -2029,6 +3406,64 @@ export const regionalEvents: RegionalEvent[] = [
     referenceUrls: ["https://scal.org/upcoming-exhibitions/"],
     description:
       "A two-and-a-half-week preview exhibition of Open Studios artists at the Santa Cruz Art League.",
+    streetAddress: "526 Broadway",
+    postalCode: "95060",
+    metaDescription: "The Santa Cruz Art League's Open Studios preview show: North Coast and mountain artists, Thursday–Sunday 11am–5pm through the October tour.",
+    intro: "The Santa Cruz Art League hangs a preview exhibit for the Open Studios Art Tour each October at its gallery at 526 Broadway, Santa Cruz. The 2026 show, titled \"Far Out\", ran from Friday 2 October to Sunday 18 October and gathered work by tour artists from the North Coast and the Santa Cruz Mountains, all of it for sale. It was open 11am to 5pm, Thursday to Sunday, and opened with a First Friday reception from 5pm to 8pm on 2 October. The idea is to see a sample of artists' work in one room before deciding whose studio to drive to.",
+    sections: [
+      {
+        heading: "What the show covers",
+        body: [
+          "Each of the Open Studios preview galleries takes a slice of the county. The Art League's share in 2026 was the North Coast and the Santa Cruz Mountains, which are the studios that take longest to reach on the tour itself, so a look here first can save a wasted drive up a mountain road.",
+          "Every piece in the exhibit is for sale. The other two preview shows in 2026 were at Pajaro Valley Arts in Watsonville, for South County artists, and M.K. Contemporary Art Gallery on Front Street in Santa Cruz, for artists from across the county.",
+        ],
+      },
+      {
+        heading: "Opening hours and the reception",
+        body: [
+          "The gallery opened the exhibit with a First Friday reception and party on 2 October from 5pm to 8pm. After that it kept its usual exhibition hours of 11am to 5pm, Thursday to Sunday, until the show closed at 5pm on Sunday 18 October, the final day of the tour.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Where is the Santa Cruz Art League?",
+        a: "526 Broadway, Santa Cruz, CA 95060.",
+      },
+      {
+        q: "When was the 2026 preview exhibit open?",
+        a: "Friday 2 October to Sunday 18 October 2026, Thursday to Sunday from 11am to 5pm, with an opening reception on 2 October from 5pm to 8pm.",
+      },
+      {
+        q: "Is the art for sale?",
+        a: "Yes. The Art League says all work in the exhibit is for sale.",
+      },
+      {
+        q: "Does it cost anything to get in?",
+        a: "The Art League does not state an entry price for this exhibit. The Open Studios tour it previews is free.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Santa Cruz Art League",
+      url: "https://scal.org/",
+    },
+    times: [
+      {
+        day: "Thursday – Sunday, 2–18 October",
+        hours: "11:00am – 5:00pm",
+      },
+      {
+        day: "Friday 2 October (opening reception)",
+        hours: "5:00pm – 8:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "11:00",
+    endTime: "17:00",
+    recurrence: "Shown each October alongside the annual Open Studios Art Tour, which runs over the first three weekends of the month.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "santa-cruz-film-festival-2026",
@@ -2036,7 +3471,7 @@ export const regionalEvents: RegionalEvent[] = [
     county: "Santa Cruz",
     cityText: "Santa Cruz (various theaters)",
     city: "Santa Cruz",
-    venue: "Various Santa Cruz theaters",
+    venue: "Del Mar, Colligan Theater, Santa Cruz Cinema, The Rio and The 418 Project",
     months: ["october"],
     dateText: "October 14-18, 2026",
     start: "2026-10-14",
@@ -2048,6 +3483,46 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "Five days of screenings across several Santa Cruz theaters.",
+    officialWebsite: "https://www.santacruzfilmfestivals.org/",
+    metaDescription: "Santa Cruz's annual five-day independent film festival: the 2026 dates, the five screening venues, and what else the festival runs.",
+    intro: "The Santa Cruz Film Festival is an annual five-day festival of independent film held in October across several Santa Cruz screens. The 26th edition ran from Wednesday 14 to Sunday 18 October 2026 at the Del Mar, Colligan Theater, Santa Cruz Cinema, the Rio and the 418 Project, with a programme running from short and experimental work to documentaries and narrative features. The organiser says it has screened more than 2,000 independent films since 2000. 2027 dates have not been announced.",
+    sections: [
+      {
+        heading: "What the festival shows",
+        body: [
+          "The programme is independent cinema in every length and form: shorts and experimental pieces alongside documentaries and narrative features. Screenings are spread across five Santa Cruz venues rather than one festival hub, so it pays to check which venue each session is in before you set out.",
+          "Tickets for 2026 were sold through the festival's online ticketing; the organiser's site does not publish prices on the main page.",
+        ],
+      },
+      {
+        heading: "Beyond the screenings",
+        body: [
+          "The festival runs events around the films as well as during them. In 2026 these included a screenwriters' workshop, festival parties and an artist and official poster reveal on 28 September at M.K. Contemporary Art Gallery on Front Street. Its Filmmaker Mixers continue through the year, with the next one due in January 2027.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was the 2026 Santa Cruz Film Festival?",
+        a: "Wednesday 14 to Sunday 18 October 2026. It was the festival's 26th year. 2027 dates have not been announced.",
+      },
+      {
+        q: "Where are films shown?",
+        a: "In 2026 the organiser listed the Del Mar, Colligan Theater, Santa Cruz Cinema, the Rio and the 418 Project.",
+      },
+      {
+        q: "How long has the festival been running?",
+        a: "Since 2000, according to the organiser, which says it has screened more than 2,000 independent films in that time.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Santa Cruz Film Festival",
+      url: "https://www.santacruzfilmfestivals.org/",
+    },
+    recurrence: "An annual five-day festival in October, according to the organiser.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "downtown-santa-cruz-halloween-mask-making-festival",
@@ -2066,20 +3541,105 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-day Halloween mask-making event for families at the London Nelson Community Center.",
+    streetAddress: "301 Center Street",
+    postalCode: "95060",
+    officialWebsite: "https://www.santacruzca.gov/Government/City-Departments/Parks-Recreation/Community-Spaces/London-Nelson-Community-Center/Events/2026-Mask-Making-Festival",
+    metaDescription: "Santa Cruz's free annual Halloween mask-making afternoon at London Nelson Community Center, with a youth theatre show and a Thriller dance.",
+    intro: "The Halloween Mask Making Festival is a free annual afternoon for families at the London Nelson Community Center, 301 Center Street, Santa Cruz, run by City of Santa Cruz Parks & Recreation. The 2026 edition was on Saturday 17 October from noon to 4:30pm. Children make their own masks, and the afternoon is broken up by a Thriller the World Santa Cruz dance performance and repeated showings of a Halloween play by the city's Youth Theatre. 2027 details have not been announced.",
+    sections: [
+      {
+        heading: "What happens",
+        body: [
+          "Mask making is the centre of it: drop in during the afternoon and make one. Around that, the city programmed a performance by Thriller the World Santa Cruz and a Halloween production by the Santa Cruz Parks and Recreation Youth Theatre.",
+          "The 2026 play was The King in Yellow, adapted from a play based on Robert W. Chambers' book. The city listed showings at 12:30pm, 2pm and 3:30pm, plus a 7pm performance after the festival itself closed.",
+        ],
+      },
+      {
+        heading: "Where and how much",
+        body: [
+          "The festival is held indoors at the London Nelson Community Center at 301 Center Street in downtown Santa Cruz. The city lists it as free.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Is the Mask Making Festival free?",
+        a: "Yes. The City of Santa Cruz lists it as a free event.",
+      },
+      {
+        q: "When was it held in 2026?",
+        a: "Saturday 17 October 2026, noon to 4:30pm. 2027 details have not been announced.",
+      },
+      {
+        q: "Where is it?",
+        a: "London Nelson Community Center, 301 Center Street, Santa Cruz, CA 95060.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "City of Santa Cruz Parks & Recreation",
+      url: "https://www.santacruzca.gov/Government/City-Departments/Parks-Recreation",
+    },
+    times: [
+      {
+        day: "Saturday 17 October",
+        hours: "12:00pm – 4:30pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "12:00",
+    endTime: "16:30",
+    recurrence: "An annual Halloween event at the London Nelson Community Center, according to City of Santa Cruz Parks & Recreation.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "santa-cruz-comedy-festival",
     name: "Santa Cruz Comedy Festival",
     county: "Santa Cruz",
-    cityText: "Santa Cruz (939 Pacific Ave)",
+    cityText: "Santa Cruz",
     city: "Santa Cruz",
-    venue: "939 Pacific Ave",
     months: ["october"],
-    dateText: "October 17, 2026",
-    start: "2026-10-17",
+    dateText: "October 12-17, 2026",
+    start: "2026-10-12",
     category: "Comedy Festival",
     referenceUrls: ["https://allevents.in/santa-cruz/festivals"],
     description: "A one-day comedy festival at 939 Pacific Avenue in Santa Cruz.",
+    officialWebsite: "https://santacruzcomedyfestival.com/",
+    metaDescription: "The Santa Cruz Comedy Festival's 13th year: free weeknight shows, then a Saturday takeover of downtown venues from Kuumbwa to the Blue Lagoon.",
+    intro: "The Santa Cruz Comedy Festival is a week of stand-up spread across bars, breweries and theatres in and around downtown Santa Cruz. Its 13th edition ran from Monday 12 to Saturday 17 October 2026: free shows on the weeknights, then a Saturday the organiser called the Downtown Takeover, with ticketed shows at the Kuumbwa, Woodhouse Blending and Brewing, the Alley Oop and the Blue Lagoon, free sets around town and a late-night party at 11th Hour Coffee. 2027 dates have not been announced.",
+    sections: [
+      {
+        heading: "The free weeknight shows",
+        body: [
+          "The first five days were free shows, one or two a night. In 2026 they were at the Secret Garden of Abbott Square (7pm) and Rosie McCann's (9pm) on Monday 12 October, the Blue Lagoon on Tuesday (7:45pm), Santa Cruz Mountain Brewery on Wednesday (8pm) and Gilman Brewing on Thursday (7pm).",
+        ],
+      },
+      {
+        heading: "Saturday's Downtown Takeover",
+        body: [
+          "Most of the festival happened on Saturday 17 October. The headline ticketed show was the All Star Headliner Comedy Show at the Kuumbwa, with 13 headliners, which sold out. A three-hour All Star Comedy Show with 21 comics ran at Woodhouse Blending and Brewing from 6:30pm to 9pm, and there were further ticketed shows at the Alley Oop and the Blue Lagoon, plus a somatic movement workshop with Toni Nagy.",
+          "Free sets ran the same evening at Streetlight Records (5:30pm), Get Faded Barbershop and Abbott Square (both 7pm) and Pleasure Pizza (7:30pm). The night ended with a 9pm festival party at 11th Hour Coffee. A limited festival pass, capped at 20, was also sold.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was the 2026 Santa Cruz Comedy Festival?",
+        a: "Monday 12 to Saturday 17 October 2026, its 13th year. Most shows were on Saturday 17 October. 2027 dates have not been announced.",
+      },
+      {
+        q: "Are there free shows?",
+        a: "Yes. In 2026 there were free shows every weeknight from Monday to Thursday and several free sets on the Saturday evening.",
+      },
+      {
+        q: "Where are the shows?",
+        a: "At venues around downtown Santa Cruz, including the Kuumbwa, Woodhouse Blending and Brewing, the Alley Oop, the Blue Lagoon, Abbott Square and 11th Hour Coffee.",
+      },
+    ],
+    updated: "2026-11-26",
+    hideSources: true,
+    end: "2026-10-17",
   },
   {
     slug: "santa-cruz-beach-boardwalk-halloween",
@@ -2108,8 +3668,8 @@ export const regionalEvents: RegionalEvent[] = [
     city: "Santa Cruz",
     venue: "Santa Cruz Harbor",
     months: ["october"],
-    dateText: "October 31, 2026",
-    start: "2026-10-31",
+    dateText: "October 24, 2026",
+    start: "2026-10-24",
     category: "Halloween / Family",
     referenceUrls: [
       "https://www.santacruz.org/upcoming-events/category/holiday/",
@@ -2117,6 +3677,56 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "Halloween trick-or-treating at Santa Cruz Harbor, billed as Haunted Harbor.",
+    streetAddress: "135 5th Avenue",
+    postalCode: "95062",
+    officialWebsite: "https://www.santacruzharbor.org/haunted-harbor",
+    metaDescription: "Haunted Harbor, the Santa Cruz Port District's Halloween trick-or-treat around harbour businesses, reached by a free inner-harbour water taxi.",
+    intro: "Haunted Harbor is the Santa Cruz Port District's Halloween trick-or-treat, with children in costume going round participating businesses at Santa Cruz Harbor. In 2026 it ran from 3pm to 6pm on Saturday 24 October, a week before Halloween itself. The Port District dresses up its free inner-harbour water taxi for the day, and visitors can park in the North Harbor and ride it between stops. The Port District says the event returns year to year but has not announced a 2027 date.",
+    sections: [
+      {
+        heading: "How it works",
+        body: [
+          "Trick-or-treating happens at participating harbour businesses rather than at a single venue, so the afternoon is spent moving around the harbour. The Port District encourages costumes and promises candy and Halloween activities along the way.",
+        ],
+      },
+      {
+        heading: "Parking and the water taxi",
+        body: [
+          "The harbour's free inner-harbour water taxi gets a Halloween makeover for the day and runs with pickup and drop-off points around the harbour; in 2026 the Port District gave its hours as 11am to 6pm. Visitor parking for water taxi passengers is in the North Harbor near X Dock.",
+          "The Port District's office address is 135 5th Avenue, Santa Cruz, CA 95062.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When was Haunted Harbor in 2026?",
+        a: "Saturday 24 October 2026, 3pm to 6pm. It was held the Saturday before Halloween, not on 31 October. A 2027 date has not been announced.",
+      },
+      {
+        q: "Where do I park?",
+        a: "The Port District points water taxi passengers to visitor parking in the North Harbor near X Dock.",
+      },
+      {
+        q: "Is the water taxi free?",
+        a: "Yes. The Port District describes it as a free inner-harbour water taxi.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Santa Cruz Port District",
+      url: "https://www.santacruzharbor.org/",
+    },
+    times: [
+      {
+        day: "Saturday 24 October",
+        hours: "3:00pm – 6:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "15:00",
+    endTime: "18:00",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "vampire-ball-at-chaminade-resort-spa",
@@ -2124,7 +3734,7 @@ export const regionalEvents: RegionalEvent[] = [
     county: "Santa Cruz",
     cityText: "Santa Cruz (Chaminade Resort and Spa)",
     city: "Santa Cruz",
-    venue: "Chaminade Resort and Spa",
+    venue: "Chaminade Resort & Spa",
     months: ["october"],
     dateText: "October 31, 2026",
     start: "2026-10-31",
@@ -2135,6 +3745,67 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A 21-and-over Halloween night event at the Chaminade Resort and Spa in Santa Cruz.",
+    streetAddress: "One Chaminade Lane",
+    postalCode: "95065",
+    officialWebsite: "https://www.chaminade.com/things-to-do-santa-cruz/vampire-ball",
+    metaDescription: "Chaminade's 21+ Vampire Ball: Halloween night 2026, 8:30pm–12:30am, $75 plus tax with a cocktail and bites, costume contest and fire dancers.",
+    intro: "The Vampire Ball is a 21-and-over Halloween party at Chaminade Resort & Spa, One Chaminade Lane, in the hills above Santa Cruz. The resort describes it as annual, and called the 2025 party its third. In 2026 it fell on Halloween itself, Saturday 31 October, from 8:30pm to 12:30am. Tickets were $75 plus tax, covering a signature cocktail and light bites, with a vampire DJ, fortune tellers, fire dancers and a costume contest. 2027 details have not been announced.",
+    sections: [
+      {
+        heading: "What the ticket covers",
+        body: [
+          "A ticket was $75 per person plus tax in 2026 and included one signature cocktail and light bites. Beyond that there is a cash bar and a heavy bites station.",
+          "The resort also sold an overnight package that bundles a Vampire Ball ticket with a room, with extra tickets addable at checkout.",
+        ],
+      },
+      {
+        heading: "The party itself",
+        body: [
+          "Entertainment is a vampire DJ and dancing, fortune tellers, fire dancers and a photo booth with souvenir photos. The costume contest has two categories: most creative solo costume and best couple or pair.",
+          "Formal attire or costumes are welcome but not required. Entry is strictly 21 and over.",
+        ],
+      },
+      {
+        heading: "Dates move from year to year",
+        body: [
+          "This is not always on Halloween night. The resort held the 2025 ball on Friday 24 October from 8pm to 11:30pm; the 2026 party moved to Saturday 31 October and ran later, to 12:30am.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "How much were Vampire Ball tickets?",
+        a: "$75 per person plus tax in 2026, including one signature cocktail and light bites.",
+      },
+      {
+        q: "Is there an age limit?",
+        a: "Yes. Chaminade states it is a 21-and-over event.",
+      },
+      {
+        q: "Do I have to wear a costume?",
+        a: "No. The resort says formal attire or costumes are welcome but not required, though there is a costume contest.",
+      },
+      {
+        q: "Where is Chaminade?",
+        a: "One Chaminade Lane, Santa Cruz, CA 95065.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Chaminade Resort & Spa",
+      url: "https://www.chaminade.com/",
+    },
+    times: [
+      {
+        day: "Saturday 31 October",
+        hours: "8:30pm – 12:30am",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "20:30",
+    recurrence: "An annual Halloween-season party at Chaminade; the resort billed its 2025 edition as the third annual Vampire Ball.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "watsonville-dia-de-muertos-festival",
@@ -2142,12 +3813,12 @@ export const regionalEvents: RegionalEvent[] = [
     county: "Santa Cruz",
     cityText: "Watsonville (Watsonville City Plaza)",
     city: "Watsonville",
-    venue: "Watsonville City Plaza",
+    venue: "City Plaza Park, Main Street and Peck Street",
     months: ["november"],
     dateText: "November 1, 2026",
     start: "2026-11-01",
     category: "Cultural Festival",
-    officialWebsite: "https://watsonville.gov/",
+    officialWebsite: "https://www.watsonville.gov/Calendar.aspx?EID=5440",
     referenceUrls: [
       "https://www.santacruz.org/upcoming-events/category/festival/",
       "https://www.santacruz.org/upcoming-event/watsonville-plaza-dia-de-los-muertos/",
@@ -2155,6 +3826,45 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-day Día de Muertos cultural festival at Watsonville City Plaza.",
+    metaDescription: "Watsonville's annual Día de Muertos festival in City Plaza, run by the Watsonville Film Festival: ofrendas, performances, films, crafts and food.",
+    intro: "The Watsonville Día de Muertos Festival is an annual evening celebration in City Plaza Park, at Main and Peck Streets in downtown Watsonville, put on by the Watsonville Film Festival with community partners. It honours ancestors and loved ones who have died, with ofrendas (altars), performances, hands-on activities, film screenings and food, and is aimed at families. The City of Watsonville listed the 2024 festival, its seventh, on Friday 1 November from 4pm to 9pm. Neither the organiser nor the city has published details of the 2026 edition or a 2027 date.",
+    sections: [
+      {
+        heading: "What happens",
+        body: [
+          "The festival is built around the plaza's ofrendas, the altars families build to remember the dead. Around them run performances, hands-on activities, food and film screenings, the last fitting for an event organised by a film festival.",
+          "The Watsonville Film Festival is a non-profit arts organisation based in Watsonville. Its own Día de Muertos page also hosts films, music and craft tutorials made for the celebration, including skeleton masks, paper flowers and candle decoration.",
+        ],
+      },
+      {
+        heading: "Where it is held",
+        body: [
+          "City Plaza Park sits at Main Street and Peck Street in the centre of downtown Watsonville. In the edition the city listed, the festival ran from late afternoon into the evening, 4pm to 9pm.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "Who organises the Watsonville Día de Muertos Festival?",
+        a: "The Watsonville Film Festival, a non-profit arts organisation, with community partners.",
+      },
+      {
+        q: "Where is it held?",
+        a: "City Plaza Park, at Main Street and Peck Street in downtown Watsonville.",
+      },
+      {
+        q: "When is the 2027 festival?",
+        a: "Not announced. The organiser and the City of Watsonville have not published a date.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Watsonville Film Festival",
+      url: "https://watsonvillefilmfest.org/",
+    },
+    recurrence: "An annual Día de Muertos festival in Watsonville's City Plaza, run by the Watsonville Film Festival; the City of Watsonville listed the 2024 edition as the seventh.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "santa-cruz-sea-glass-and-ocean-art-festival",
@@ -2162,7 +3872,7 @@ export const regionalEvents: RegionalEvent[] = [
     county: "Santa Cruz",
     cityText: "Santa Cruz (The Grove)",
     city: "Santa Cruz",
-    venue: "The Grove",
+    venue: "The Grove event center, Santa Cruz Beach Boardwalk",
     months: ["november"],
     dateText: "November 7-8, 2026",
     start: "2026-11-07",
@@ -2175,6 +3885,72 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "The 18th annual sea glass and ocean art festival, two days at The Grove in Santa Cruz.",
+    streetAddress: "400 Beach Street",
+    officialWebsite: "https://sites.google.com/view/santacruzseaglass-oceanartfest/home",
+    metaDescription: "Santa Cruz's sea glass and ocean art market at the Boardwalk's Grove: $5 at the door, kids free, 60+ makers. Next edition 13–14 November 2027.",
+    intro: "The Santa Cruz Sea Glass and Ocean Art Festival is a two-day market of sea glass jewellery and ocean-themed art held upstairs at the Grove event center on the Santa Cruz Beach Boardwalk, 400 Beach Street. The 18th edition ran on Saturday 7 and Sunday 8 November 2026, 10am to 5pm, with more than 60 makers, live music, collector talks and a favourite-find contest. Entry is $5 at the door and children get in free. The organiser has announced the 19th festival for 13–14 November 2027.",
+    sections: [
+      {
+        heading: "Admission, and the ticket scam warning",
+        body: [
+          "Entry is $5 per person and children are free. Tickets are sold only at the door; there are no online sales, and the organiser warns that social media posts offering early tickets are fraudulent.",
+          "Each $5 ticket doubles as an entry into a gift-basket draw of sea-themed pieces donated by the artists, with four baskets given away each day. Part of every entry fee goes to ocean conservation and whale entanglement work through the Monterey Bay Sanctuary; the organiser says it has given more than $12,000 since the festival began in 2009.",
+        ],
+      },
+      {
+        heading: "What was on in 2026",
+        body: [
+          "Alongside the stalls, the Grove Ballroom's main stage had live music both days, from Cement Ship on Saturday and Dos Bros on Sunday. Each day had a midday talk by a collector: Sage Harmon on iconic beach finds on Saturday, and artist and sea glass historian Jo Fry on Sunday.",
+          "Sunday afternoon brought the Favorite Find Contest, where up to six local beachcombers showed a piece of ocean-worn glass or other found object on stage. New for 2026 was a silent auction of three large fused-glass panels donated by artist Dana Boyko, with bids starting at $100 and proceeds going to the Monterey Bay Sanctuary Fund.",
+        ],
+      },
+      {
+        heading: "Getting there and parking",
+        body: [
+          "Look for the Sea Glass Festival sign on the marquee at Entrance B of the Boardwalk. The festival is on the second floor, and there is a lift at the pedestrian entrance, so it is wheelchair accessible.",
+          "In 2026 the organiser said Boardwalk parking across Beach Street was $15 over the festival weekend, with RVs allowed in the River Street lot at double the fee and no overnight parking. Dogs are not allowed on the Boardwalk, other than service animals.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "How much does it cost to get in?",
+        a: "$5 per person at the door, and children are free. There are no online tickets; the organiser says online ticket offers on social media are fake.",
+      },
+      {
+        q: "When is the next Sea Glass and Ocean Art Festival?",
+        a: "13–14 November 2027, 10am to 5pm, at the Grove on the Santa Cruz Beach Boardwalk. It will be the 19th festival.",
+      },
+      {
+        q: "Is it wheelchair accessible?",
+        a: "Yes. The event is on the second floor of the Grove, and there is a lift at Entrance B.",
+      },
+      {
+        q: "Can I bring my dog?",
+        a: "No. Dogs are not allowed on the Boardwalk, except service animals.",
+      },
+    ],
+    times: [
+      {
+        day: "Saturday 7 November",
+        hours: "10:00am – 5:00pm",
+      },
+      {
+        day: "Sunday 8 November",
+        hours: "10:00am – 5:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "10:00",
+    endTime: "17:00",
+    recurrence: "A recurring festival the organiser dates back to 2009; it numbers each edition, and the 2027 festival will be the 19th.",
+    nextEdition: {
+      start: "2027-11-13",
+      end: "2027-11-14",
+      source: "https://sites.google.com/view/santacruzseaglass-oceanartfest/home",
+    },
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "santa-cruz-beach-boardwalk-winter-wonderland",
@@ -2234,6 +4010,56 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-night holiday performance at the Santa Cruz Civic Auditorium.",
+    streetAddress: "307 Church Street",
+    postalCode: "95060",
+    officialWebsite: "https://atasteofirelandshow.com/show/a-celtic-christmas/2026-christmas-tour/santa-cruz/",
+    metaDescription: "Wednesday 2 December 2026, 7:30pm at the Santa Cruz Civic Auditorium. Irish dance, fiddle and carols; tickets $48.81–$119.89.",
+    intro: "A Celtic Christmas, the holiday show from the touring Irish dance company A Taste of Ireland, plays one night in Santa Cruz: Wednesday 2 December 2026 at 7:30pm, at the Santa Cruz Civic Auditorium, 307 Church Street. It is a seated, ticketed stage show rather than a community event, mixing Irish step dance, live fiddle and guitar, singing and storytelling with Christmas carols. The company lists ticket prices from $48.81 to $119.89, sold through the venue's box office site, santacruztickets.com. Santa Cruz is one stop on the company's 2026 Christmas tour.",
+    sections: [
+      {
+        heading: "What the show is",
+        body: [
+          "The production pairs a troupe of Irish dancers with a small live band. The company says its dancers include former world Irish dance champions and performers who have worked in Lord of the Dance and Riverdance, and it bills the show as coming from New York's Off-Broadway and London's West End.",
+          "The running order moves between traditional tunes and ballads, folk mash-ups, an a cappella tap battle and familiar Christmas carols, tied together with storytelling and staged against a Celtic landscape. The published cast lists dancers, two vocalists, two fiddlers and two guitarists; the company notes that the instruments can change from one performance to the next.",
+        ],
+      },
+      {
+        heading: "Tickets and timing",
+        body: [
+          "The show starts at 7:30pm. The company has not published a door time or a running time for the Santa Cruz date, so plan to arrive before curtain rather than at it.",
+          "Prices on the company's Santa Cruz page run from $48.81 to $119.89, and tickets are sold through santacruztickets.com rather than by the company directly. No age rules are published for this performance.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is A Celtic Christmas in Santa Cruz?",
+        a: "Wednesday 2 December 2026 at 7:30pm, at the Santa Cruz Civic Auditorium, 307 Church Street.",
+      },
+      {
+        q: "How much are tickets?",
+        a: "The company lists prices from $48.81 to $119.89, sold through santacruztickets.com.",
+      },
+      {
+        q: "Is it the same as the Taste of Ireland show that came to Santa Cruz before?",
+        a: "No. A Celtic Christmas is the company's Christmas production, built around carols and holiday storytelling alongside the Irish dance and music.",
+      },
+    ],
+    organizer: {
+      type: "PerformingGroup",
+      name: "A Taste of Ireland",
+      url: "https://atasteofirelandshow.com/",
+    },
+    times: [
+      {
+        day: "Wednesday 2 December",
+        hours: "7:30pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "19:30",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "downtown-boulder-creek-market-ugly-sweater-contest",
@@ -2251,6 +4077,58 @@ export const regionalEvents: RegionalEvent[] = [
     ],
     description:
       "A one-day holiday market and ugly sweater contest in downtown Boulder Creek.",
+    venue: "Downtown Boulder Creek",
+    postalCode: "95006",
+    officialWebsite: "https://www.bcba.net/events-1/first-friday-boulder-creek-ugly-sweater-2026-12-04-17-00",
+    metaDescription: "Friday 4 December 2026, 5–8pm in downtown Boulder Creek: the year's last First Friday market, themed around an ugly sweater contest.",
+    intro: "The Downtown Boulder Creek Market and Ugly Sweater Contest is the December edition of First Friday Boulder Creek, held from 5pm to 8pm on Friday 4 December 2026 in the town's historic downtown. First Friday is a monthly evening market run by the Boulder Creek Business Association with a volunteer committee, where local shops stay open and specialty vendors set up along the downtown core. December's edition is the last of the 2026 season and carries an ugly sweater theme, so wearing your worst knitwear is the point.",
+    sections: [
+      {
+        heading: "What happens",
+        body: [
+          "First Friday brings local shops and specialty vendors together in historic Boulder Creek for an evening of browsing; the organisers describe it as a way to support local people and businesses. The December date is billed as the ugly sweater edition.",
+          "The organisers have not published contest rules, judging times or prizes for 2026, so treat the sweater contest as a theme to dress for and check with them if you are entering seriously.",
+        ],
+      },
+      {
+        heading: "Season and families",
+        body: [
+          "First Friday runs monthly from April to December, and this is the final one of 2026. The organisers say the Kid's Zone behind the Sheriff station runs only from April to October, so there is no Kid's Zone at the November or December events.",
+          "Vendors apply through a monthly form on the First Friday Boulder Creek site, which has a separate December application.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Boulder Creek ugly sweater First Friday?",
+        a: "Friday 4 December 2026, from 5pm to 8pm in downtown Boulder Creek.",
+      },
+      {
+        q: "Is there a kids' area?",
+        a: "Not in December. The organisers say the Kid's Zone runs only at the April to October events.",
+      },
+      {
+        q: "Who runs it?",
+        a: "The Boulder Creek Business Association, with the First Friday Boulder Creek committee and volunteers.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Boulder Creek Business Association (First Friday Boulder Creek)",
+      url: "https://www.bcba.net/",
+    },
+    times: [
+      {
+        day: "Friday 4 December",
+        hours: "5:00pm – 8:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "17:00",
+    endTime: "20:00",
+    recurrence: "First Friday Boulder Creek runs on the first Friday of every month from April to December, 5pm to 8pm.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "santa-cruz-harbor-lighted-boat-parade",
@@ -2274,6 +4152,59 @@ export const regionalEvents: RegionalEvent[] = [
       label: "Holiday lights map 2026",
       blurb: "Every tree lighting, lighted boat parade and drive-through display around Monterey Bay on one map, with dates, prices and directions.",
     },
+    officialWebsite: "https://www.santacruzharbor.org/lighted-boat-parade",
+    metaDescription: "Saturday 5 December 2026 from 5:30pm, rain or shine: the 39th Lighted Boat Parade at Santa Cruz Harbor. Viewing and parking notes.",
+    intro: "The Santa Cruz Yacht Club's 39th annual Lighted Boat Parade sets off at 5:30pm on Saturday 5 December 2026 at Santa Cruz Harbor, and goes ahead rain or shine. Decorated power boats and sailboats, around 50 of them according to the harbour, cruise through the harbour after dark while people watch from the shore. The harbour describes it as a family event, with hot drinks and snacks on sale at spots around the south harbour. The Yacht Club sponsors and runs the parade; the Santa Cruz Port District hosts it.",
+    sections: [
+      {
+        heading: "Watching from the shore",
+        body: [
+          "This is a landside event for most people. For the 2025 parade the City of Santa Cruz said spectators could watch from several points around the harbour but that dock access was limited to slip renters and their guests; it has not reposted that guidance for 2026, but there is no sign it has changed.",
+          "The harbour says hot drinks and snacks are available at various locations in the south harbour, which is the side to head for if you want something warm while you wait. Charter boats are also available for anyone who wants to be on the water.",
+        ],
+      },
+      {
+        heading: "Parking and weather",
+        body: [
+          "The city warned last year that parking around the harbour is very limited and asked people to carpool or use other transport. Expect the same on a Saturday evening in December.",
+          "The parade runs rain or shine, so dress for a damp, cold evening by the water rather than checking for a postponement.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "What time does the Santa Cruz lighted boat parade start?",
+        a: "5:30pm on Saturday 5 December 2026. The organisers have not published an end time.",
+      },
+      {
+        q: "Is it cancelled if it rains?",
+        a: "No. The harbour lists it as rain or shine.",
+      },
+      {
+        q: "Where is the best place to watch?",
+        a: "From the shore around the harbour. Dock access has been limited to slip renters and their guests, and hot drinks and snacks are sold in the south harbour.",
+      },
+      {
+        q: "Is there parking?",
+        a: "Very little. The city has asked people to carpool or use other transport.",
+      },
+    ],
+    organizer: {
+      type: "Organization",
+      name: "Santa Cruz Yacht Club",
+      url: "https://scyc.org/",
+    },
+    times: [
+      {
+        day: "Saturday 5 December",
+        hours: "from 5:30pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "17:30",
+    recurrence: "An annual parade; 2026 is the Santa Cruz Yacht Club's 39th.",
+    updated: "2026-11-26",
+    hideSources: true,
   },
   {
     slug: "hallcrest-vineyards-holiday-market",
@@ -2300,16 +4231,70 @@ export const regionalEvents: RegionalEvent[] = [
     city: "Santa Cruz",
     venue: "Pacific Avenue, Downtown Santa Cruz",
     months: ["december"],
-    dateText: "",
+    dateText: "December 5, 2026",
     category: "Holiday / Parade",
-    officialWebsite:
-      "https://www.santacruzca.gov/Government/City-Departments/Parks-Recreation/Santa-Cruz-Holiday-Parade",
+    officialWebsite: "https://downtownsantacruz.com/do/holiday-parade-2",
     referenceUrls: [
       "https://downtownsantacruz.com/events/downtown-holiday-parade",
       "https://downtownsantacruz.com/events/holidays",
     ],
     description:
       "Santa Cruz's holiday parade along Pacific Avenue downtown. The 2026 date has not been announced.",
+    metaDescription: "Saturday 5 December 2026, 10am–noon on Pacific Avenue from Laurel to Water Street. Route, what to expect, and how to watch online.",
+    intro: "The Downtown Santa Cruz Holiday Parade marches down Pacific Avenue from 10am to noon on Saturday 5 December 2026, rain or shine. It is the city's official start to the holiday season and a showcase for Santa Cruz County schools, youth groups and local nonprofits, which make up most of the entries. The 2026 route runs the length of downtown, from the corner of Laurel Street and Pacific Avenue to Pacific and Water Street. The Downtown Association says the parade draws about 1,200 participants and more than 3,000 spectators each year.",
+    sections: [
+      {
+        heading: "Route and timing",
+        body: [
+          "The parade steps off at 10am at Laurel Street and Pacific Avenue and heads north along Pacific to Water Street, finishing around noon. Any spot along Pacific Avenue downtown puts you on the route.",
+          "It goes ahead rain or shine. That route is longer than the one the city published for 2025, which started at Spruce Street, so if you watched from the far southern end last year, check the 2026 start point.",
+        ],
+      },
+      {
+        heading: "Who is in it",
+        body: [
+          "The parade is built around local schools, youth organisations and nonprofits rather than commercial floats. Entry registration for 2026 has closed.",
+          "Sponsors for 2026 include The Penny Ice Creamery, Sandbar Solar, Santa Cruz Shakespeare, Woodstock's Pizza and Pacific Valley Bank.",
+        ],
+      },
+      {
+        heading: "Watching from home",
+        body: [
+          "If you cannot make it downtown, the parade is streamed live on Facebook and a recording is broadcast afterwards on Santa Cruz Community Television.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "When is the Santa Cruz holiday parade in 2026?",
+        a: "Saturday 5 December 2026, from 10am to noon, rain or shine.",
+      },
+      {
+        q: "What is the parade route?",
+        a: "Along Pacific Avenue from Laurel Street to Water Street in downtown Santa Cruz.",
+      },
+      {
+        q: "Can I still enter the parade?",
+        a: "No. Registration for 2026 has closed.",
+      },
+      {
+        q: "Can I watch it online?",
+        a: "Yes. It is streamed live on Facebook and later shown on Santa Cruz Community Television.",
+      },
+    ],
+    times: [
+      {
+        day: "Saturday 5 December",
+        hours: "10:00am – 12:00pm",
+      },
+    ],
+    timesConfidence: "official",
+    startTime: "10:00",
+    endTime: "12:00",
+    recurrence: "An annual parade down Pacific Avenue on a Saturday morning in early December.",
+    updated: "2026-11-26",
+    hideSources: true,
+    start: "2026-12-05",
   },
   {
     slug: "hotel-paradox-holiday-market",

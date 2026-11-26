@@ -31,6 +31,10 @@ const month = monthMeta(primaryMonth(event));
 const dateLabel = event.dateText || DATE_TBA;
 // Build-time, not view-time — see src/lib/isPast.ts.
 const isPast = isPastDate(event.start, event.end);
+const done = event.recurrence ? "The 2026 edition has finished." : "This event has finished.";
+const fmtDay = (iso: string) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
+const fmtRange = (a: string, b?: string) => (b && b !== a ? `${fmtDay(a)} to ${fmtDay(b)}` : fmtDay(a));
 // Car Week paragraph at the foot of the page: in season only (src/data/season.ts).
 const carWeekSeason = inCarWeekSeason();
 
@@ -176,12 +180,25 @@ const others = eventsInMonth(month.key)
           )
         }
 
+        {
+          isPast && event.recurrence && (
+            <div class="mt-4 border-l-2 border-brass pl-4" id="next-edition">
+              <p class="text-sm text-foreground">{event.recurrence}</p>
+              <p class="mt-2 text-sm text-foreground">
+                {event.nextEdition
+                  ? <>Next: <a href={event.nextEdition.source} class="text-brass hover:underline" rel="noopener">{fmtRange(event.nextEdition.start, event.nextEdition.end)}</a>, as announced by the organiser.</>
+                  : <>The next dates have not been announced yet. We add them when the organiser publishes them.</>}
+              </p>
+            </div>
+          )
+        }
+
         <p class="mt-4 text-sm leading-relaxed text-muted-foreground">
           {
             isPast
               ? event.times
-                ? "This event has finished. The hours above are what was published for it at the time."
-                : "This event has finished. No start time was published for it."
+                ? `${done} The hours above are what was published for it at the time.`
+                : `${done} No start time was published for it.`
               : event.times && event.timesConfidence === "unconfirmed"
                 ? "These hours come from a secondary listing. The organiser has not published door hours on its own page, so they are not carried in this page's structured data — the dates are. Confirm with the organiser before you plan a day around them."
                 : event.times
