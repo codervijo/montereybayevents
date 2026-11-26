@@ -1,0 +1,40 @@
+---
+// "At a glance" card (v2.Z) for one event page, plus its ImageObject JSON-LD.
+// The PNG is drawn by scripts/gen-og.mjs from the same Glance rows this
+// component reads (src/data/glance.ts), so the alt text is exactly what the
+// image says. Below the fold, so lazy.
+import { glancePath, glanceAlt, glanceHeight, GLANCE_W, type Glance } from "../data/glance";
+
+interface Props {
+  glance: Glance;
+  pageUrl: string;
+}
+const { glance, pageUrl } = Astro.props;
+const site = "https://montereybayevents.com";
+const src = glancePath(glance.slug);
+const h = glanceHeight(glance);
+const alt = glanceAlt(glance);
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "ImageObject",
+  "@id": `${site}${src}#image`,
+  name: `${glance.name}: at a glance`,
+  description: alt,
+  contentUrl: `${site}${src}`,
+  encodingFormat: "image/png",
+  width: GLANCE_W,
+  height: h,
+  creator: { "@type": "Organization", name: "Monterey Bay Events", url: `${site}/` },
+  creditText: "Monterey Bay Events",
+  copyrightNotice: "Monterey Bay Events",
+  mainEntityOfPage: pageUrl,
+};
+---
+
+<figure class="mt-10 max-w-2xl" id="at-a-glance">
+  <img src={src} width={GLANCE_W} height={h} alt={alt} loading="lazy" decoding="async" class="block h-auto w-full border border-border/70" />
+  <figcaption class="mt-2 text-xs text-muted-foreground">
+    At a glance, from the details on this page. <a href={src} download class="text-brass hover:underline">Download PNG</a>
+  </figcaption>
+</figure>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />

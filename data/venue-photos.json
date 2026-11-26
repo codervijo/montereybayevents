@@ -1,0 +1,44 @@
+{
+  "_doc": "v2.Z landmark venue photos. Public-domain or CC0 only, no people (checked by eye; crops noted). Keys match data/event-venues.json. Rendered by scripts/venue-photos.py into public/photos/venues/. Each entry records its source page and licence; the page caption credits the author.",
+  "photos": {
+    "custom-house-plaza": {
+      "commons": "File:Custom House, Custom House Plaza, Monterey (Monterey County, California).jpg",
+      "source": "https://commons.wikimedia.org/wiki/File:Custom_House,_Custom_House_Plaza,_Monterey_(Monterey_County,_California).jpg",
+      "origin": "Library of Congress, Historic American Buildings Survey, digital ID hhh.ca0380/photos.013690p",
+      "author": "Robert W. Kerrigan, Historic American Buildings Survey",
+      "date": "1936-05-15",
+      "licence": "Public domain",
+      "licenceNote": "Work of the US federal government (HABS, National Park Service)",
+      "licenceUrl": "https://www.loc.gov/pictures/collection/hh/",
+      "crop": null,
+      "alt": "Black-and-white photograph of the Custom House in Monterey in 1936: a long whitewashed adobe with a tiled roof, a two-storey wooden balcony at the near end, and a vintage car parked along the street.",
+      "caption": "The Custom House beside Custom House Plaza, photographed in 1936 for the Historic American Buildings Survey."
+    },
+    "point-pinos-lighthouse": {
+      "commons": "File:Point Pinos Lighthouse - DSC06573.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Point_Pinos_Lighthouse_-_DSC06573.JPG",
+      "origin": "Wikimedia Commons, own work of the photographer",
+      "author": "Daderot",
+      "date": "2012-04-18",
+      "licence": "CC0 1.0",
+      "licenceNote": "Dedicated to the public domain by the photographer",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "crop": null,
+      "alt": "Point Pinos Lighthouse: a white keeper's house with a lantern tower rising from the roof, framed by wind-bent cypress trees, with the ocean behind a white rail fence.",
+      "caption": "Point Pinos Lighthouse in Pacific Grove, photographed in 2012."
+    },
+    "carmel-beach": {
+      "commons": "File:Carmel Beach, California - DSC07171.JPG",
+      "source": "https://commons.wikimedia.org/wiki/File:Carmel_Beach,_California_-_DSC07171.JPG",
+      "origin": "Wikimedia Commons, own work of the photographer",
+      "author": "Daderot",
+      "date": "2013-11-18",
+      "licence": "CC0 1.0",
+      "licenceNote": "Dedicated to the public domain by the photographer",
+      "licenceUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "crop": [0.30, 0.35, 1.0, 1.0],
+      "alt": "White sand at Carmel Beach below a line of wind-shaped Monterey cypress trees and a weathered driftwood-grey cypress, under a sky of small clouds.",
+      "caption": "The sand and cypress at Carmel Beach, photographed in 2013 (cropped)."
+    }
+  }
+}

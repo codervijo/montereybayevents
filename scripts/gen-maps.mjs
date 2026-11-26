@@ -663,6 +663,83 @@ async function ogFromPng(png) {
 }
 
 // ---------------------------------------------------------------------------
+// Venue location maps (v2.Z, = v2.Y): one per fixed venue, from the OSM
+// extract in data/geo/venues/<key>.json (scripts/fetch-venue-geo.py). The pin
+// is the venue's recorded coordinate; nothing else is labelled except the
+// street names OSM gives.
+// ---------------------------------------------------------------------------
+
+const VENUE_DIR = join(ROOT, "data", "geo", "venues");
+const venueTable = JSON.parse(readFileSync(join(ROOT, "data", "event-venues.json"), "utf8")).venues;
+const cwById = Object.fromEntries(mapVenues.map((v) => [v.id, v]));
+const venueKeys = existsSync(VENUE_DIR) ? readdirSync(VENUE_DIR).filter((f) => f.endsWith(".json")).map((f) => f.replace(/\.json$/, "")).sort() : [];
+
+function venueMap(key) {
+  const geo = JSON.parse(readFileSync(join(VENUE_DIR, `${key}.json`), "utf8"));
+  const meta = venueTable[key] ?? { name: cwById[key]?.label ?? key, osm: cwById[key]?.source };
+  const W = 1200, TOP = 170, FOOT = 64;
+  const [s, w, n, e] = geo.bbox;
+  const { p, height, mpp } = projection({ minLon: w, maxLon: e, minLat: s, maxLat: n, width: W, top: TOP });
+  const H = TOP + height + FOOT;
+  const f = frame(W, H, { kicker: "Venue location map", title: meta.name, credit: "Map data © OpenStreetMap contributors (ODbL). Check the organiser for entrances." });
+  if (meta.name.length > 26) f.head = f.head.replace('font-size="78"', `font-size="${meta.name.length > 38 ? 50 : 60}"`);
+  const by = (k) => geo.features.filter((x) => x.k === k);
+  const closed = (g) => g.length > 3 && g[0][0] === g.at(-1)[0] && g[0][1] === g.at(-1)[1];
+  const fill = (k, col, edge) => by(k).filter((x) => closed(x.g)).map((x) => `<path d="${path(x.g.map(p), true)}" fill="${col}"${edge ? ` stroke="${edge}" stroke-width="1"` : ""}/>`).join("");
+  const line = (k, col, wdt, dash = "") => by(k).map((x) => `<path d="${path(x.g.map(p))}" fill="none" stroke="${col}" stroke-width="${wdt}" stroke-linecap="round" stroke-linejoin="round"${dash ? ` stroke-dasharray="${dash}"` : ""}/>`).join("");
+  // Street labels: the longest named major roads, placed along their longest segment, no overlaps.
+  const placed = [];
+  const labels = [];
+  const named = geo.features.filter((x) => x.n && (x.k === "road1" || x.k === "road2" || x.k === "road3"));
+  const seen = new Set();
+  const cand = named.map((x) => {
+    const pts = x.g.map(p);
+    let best = null;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [x1, y1] = pts[i], [x2, y2] = pts[i + 1];
+      const len = Math.hypot(x2 - x1, y2 - y1);
+      if (!best || len > best.len) best = { len, x: (x1 + x2) / 2, y: (y1 + y2) / 2, ang: (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI };
+    }
+    return { name: x.n, rank: x.k === "road1" ? 0 : x.k === "road2" ? 1 : 2, ...best };
+  }).filter((c) => c.len > 90).sort((a, b) => a.rank - b.rank || b.len - a.len);
+  for (const c of cand) {
+    if (seen.has(c.name) || labels.length >= 9) continue;
+    if (c.y < TOP + 20 || c.y > TOP + height - 20 || c.x < 40 || c.x > W - 40) continue;
+    const half = Math.min(c.len, c.name.length * 9) / 2 + 10;
+    if (placed.some(([px, py]) => Math.hypot(px - c.x, py - c.y) < half + 60)) continue;
+    if (Math.hypot(c.x - W / 2, c.y - (TOP + height / 2)) < 90) continue; // keep the pin clear
+    let ang = c.ang; if (ang > 90) ang -= 180; if (ang < -90) ang += 180;
+    labels.push(label(c.x, c.y + 6, c.name, { size: 17, weight: 500, fill: C.muted, rotate: ang }));
+    placed.push([c.x, c.y]); seen.add(c.name);
+  }
+  const [cx, cy] = p(geo.center);
+  const pin = `<g>
+    <circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="34" fill="${C.brass}" fill-opacity="0.18"/>
+    <path d="M${cx},${cy} c-12,-18 -20,-27 -20,-38 a20,20 0 1 1 40,0 c0,11 -8,20 -20,38 z" fill="${C.brass}" stroke="${C.bg}" stroke-width="3"/>
+    <circle cx="${cx}" cy="${cy - 38}" r="7" fill="${C.bg}"/>
+    ${label(cx, cy - 70, meta.name, { size: 24, weight: 700, fill: C.fg })}
+  </g>`;
+  const metres = [50, 100, 200, 250, 500, 1000].reverse().find((m) => m / mpp <= 220) ?? 50;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  ${f.head}
+  <svg x="0" y="${TOP}" width="${W}" height="${height}" viewBox="0 ${TOP} ${W} ${height}" overflow="hidden">
+    <rect x="0" y="${TOP}" width="${W}" height="${height}" fill="${C.raised}"/>
+    ${fill("green", C.camp, C.campEdge)}${fill("beach", "#3a3326")}${fill("water", C.water, C.seaEdge)}
+    ${line("coast", C.seaEdge, 4)}${line("stream", C.seaEdge, 3)}
+    ${fill("building", C.surface, C.border)}
+    ${line("runway", C.road, 14)}${line("rail", C.muted, 2, "8 6")}${line("pier", C.roadMajor, 8)}
+    ${line("path", C.border, 1.5, "4 4")}${line("road3", C.road, 4)}${line("road2", C.roadMajor, 7)}${line("road1", C.brassSoft, 9)}
+    ${labels.join("")}
+    ${pin}
+  </svg>
+  ${northArrow(W - 70, TOP + 70)}
+  ${scaleBar(60, TOP + height - 30, mpp, metres, metres >= 1000 ? `${metres / 1000} km` : `${metres} m`)}
+  ${f.foot}
+</svg>`;
+  return { svg, W, H };
+}
+
+// ---------------------------------------------------------------------------
 // targets + write
 // ---------------------------------------------------------------------------
 
@@ -680,6 +757,7 @@ const targets = [
   })),
   { name: "og-monterey-events-calendar", make: calendarOg, widths: [] },
   { name: "og-holiday-lights", make: holidayLightsOg, widths: [] },
+  ...venueKeys.map((k) => ({ name: `venue-${k}`, make: () => venueMap(k), widths: [800, 1200] })),
 ];
 
 const check = process.argv.includes("--check");

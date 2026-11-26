@@ -13,6 +13,11 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import FireAlert from "../../components/FireAlert.astro";
 import RegionalEventPage from "../../components/RegionalEventPage.astro";
+import GlanceFigure from "../../components/GlanceFigure.astro";
+import { carWeekGlance } from "../../data/glance";
+import { buildImageObject } from "../../lib/imageSchema";
+import MapFigure from "../../components/MapFigure.astro";
+import { carWeekVenueMap } from "../../data/venueMaps";
 import { allEventDetails, mapUrl, type EventDetail } from "../../data/eventIndex";
 import { mapVenues } from "../../data/carWeekVenues";
 import { ROAD_CLOSURES_URL } from "../../data/events";
@@ -49,6 +54,7 @@ const fullDescription = event
 const title = event ? `${event.title} — Monterey Car Week 2026` : "";
 const canonical = event ? `${site}/event/${event.slug}/` : "";
 // The Car Week map pin for this venue, if it has one (see src/data/carWeekVenues.ts).
+const venueMap = carWeekVenueMap(event?.venue?.venue);
 const carWeekPin = event?.venue ? mapVenues.find((v) => v.venueNames.includes(event.venue!.venue)) : undefined;
 const image = `${site}/og-carweek.jpg`;
 const desc = fullDescription.slice(0, 155);
@@ -161,6 +167,8 @@ const others = event
         </p>
       )
     }
+
+    <GlanceFigure glance={carWeekGlance(event)} pageUrl={canonical} />
 
     <!-- Contextual cross-links. The wording changes with admission because the
          reader's next question changes with it: a free event's visitor wants the
@@ -309,6 +317,9 @@ const others = event
         </p>
       </section>
     </div>
+
+    {venueMap && <MapFigure visual={venueMap} sizes="(min-width: 1024px) 896px, 100vw" id="venue-map" />}
+    {venueMap && <script type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", ...buildImageObject(venueMap, { pageUrl: canonical, credit: "Map data © OpenStreetMap contributors (ODbL); map by Monterey Bay Events" }) })} />}
 
     {
       event.url && (

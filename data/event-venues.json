@@ -1,0 +1,340 @@
+{
+  "_doc": "v2.Z/v2.Y venue location maps. One entry per fixed venue; `events` are regional /event/ slugs shown on that venue's map (Car Week events resolve through src/data/carWeekVenues.ts). lat/lon/osm are filled by scripts/venue-pins.py from OSM Nominatim; `query` is what was searched. Events with no single fixed venue (routes, downtown areas, several venues, countywide) are deliberately absent and get no map.",
+  "venues": {
+    "custom-house-plaza": {
+      "name": "Custom House Plaza",
+      "radius": 450,
+      "events": [
+        "california-turkish-arts-culture-festival",
+        "festa-italia-monterey",
+        "monterey-bay-greek-festival",
+        "ice-skating-by-the-bay"
+      ],
+      "lat": 36.60269,
+      "lon": -121.89343,
+      "osm": "OSM way/153299640 (Custom House Plaza, Downtown Monterey, New Monterey, Monterey, Monterey County, )"
+    },
+    "monterey-county-fairgrounds": {
+      "name": "Monterey County Fair & Event Center",
+      "radius": 650,
+      "events": [
+        "monterey-county-fair",
+        "monterey-jazz-festival",
+        "winter-wonderfest-monterey"
+      ],
+      "lat": 36.59446,
+      "lon": -121.86238,
+      "osm": "OSM way/152019970 (Monterey County Fairgrounds, Fairground Road, Monterey)"
+    },
+    "laguna-seca": {
+      "name": "WeatherTech Raceway Laguna Seca",
+      "radius": 1600,
+      "events": [
+        "indycar-grand-prix-of-monterey",
+        "gridlife-laguna-festival",
+        "laguna-seca-speedtour"
+      ],
+      "lat": 36.58441,
+      "lon": -121.75339,
+      "osm": "OSM way/41229940 (WeatherTech Raceway Laguna Seca, Lookout Ridge Road, East Garrison, Monterey Cou)"
+    },
+    "pebble-beach-golf-links": {
+      "name": "Pebble Beach Golf Links",
+      "radius": 1100,
+      "events": [
+        "pure-insurance-championship-at-pebble-beach"
+      ],
+      "lat": 36.56966,
+      "lon": -121.94974,
+      "osm": "OSM way/686560759 (Pebble Beach Golf Links, 1700, 17 Mile Drive, Pebble Beach, Del Monte Forest, Mo)"
+    },
+    "carmel-beach": {
+      "name": "Carmel Beach",
+      "radius": 650,
+      "events": [
+        "the-great-sandcastle-contest"
+      ],
+      "lat": 36.55124,
+      "lon": -121.92944,
+      "osm": "OSM relation/7036987 (Carmel Beach, Carmel-by-the-Sea, Monterey County, California, United States)"
+    },
+    "salinas-airport": {
+      "name": "Salinas Municipal Airport",
+      "radius": 1600,
+      "events": [
+        "california-international-airshow-salinas"
+      ],
+      "lat": 36.66286,
+      "lon": -121.60895,
+      "osm": "OSM way/43538797 (Salinas Municipal Airport, Airport Boulevard, Alisal, Salinas, Monterey County, )"
+    },
+    "golden-bough": {
+      "name": "Golden Bough Playhouse",
+      "lat": 36.55193,
+      "lon": -121.92443,
+      "osm": "midpoint of Monte Verde Street between 8th and 9th Avenues (OSM street geometry); the playhouse is not mapped in OSM",
+      "radius": 400,
+      "events": [
+        "carmel-international-film-festival"
+      ]
+    },
+    "point-pinos-lighthouse": {
+      "name": "Point Pinos Lighthouse",
+      "radius": 550,
+      "events": [
+        "butterfly-days-sunset-celebration-at-point-pinos-lighthouse"
+      ],
+      "lat": 36.63339,
+      "lon": -121.93374,
+      "osm": "OSM node/664318913 (Point Pinos Lighthouse, Asilomar Avenue, Pacific Grove Acres, Pacific Grove, Mon)"
+    },
+    "devendorf-park": {
+      "name": "Devendorf Park",
+      "radius": 400,
+      "events": [
+        "meet-the-makers-art-wine-walk",
+        "carmel-holidays-in-the-park-tree-menorah-lighting"
+      ],
+      "lat": 36.55541,
+      "lon": -121.92052,
+      "osm": "OSM way/43538890 (Devendorf Park, 544, Carmel-by-the-Sea, Monterey County, California, 93921, Unit)"
+    },
+    "fumc-pacific-grove": {
+      "name": "First United Methodist Church of Pacific Grove",
+      "radius": 450,
+      "events": [
+        "aria-womens-choir-where-mercy-dwells"
+      ],
+      "lat": 36.61431,
+      "lon": -121.9305,
+      "osm": "OSM way/156109167 (915, Sunset Drive, Pacific Grove Acres, Pacific Grove, Monterey County, Californ)"
+    },
+    "sc-civic-auditorium": {
+      "name": "Santa Cruz Civic Auditorium",
+      "radius": 450,
+      "events": [
+        "cabrillo-festival-of-contemporary-music",
+        "cabrillo-festival-free-family-orchestral-concert",
+        "cabrillo-festival-grand-finale",
+        "a-taste-of-ireland-a-celtic-christmas"
+      ],
+      "lat": 36.97389,
+      "lon": -122.02912,
+      "osm": "OSM node/368171606 (Santa Cruz Civic Auditorium, Church Street, Downtown District (Commercial), Down)"
+    },
+    "skypark": {
+      "name": "Skypark",
+      "radius": 500,
+      "events": [
+        "scotts-valley-60th-anniversary-celebration-at-skypark"
+      ],
+      "lat": 37.04826,
+      "lon": -122.02975,
+      "osm": "OSM way/39944099 (Skypark, Scotts Valley, Santa Cruz County, California, United States)"
+    },
+    "abbott-square": {
+      "name": "Abbott Square Market",
+      "radius": 400,
+      "events": [
+        "santa-cruz-jug-band-festival"
+      ],
+      "lat": 36.97473,
+      "lon": -122.0257,
+      "osm": "OSM relation/20340663 (Abbott Square, Downtown District (Commercial), Downtown, Santa Cruz, Santa Cruz )"
+    },
+    "hwy-17-studios": {
+      "name": "HWY 17 Studios",
+      "radius": 450,
+      "events": [
+        "hwy-17-studios-all-star-food-fest"
+      ],
+      "lat": 36.96087,
+      "lon": -122.04367,
+      "osm": "OSM way/10553476 (831, Almar Avenue, Westside Industrial District, Westside, Santa Cruz, Santa Cru)"
+    },
+    "sc-county-fairgrounds": {
+      "name": "Santa Cruz County Fairgrounds",
+      "radius": 800,
+      "events": [
+        "santa-cruz-county-fair",
+        "sparkys-holiday-lights"
+      ],
+      "lat": 36.95159,
+      "lon": -121.73558,
+      "osm": "OSM way/282390769 (Santa Cruz County Fairgrounds, Interlaken, Santa Cruz County, California, United)"
+    },
+    "sc-wharf": {
+      "name": "Santa Cruz Wharf",
+      "radius": 650,
+      "events": [
+        "aloha-outrigger-races"
+      ],
+      "lat": 36.96015,
+      "lon": -122.01998,
+      "osm": "OSM relation/7063040 (Santa Cruz Municipal Wharf)"
+    },
+    "crest-ranch": {
+      "name": "Crest Ranch",
+      "radius": 700,
+      "events": [
+        "bonny-doon-art-wine-and-beer-festival"
+      ],
+      "lat": 37.11927,
+      "lon": -122.15693,
+      "osm": "OSM way/43080213 (12200, Empire Grade, Boulder Creek, Santa Cruz County, California, 95060, United)"
+    },
+    "sc-art-league": {
+      "name": "Santa Cruz Art League",
+      "radius": 400,
+      "events": [
+        "open-studios-satellite-preview-exhibit"
+      ],
+      "lat": 36.97344,
+      "lon": -122.01781,
+      "osm": "OSM way/1410951324 (526, Broadway, Soquel Avenue Commercial Corridor, Downtown, Santa Cruz, Santa Cr)"
+    },
+    "london-nelson": {
+      "name": "London Nelson Community Center",
+      "radius": 400,
+      "events": [
+        "downtown-santa-cruz-halloween-mask-making-festival"
+      ],
+      "lat": 36.96939,
+      "lon": -122.02771,
+      "osm": "OSM way/34321480 (mapped under the centre's former name, Louden Nelson Community Center, Center Street, Santa Cruz)"
+    },
+    "sc-boardwalk": {
+      "name": "Santa Cruz Beach Boardwalk",
+      "radius": 550,
+      "events": [
+        "santa-cruz-beach-boardwalk-halloween",
+        "santa-cruz-sea-glass-and-ocean-art-festival",
+        "santa-cruz-beach-boardwalk-winter-wonderland"
+      ],
+      "lat": 36.96456,
+      "lon": -122.01538,
+      "osm": "OSM relation/7063039 (Santa Cruz Beach Boardwalk, 400, Beach Street, Beach & Boardwalk Commercial Dist)"
+    },
+    "sc-harbor": {
+      "name": "Santa Cruz Harbor",
+      "radius": 650,
+      "events": [
+        "santa-cruz-harbor-trick-or-treat",
+        "santa-cruz-harbor-lighted-boat-parade"
+      ],
+      "lat": 36.96825,
+      "lon": -122.0029,
+      "osm": "OSM relation/9458343 (Santa Cruz Small Craft Harbor, Harbor Roundabout, Seabright, Santa Cruz, Santa C)"
+    },
+    "chaminade": {
+      "name": "Chaminade Resort & Spa",
+      "radius": 600,
+      "events": [
+        "vampire-ball-at-chaminade-resort-spa"
+      ],
+      "lat": 36.99967,
+      "lon": -121.98463,
+      "osm": "OSM way/681004101 (Chaminade (Resort & Conference Center), Live Oak, Santa Cruz County, California,)"
+    },
+    "watsonville-plaza": {
+      "name": "City Plaza Park, Watsonville",
+      "radius": 400,
+      "events": [
+        "watsonville-dia-de-muertos-festival"
+      ],
+      "lat": 36.91028,
+      "lon": -121.75614,
+      "osm": "OSM way/41380421 (City Plaza Park, 350, Colache Town, Watsonville, Santa Cruz County, California, )"
+    },
+    "hallcrest": {
+      "name": "Hallcrest Vineyards",
+      "radius": 500,
+      "events": [
+        "hallcrest-vineyards-holiday-market"
+      ],
+      "lat": 37.05167,
+      "lon": -122.07758,
+      "osm": "OSM way/230952565 (379, Felton Empire Road, Felton, Santa Cruz County, California, 95018, United St)"
+    },
+    "hotel-paradox": {
+      "name": "Hotel Paradox",
+      "radius": 400,
+      "events": [
+        "hotel-paradox-holiday-market"
+      ],
+      "lat": 36.97702,
+      "lon": -122.02144,
+      "osm": "OSM way/34927638 (Hotel Paradox, Ocean Street, Soquel Avenue Commercial Corridor, Downtown, Santa )"
+    },
+    "soquel-high": {
+      "name": "Soquel High School",
+      "radius": 500,
+      "events": [
+        "run-for-pie-2026"
+      ],
+      "lat": 36.99385,
+      "lon": -121.95697,
+      "osm": "OSM way/102629938 (401, Soquel San Jose Road, Soquel, Santa Cruz County, California, 95073, United )"
+    },
+    "steinbeck-plaza": {
+      "name": "Steinbeck Plaza, Cannery Row",
+      "radius": 400,
+      "events": [
+        "cannery-row-holiday-tree-lighting"
+      ],
+      "lat": 36.61612,
+      "lon": -121.89997,
+      "osm": "OSM relation/7037902 (Steinbeck Plaza, New Monterey, Monterey, Monterey County, California, 93944, Uni)"
+    },
+    "jewell-park": {
+      "name": "Jewell Park",
+      "lat": 36.62209,
+      "lon": -121.91672,
+      "osm": "corner of Central and Grand Avenues, the park's published address (OSM street geometry); the park itself is not named in OSM",
+      "radius": 400,
+      "events": [
+        "pacific-grove-holiday-tree-lighting"
+      ]
+    },
+    "carmel-plaza": {
+      "name": "Carmel Plaza",
+      "radius": 400,
+      "events": [
+        "carmel-plaza-black-friday-happenings"
+      ],
+      "lat": 36.55431,
+      "lon": -121.92056,
+      "osm": "OSM node/7428153085 (Carmel Plaza, Mission Street, Carmel-by-the-Sea, Monterey County, California, 93)"
+    },
+    "palace-arts": {
+      "name": "1407 Pacific Avenue",
+      "radius": 400,
+      "events": [
+        "downtown-santa-cruz-makers-market-holiday-pop-up"
+      ],
+      "lat": 36.97508,
+      "lon": -122.02657,
+      "osm": "OSM way/531922206 (1407, Pacific Avenue, Downtown District (Commercial), Downtown, Santa Cruz, Sant)"
+    },
+    "capitola-beach": {
+      "name": "Capitola Beach",
+      "radius": 500,
+      "events": [
+        "surfin-santa-visits-capitola-2026"
+      ],
+      "lat": 36.9714,
+      "lon": -121.95165,
+      "osm": "OSM way/35343873 (Capitola Beach, Capitola, Santa Cruz County, California, United States)"
+    },
+    "one-main-salinas": {
+      "name": "One Main Street, Salinas",
+      "radius": 450,
+      "events": [
+        "salinas-tree-for-peace-lighting-ceremony"
+      ],
+      "lat": 36.67718,
+      "lon": -121.65557,
+      "osm": "OSM way/275847596 (National Steinbeck Center, 1, Main Street, Oldtown Salinas, Maple Park, Salinas,)"
+    }
+  }
+}

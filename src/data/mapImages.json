@@ -90,5 +90,437 @@
     "width": 1200,
     "height": 630,
     "widths": []
+  },
+  "venue-abbott-square": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-asilomar": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-barnyard": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-bayonet-black-horse": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-broadway-seaside": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-capitola-beach": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-carmel-beach": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-carmel-plaza": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-carmel-valley-historical-society": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-casa-palmero": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-chaminade": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-crest-ranch": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-crossroads": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-custom-house-plaza": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-devendorf-park": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-downtown-pacific-grove": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-embassy-suites": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-equestrian-center": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-fumc-pacific-grove": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-golden-bough": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-hallcrest": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-hotel-paradox": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-hwy-17-studios": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-hyatt-regency": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-jewell-park": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-laguna-seca": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-lodge-at-pebble-beach": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-london-nelson": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-monterey-conference-center": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-monterey-county-fairgrounds": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-monterey-jet-center": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-monterey-pines": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-ocean-avenue-carmel": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-one-main-salinas": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-pacific-grove-golf-links": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-palace-arts": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-pasadera": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-pebble-beach-golf-links": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-point-pinos-lighthouse": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-porsche-monterey": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-quail-lodge": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-salinas-airport": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-sc-art-league": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-sc-boardwalk": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-sc-civic-auditorium": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-sc-county-fairgrounds": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-sc-harbor": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-sc-wharf": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-seaside-city-hall": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-skypark": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-soquel-high": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-spanish-bay": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-steinbeck-plaza": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
+  },
+  "venue-watsonville-plaza": {
+    "width": 1200,
+    "height": 1134,
+    "widths": [
+      800,
+      1200
+    ]
   }
 }

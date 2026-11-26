@@ -3,6 +3,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { regionalEvents } from './src/data/events-2026';
 import { pageImageUrls } from './src/data/visuals';
+import { regionalVenueMap, carWeekVenueMap } from './src/data/venueMaps';
+import { venuePhoto } from './src/data/venuePhotos';
+import { allEventDetails } from './src/data/eventIndex';
 
 // Hand-set lastmod for non-event pages. Same rule as `updated` on an event
 // row: only pages whose content we know changed, dated by hand in the commit
@@ -65,6 +68,13 @@ export default defineConfig({
 
         const m = item.url.match(/\/event\/([^/]+)\/$/);
         if (!m) return item;
+        // v2.Z: every event page shows its "at a glance" card (src/data/glance.ts).
+        item = { ...item, img: [...(item.img ?? []), { url: `https://montereybayevents.com/og/glance-${m[1]}.png` }] };
+        // v2.Z / v2.Y: the venue location map, where the page has one.
+        const vm = regionalVenueMap(m[1]) ?? carWeekVenueMap(allEventDetails.find((e) => e.slug === m[1])?.venue?.venue);
+        if (vm) item = { ...item, img: [...item.img, { url: `https://montereybayevents.com/maps/${vm.key}.png` }] };
+        const ph = venuePhoto(m[1]);
+        if (ph) item = { ...item, img: [...item.img, { url: `https://montereybayevents.com/photos/venues/${ph.key}.jpg` }] };
         const updated = regionalEvents.find((e) => e.slug === m[1])?.updated;
         return updated ? { ...item, lastmod: `${updated}T00:00:00-07:00` } : item;
       },

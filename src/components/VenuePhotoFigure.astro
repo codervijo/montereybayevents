@@ -1,0 +1,44 @@
+---
+// Landmark venue photo (v2.Z): public domain or CC0, credited in the caption
+// and in ImageObject JSON-LD (license + acquireLicensePage point at the source).
+import { photoJpg, photoWebp, type VenuePhoto } from "../data/venuePhotos";
+
+interface Props {
+  photo: VenuePhoto;
+  pageUrl: string;
+}
+const { photo, pageUrl } = Astro.props;
+const site = "https://montereybayevents.com";
+const jpg = photoJpg(photo.key);
+const ld = {
+  "@context": "https://schema.org",
+  "@type": "ImageObject",
+  "@id": `${site}${jpg}#image`,
+  name: photo.venue,
+  description: photo.alt,
+  contentUrl: `${site}${jpg}`,
+  encodingFormat: "image/jpeg",
+  width: photo.width,
+  height: photo.height,
+  dateCreated: photo.date,
+  creator: { "@type": "Person", name: photo.author },
+  creditText: `${photo.author} (${photo.licence})`,
+  license: photo.licenceUrl,
+  acquireLicensePage: photo.source,
+  isBasedOn: photo.source,
+  mainEntityOfPage: pageUrl,
+};
+---
+
+<figure class="mt-8" id="venue-photo">
+  <picture>
+    <source type="image/webp" srcset={`${photoWebp(photo.key, 800)} 800w, ${photoWebp(photo.key, 1200)} 1200w`} sizes="(min-width: 1024px) 896px, 100vw" />
+    <img src={jpg} width={photo.width} height={photo.height} alt={photo.alt} loading="lazy" decoding="async" class="block h-auto w-full border border-border/70" />
+  </picture>
+  <figcaption class="mt-3 text-sm leading-relaxed text-muted-foreground">
+    {photo.caption}{" "}
+    Photo: {photo.author}, <a href={photo.licenceUrl} rel="license noopener" class="text-brass hover:underline">{photo.licence}</a>
+    {" "}(<a href={photo.source} rel="noopener" class="text-brass hover:underline">source</a>).
+  </figcaption>
+</figure>
+<script type="application/ld+json" set:html={JSON.stringify(ld)} />

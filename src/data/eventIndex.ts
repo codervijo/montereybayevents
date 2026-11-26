@@ -1,6 +1,6 @@
-import { schedule, type Access, type Admission, type CarEvent } from "./events";
-import { venues, type Venue } from "./venues";
-import { organizers, type Organizer } from "./organizers";
+import { schedule, type Access, type Admission, type CarEvent } from "./events.ts";
+import { venues, type Venue } from "./venues.ts";
+import { organizers, type Organizer } from "./organizers.ts";
 
 export type EventDay = {
   id: string;

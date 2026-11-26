@@ -21,6 +21,13 @@ import {
 } from "../data/events-2026";
 import { buildFaqJsonLd, buildRegionalEventJsonLd } from "../lib/regionalEventSchema";
 import { isPastDate } from "../lib/isPast";
+import GlanceFigure from "./GlanceFigure.astro";
+import { buildImageObject } from "../lib/imageSchema";
+import MapFigure from "./MapFigure.astro";
+import { regionalVenueMap } from "../data/venueMaps";
+import VenuePhotoFigure from "./VenuePhotoFigure.astro";
+import { venuePhoto } from "../data/venuePhotos";
+import { regionalGlance } from "../data/glance";
 import { cityHubHref } from "../data/cityHubs";
 import { inCarWeekSeason } from "../data/season";
 
@@ -31,6 +38,8 @@ const month = monthMeta(primaryMonth(event));
 const dateLabel = event.dateText || DATE_TBA;
 // Build-time, not view-time — see src/lib/isPast.ts.
 const isPast = isPastDate(event.start, event.end);
+const venueMap = regionalVenueMap(event.slug);
+const photo = venuePhoto(event.slug);
 const done = event.recurrence ? "The 2026 edition has finished." : "This event has finished.";
 const fmtDay = (iso: string) =>
   new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
@@ -163,6 +172,8 @@ const others = eventsInMonth(month.key)
       )
     }
 
+    <GlanceFigure glance={regionalGlance(event)} pageUrl={canonical} />
+
     <div class="mt-12 grid gap-10 sm:grid-cols-2">
       <section>
         <h2 class="border-b border-border/70 pb-2 text-2xl text-brass">When</h2>
@@ -259,6 +270,10 @@ const others = eventsInMonth(month.key)
         </div>
       </section>
     </div>
+
+    {venueMap && <MapFigure visual={venueMap} sizes="(min-width: 1024px) 896px, 100vw" id="venue-map" />}
+    {venueMap && <script type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", ...buildImageObject(venueMap, { pageUrl: canonical, credit: "Map data © OpenStreetMap contributors (ODbL); map by Monterey Bay Events" }) })} />}
+    {photo && <VenuePhotoFigure photo={photo} pageUrl={canonical} />}
 
     {
       event.officialWebsite && (

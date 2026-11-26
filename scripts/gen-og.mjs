@@ -186,6 +186,35 @@ for (const e of regionalEvents.filter((e) => !e.existingSlug && !e.hubHref)) {
   });
 }
 
+// "At a glance" cards (v2.Z): one per event page, rows from src/data/glance.ts.
+const { allGlances, glanceKey, glanceHeight, GLANCE_W } = await import("../src/data/glance.ts");
+
+function glanceCard(g) {
+  const h = glanceHeight(g);
+  const titleLines = wrap(g.name.replace(/\s*\([^)]*\)\s*$/, "").trim() || g.name, 30, 2);
+  const titleSize = titleLines.length > 1 ? 64 : 76;
+  const rows = g.rows.map((r, i) => {
+    const y = 300 + i * 92;
+    const lines = wrap(r.value, 46, 2);
+    const fs = lines.length > 1 ? 30 : 36;
+    const first = lines.length > 1 ? y + 38 : y + 54;
+    return `<rect x="0" y="${y}" width="${GLANCE_W}" height="1" fill="${C.border}"/>
+  <text x="80" y="${y + 54}" font-family="Barlow" font-weight="600" font-size="22" letter-spacing="4.4" fill="${C.brass}">${esc(r.label.toUpperCase())}</text>
+  ${lines.map((l, k) => `<text x="300" y="${first + k * 36}" font-family="Barlow" font-weight="500" font-size="${fs}" fill="${C.fg}">${esc(l)}</text>`).join("\n  ")}`;
+  }).join("\n  ");
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${GLANCE_W}" height="${h}" viewBox="0 0 ${GLANCE_W} ${h}" role="img" aria-label="${esc(`At a glance: ${g.name}`)}">
+  <rect width="${GLANCE_W}" height="${h}" fill="${C.bg}"/>
+  <rect x="0" y="0" width="${GLANCE_W}" height="9" fill="${C.brass}"/>
+  <text x="80" y="88" font-family="Barlow" font-weight="600" font-size="24" letter-spacing="4.8" fill="${C.brass}">${esc(("At a glance · " + g.kicker).toUpperCase())}</text>
+  ${titleLines.map((l, i) => `<text x="80" y="${titleLines.length > 1 ? 172 + i * 62 : 196}" font-family="Bebas Neue" font-size="${titleSize}" fill="${C.fg}">${esc(l)}</text>`).join("\n  ")}
+  ${rows}
+  <rect x="0" y="${h - 70}" width="${GLANCE_W}" height="70" fill="${C.surface}"/>
+  <text x="80" y="${h - 26}" font-family="Barlow" font-weight="400" font-size="22" fill="${C.muted}">Check the organiser's page before you go</text>
+  <text x="${GLANCE_W - 80}" y="${h - 26}" text-anchor="end" font-family="Barlow" font-weight="600" font-size="22" letter-spacing="2.2" fill="${C.brassSoft}">montereybayevents.com</text>
+</svg>`;
+}
+for (const g of allGlances()) targets.push({ name: glanceKey(g.slug), svg: glanceCard(g), width: GLANCE_W });
+
 // ---- write ------------------------------------------------------------------
 
 const check = process.argv.includes("--check");
