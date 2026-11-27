@@ -21,6 +21,13 @@ const GUIDE_LASTMOD = {
   '/events/pacific-grove/': '2026-11-01',
   '/thanksgiving/': '2026-11-24',
   '/holiday-lights/': '2026-11-24',
+  '/new-years-eve/monterey/': '2026-11-25',
+  '/new-years-eve/santa-cruz/': '2026-11-25',
+  '/things-to-do/': '2026-11-25',
+  '/things-to-do/monterey/': '2026-11-25',
+  '/things-to-do/santa-cruz/': '2026-11-25',
+  '/things-to-do/carmel/': '2026-11-25',
+  '/things-to-do/pacific-grove/': '2026-11-25',
 };
 
 // <image:image> entries for the pages whose point is an image — the maps and
